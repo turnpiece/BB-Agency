@@ -16,13 +16,13 @@
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define('DB_NAME', 'beautifu_wp598');
+define('DB_NAME', 'beautifulbumps');
 
 /** MySQL database username */
-define('DB_USER', 'beautifu_wp598');
+define('DB_USER', 'root');
 
 /** MySQL database password */
-define('DB_PASSWORD', '4taf1PzkS6');
+define('DB_PASSWORD', 'c0df15h66');
 
 /** MySQL hostname */
 define('DB_HOST', 'localhost');

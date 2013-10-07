@@ -1,0 +1,5 @@
+[04-Oct-2013 17:12:01 UTC] PHP Fatal error:  Call to undefined function _deprecated_file() in /home/beautif1/public_html/wp-includes/rss-functions.php on line 8
+[04-Oct-2013 17:12:55 UTC] PHP Fatal error:  Call to undefined function _deprecated_file() in /home/beautif1/public_html/wp-includes/rss-functions.php on line 8
+[04-Oct-2013 17:14:05 UTC] PHP Fatal error:  Call to undefined function _deprecated_file() in /home/beautif1/public_html/wp-includes/rss-functions.php on line 8
+[04-Oct-2013 17:21:03 UTC] PHP Fatal error:  Call to undefined function _deprecated_file() in /home/beautif1/public_html/wp-includes/rss-functions.php on line 8
+[04-Oct-2013 17:22:29 UTC] PHP Fatal error:  Call to undefined function _deprecated_file() in /home/beautif1/public_html/wp-includes/rss-functions.php on line 8
