@@ -1,0 +1,2 @@
+[21-Aug-2013 08:00:43 UTC] PHP Fatal error:  Call to undefined function __() in /home/beautif1/public_html/wp-content/plugins/RB-Agency-Interact/rb-agency-interact.php on line 15
+[21-Aug-2013 08:00:46 UTC] PHP Fatal error:  Call to undefined function get_option() in /home/beautif1/public_html/wp-content/plugins/RB-Agency-Interact/upgrade.php on line 3

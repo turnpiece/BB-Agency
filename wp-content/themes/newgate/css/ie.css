@@ -1,0 +1,111 @@
+/**
+ * @package WordPress
+ * @subpackage Newgate
+ * @since Newgate 1.0
+ * 
+ * Custom CSS Rules for Internet Explorer < 9
+ * Created by CMSMasters
+ * 
+ */
+ 
+
+.p_options_block, 
+.p_filter_container:hover ul.p_filter {filter:alpha(opacity=100);}
+
+.p_filter_container ul.p_filter, 
+.cmsms-form-builder .check_parent input[type="checkbox"], 
+.cmsms-form-builder .check_parent input[type="radio"], 
+.loading {filter:alpha(opacity=0);}
+
+.button,
+.button_small,
+.button_medium,
+.button_large,
+.dropcap2,
+.comment-reply-link,
+.cmsmsLike {
+	position:relative;
+	z-index:0;
+}
+
+.jackbox-modal {background: url(../img/jackbox/ie_bg.png);}
+
+.cmsms_plus {z-index:0;}
+
+div.p_filter {height:1000px;}
+
+.p_filter_container ul.p_filter {top:32px;}
+
+.portfolio_container .portfolio_inner {box-shadow:0 0 5px #d5d5d5;}
+
+html.ie .cmsms-form-builder form .check_parent input[type="radio"] + label:before, 
+html.ie .wpcf7 form.wpcf7-form span.wpcf7-list-item input[type="radio"] + span.wpcf7-list-item-label,
+html.ie .cmsms-form-builder form .check_parent input[type="checkbox"] + label:before,
+html.ie .wpcf7 form.wpcf7-form span.wpcf7-list-item input[type="checkbox"] + span.wpcf7-list-item-label {background:none;}
+
+html.ie .cmsms-form-builder .check_parent input[type="radio"],
+html.ie .wpcf7 form.wpcf7-form span.wpcf7-list-item input[type="radio"],
+html.ie .cmsms-form-builder .check_parent input[type="checkbox"],
+html.ie .wpcf7 form.wpcf7-form span.wpcf7-list-item input[type="checkbox"] {
+	margin-top:11px;
+	visibility:visible;
+	filter:alpha(opacity=100);
+}
+
+a span.image_rollover {
+	background:#666666;
+	filter:alpha(opacity=50);
+}
+
+img.fullwidth {width:100%;}
+
+input[type="text"],
+input[type="password"] {padding-top:8px;}
+
+.cmsms_slider_video.hidden {display:none;}
+
+#navigation ul,
+.p_filter_container ul.p_filter {border:1px solid #ebecec;}
+
+.p_filter_container ul.p_filter {left:0;}
+
+.glow_blue:before,
+.glow_green:before,
+.glow_yellow:before,
+.glow_red:before {display:none;}
+
+.format-album.cmsms_four .resize figure+figure+figure+figure, 
+.format-album.cmsms_three .resize figure+figure+figure, 
+.format-album.cmsms_two .resize figure+figure, 
+.format-album.cmsms_one .resize figure {padding-right:0;}
+
+/* ---------- Small Tablet & Mobile (Note: Design for a width less than 768px) ---------- */
+
+@media only screen and (max-width: 767px) {
+	
+	.portfolio.three_columns, 
+	.portfolio.one_blocks {margin-right:0;}
+	
+	.one_sixth,
+	.one_fifth,
+	.two_fifth,
+	.three_fifth,
+	.four_fifth,
+	.five_sixth,
+	.one_half, 
+	.one_third, 
+	.two_third, 
+	.three_fourth {
+		float:none;
+		width:96%;
+		margin:0 2%;
+	}
+	
+	.portfolio.three_columns .project, 
+	.format-album.cmsms_two .resize figure, 
+	.format-album.cmsms_three .resize figure {
+		float:none;
+		padding-right:0;
+		width:100%;
+	}
+}

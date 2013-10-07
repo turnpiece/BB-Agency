@@ -3,8 +3,8 @@
 Profile View with Scrolling Thumbnails and Primary Image
 */
 	# lightbox.	
-  	echo "<script type='text/javascript' src='".rb_agency_BASEDIR."js/slimbox2.js'></script>";
-	echo '<link rel="stylesheet" href="'.rb_agency_BASEDIR.'style/slimbox2.css" type="text/css" media="screen" />';
+  	//echo "<script type='text/javascript' src='".rb_agency_BASEDIR."js/slimbox2.js'></script>";
+	//echo '<link rel="stylesheet" href="'.rb_agency_BASEDIR.'style/slimbox2.css" type="text/css" media="screen" />';
 	
 	echo "<div id=\"profile\">\n";
 	echo " <div id=\"rblayout-zero\" class=\"rblayout\">\n";

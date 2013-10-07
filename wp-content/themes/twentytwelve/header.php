@@ -52,3 +52,4 @@
 	</header><!-- #masthead -->
 
 	<div id="main" class="wrapper">
+<?php var_dump(ABSPATH) ?>
