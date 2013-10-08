@@ -88,7 +88,7 @@ Profile View with Scrolling Thumbnails and Primary Image
 
 					if($count_castingcart>0){ $cl2 = "cart_bg"; $tl2="Remove from Casting Cart"; }
 					
-					echo '<li class=\"favorite\"><a title="'.$tl1.'" href="javascript:;" class="save_fav '.$cl1.' rb_button" id="'.$ProfileID.'">'.$tl1.'</a></li>';
+					echo '<li class=\"favorite\"><a title="'.$tl1.'" href="javascript:;" class="save_fav '.$cl1.' bb_button" id="'.$ProfileID.'">'.$tl1.'</a></li>';
 			}
 			
 			if(is_permitted("favorite")){
@@ -100,7 +100,7 @@ Profile View with Scrolling Thumbnails and Primary Image
 
 					if($count_favorite>0){ $cl1 = "fav_bg"; $tl1="Remove from Favorites"; }
 					
-					echo '<li><a title="'.$tl2.'" href="javascript:;" id="mycart" class="save_cart '.$cl2.' rb_button">'.$tl2.'</a></li>';
+					echo '<li><a title="'.$tl2.'" href="javascript:;" id="mycart" class="save_cart '.$cl2.' bb_button">'.$tl2.'</a></li>';
 			}
 	
 	echo '</div>';
@@ -108,10 +108,10 @@ Profile View with Scrolling Thumbnails and Primary Image
 						echo '<div id="resultsGoHereAddtoCart"></div>';
 						?>
         
-        <div id="view_casting_cart" style="<?php if($tl2=="Add to Casting Cart"){?>display:none;<?php }else{?>display:block;<?php }?>"><li class="casting"><a class="rb_button" href="<?php echo get_bloginfo('url')?>/profile-casting/"><?php echo __("View Casting Cart", bb_agency_TEXTDOMAIN);?></a></li></div>
+        <div id="view_casting_cart" style="<?php if($tl2=="Add to Casting Cart"){?>display:none;<?php }else{?>display:block;<?php }?>"><li class="casting"><a class="bb_button" href="<?php echo get_bloginfo('url')?>/profile-casting/"><?php echo __("View Casting Cart", bb_agency_TEXTDOMAIN);?></a></li></div>
     
         
-        <div id="view_favorite" style="<?php if($tl1=="Add to Favorites"){?>display:none;<?php }else{?>display:block;<?php }?>"><li class="favorite"><a class="rb_button" href="<?php echo get_bloginfo('url')?>/profile-favorite/"><?php echo __("View favorite", bb_agency_TEXTDOMAIN);?></a></li></div>
+        <div id="view_favorite" style="<?php if($tl1=="Add to Favorites"){?>display:none;<?php }else{?>display:block;<?php }?>"><li class="favorite"><a class="bb_button" href="<?php echo get_bloginfo('url')?>/profile-favorite/"><?php echo __("View favorite", bb_agency_TEXTDOMAIN);?></a></li></div>
     <?php
 
 				// Resume
@@ -119,7 +119,7 @@ Profile View with Scrolling Thumbnails and Primary Image
 				$countMedia = mysql_num_rows($resultsMedia);
 				if ($countMedia > 0) {
 				  while ($dataMedia = mysql_fetch_array($resultsMedia)) {
-				echo "<li class=\"item resume\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"rb_button\">Download Resume</a></li>\n";
+				echo "<li class=\"item resume\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"bb_button\">Download Resume</a></li>\n";
 				  }
 				}
 			
@@ -128,7 +128,7 @@ Profile View with Scrolling Thumbnails and Primary Image
 				$countMedia = mysql_num_rows($resultsMedia);
 				if ($countMedia > 0) {
 				  while ($dataMedia = mysql_fetch_array($resultsMedia)) {
-				echo "<li class=\"item compcard\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"rb_button\">Download Comp Card</a></li>\n";
+				echo "<li class=\"item compcard\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"bb_button\">Download Comp Card</a></li>\n";
 				  }
 				}
 				// Headshots
@@ -136,7 +136,7 @@ Profile View with Scrolling Thumbnails and Primary Image
 				$countMedia = mysql_num_rows($resultsMedia);
 				if ($countMedia > 0) {
 				  while ($dataMedia = mysql_fetch_array($resultsMedia)) {
-				echo "<li class=\"item headshot\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"rb_button\">Download Headshot</a></li>\n";
+				echo "<li class=\"item headshot\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"bb_button\">Download Headshot</a></li>\n";
 				  }
 				}
 				
@@ -145,7 +145,7 @@ Profile View with Scrolling Thumbnails and Primary Image
 				$countMedia = mysql_num_rows($resultsMedia);
 				if ($countMedia > 0) {
 				  while ($dataMedia = mysql_fetch_array($resultsMedia)) {
-				echo "<li class=\"item voice\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"rb_button\">Listen to Voice Demo</a></li>\n";
+				echo "<li class=\"item voice\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"bb_button\">Listen to Voice Demo</a></li>\n";
 				  }
 				}
 
@@ -155,7 +155,7 @@ Profile View with Scrolling Thumbnails and Primary Image
 				if ($countMedia > 0) {
 				  while ($dataMedia = mysql_fetch_array($resultsMedia)) {
 					 $profileVideoEmbed = $dataMedia['ProfileMediaURL'];
-				echo "		<li class=\"item video slate\"><a href=\"http://www.youtube.com/watch?v=". $dataMedia['ProfileMediaURL'] ."\" target=\"_blank\" class=\"rb_button\">Watch Video Slate</a></li>\n";
+				echo "		<li class=\"item video slate\"><a href=\"http://www.youtube.com/watch?v=". $dataMedia['ProfileMediaURL'] ."\" target=\"_blank\" class=\"bb_button\">Watch Video Slate</a></li>\n";
 				  }
 				}
 
@@ -164,7 +164,7 @@ Profile View with Scrolling Thumbnails and Primary Image
 				$countMedia = mysql_num_rows($resultsMedia);
 				if ($countMedia > 0) {
 				  while ($dataMedia = mysql_fetch_array($resultsMedia)) {
-				echo "		<li class=\"item video monologue\"><a href=\"http://www.youtube.com/watch?v=". $dataMedia['ProfileMediaURL'] ."\" target=\"_blank\" class=\"rb_button\">Watch Video Monologue</a></li>\n";
+				echo "		<li class=\"item video monologue\"><a href=\"http://www.youtube.com/watch?v=". $dataMedia['ProfileMediaURL'] ."\" target=\"_blank\" class=\"bb_button\">Watch Video Monologue</a></li>\n";
 				  }
 				}
 
@@ -173,7 +173,7 @@ Profile View with Scrolling Thumbnails and Primary Image
 				$countMedia = mysql_num_rows($resultsMedia);
 				if ($countMedia > 0) {
 				  while ($dataMedia = mysql_fetch_array($resultsMedia)) {
-				echo "		<li class=\"item video demoreel\"><a href=\"http://www.youtube.com/watch?v=". $dataMedia['ProfileMediaURL'] ."\" target=\"_blank\" class=\"rb_button\">Watch Demo Reel</a></li>\n";
+				echo "		<li class=\"item video demoreel\"><a href=\"http://www.youtube.com/watch?v=". $dataMedia['ProfileMediaURL'] ."\" target=\"_blank\" class=\"bb_button\">Watch Demo Reel</a></li>\n";
 				  }
 				}
 
@@ -185,7 +185,7 @@ Profile View with Scrolling Thumbnails and Primary Image
 				$countMedia = mysql_num_rows($resultsMedia);
 				if ($countMedia > 0) {
 				  	while ($dataMedia = mysql_fetch_array($resultsMedia)) {
-                        echo "<li class=\"item video demoreel\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"rb_button\">".$dataMedia['ProfileMediaType']. "</a></li>\n";
+                        echo "<li class=\"item video demoreel\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"bb_button\">".$dataMedia['ProfileMediaType']. "</a></li>\n";
 				  	}
 				}
                                 
@@ -220,12 +220,12 @@ Profile View with Scrolling Thumbnails and Primary Image
 						} else {
 				  			# removed as required
 							#echo "<li class=\"add to cart\">". __("", bb_agency_TEXTDOMAIN);						  
-						  	#echo " <a href=\"".get_bloginfo('url')."/profile-casting/\" class=\"rb_button\">". __("View Casting Cart", bb_agency_TEXTDOMAIN)."</a></li>\n";
+						  	#echo " <a href=\"".get_bloginfo('url')."/profile-casting/\" class=\"bb_button\">". __("View Casting Cart", bb_agency_TEXTDOMAIN)."</a></li>\n";
 							
 			          	}
 					}	//end if(checkCart(bb_agency_get_current_userid()
 					# removed as required.
-					#echo "		<li class=\"return dashboard\"><a href=\"". get_bloginfo("url") ."/dashboard/\" class=\"rb_button\">". __("Access Dashboard", bb_agency_TEXTDOMAIN). "</a></li>\n";
+					#echo "		<li class=\"return dashboard\"><a href=\"". get_bloginfo("url") ."/dashboard/\" class=\"bb_button\">". __("Access Dashboard", bb_agency_TEXTDOMAIN). "</a></li>\n";
 				}
 				
 

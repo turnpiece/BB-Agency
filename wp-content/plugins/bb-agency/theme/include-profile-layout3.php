@@ -155,8 +155,8 @@ echo "	      				<p id=\"profile-views\"><strong>". $ProfileStatHits ."</strong>
 							// added this links to be positioned here in substitute
 							// for the favorited label
 echo '	      				<div id="profile-links">';
-								if(is_permitted('favorite')){ echo'<a href="'.get_bloginfo('wpurl').'/profile-favorite" class="rb_button">View Favorites</a>';}
-								if(is_permitted('favorite')){ echo'<a href="'.get_bloginfo('wpurl').'/profile-casting" class="rb_button">View Casting Cart</a>';} 	
+								if(is_permitted('favorite')){ echo'<a href="'.get_bloginfo('wpurl').'/profile-favorite" class="bb_button">View Favorites</a>';}
+								if(is_permitted('favorite')){ echo'<a href="'.get_bloginfo('wpurl').'/profile-casting" class="bb_button">View Casting Cart</a>';} 	
 echo '							</div>';
 
 echo "	  				</div> <!-- #profile-actions -->\n";

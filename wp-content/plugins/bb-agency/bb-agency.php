@@ -3,7 +3,7 @@
   Plugin Name: BB Agency
   Text Domain: bb-agency
   Plugin URI: http://rbplugin.com/wordpress/model-talent-agency-software/
-  Description: Forked from RB Agency plugin and adapted for Beautiful Bumps agency. With this plugin you can easily manage models' profiles and information.
+  Description: Forked from RB Agency plugin and adapted for the Beautiful Bumps agency. With this plugin you can easily manage models' profiles and information.
   Author: Paul Jenkins
   Author URI: http://turnpiece.com/
   Version: 0.0.1
@@ -37,6 +37,8 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 	define("bb_agency_UPLOADDIR", $bb_agency_WPUPLOADARRAY['baseurl'] ."/profile-media/" );  // http://domain.com/wordpress/wp-content/uploads/profile-media/
 	define("bb_agency_UPLOADPATH", $bb_agency_WPUPLOADARRAY['basedir'] ."/profile-media/" ); // /home/content/99/6048999/html/domain.com/wordpress/wp-content/uploads/profile-media/
 	define("bb_agency_TEXTDOMAIN", basename(dirname( __FILE__ )) ); //   bb-agency
+	define("bb_agency_MUMSTOBE_ID", 1); // id of mums to be data type
+	define("bb_agency_AFTERBIRTH_ID", 2); // id of data type to move mums to be to once they've given birth
 	// Clean Up:
 	$pageURL = '';
  	if ($_SERVER["SERVER_PORT"] != "80") {
@@ -167,6 +169,7 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 				ProfileContactNameLast VARCHAR(255),
 				ProfileGender VARCHAR(255),
 				ProfileDateBirth DATE,
+				ProfileDateDue DATE,
 				ProfileLocationStreet VARCHAR(255),
 				ProfileLocationCity VARCHAR(255),
 				ProfileLocationState VARCHAR(255),

@@ -112,7 +112,7 @@
 											}
 											echo "</select>\n";
 										} else {
-											echo "". __("No items to select", rb_restaurant_TEXTDOMAIN) .".";
+											echo "". __("No items to select", bb_restaurant_TEXTDOMAIN) .".";
 										}
 							echo "				        </td>\n";
 							echo "				    </tr>\n";

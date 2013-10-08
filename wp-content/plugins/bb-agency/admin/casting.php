@@ -51,7 +51,7 @@ if (isset($_POST['action'])) {
 			} else {
 	       		echo ('<div id="message" class="error"><p>'. __("Error creating record, please ensure you have filled out all required fields.", bb_agency_TEXTDOMAIN) .'</p></div>'); 
 			}
-			rb_display_list();
+			bb_display_list();
 			exit;
 		break;
 		
@@ -82,7 +82,7 @@ if (isset($_POST['action'])) {
 	         	echo ('<div id="message" class="error"><p>Error updating record, please ensure you have filled out all required fields.</p></div>'); 
 			}
 			
-			rb_display_list();
+			bb_display_list();
 			exit;
 		break;
 
@@ -92,7 +92,7 @@ if (isset($_POST['action'])) {
 				mysql_query("DELETE FROM " . table_agency_casting . " WHERE CastingID=$CastingID");
 			}
 			echo ('<div id="message" class="updated"><p>Casting deleted successfully!</p></div>');
-			rb_display_list();
+			bb_display_list();
 			exit;
 		break;	
 	}
@@ -112,7 +112,7 @@ if (isset($_POST['action'])) {
 		echo ('<div id="message" class="updated"><p>Casting deleted successfully!</p></div>');			
 	}
 			
-	rb_display_list();
+	bb_display_list();
 
 } elseif (($_GET['action'] == "editRecord") || ($_GET['action'] == "add")) {
 	$action = $_GET['action'];?>
@@ -276,11 +276,11 @@ if (isset($_POST['action'])) {
 <?php 
 } else {
 	
-	rb_display_list();
+	bb_display_list();
 	
 }
 
-function rb_display_list() { ?>
+function bb_display_list() { ?>
 
    <h3 class="title">All Castings</h3>
    <p><a class="button-primary" href="<?php echo admin_url("admin.php?page=". $_GET['page']) ?>&action=add">Create New Record</a></p>

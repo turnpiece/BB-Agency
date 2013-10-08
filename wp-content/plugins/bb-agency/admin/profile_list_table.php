@@ -23,7 +23,7 @@ $results2 = mysql_query($query);
 $count = mysql_num_rows($results2);
 $i = 0;
 while ($data = mysql_fetch_array($results2)) {
-
+  ?><pre><?php print_r($data) ?></pre><?php
   $ProfileID = $data['ProfileID'];
   $ProfileContactNameFirst = stripslashes($data['ProfileContactNameFirst']);
   $ProfileContactNameLast = stripslashes($data['ProfileContactNameLast']);

@@ -1289,14 +1289,14 @@ elseif ($ConfigID == 14) {
 								  // Copy images
 								  if($a<=3){
 									if ($userGender["GenderID"] % 2 != 0) {
-									 if(!copy(rb_chmod_file_display($sample_url."/".$userMediaImagesM[$a]),rb_chmod_file_display(bb_agency_UPLOADPATH . $ProfileGallery ."/".$userMediaImagesM[$a]))){
+									 if(!copy(bb_chmod_file_display($sample_url."/".$userMediaImagesM[$a]),bb_chmod_file_display(bb_agency_UPLOADPATH . $ProfileGallery ."/".$userMediaImagesM[$a]))){
 										echo $sample_url."/".$userMediaImagesM[$a]."<br/>".bb_agency_UPLOADPATH . $ProfileGallery ."/".$userMediaImagesM[$a];
 										echo "<br/>";
 										die("Failed to Copy files... <br/>".phpinfo());
 									 }
 									 $results = mysql_query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL) VALUES ('". $ProfileID ."','Image','". $userMediaImagesM[$a] ."','". $userMediaImagesM[$a] ."')");
 									} else {
-									 if(!copy(rb_chmod_file_display($sample_url."/".$userMediaImagesF[$a]),rb_chmod_file_display(bb_agency_UPLOADPATH . $ProfileGallery ."/".$userMediaImagesF[$a]))){
+									 if(!copy(bb_chmod_file_display($sample_url."/".$userMediaImagesF[$a]),bb_chmod_file_display(bb_agency_UPLOADPATH . $ProfileGallery ."/".$userMediaImagesF[$a]))){
 										echo $sample_url."/".$userMediaImagesF[$a]."<br/>".bb_agency_UPLOADPATH . $ProfileGallery ."/".$userMediaImagesF[$a];
 										echo "<br/>";
 										die("Failed to Copy files... <br/>".phpinfo());
@@ -1309,22 +1309,22 @@ elseif ($ConfigID == 14) {
 								  }
 								  if($a==1){ 
 									if ($userGender["GenderID"] % 2 != 0) {
-									 copy(rb_chmod_file_display($sample_url."/".$userMediaImagesM[$randTo8]),bb_agency_UPLOADPATH . $ProfileGallery ."/".$userMediaImagesM[$randTo8]);
+									 copy(bb_chmod_file_display($sample_url."/".$userMediaImagesM[$randTo8]),bb_agency_UPLOADPATH . $ProfileGallery ."/".$userMediaImagesM[$randTo8]);
 									 $results = mysql_query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL,ProfileMediaPrimary) VALUES ('". $ProfileID ."','Image','". $userMediaImagesM[$randTo8]."','". $userMediaImagesM[$randTo8] ."',1)") or die(mysql_error());
 									} else {
-									 copy(rb_chmod_file_display($sample_url."/".$userMediaImagesF[$randTo8]),bb_agency_UPLOADPATH . $ProfileGallery ."/".$userMediaImagesF[$randTo8]);
+									 copy(bb_chmod_file_display($sample_url."/".$userMediaImagesF[$randTo8]),bb_agency_UPLOADPATH . $ProfileGallery ."/".$userMediaImagesF[$randTo8]);
 									 $results = mysql_query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL,ProfileMediaPrimary) VALUES ('". $ProfileID ."','Image','". $userMediaImagesF[$randTo8]."','". $userMediaImagesF[$randTo8] ."',1)") or die(mysql_error());
 									}
-									copy(rb_chmod_file_display($sample_url."/".$userMediaHeadshot[$rand]),bb_agency_UPLOADPATH . $ProfileGallery ."/".$userMediaHeadshot[$rand]);
+									copy(bb_chmod_file_display($sample_url."/".$userMediaHeadshot[$rand]),bb_agency_UPLOADPATH . $ProfileGallery ."/".$userMediaHeadshot[$rand]);
 									 $results = mysql_query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL) VALUES ('". $ProfileID ."','Headshot','". $userMediaHeadshot[$rand]."','". $userMediaHeadshot[$rand] ."')");
 									
-									copy(rb_chmod_file_display($sample_url."/".$userMediaVoicedemo[0]),bb_agency_UPLOADPATH . $ProfileGallery ."/".$userMediaVoicedemo[0]);
+									copy(bb_chmod_file_display($sample_url."/".$userMediaVoicedemo[0]),bb_agency_UPLOADPATH . $ProfileGallery ."/".$userMediaVoicedemo[0]);
 									 $results = mysql_query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL) VALUES ('". $ProfileID ."','VoiceDemo','". $userMediaVoicedemo[0] ."','".  $userMediaVoicedemo[0] ."')");
 												 
-									copy(rb_chmod_file_display($sample_url."/".$userMediaCompcard[0]),bb_agency_UPLOADPATH . $ProfileGallery ."/".$userMediaCompcard[0]);
+									copy(bb_chmod_file_display($sample_url."/".$userMediaCompcard[0]),bb_agency_UPLOADPATH . $ProfileGallery ."/".$userMediaCompcard[0]);
 									$results = mysql_query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL) VALUES ('". $ProfileID ."','CompCard','".$userMediaCompcard[0] ."','". $userMediaCompcard[0]."')");
 									
-									copy(rb_chmod_file_display($sample_url."/".$userMediaResume[$rand]),bb_agency_UPLOADPATH . $ProfileGallery ."/".$userMediaResume[$rand]);
+									copy(bb_chmod_file_display($sample_url."/".$userMediaResume[$rand]),bb_agency_UPLOADPATH . $ProfileGallery ."/".$userMediaResume[$rand]);
 									$results = mysql_query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL) VALUES ('". $ProfileID ."','Resume','". $userMediaResume[$rand]."','".$userMediaResume[$rand]."')");
 												 
 								  }
@@ -1346,7 +1346,7 @@ elseif($ConfigID == '99'){
 
     echo "<h2>". __("Generate Login / Passwords", bb_agency_TEXTDOMAIN) . "</h2>\n";
 
-    rb_display_profile_list();
+    bb_display_profile_list();
 
     
 }
@@ -1427,7 +1427,7 @@ function bb_agency_set_directory($ProfileGallery){
 }
 
 
-function rb_chmod_file_display($file){
+function bb_chmod_file_display($file){
     @chmod($file,0755);	
     return $file;
 }

@@ -415,7 +415,7 @@ error_reporting(0);
 			return "--";
 		}
 	}
-	
+
    /**
      * Get Profile's Due Date
      *
@@ -741,7 +741,7 @@ error_reporting(0);
      * @param array $atts 
      */
 	function bb_agency_profilelist($atts, $content = NULL) {
-
+		print_r($atts);
 		// Get Preferences
 		$bb_agency_options_arr = get_option('bb_agency_options');
 		$bb_agency_option_privacy					 = isset($bb_agency_options_arr['bb_agency_option_privacy']) ? $bb_agency_options_arr['bb_agency_option_privacy'] :0;
@@ -1061,6 +1061,7 @@ error_reporting(0);
 		}
 		
 		// Type
+		echo $ProfileType;
 		if (isset($ProfileType) && !empty($ProfileType)){
 			$ProfileType = $ProfileType;
 			$filter .= " AND FIND_IN_SET(". $ProfileType .", profile.ProfileType) ";
@@ -1308,7 +1309,9 @@ error_reporting(0);
 					profile.ProfileContactDisplay, 
 					profile.ProfileDateBirth, 
 					profile.ProfileDateDue, 
-					profile.ProfileLocationState, 
+					profile.ProfileLocationState,
+					profile.ProfileType,
+					IF(DATE(profile.ProfileDateDue) < CURDATE(),'yes','no') AS ProfileGivenBirth,
 					customfield_mux.ProfileCustomMuxID, customfield_mux.ProfileCustomMuxID, customfield_mux.ProfileCustomID, customfield_mux.ProfileCustomValue,  
 					media.ProfileMediaURL
 				FROM ". table_agency_profile ." profile 
@@ -1329,7 +1332,7 @@ error_reporting(0);
 			$resultsList = mysql_query($queryList);
 			$countList = mysql_num_rows($resultsList);
 	                
-			$rb_user_isLogged = is_user_logged_in();
+			$bb_user_isLogged = is_user_logged_in();
 
 			#DEBUG!
 			// echo $queryList;
@@ -1342,7 +1345,14 @@ error_reporting(0);
 	        $profileDisplay = 0;
 			$countFav = 0;
 			while ($dataList = mysql_fetch_assoc($resultsList)) {
-					
+				if (intval($dataList['ProfileType']) === bb_agency_MUMSTOBE_ID && $dataList['ProfileGivenBirth'] === "yes") {
+					// check due date to make sure she hasn't yet given birth
+					echo $type.': '.$dataList['ProfileDateDue'].' given birth = "'.$dataList['ProfileGivenBirth'].'"<br />';
+
+					if (intval($type) == bb_agency_MUMSTOBE_ID) {
+						continue; // skip this one
+					}
+				}
 				$profileDisplay++;
 				if ($profileDisplay == 1 ){
 					 
@@ -1422,7 +1432,7 @@ error_reporting(0);
 				}
 				
 	         	//echo "loaded: ".microtime()." ms";				
-				if($rb_user_isLogged ){
+				if($bb_user_isLogged ){
 				   	//Get Favorite & Casting Cart links
 			        $displayHTML .= bb_agency_get_miscellaneousLinks($dataList["ProfileID"]);
 				}
@@ -1914,7 +1924,7 @@ class bb_agency_pagination {
 
 // *************************************************************************************************** //
 // Custom Fields
-function rb_custom_fields($visibility = 0, $ProfileID, $ProfileGender, $ProfileGenderShow = false, $SearchMode = false){
+function bb_custom_fields($visibility = 0, $ProfileID, $ProfileGender, $ProfileGenderShow = false, $SearchMode = false){
 				
 	$query3 = "SELECT * FROM ". table_agency_customfields ." WHERE ProfileCustomView = ".$visibility."  ORDER BY ProfileCustomOrder";
 	$results3 = mysql_query($query3) or die(mysql_error());
@@ -1923,12 +1933,12 @@ function rb_custom_fields($visibility = 0, $ProfileID, $ProfileGender, $ProfileG
 	while ($data3 = mysql_fetch_assoc($results3)) {
 		 if($ProfileGenderShow ==true){
 			if($data3["ProfileCustomShowGender"] == $ProfileGender && $count3 >=1 ){ // Depends on Current LoggedIn User's Gender
-				rb_custom_fields_template($visibility, $ProfileID, $data3);
+				bb_custom_fields_template($visibility, $ProfileID, $data3);
 			} elseif(empty($data3["ProfileCustomShowGender"])) {
-				rb_custom_fields_template($visibility, $ProfileID, $data3);
+				bb_custom_fields_template($visibility, $ProfileID, $data3);
 			}
 		 } else {
-					 rb_custom_fields_template($visibility, $ProfileID, $data3);
+					 bb_custom_fields_template($visibility, $ProfileID, $data3);
 		 }
 			// END Query2
 		echo "    </td>\n";
@@ -1943,7 +1953,7 @@ function rb_custom_fields($visibility = 0, $ProfileID, $ProfileGender, $ProfileG
 
 // *************************************************************************************************** //
 // Custom Fields TEMPLATE 
-function rb_custom_fields_template($visibility = 0, $ProfileID, $data3){
+function bb_custom_fields_template($visibility = 0, $ProfileID, $data3){
 
 	$bb_agency_options_arr 				= get_option('bb_agency_options');
 	$bb_agency_option_unittype  		= $bb_agency_options_arr['bb_agency_option_unittype'];
@@ -2996,7 +3006,7 @@ function checkCart($currentUserID,$pid){
 }
 
 /* function that lists users for generating login/password */
-function rb_display_profile_list(){  
+function bb_display_profile_list(){  
     global $wpdb;
     $bb_agency_options_arr = get_option('bb_agency_options');
     $bb_agency_option_locationtimezone 		= (int)$bb_agency_options_arr['bb_agency_option_locationtimezone'];
@@ -3260,7 +3270,7 @@ add_action('wp_ajax_write_email_cnt', 'write_email_content');
 
 function write_email_content(){
     $email_message = $_POST['email_message'];
-    update_option( 'rb_email_content', $email_message );
+    update_option( 'bb_email_content', $email_message );
     die;
 }
 
@@ -3268,10 +3278,10 @@ add_action('wp_ajax_read_email_cnt', 'read_email_content');
 
 function read_email_content($ret = false){ 
     if($ret){
-        return $email_message = get_option( 'rb_email_content', 'empty' );
+        return $email_message = get_option( 'bb_email_content', 'empty' );
     }
     else {
-        echo $email_message = get_option( 'rb_email_content', 'empty' );
+        echo $email_message = get_option( 'bb_email_content', 'empty' );
     }
     
     die;
@@ -3492,9 +3502,9 @@ function is_client_profiletype(){
  * Users
  */
 
-$rb_profile_delete = isset($bb_agency_options_arr['bb_agency_option_profiledeletion']) ? $bb_agency_options_arr['bb_agency_option_profiledeletion'] : 1;
+$bb_profile_delete = isset($bb_agency_options_arr['bb_agency_option_profiledeletion']) ? $bb_agency_options_arr['bb_agency_option_profiledeletion'] : 1;
  
-if($rb_profile_delete == 2 || $rb_profile_delete == 3){
+if($bb_profile_delete == 2 || $bb_profile_delete == 3){
 		
 		add_action('admin_menu', 'Delete_Owner');	
 		
@@ -3522,9 +3532,9 @@ function Delete_Owner(){
 }
 
 function Profile_Account(){  
-    global $rb_profile_delete;
+    global $bb_profile_delete;
     echo "<h2>Account Settings</h2><br/>";
-	echo "<input type='hidden' id='delete_opt' value='".$rb_profile_delete."'>";
+	echo "<input type='hidden' id='delete_opt' value='".$bb_profile_delete."'>";
     echo "<input id='self_del' type='button' name='remove' value='Remove My Profile' class='btn-primary'>";
 	
 }

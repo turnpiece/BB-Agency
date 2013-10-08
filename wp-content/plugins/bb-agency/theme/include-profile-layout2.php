@@ -79,7 +79,7 @@ echo "							<ul>\n";
 									$countMedia = mysql_num_rows($resultsMedia);
 									if ($countMedia > 0) {
 									  	while ($dataMedia = mysql_fetch_array($resultsMedia)) {
-											echo "<li class=\"item resume\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"rb_button\">Print Resume</a></li>\n";
+											echo "<li class=\"item resume\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"bb_button\">Print Resume</a></li>\n";
 									  	}
 									}		
 									// Comp Card
@@ -87,7 +87,7 @@ echo "							<ul>\n";
 									$countMedia = mysql_num_rows($resultsMedia);
 									if ($countMedia > 0) {
 									  	while ($dataMedia = mysql_fetch_array($resultsMedia)) {
-											echo "<li class=\"item compcard\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"rb_button\">Download Comp Card</a></li>\n";
+											echo "<li class=\"item compcard\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"bb_button\">Download Comp Card</a></li>\n";
 									  	}
 									}
 									// Headshots
@@ -95,7 +95,7 @@ echo "							<ul>\n";
 									$countMedia = mysql_num_rows($resultsMedia);
 									if ($countMedia > 0) {
 									  	while ($dataMedia = mysql_fetch_array($resultsMedia)) {
-											echo "<li class=\"item headshot\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"rb_button\">Download Headshot</a></li>\n";
+											echo "<li class=\"item headshot\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"bb_button\">Download Headshot</a></li>\n";
 									  	}
 									}			
 									//Voice Demo
@@ -103,7 +103,7 @@ echo "							<ul>\n";
 									$countMedia = mysql_num_rows($resultsMedia);
 									if ($countMedia > 0) {
 									  	while ($dataMedia = mysql_fetch_array($resultsMedia)) {
-											echo "<li class=\"item voice\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"rb_button\">Listen to Voice Demo</a></li>\n";
+											echo "<li class=\"item voice\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"bb_button\">Listen to Voice Demo</a></li>\n";
 									  	}
 									}
 									//Video Slate
@@ -112,7 +112,7 @@ echo "							<ul>\n";
 									if ($countMedia > 0) {
 									  	while ($dataMedia = mysql_fetch_array($resultsMedia)) {
 											$profileVideoEmbed = $dataMedia['ProfileMediaURL'];
-											echo "<li class=\"item video slate\"><a href=\"http://www.youtube.com/watch?v=". $dataMedia['ProfileMediaURL'] ."\" ". $reltypev ." class=\"rb_button\">Watch Video Slate</a></li>\n";
+											echo "<li class=\"item video slate\"><a href=\"http://www.youtube.com/watch?v=". $dataMedia['ProfileMediaURL'] ."\" ". $reltypev ." class=\"bb_button\">Watch Video Slate</a></li>\n";
 									  	}
 									}
 									//Video Monologue
@@ -120,7 +120,7 @@ echo "							<ul>\n";
 									$countMedia = mysql_num_rows($resultsMedia);
 									if ($countMedia > 0) {
 									  	while ($dataMedia = mysql_fetch_array($resultsMedia)) {
-											echo "<li class=\"item video monologue\"><a href=\"http://www.youtube.com/watch?v=". $dataMedia['ProfileMediaURL'] ."\" ". $reltypev ." class=\"rb_button\">Watch Video Monologue</a></li>\n";
+											echo "<li class=\"item video monologue\"><a href=\"http://www.youtube.com/watch?v=". $dataMedia['ProfileMediaURL'] ."\" ". $reltypev ." class=\"bb_button\">Watch Video Monologue</a></li>\n";
 									  	}
 									}
 									//Demo Reel
@@ -128,12 +128,12 @@ echo "							<ul>\n";
 									$countMedia = mysql_num_rows($resultsMedia);
 									if ($countMedia > 0) {
 									  	while ($dataMedia = mysql_fetch_array($resultsMedia)) {
-											echo "<li class=\"item video demoreel\"><a href=\"http://www.youtube.com/watch?v=". $dataMedia['ProfileMediaURL'] ."\" ". $reltypev ." class=\"rb_button\">Watch Demo Reel</a></li>\n";
+											echo "<li class=\"item video demoreel\"><a href=\"http://www.youtube.com/watch?v=". $dataMedia['ProfileMediaURL'] ."\" ". $reltypev ." class=\"bb_button\">Watch Demo Reel</a></li>\n";
 									  	}
 									}
 									//Contact Profile
 									if($bb_agency_option_showcontactpage==1){
-							    		echo "<div class=\"rel\"><strong>". __("Contact: ", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> <a href=\"". get_bloginfo("wpurl") ."/profile/".$ProfileGallery	."/contact/\" class=\"rb_button\">Click Here</a></div>\n";
+							    		echo "<div class=\"rel\"><strong>". __("Contact: ", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> <a href=\"". get_bloginfo("wpurl") ."/profile/".$ProfileGallery	."/contact/\" class=\"bb_button\">Click Here</a></div>\n";
 									}
 						            // Other links - Favorite, Casting cart...
 								    // does not need this anymore
@@ -163,10 +163,10 @@ echo "							<ul>\n";
 													
 									            </script>
 									            <?php
-												echo "<li id=\"casting_cart_li\" class=\"item cart\"><a id=\"addtocart\" onclick=\"javascript:addtoCart('$ProfileID');\" href=\"javascript:void(0)\" class=\"rb_button\">". __("Add to Casting Cart", bb_agency_TEXTDOMAIN). "</a></li>\n";
+												echo "<li id=\"casting_cart_li\" class=\"item cart\"><a id=\"addtocart\" onclick=\"javascript:addtoCart('$ProfileID');\" href=\"javascript:void(0)\" class=\"bb_button\">". __("Add to Casting Cart", bb_agency_TEXTDOMAIN). "</a></li>\n";
 											} else {
 												echo "<li class=\"item cart\">". __("", bb_agency_TEXTDOMAIN);
-												echo " <a href=\"".get_bloginfo('url')."/profile-casting/\" class=\"rb_button\">". __("View Casting Cart", bb_agency_TEXTDOMAIN)."</a></li>\n";						
+												echo " <a href=\"".get_bloginfo('url')."/profile-casting/\" class=\"bb_button\">". __("View Casting Cart", bb_agency_TEXTDOMAIN)."</a></li>\n";						
 										    }
 										}	//end if(checkCart(bb_agency_get_current_userid()
 																				
@@ -181,16 +181,16 @@ echo "							<ul>\n";
 												
 												if($count_favorite>0){
 													echo "<li class=\"item cart\">". __("", bb_agency_TEXTDOMAIN);
-													echo " <a id='save_fav_li' onclick=\"javascript:addtofv('$ProfileID');\" href=\"javascript:void(0)\" class=\"rb_button\">". __("Remove from Favorites", bb_agency_TEXTDOMAIN)."</a></li>\n";						
+													echo " <a id='save_fav_li' onclick=\"javascript:addtofv('$ProfileID');\" href=\"javascript:void(0)\" class=\"bb_button\">". __("Remove from Favorites", bb_agency_TEXTDOMAIN)."</a></li>\n";						
 												} else {
 													echo "<li class=\"item cart\">". __("", bb_agency_TEXTDOMAIN);
-													echo " <a id='save_fav_li' onclick=\"javascript:addtofv('$ProfileID');\" href=\"javascript:void(0)\" class=\"rb_button\">". __("Add to Favorites", bb_agency_TEXTDOMAIN)."</a></li>\n";						
+													echo " <a id='save_fav_li' onclick=\"javascript:addtofv('$ProfileID');\" href=\"javascript:void(0)\" class=\"bb_button\">". __("Add to Favorites", bb_agency_TEXTDOMAIN)."</a></li>\n";						
 												}				
 										}
 
 									}
 echo "								<li id=\"resultsGoHereAddtoCart\"></li>";
-echo "								<li id=\"view_casting_cart\" style=\"display:none;\"><a href=\"".get_bloginfo('url')."/profile-casting/\" class=\"rb_button\">". __("View Casting Cart", bb_agency_TEXTDOMAIN)."</a></li>";
+echo "								<li id=\"view_casting_cart\" style=\"display:none;\"><a href=\"".get_bloginfo('url')."/profile-casting/\" class=\"bb_button\">". __("View Casting Cart", bb_agency_TEXTDOMAIN)."</a></li>";
 echo "							</ul>\n";	
 echo "						</div>\n";// #links
 echo "					</div>\n";// .col_6 ?>

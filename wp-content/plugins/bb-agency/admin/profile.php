@@ -224,7 +224,7 @@ if (isset($_POST['action'])) {
 
                     echo ('<div id="message" class="updated"><p>' . __("New Profile added successfully!", bb_agency_TEXTDOMAIN) . ' <a href="' . admin_url("admin.php?page=" . $_GET['page']) . '&action=editRecord&ProfileID=' . $ProfileID . '">' . __("Update and add media", bb_agency_TEXTDOMAIN) . '</a></p></div>');
                     // We can edit it now
-                    // rb_display_manage($ProfileID);
+                    // bb_display_manage($ProfileID);
                     // exit;
                 }
             } else {
@@ -232,7 +232,7 @@ if (isset($_POST['action'])) {
                 echo ('<div id="message" class="error"><p>' . $error);
                 echo "<br/><a href=\"javascript:;\" onclick=\"if(document.referrer) {window.open(document.referrer,'_self');} else {history.go(-1);} return false;\">&larr;Go back and Edit</a>";
                 echo "</p></div>";
-                rb_display_manage($ProfileID);
+                bb_display_manage($ProfileID);
             }
 
             break;
@@ -425,7 +425,7 @@ if (isset($_POST['action'])) {
                 echo ("<div id=\"message\" class=\"error\"><p>" . __("Error updating record, please ensure you have filled out all required fields.", bb_agency_TEXTDOMAIN) . "</p></div>");
             }
 
-            rb_display_list();
+            bb_display_list();
             exit;
             break;
 
@@ -479,7 +479,7 @@ if (isset($_POST['action'])) {
                 /// Now delete
                 wp_delete_user($dataDelete["ProfileUserLinked"], $AdminID);
             }
-            rb_display_list();
+            bb_display_list();
             exit;
             break;
     }
@@ -523,7 +523,7 @@ elseif ($_GET['action'] == "deleteRecord") {
         wp_delete_user($dataDelete["ProfileUserLinked"]);
         echo ('<div id="message" class="updated"><p>' . __("Profile deleted successfully!", bb_agency_TEXTDOMAIN) . '</p></div>');
     } // is there record?
-    rb_display_list();
+    bb_display_list();
 }
 // *************************************************************************************************** //
 // Show Edit Record
@@ -532,16 +532,16 @@ elseif (($_GET['action'] == "editRecord") || ($_GET['action'] == "add")) {
     $action = $_GET['action'];
     $ProfileID = $_GET['ProfileID'];
 
-    rb_display_manage($ProfileID);
+    bb_display_manage($ProfileID);
 } else {
 // *************************************************************************************************** //
 // Show List
-    rb_display_list();
+    bb_display_list();
 }
 
 // *************************************************************************************************** //
 // Manage Record
-function rb_display_manage($ProfileID) {
+function bb_display_manage($ProfileID) {
     global $wpdb;
     $bb_agency_options_arr = get_option('bb_agency_options');
     $bb_agency_option_unittype = $bb_agency_options_arr['bb_agency_option_unittype'];
@@ -756,9 +756,9 @@ function rb_display_manage($ProfileID) {
     // ProfileCustomView = 1 , Private
     if (isset($_GET["ProfileGender"])) {
         $ProfileGender = $_GET["ProfileGender"];
-        rb_custom_fields(1, 0, $ProfileGender, true);
+        bb_custom_fields(1, 0, $ProfileGender, true);
     } else {
-        rb_custom_fields(1, $ProfileID, $ProfileGender, true);
+        bb_custom_fields(1, $ProfileID, $ProfileGender, true);
     }
 
     // Public Information
@@ -791,7 +791,7 @@ function rb_display_manage($ProfileID) {
         }
         echo "</select>\n";
     } else {
-        echo "" . __("No items to select", rb_restaurant_TEXTDOMAIN) . ".";
+        echo "" . __("No items to select", bb_restaurant_TEXTDOMAIN) . ".";
     }
     echo "        </td>\n";
     echo "    </tr>\n";
@@ -799,9 +799,9 @@ function rb_display_manage($ProfileID) {
     // ProfileCustomView = 1 , Private
     if (isset($_GET["ProfileGender"])) {
         $ProfileGender = $_GET["ProfileGender"];
-        rb_custom_fields(0, 0, $ProfileGender, true);
+        bb_custom_fields(0, 0, $ProfileGender, true);
     } else {
-        rb_custom_fields(0, $ProfileID, $ProfileGender, true);
+        bb_custom_fields(0, $ProfileID, $ProfileGender, true);
     }
 
     echo "  </tbody>\n";
@@ -1135,7 +1135,7 @@ function rb_display_manage($ProfileID) {
 
 /* List Records **************************************************** */
 
-function rb_display_list() {
+function bb_display_list() {
     global $wpdb;
     $bb_agency_options_arr = get_option('bb_agency_options');
     $bb_agency_option_locationtimezone = (int) $bb_agency_options_arr['bb_agency_option_locationtimezone'];
