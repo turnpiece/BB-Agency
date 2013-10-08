@@ -27,16 +27,16 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 	}
 
 // Plugin Definitions
-	define("bb_agency_BASENAME", plugin_basename(__FILE__) );  // rb-agency/rb-agency.php
+	define("bb_agency_BASENAME", plugin_basename(__FILE__) );  // bb-agency/bb-agency.php
 	$bb_agency_WPURL = get_bloginfo("wpurl"); // http://domain.com/wordpress
 	$bb_agency_WPUPLOADARRAY = wp_upload_dir(); // Array  $bb_agency_WPUPLOADARRAY['baseurl'] $bb_agency_WPUPLOADARRAY['basedir']
-	define("bb_agency_BASEDIR", get_bloginfo("wpurl") ."/". PLUGINDIR ."/". dirname( plugin_basename(__FILE__) ) ."/" );  // http://domain.com/wordpress/wp-content/plugins/rb-agency/
+	define("bb_agency_BASEDIR", get_bloginfo("wpurl") ."/". PLUGINDIR ."/". dirname( plugin_basename(__FILE__) ) ."/" );  // http://domain.com/wordpress/wp-content/plugins/bb-agency/
 	define("bb_agency_BASEREL", str_replace(get_bloginfo('url'), '', bb_agency_BASEDIR));  // /wordpress/wp-content/uploads/profile-media/
-	define("bb_agency_BASEPATH", "/". PLUGINDIR ."/". dirname( plugin_basename(__FILE__) ) ."/" );  // wordpress/wp-content/plugins/rb-agency/
+	define("bb_agency_BASEPATH", "/". PLUGINDIR ."/". dirname( plugin_basename(__FILE__) ) ."/" );  // wordpress/wp-content/plugins/bb-agency/
 	define("bb_agency_UPLOADREL", str_replace(get_bloginfo('url'), '', $bb_agency_WPUPLOADARRAY['baseurl']) ."/profile-media/" );  // /wordpress/wp-content/uploads/profile-media/
 	define("bb_agency_UPLOADDIR", $bb_agency_WPUPLOADARRAY['baseurl'] ."/profile-media/" );  // http://domain.com/wordpress/wp-content/uploads/profile-media/
 	define("bb_agency_UPLOADPATH", $bb_agency_WPUPLOADARRAY['basedir'] ."/profile-media/" ); // /home/content/99/6048999/html/domain.com/wordpress/wp-content/uploads/profile-media/
-	define("bb_agency_TEXTDOMAIN", basename(dirname( __FILE__ )) ); //   rb-agency
+	define("bb_agency_TEXTDOMAIN", basename(dirname( __FILE__ )) ); //   bb-agency
 	// Clean Up:
 	$pageURL = '';
  	if ($_SERVER["SERVER_PORT"] != "80") {
@@ -367,8 +367,8 @@ if ( is_admin() ){
 	add_action('admin_init', 'bb_agency_register_settings');
 		// Register our Array of settings
 		function bb_agency_register_settings() {
-			register_setting('rb-agency-settings-group', 'bb_agency_options'); //, 'bb_agency_options_validate'
-			register_setting( 'rb-agency-dummy-settings-group', 'bb_agency_dummy_options' ); //, setup dummy profile options
+			register_setting('bb-agency-settings-group', 'bb_agency_options'); //, 'bb_agency_options_validate'
+			register_setting( 'bb-agency-dummy-settings-group', 'bb_agency_dummy_options' ); //, setup dummy profile options
 		}
 		// Validate/Sanitize Data
 		function bb_agency_options_validate($input) {
@@ -412,7 +412,7 @@ if ( is_admin() ){
 		function bb_agency_addsettingspage() {
 			if ( !current_user_can('update_core') )
 				return;
-			$pagehook = add_management_page( __("RB Agency", bb_agency_TEXTDOMAIN), __("RB Agency", bb_agency_TEXTDOMAIN), 'update_core', bb_agency_BASENAME, 'bb_agency_settings', '' );
+			$pagehook = add_management_page( __("BB Agency", bb_agency_TEXTDOMAIN), __("BB Agency", bb_agency_TEXTDOMAIN), 'update_core', bb_agency_BASENAME, 'bb_agency_settings', '' );
 			add_action( 'load-plugins.php', 'bb_agency_on_load' );
 			//wp_enqueue_script('jquery');
 		}
@@ -569,7 +569,7 @@ if ( is_admin() ){
 			// Setup
 			function bb_agency_widget_showpromoted() {
 				$widget_ops = array('classname' => 'bb_agency_widget_showpromoted', 'description' => __("Displays promoted profiles", bb_agency_TEXTDOMAIN) );
-				$this->WP_Widget('bb_agency_widget_showpromoted', __("RB Agency : Featured", bb_agency_TEXTDOMAIN), $widget_ops);
+				$this->WP_Widget('bb_agency_widget_showpromoted', __("BB Agency : Featured", bb_agency_TEXTDOMAIN), $widget_ops);
 			}
 		
 			// What Displays
@@ -619,7 +619,7 @@ if ( is_admin() ){
 			// Setup
 			function bb_agency_widget_showsearch() {
 				$widget_ops = array('classname' => 'bb_agency_widget_showsearch', 'description' => __("Displays profile search fields", bb_agency_TEXTDOMAIN) );
-				$this->WP_Widget('bb_agency_widget_showsearch', __("RB Agency : Search", bb_agency_TEXTDOMAIN), $widget_ops);
+				$this->WP_Widget('bb_agency_widget_showsearch', __("BB Agency : Search", bb_agency_TEXTDOMAIN), $widget_ops);
 			}
 		
 			// What Displays
@@ -722,7 +722,7 @@ if ( is_admin() ){
 				<script type="text/javascript">
 				jQuery(document).ready( function($) {
 					
-				var options = {"content":"<h3>RB Agency Plugin</h3><p>Thanks for installing RB Plugin, we hope you find it useful.  Lets <a href=\'<?php echo admin_url("admin.php?page=bb_agency_settings&ConfigID=1"); ?>\'>check your settings</a> before we get started.</p>","position":{"edge":"left","align":"center"}};
+				var options = {"content":"<h3>BB Agency Plugin</h3><p>Thanks for installing the BB Plugin. We hope you find it useful.  Lets <a href=\'<?php echo admin_url("admin.php?page=bb_agency_settings&ConfigID=1"); ?>\'>check your settings</a> before we get started.</p>","position":{"edge":"left","align":"center"}};
 				if ( ! options )
 					return;
 					options = $.extend( options, {
@@ -778,7 +778,7 @@ function bb_agency_notify_installation(){
 	"client_admin_email"  => $client_admin_email,
 	"client_sitename" =>$client_sitename,
 	"client_plugin_version" => $client_plugin_version,
-	"client_plugin_name" =>"RB Plugin");                                                                    
+	"client_plugin_name" =>"BB Plugin");                                                                    
 	$data_string = json_encode($data);
 		if(function_exists("bb_agencyinteract_install")){
 			$client_interact_exist = get_option('bb_agency_version');	
@@ -846,7 +846,7 @@ register_activation_hook(__FILE__,"bb_agency_notify_installation");
 		// Final Cleanup
 		delete_option('bb_agency_options');
 		
-		$thepluginfile = "rb-agency/rb-agency.php";
+		$thepluginfile = "bb-agency/bb-agency.php";
 		$current = get_settings('active_plugins');
 		array_splice($current, array_search( $thepluginfile, $current), 1 );
 		update_option('active_plugins', $current);

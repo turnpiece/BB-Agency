@@ -44,7 +44,7 @@ msgstr ""
 
 #: C:\Dropbox\Users\Rob\Scripts\RB
 #: Plugin\bb-agency/bb-agency.php:373
-msgid "RB Agency"
+msgid "BB Agency"
 msgstr ""
 
 #: C:\Dropbox\Users\Rob\Scripts\RB
