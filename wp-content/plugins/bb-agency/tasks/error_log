@@ -1,0 +1,1 @@
+[03-Oct-2013 17:49:16 UTC] PHP Warning:  fopen(./cache/timthumb_int_998d32977789887577a7031eaab90070.timthumb.txt) [<a href='function.fopen'>function.fopen</a>]: failed to open stream: No such file or directory in /home/beautif1/public_html/wp-content/plugins/bb-agency/tasks/timthumb.php on line 1020
