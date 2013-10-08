@@ -30,12 +30,12 @@ $rb_agency_options_arr = get_option('rb_agency_options');
 		echo "		 				<label for=\"ProfileFirstName\">". __("First Name", rb_agency_TEXTDOMAIN) ."</label>\n";
 	      echo "		 				<input type=\"text\" id=\"ProfileContactNameFirst\" name=\"ProfileContactNameFirst\" value=\"". $_SESSION["ProfileContactNameFirst"] ."\" />\n";
 	      echo "	 				</div>\n";
-		
+/*		
 		echo "	 				<div class=\"search-field single\">\n";
 		echo "		 				<label for=\"ProfileLastName\">". __("Last Name", rb_agency_TEXTDOMAIN) ."</label>\n";
 	      echo "						 <input type=\"text\" id=\"ProfileContactNameLast\" name=\"ProfileContactNameLast\" value=\"". $_SESSION["ProfileContactNameLast"] ."\" />\n";
 		echo "					 </div>\n";		
-		
+*/		
 		echo "				    <div class=\"search-field single\">\n";
 		echo "				       <label for=\"ProfileType\">". __("Type", rb_agency_TEXTDOMAIN) . "</label>\n";
 		echo "				        	<select name=\"ProfileType\" id=\"ProfileType\">\n";               
@@ -50,6 +50,7 @@ $rb_agency_options_arr = get_option('rb_agency_options');
 											}
 		echo "				        	</select>\n";
 		echo "				    </div>\n";
+/*
 		echo "				    <div class=\"search-field single\">\n";
 		echo "				       <label for=\"ProfileGender\">". __("Gender", rb_agency_TEXTDOMAIN) . "</label>\n";
 		echo "				        <select name=\"ProfileGender\" id=\"ProfileGender\">\n";               
@@ -71,7 +72,7 @@ $rb_agency_options_arr = get_option('rb_agency_options');
 		echo "				        <div><label for=\"ProfileDateBirth_max\">". __("Max", rb_agency_TEXTDOMAIN) . "</label>\n";
 		echo "				        	<input type=\"text\" class=\"stubby\" id=\"ProfileDateBirth_max\" name=\"ProfileDateBirth_max\" value=\"". $_SESSION['ProfileDateBirth_max'] ."\" /></div>";
 		echo "				    </fieldset>";
-                
+*/                
 		echo "				<div><input type=\"hidden\" name=\"ProfileIsActive\" value=\"1\" /></div>\n";
 		echo "				<div class=\"search-field submit\">";
 		echo "				<input type=\"submit\" value=\"". __("Search Profiles", rb_agency_TEXTDOMAIN) . "\" class=\"button-primary\" onclick=\"this.form.action='".get_bloginfo("wpurl")."/profile-search/'\" />";
