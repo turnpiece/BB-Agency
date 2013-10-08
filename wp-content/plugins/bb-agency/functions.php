@@ -415,7 +415,17 @@ error_reporting(0);
 			return "--";
 		}
 	}
-
+	
+   /**
+     * Get Profile's Due Date
+     *
+     * @param string $p_strDate
+     */
+	function bb_agency_get_due_date($p_strDate) {
+		// Just display YYYY-MM-DD
+		// TODO - could display date in a different way
+		return $p_strDate;
+	}
 
    /**
      * Get Profile's Age
@@ -766,8 +776,10 @@ error_reporting(0);
 			"profilestatweight_min" => NULL,
 			"profilestatweight_max" => NULL,
 			"profiledatebirth_min" => NULL,
+			"profiledatedue_min" => NULL,
 			"age_start" => NULL,
 			"profiledatebirth_max" => NULL,
+			"profiledatedue_max" => NULL,
 			"age_stop" => NULL,
 			"featured" => NULL,
 			"stars" => NULL,
@@ -836,6 +848,8 @@ error_reporting(0);
 		$ProfileStatWeight_max		= $profilestatheight_max;
 		$ProfileDateBirth_min		= $profiledatebirth_min;
 		$ProfileDateBirth_max		= $profiledatebirth_max;
+		$ProfileDateDue_min			= $profiledatedue_min;
+		$ProfileDateDue_max			= $profiledatedue_max;
 		$ProfileIsFeatured			= $featured;
 		$ProfileIsPromoted			= $stars;
 		$OverridePrivacy			= $override_privacy;
@@ -1075,7 +1089,18 @@ error_reporting(0);
 		if (isset($ProfileDateBirth_max) && !empty($ProfileDateBirth_max)){
 			$selectedYearMax = date('Y-m-d', strtotime('-'. $ProfileDateBirth_max - 1 .' year'. $date));
 			$filter .= " AND profile.ProfileDateBirth >= '$selectedYearMax'";
-		}		
+		}
+
+		// Due date
+		if (isset($ProfileDateDue_min) && !empty($ProfileDateDue_min)){
+			$selectedYearMin = date('Y-m-d', strtotime('-'. $ProfileDateDue_min .' year'. $date));
+			$filter .= " AND profile.ProfileDateDue <= '$selectedYearMin'";
+		}
+		if (isset($ProfileDateDue_max) && !empty($ProfileDateDue_max)){
+			$selectedYearMax = date('Y-m-d', strtotime('-'. $ProfileDateDue_max - 1 .' year'. $date));
+			$filter .= " AND profile.ProfileDateDue >= '$selectedYearMax'";
+		}
+
 		if (isset($ProfileIsFeatured)){
 			$filter .= " AND profile.ProfileIsFeatured = '1' ";
 		}		
@@ -1173,7 +1198,7 @@ error_reporting(0);
 		  
 				/*********** Paginate **************/
 					$qItem = mysql_query("SELECT
-					profile.ProfileGallery, profile.ProfileContactDisplay, profile.ProfileDateBirth, profile.ProfileLocationState, profile.ProfileID as pID , 
+					profile.ProfileGallery, profile.ProfileContactDisplay, profile.ProfileDateBirth, profile.ProfileDateDue, profile.ProfileLocationState, profile.ProfileID as pID , 
 					customfield_mux.*,  
 					(SELECT media.ProfileMediaURL FROM ". table_agency_profile_media ." media  WHERE  profile.ProfileID = media.ProfileID  AND media.ProfileMediaType = \"Image\"  AND media.ProfileMediaPrimary = 1) 
 					AS ProfileMediaURL 
@@ -1229,7 +1254,7 @@ error_reporting(0);
 			 */
 			if (isset($profilefavorite) && !empty($profilefavorite)){
 				// Execute query showing favorites
-				$queryList = "SELECT profile.ProfileID, profile.ProfileGallery, profile.ProfileContactDisplay, profile.ProfileDateBirth, profile.ProfileLocationState, profile.ProfileID as pID, fav.SavedFavoriteTalentID, fav.SavedFavoriteProfileID, (SELECT media.ProfileMediaURL FROM ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1) AS ProfileMediaURL FROM ". table_agency_profile ." profile INNER JOIN  ".table_agency_savedfavorite." fav WHERE $sqlFavorite_userID AND profile.ProfileIsActive = 1 GROUP BY fav.SavedFavoriteTalentID";
+				$queryList = "SELECT profile.ProfileID, profile.ProfileGallery, profile.ProfileContactDisplay, profile.ProfileDateBirth, profile.ProfileDateDue, profile.ProfileLocationState, profile.ProfileID as pID, fav.SavedFavoriteTalentID, fav.SavedFavoriteProfileID, (SELECT media.ProfileMediaURL FROM ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1) AS ProfileMediaURL FROM ". table_agency_profile ." profile INNER JOIN  ".table_agency_savedfavorite." fav WHERE $sqlFavorite_userID AND profile.ProfileIsActive = 1 GROUP BY fav.SavedFavoriteTalentID";
 				
 			} elseif (isset($profilecastingcart) && !empty($profilecastingcart)){
 				// There is a Casting Cart ID present
@@ -1243,12 +1268,12 @@ error_reporting(0);
 				}
 
 				// Execute the query showing casting cart
-				$queryList = "SELECT profile.ProfileID, profile.ProfileGallery, profile.ProfileContactDisplay, profile.ProfileDateBirth, profile.ProfileLocationState, profile.ProfileID as pID, cart.CastingCartTalentID, cart.CastingCartTalentID, (SELECT media.ProfileMediaURL FROM ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1) AS ProfileMediaURL FROM ". table_agency_profile ." profile INNER JOIN  ".table_agency_castingcart." cart WHERE $sqlCasting_userID AND ProfileIsActive = 1 GROUP BY profile.ProfileID";  
+				$queryList = "SELECT profile.ProfileID, profile.ProfileGallery, profile.ProfileContactDisplay, profile.ProfileDateBirth, profile.ProfileDateDue, profile.ProfileLocationState, profile.ProfileID as pID, cart.CastingCartTalentID, cart.CastingCartTalentID, (SELECT media.ProfileMediaURL FROM ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1) AS ProfileMediaURL FROM ". table_agency_profile ." profile INNER JOIN  ".table_agency_castingcart." cart WHERE $sqlCasting_userID AND ProfileIsActive = 1 GROUP BY profile.ProfileID";  
 			
 			} elseif ($_GET['t']=="casting"){
 						   
 	// ?????????????????????  Purpose?
-				$queryList = "SELECT profile.ProfileID, profile.ProfileGallery, profile.ProfileContactDisplay, profile.ProfileDateBirth, profile.ProfileLocationState, profile.ProfileID as pID, cart.CastingCartTalentID, cart.CastingCartTalentID, (SELECT media.ProfileMediaURL FROM ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1) AS ProfileMediaURL FROM ". table_agency_profile ." profile INNER JOIN  ".table_agency_castingcart." cart WHERE  $sqlCasting_userID AND ProfileIsActive = 1 GROUP BY profile.ProfileID";  
+				$queryList = "SELECT profile.ProfileID, profile.ProfileGallery, profile.ProfileContactDisplay, profile.ProfileDateBirth, profile.ProfileDateDue, profile.ProfileLocationState, profile.ProfileID as pID, cart.CastingCartTalentID, cart.CastingCartTalentID, (SELECT media.ProfileMediaURL FROM ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1) AS ProfileMediaURL FROM ". table_agency_profile ." profile INNER JOIN  ".table_agency_castingcart." cart WHERE  $sqlCasting_userID AND ProfileIsActive = 1 GROUP BY profile.ProfileID";  
 				 
 			} elseif ($fastload){
 				// Execute Query in slim down mode, only return name, face and link
@@ -1282,6 +1307,7 @@ error_reporting(0);
 					profile.ProfileGallery,
 					profile.ProfileContactDisplay, 
 					profile.ProfileDateBirth, 
+					profile.ProfileDateDue, 
 					profile.ProfileLocationState, 
 					customfield_mux.ProfileCustomMuxID, customfield_mux.ProfileCustomMuxID, customfield_mux.ProfileCustomID, customfield_mux.ProfileCustomValue,  
 					media.ProfileMediaURL
@@ -1389,6 +1415,10 @@ error_reporting(0);
 
 				if ($bb_agency_option_profilelist_expanddetails) {
 				 	$displayHTML .= "     <div class=\"details\"><span class=\"details-age\">". bb_agency_get_age($dataList["ProfileDateBirth"]) ."</span><span class=\"divider\">, </span><span class=\"details-state\">". $dataList["ProfileLocationState"] ."</span></div>\n";
+				 	/*
+				 	TODO - get due date if applicable
+				 	$displayHTML .= "     <div class=\"details\"><span class=\"details-due\">". bb_agency_get_age($dataList["ProfileDateDue"]) ."</span><span class=\"divider\">, </span><span class=\"details-state\">". $dataList["ProfileLocationState"] ."</span></div>\n";
+				 	*/
 				}
 				
 	         	//echo "loaded: ".microtime()." ms";				

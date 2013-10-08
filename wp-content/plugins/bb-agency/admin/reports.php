@@ -1262,7 +1262,8 @@ elseif ($ConfigID == 14) {
     								  ProfileIsActive,
     								  ProfileGender,
     								  ProfileType,
-    								  ProfileDateBirth 
+                                      ProfileDateBirth,
+                                      ProfileDateDue, 
     							  ) VALUES (
     								  '".$ProfileGallery."',
     								  '".trim($ProfileContactDisplay)."',
@@ -1271,7 +1272,8 @@ elseif ($ConfigID == 14) {
     								  1,
     								  '".$userGender["GenderID"]."',
     								  '".$userCategory["DataTypeID"]."',
-    								  '".date('Y-m-d', strtotime(mt_rand(1970,2010).'-'.mt_rand(1,12)."-".mt_rand(1,30)))."'
+    								  '".date('Y-m-d', strtotime(mt_rand(1970,2010).'-'.mt_rand(1,12)."-".mt_rand(1,30)))."',
+                                      '".date('Y-m-d', strtotime(mt_rand(2013,2016).'-'.mt_rand(1,12)."-".mt_rand(1,30)))."'
     							 );"; 
 							  
 							$results = $wpdb->query($insert) or die(mysql_error());

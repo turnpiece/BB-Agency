@@ -54,6 +54,7 @@ if (isset($_POST['action'])) {
     }
     $ProfileGender = $_POST['ProfileGender'];
     $ProfileDateBirth = $_POST['ProfileDateBirth'];
+    $ProfileDateDue = $_POST['ProfileDateDue'];
     $ProfileContactEmail = $_POST['ProfileContactEmail'];
     $ProfileUsername = $_POST["ProfileUsername"];
     $ProfilePassword = $_POST['ProfilePassword'];
@@ -149,6 +150,7 @@ if (isset($_POST['action'])) {
                            ProfileContactWebsite,
                            ProfileGender,
                            ProfileDateBirth,
+                           ProfileDateDue,
                            ProfileLocationStreet,
                            ProfileLocationCity,
                            ProfileLocationState,
@@ -174,6 +176,7 @@ if (isset($_POST['action'])) {
                             '" . $wpdb->escape($ProfileContactWebsite) . "',
                             '" . $wpdb->escape($ProfileGender) . "',
                             '" . $wpdb->escape($ProfileDateBirth) . "',
+                            '" . $wpdb->escape($ProfileDateDue) . "',
                             '" . $wpdb->escape($ProfileLocationStreet) . "',
                             '" . $wpdb->escape($ProfileLocationCity) . "',
                             '" . $wpdb->escape($ProfileLocationState) . "',
@@ -253,6 +256,7 @@ if (isset($_POST['action'])) {
             ProfileGender='" . $wpdb->escape($ProfileGender) . "',
 			ProfileGender='" . $wpdb->escape($ProfileGender) . "',
             ProfileDateBirth ='" . $wpdb->escape($ProfileDateBirth) . "',
+            ProfileDateDue ='" . $wpdb->escape($ProfileDateDue) . "',
             ProfileLocationStreet='" . $wpdb->escape($ProfileLocationStreet) . "',
             ProfileLocationCity='" . $wpdb->escape($ProfileLocationCity) . "',
             ProfileLocationState='" . $wpdb->escape($ProfileLocationState) . "',
@@ -579,6 +583,7 @@ function rb_display_manage($ProfileID) {
             $ProfileTypeArray = stripslashes($data['ProfileType']);
            
 			$ProfileDateBirth = stripslashes($data['ProfileDateBirth']);
+            $ProfileDateDue = stripslashes($data['ProfileDateDue']);
             $ProfileLocationStreet = stripslashes($data['ProfileLocationStreet']);
             $ProfileLocationCity = stripslashes($data['ProfileLocationCity']);
             $ProfileLocationState = stripslashes($data['ProfileLocationState']);
@@ -686,6 +691,12 @@ function rb_display_manage($ProfileID) {
     echo "      <th scope=\"row\">" . __("Birthdate", bb_agency_TEXTDOMAIN) . " <em>YYYY-MM-DD</em></th>\n";
     echo "      <td>\n";
     echo "          <input type=\"text\" id=\"ProfileDateBirth\" name=\"ProfileDateBirth\" value=\"" . $ProfileDateBirth . "\" />\n";
+    echo "      </td>\n";
+    echo "    </tr>\n";
+    echo "    <tr valign=\"top\">\n";
+    echo "      <th scope=\"row\">" . __("Due date", bb_agency_TEXTDOMAIN) . " <em>YYYY-MM-DD</em></th>\n";
+    echo "      <td>\n";
+    echo "          <input type=\"text\" id=\"ProfileDateDue\" name=\"ProfileDateDue\" value=\"" . $ProfileDateDue . "\" />\n";
     echo "      </td>\n";
     echo "    </tr>\n";
     echo "    <tr valign=\"top\">\n";
@@ -1381,7 +1392,7 @@ function rb_display_list() {
     echo "        <th class=\"column-ProfileContactNameFirst\" id=\"ProfileContactNameFirst\" scope=\"col\" style=\"width:150px;\"><a href=\"" . admin_url("admin.php?page=" . $_GET['page'] . "&sort=ProfileContactNameFirst&dir=" . $sortDirection) . "\">First Name</a></th>\n";
     echo "        <th class=\"column-ProfileContactNameLast\" id=\"ProfileContactNameLast\" scope=\"col\"><a href=\"" . admin_url("admin.php?page=" . $_GET['page'] . "&sort=ProfileContactNameLast&dir=" . $sortDirection) . "\">Last Name</a></th>\n";
     echo "        <th class=\"column-ProfileGender\" id=\"ProfileGender\" scope=\"col\"><a href=\"" . admin_url("admin.php?page=" . $_GET['page'] . "&sort=ProfileGender&dir=" . $sortDirection) . "\">Gender</a></th>\n";
-    echo "        <th class=\"column-ProfilesProfileDate\" id=\"ProfilesProfileDate\" scope=\"col\"><a href=\"" . admin_url("admin.php?page=" . $_GET['page'] . "&sort=ProfileDateBirth&dir=" . $sortDirection) . "\">Age</a></th>\n";
+    echo "        <th class=\"column-ProfilesProfileDate\" id=\"ProfilesProfileDate\" scope=\"col\"><a href=\"" . admin_url("admin.php?page=" . $_GET['page'] . "&sort=ProfileDateDue&dir=" . $sortDirection) . "\">Due date</a></th>\n";
     echo "        <th class=\"column-ProfileLocationCity\" id=\"ProfileLocationCity\" scope=\"col\"><a href=\"" . admin_url("admin.php?page=" . $_GET['page'] . "&sort=ProfileLocationCity&dir=" . $sortDirection) . "\">City</a></th>\n";
     echo "        <th class=\"column-ProfileLocationState\" id=\"ProfileLocationState\" scope=\"col\"><a href=\"" . admin_url("admin.php?page=" . $_GET['page'] . "&sort=ProfileLocationState&dir=" . $sortDirection) . "\">State</a></th>\n";
     echo "        <th class=\"column-ProfileDetails\" id=\"ProfileDetails\" scope=\"col\">Category</th>\n";
@@ -1397,7 +1408,7 @@ function rb_display_list() {
     echo "        <th class=\"column\" scope=\"col\">First Name</th>\n";
     echo "        <th class=\"column\" scope=\"col\">Last Name</th>\n";
     echo "        <th class=\"column\" scope=\"col\">Gender</th>\n";
-    echo "        <th class=\"column\" scope=\"col\">Age</th>\n";
+    echo "        <th class=\"column\" scope=\"col\">Due date</th>\n";
     echo "        <th class=\"column\" scope=\"col\">City</th>\n";
     echo "        <th class=\"column\" scope=\"col\">State</th>\n";
     echo "        <th class=\"column\" scope=\"col\">Category</th>\n";
@@ -1420,7 +1431,7 @@ function rb_display_list() {
         $ProfileLocationCity = bb_agency_strtoproper(stripslashes($data['ProfileLocationCity']));
         $ProfileLocationState = stripslashes($data['ProfileLocationState']);
         $ProfileGender = stripslashes($data['ProfileGender']);
-        $ProfileDateBirth = stripslashes($data['ProfileDateBirth']);
+        $ProfileDateDue = stripslashes($data['ProfileDateDue']);
         $ProfileStatHits = stripslashes($data['ProfileStatHits']);
         $ProfileDateViewLast = stripslashes($data['ProfileDateViewLast']);
         if ($data['ProfileIsActive'] == 0) {
@@ -1493,7 +1504,7 @@ function rb_display_list() {
         echo "        </td>\n";
         echo "        <td class=\"ProfileContactNameLast column-ProfileContactNameLast\">" . $ProfileContactNameLast . "</td>\n";
         echo "        <td class=\"ProfileGender column-ProfileGender\">" . $ProfileGender . "</td>\n";
-        echo "        <td class=\"ProfilesProfileDate column-ProfilesProfileDate\">" . bb_agency_get_age($ProfileDateBirth) . "</td>\n";
+        echo "        <td class=\"ProfilesProfileDate column-ProfilesProfileDate\">" . bb_agency_get_date_due($ProfileDateDue) . "</td>\n";
         echo "        <td class=\"ProfileLocationCity column-ProfileLocationCity\">" . $ProfileLocationCity . "</td>\n";
         echo "        <td class=\"ProfileLocationCity column-ProfileLocationState\">" . $ProfileLocationState . "</td>\n";
         echo "        <td class=\"ProfileDetails column-ProfileDetails\">" . $DataTypeTitle . "</td>\n";

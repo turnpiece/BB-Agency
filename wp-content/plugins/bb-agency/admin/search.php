@@ -205,6 +205,19 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
 			$filter .= " AND profile.ProfileDateBirth >= '$selectedYearMax'";
 		}
 
+		// Due date
+		if (isset($_GET['ProfileDateDue_min']) && !empty($_GET['ProfileDateDue_min'])){
+			$ProfileDateDue_min = $_GET['ProfileDateBirth_min'];
+			$selectedYearMin = date($format, strtotime('-'. $ProfileDateDue_min .' year'. $date));
+			$filter .= " AND profile.ProfileDateDue <= '$selectedYearMin'";
+		}
+		
+		if (isset($_GET['ProfileDateDue_max']) && !empty($_GET['ProfileDateDue_max'])){
+			$ProfileDateDue_max = $_GET['ProfileDateDue_max'];
+			$selectedYearMax = date($format, strtotime('-'. $ProfileDateDue_max-1 .' year'. $date));
+			$filter .= " AND profile.ProfileDateDue >= '$selectedYearMax'";
+		}
+
        echo "  <div class=\"boxblock-holder\">\n";
 
 		// Filter Models Already in Cart
