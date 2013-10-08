@@ -1,9 +1,9 @@
 <?php 
 #This page that will generate HTML to feed on domPDF
 
-$bb_agency_options_arr = get_option('rb_agency_options');
-$bb_agency_option_agencyname = $bb_agency_options_arr['rb_agency_option_agencyname'];
-$bb_agency_option_agencylogo = $bb_agency_options_arr['rb_agency_option_agencylogo'];
+$bb_agency_options_arr = get_option('bb_agency_options');
+$bb_agency_option_agencyname = $bb_agency_options_arr['bb_agency_option_agencyname'];
+$bb_agency_option_agencylogo = $bb_agency_options_arr['bb_agency_option_agencylogo'];
 
 $header='
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -235,7 +235,7 @@ if($_POST['print_option']==14){  // print for division
 					<h1 style="margin-top:0px; margin-bottom:0px;">'.$ProfileContactDisplay.'</h1>
 				
 					<ul>
-					'.rb_agency_getProfileCustomFieldsCustom($ProfileID, $ProfileGender,"dontecho").'
+					'.bb_agency_getProfileCustomFieldsCustom($ProfileID, $ProfileGender,"dontecho").'
 					</ul>
 				</div>'."\n";
 				
@@ -265,21 +265,21 @@ if($_POST['print_option']==14){  // print for division
 						   $cnt++;
 						   $cnt2++;
 						   
-					// $allImages.="<td><img $widthAndHeight id='".$dataImg["ProfileMediaID"]."' src=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt='' class='allimages_thumbs' /></td>\n";
+					// $allImages.="<td><img $widthAndHeight id='".$dataImg["ProfileMediaID"]."' src=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt='' class='allimages_thumbs' /></td>\n";
 					//style="width:450px; height:650px;"
 					$timthumbHW=str_replace('style="width:',"&w=",$widthAndHeight);
 					$timthumbHW=str_replace('px; height:',"&h=",$timthumbHW);
 					$timthumbHW=str_replace('px;"',"",$timthumbHW);
 					
 				
-			//	$allImages.="<td><img id='".$dataImg["ProfileMediaID"]."' src=\"".get_bloginfo("url")."/wp-content/plugins/bb-agency/tasks/timthumb.php?src=". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL']  .$timthumbHW."\" alt='' class='allimages_thumbs' /></td>\n";
+			//	$allImages.="<td><img id='".$dataImg["ProfileMediaID"]."' src=\"".get_bloginfo("url")."/wp-content/plugins/bb-agency/tasks/timthumb.php?src=". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL']  .$timthumbHW."\" alt='' class='allimages_thumbs' /></td>\n";
 
-				copy(get_bloginfo("url")."/wp-content/plugins/bb-agency/tasks/timthumb.php?src=". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL']  .$timthumbHW,"/home/content/99/6048999/html/rbplugin.agency/wp-content/plugins/bb-agency/cache/images/".$totalCount.".jpg");
+				copy(get_bloginfo("url")."/wp-content/plugins/bb-agency/tasks/timthumb.php?src=". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL']  .$timthumbHW,"/home/content/99/6048999/html/rbplugin.agency/wp-content/plugins/bb-agency/cache/images/".$totalCount.".jpg");
 					
 				$allImages.="<td><img $widthAndHeight id='".$dataImg["ProfileMediaID"]."' src='".get_bloginfo("url")."/wp-content/plugins/bb-agency/cache/images/".$totalCount.".jpg' alt='' class='allimages_thumbs' /></td>\n";
 
 					
-					 //src=\"".get_bloginfo("url")."/wp-content/plugins/bb-agency/tasks/timthumb.php?src=".rb_agency_UPLOADDIR ."". $dataList["ProfileGallery"] ."/". $dataList["ProfileMediaURL"]."&w=200&q=60\"
+					 //src=\"".get_bloginfo("url")."/wp-content/plugins/bb-agency/tasks/timthumb.php?src=".bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"] ."/". $dataList["ProfileMediaURL"]."&w=200&q=60\"
 						
 						 if($cnt==$col){ $allImages.="</tr></table>\n";
 						   if($cnt2==$perPage){
@@ -351,7 +351,7 @@ $pdfFile="$blog_title-".str_replace(" ","-",$ProfileContactDisplay).$format.date
 
 
 
-$toRedirect=rb_agency_BASEDIR."dompdf/dompdf.php?base_path=htmls/&pper=$paperDef&output_filed=".$pdfFile."&input_file=".$htmlFile;
+$toRedirect=bb_agency_BASEDIR."dompdf/dompdf.php?base_path=htmls/&pper=$paperDef&output_filed=".$pdfFile."&input_file=".$htmlFile;
 $path="wp-content/plugins/bb-agency/dompdf/htmls/";
 
 //include("/wp-content/plugins/bb-agency/dompdf/htmls/test.txt");

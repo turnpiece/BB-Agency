@@ -10,7 +10,7 @@ global $wpdb;
 // *************************************************************************************************** //
 // Get Going
 
-	$result = mysql_query("SHOW COLUMNS FROM rb_agency_profile");
+	$result = mysql_query("SHOW COLUMNS FROM bb_agency_profile");
 	$i = 0;
 	if (mysql_num_rows($result) > 0) {
 	  while ($row = mysql_fetch_assoc($result)) {
@@ -20,7 +20,7 @@ global $wpdb;
 	}
 	$csv_output .= "\n";
 	
-	$values = mysql_query("SELECT * FROM rb_agency_profile");
+	$values = mysql_query("SELECT * FROM bb_agency_profile");
 	while ($rowr = mysql_fetch_row($values)) {
 		for ($j=0;$j<$i;$j++) {
 		$csv_output .= $rowr[$j].", ";

@@ -9,7 +9,7 @@
   Version: 0.0.1
 */
 $bb_agency_VERSION = "2.0.0"; // starter
-if(!get_option("rb_agency_version")){  add_option("rb_agency_version", $bb_agency_VERSION , '', 'no');  update_option("rb_agency_version", $bb_agency_VERSION);}
+if(!get_option("bb_agency_version")){  add_option("bb_agency_version", $bb_agency_VERSION , '', 'no');  update_option("bb_agency_version", $bb_agency_VERSION);}
 	
 if (!session_id()) session_start();
 
@@ -27,16 +27,16 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 	}
 
 // Plugin Definitions
-	define("rb_agency_BASENAME", plugin_basename(__FILE__) );  // rb-agency/rb-agency.php
+	define("bb_agency_BASENAME", plugin_basename(__FILE__) );  // rb-agency/rb-agency.php
 	$bb_agency_WPURL = get_bloginfo("wpurl"); // http://domain.com/wordpress
 	$bb_agency_WPUPLOADARRAY = wp_upload_dir(); // Array  $bb_agency_WPUPLOADARRAY['baseurl'] $bb_agency_WPUPLOADARRAY['basedir']
-	define("rb_agency_BASEDIR", get_bloginfo("wpurl") ."/". PLUGINDIR ."/". dirname( plugin_basename(__FILE__) ) ."/" );  // http://domain.com/wordpress/wp-content/plugins/rb-agency/
-	define("rb_agency_BASEREL", str_replace(get_bloginfo('url'), '', rb_agency_BASEDIR));  // /wordpress/wp-content/uploads/profile-media/
-	define("rb_agency_BASEPATH", "/". PLUGINDIR ."/". dirname( plugin_basename(__FILE__) ) ."/" );  // wordpress/wp-content/plugins/rb-agency/
-	define("rb_agency_UPLOADREL", str_replace(get_bloginfo('url'), '', $bb_agency_WPUPLOADARRAY['baseurl']) ."/profile-media/" );  // /wordpress/wp-content/uploads/profile-media/
-	define("rb_agency_UPLOADDIR", $bb_agency_WPUPLOADARRAY['baseurl'] ."/profile-media/" );  // http://domain.com/wordpress/wp-content/uploads/profile-media/
-	define("rb_agency_UPLOADPATH", $bb_agency_WPUPLOADARRAY['basedir'] ."/profile-media/" ); // /home/content/99/6048999/html/domain.com/wordpress/wp-content/uploads/profile-media/
-	define("rb_agency_TEXTDOMAIN", basename(dirname( __FILE__ )) ); //   rb-agency
+	define("bb_agency_BASEDIR", get_bloginfo("wpurl") ."/". PLUGINDIR ."/". dirname( plugin_basename(__FILE__) ) ."/" );  // http://domain.com/wordpress/wp-content/plugins/rb-agency/
+	define("bb_agency_BASEREL", str_replace(get_bloginfo('url'), '', bb_agency_BASEDIR));  // /wordpress/wp-content/uploads/profile-media/
+	define("bb_agency_BASEPATH", "/". PLUGINDIR ."/". dirname( plugin_basename(__FILE__) ) ."/" );  // wordpress/wp-content/plugins/rb-agency/
+	define("bb_agency_UPLOADREL", str_replace(get_bloginfo('url'), '', $bb_agency_WPUPLOADARRAY['baseurl']) ."/profile-media/" );  // /wordpress/wp-content/uploads/profile-media/
+	define("bb_agency_UPLOADDIR", $bb_agency_WPUPLOADARRAY['baseurl'] ."/profile-media/" );  // http://domain.com/wordpress/wp-content/uploads/profile-media/
+	define("bb_agency_UPLOADPATH", $bb_agency_WPUPLOADARRAY['basedir'] ."/profile-media/" ); // /home/content/99/6048999/html/domain.com/wordpress/wp-content/uploads/profile-media/
+	define("bb_agency_TEXTDOMAIN", basename(dirname( __FILE__ )) ); //   rb-agency
 	// Clean Up:
 	$pageURL = '';
  	if ($_SERVER["SERVER_PORT"] != "80") {
@@ -54,9 +54,9 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 		define('IS_WPMU', $is_wpmu);
 	}
 
-	add_action('init', 'rb_agency_loadtranslation');
-	function rb_agency_loadtranslation(){
-		load_plugin_textdomain( rb_agency_TEXTDOMAIN, false, basename( dirname( __FILE__ ) ) . '/translation/' ); 
+	add_action('init', 'bb_agency_loadtranslation');
+	function bb_agency_loadtranslation(){
+		load_plugin_textdomain( bb_agency_TEXTDOMAIN, false, basename( dirname( __FILE__ ) ) . '/translation/' ); 
 	}
 	
 
@@ -64,41 +64,41 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 
 // Set Table Names
 	if (!defined("table_agency_casting"))
-		define("table_agency_casting", "rb_agency_casting");
+		define("table_agency_casting", "bb_agency_casting");
 	if (!defined("table_agency_profile"))
-		define("table_agency_profile", "rb_agency_profile");
+		define("table_agency_profile", "bb_agency_profile");
 	if (!defined("table_agency_profile_media"))
-		define("table_agency_profile_media", "rb_agency_profile_media");
+		define("table_agency_profile_media", "bb_agency_profile_media");
 	if (!defined("table_agency_data_ethnicity"))
-		define("table_agency_data_ethnicity", "rb_agency_data_ethnicity");
+		define("table_agency_data_ethnicity", "bb_agency_data_ethnicity");
 	if (!defined("table_agency_data_colorskin"))
-		define("table_agency_data_colorskin", "rb_agency_data_colorskin");
+		define("table_agency_data_colorskin", "bb_agency_data_colorskin");
 	if (!defined("table_agency_data_coloreye"))
-		define("table_agency_data_coloreye", "rb_agency_data_coloreye");
+		define("table_agency_data_coloreye", "bb_agency_data_coloreye");
 	if (!defined("table_agency_data_colorhair"))
-		define("table_agency_data_colorhair", "rb_agency_data_colorhair");
+		define("table_agency_data_colorhair", "bb_agency_data_colorhair");
 	if (!defined("table_agency_data_gender"))
-		define("table_agency_data_gender", "rb_agency_data_gender");
+		define("table_agency_data_gender", "bb_agency_data_gender");
 	if (!defined("table_agency_rel_taxonomy"))
-		define("table_agency_rel_taxonomy", "rb_agency_rel_taxonomy");
+		define("table_agency_rel_taxonomy", "bb_agency_rel_taxonomy");
 	if (!defined("table_agency_data_type"))
-		define("table_agency_data_type", "rb_agency_data_type");
+		define("table_agency_data_type", "bb_agency_data_type");
 	if (!defined("table_agency_customfields"))
-		define("table_agency_customfields", "rb_agency_customfields");
+		define("table_agency_customfields", "bb_agency_customfields");
 	if (!defined("table_agency_customfield_mux"))
-		define("table_agency_customfield_mux", "rb_agency_customfield_mux");
+		define("table_agency_customfield_mux", "bb_agency_customfield_mux");
 	if (!defined("table_agency_searchsaved"))
-		define("table_agency_searchsaved", "rb_agency_searchsaved");
+		define("table_agency_searchsaved", "bb_agency_searchsaved");
 	if (!defined("table_agency_searchsaved_mux"))
-		define("table_agency_searchsaved_mux", "rb_agency_searchsaved_mux");
+		define("table_agency_searchsaved_mux", "bb_agency_searchsaved_mux");
 	if (!defined("table_agency_savedfavorite"))
-		define("table_agency_savedfavorite", "rb_agency_savedfavorite");	
+		define("table_agency_savedfavorite", "bb_agency_savedfavorite");	
 	if (!defined("table_agency_castingcart"))
-		define("table_agency_castingcart", "rb_agency_castingcart");
+		define("table_agency_castingcart", "bb_agency_castingcart");
 	if (!defined("table_agency_mediacategory"))
-		define("table_agency_mediacategory", "rb_agency_mediacategory");
+		define("table_agency_mediacategory", "bb_agency_mediacategory");
 	if (!defined("table_agency_customfields_types"))
-	define("table_agency_customfields_types", "rb_agency_customfields_types");				
+	define("table_agency_customfields_types", "bb_agency_customfields_types");				
 
 
 // Declare Global WordPress Database Access
@@ -113,9 +113,9 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 	
 
 // Declare Version
-	$bb_agency_storedversion = get_option("rb_agency_version");
-	$bb_agency_VERSION = get_option("rb_agency_version");	
-	define("rb_agency_VERSION", $bb_agency_VERSION); // e.g. 1.0
+	$bb_agency_storedversion = get_option("bb_agency_version");
+	$bb_agency_VERSION = get_option("bb_agency_version");	
+	define("bb_agency_VERSION", $bb_agency_VERSION); // e.g. 1.0
 
 
 // Call default functions
@@ -123,7 +123,7 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 
 
 // Now Call the Lanuage
-	define("rb_agency_PROFILEDIR", get_bloginfo('wpurl') . rb_agency_getActiveLanguage() ."/profile/" ); // http://domain.com/wordpress/de/profile/
+	define("bb_agency_PROFILEDIR", get_bloginfo('wpurl') . bb_agency_getActiveLanguage() ."/profile/" ); // http://domain.com/wordpress/de/profile/
 
 // *************************************************************************************************** //
 	
@@ -132,26 +132,26 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 // *************************************************************************************************** //
 // Creating tables on plugin activation
 
-	function rb_agency_install() {
+	function bb_agency_install() {
 		// Required for all WordPress database manipulations
 		global $wpdb;
 		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 		
 		// Ensure directory is setup
-		if (!is_dir(rb_agency_UPLOADPATH)) {
-			@mkdir(rb_agency_UPLOADPATH, 0755);
-			@chmod(rb_agency_UPLOADPATH, 0777);
+		if (!is_dir(bb_agency_UPLOADPATH)) {
+			@mkdir(bb_agency_UPLOADPATH, 0755);
+			@chmod(bb_agency_UPLOADPATH, 0777);
 		}
            
 		// Update the options in the database
-		if(!get_option("rb_agency_options"))
-		add_option("rb_agency_options",$bb_agency_options_arr);
-		update_option("rb_agency_options",$bb_agency_options_arr);
+		if(!get_option("bb_agency_options"))
+		add_option("bb_agency_options",$bb_agency_options_arr);
+		update_option("bb_agency_options",$bb_agency_options_arr);
 		
 		// Hold the version in a seprate option
-		if(!get_option("rb_agency_version"))
-		add_option("rb_agency_version", $bb_agency_VERSION);
-		update_option("rb_agency_version", $bb_agency_VERSION);
+		if(!get_option("bb_agency_version"))
+		add_option("bb_agency_version", $bb_agency_VERSION);
+		update_option("bb_agency_version", $bb_agency_VERSION);
 		
 		/*
 		 * Fixed this so that tables will always be
@@ -354,7 +354,7 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 			dbDelta($sql);		
 	}
 //Activate Install Hook
-register_activation_hook(__FILE__,'rb_agency_install');
+register_activation_hook(__FILE__,'bb_agency_install');
 		
 
 // *************************************************************************************************** //
@@ -364,14 +364,14 @@ if ( is_admin() ){
 
 	/****************  Add Options Page Settings Group ***************/
 
-	add_action('admin_init', 'rb_agency_register_settings');
+	add_action('admin_init', 'bb_agency_register_settings');
 		// Register our Array of settings
-		function rb_agency_register_settings() {
-			register_setting('rb-agency-settings-group', 'rb_agency_options'); //, 'rb_agency_options_validate'
-			register_setting( 'rb-agency-dummy-settings-group', 'rb_agency_dummy_options' ); //, setup dummy profile options
+		function bb_agency_register_settings() {
+			register_setting('rb-agency-settings-group', 'bb_agency_options'); //, 'bb_agency_options_validate'
+			register_setting( 'rb-agency-dummy-settings-group', 'bb_agency_dummy_options' ); //, setup dummy profile options
 		}
 		// Validate/Sanitize Data
-		function rb_agency_options_validate($input) {
+		function bb_agency_options_validate($input) {
 			// Our first value is either 0 or 1
 			//$input['option1'] = ( $input['option1'] == 1 ? 1 : 0 );
 			
@@ -384,36 +384,36 @@ if ( is_admin() ){
 	
 	/****************  Settings in Plugin Page ***********************/
 	
-	add_action( 'plugins_loaded', 'rb_agency_init' );
+	add_action( 'plugins_loaded', 'bb_agency_init' );
 		// Initialize Settings
-		function rb_agency_init() {
+		function bb_agency_init() {
 		  	if ( is_admin() ){
-				add_action('admin_menu', 'rb_agency_addsettingspage');
+				add_action('admin_menu', 'bb_agency_addsettingspage');
 		  	}
 		}
-		function rb_agency_on_load() {
-			add_filter( 'plugin_action_links_' . rb_agency_BASENAME, 'rb_agency_filter_plugin_meta', 10, 2 );  
+		function bb_agency_on_load() {
+			add_filter( 'plugin_action_links_' . bb_agency_BASENAME, 'bb_agency_filter_plugin_meta', 10, 2 );  
 		}
 		
 		// Add Link to Admin Menu
-		function rb_agency_filter_plugin_meta($links, $file) {
+		function bb_agency_filter_plugin_meta($links, $file) {
 			if (empty($links))
 				return;
 			/* create link */
-			if ( $file == rb_agency_BASENAME ) {
+			if ( $file == bb_agency_BASENAME ) {
 				array_unshift(
 					$links,
-					sprintf( '<a href="tools.php?page=%s">%s</a>', rb_agency_BASENAME, __('Settings') )
+					sprintf( '<a href="tools.php?page=%s">%s</a>', bb_agency_BASENAME, __('Settings') )
 				);
 			}
 			return $links;
 		}
 		
-		function rb_agency_addsettingspage() {
+		function bb_agency_addsettingspage() {
 			if ( !current_user_can('update_core') )
 				return;
-			$pagehook = add_management_page( __("RB Agency", rb_agency_TEXTDOMAIN), __("RB Agency", rb_agency_TEXTDOMAIN), 'update_core', rb_agency_BASENAME, 'rb_agency_settings', '' );
-			add_action( 'load-plugins.php', 'rb_agency_on_load' );
+			$pagehook = add_management_page( __("RB Agency", bb_agency_TEXTDOMAIN), __("RB Agency", bb_agency_TEXTDOMAIN), 'update_core', bb_agency_BASENAME, 'bb_agency_settings', '' );
+			add_action( 'load-plugins.php', 'bb_agency_on_load' );
 			//wp_enqueue_script('jquery');
 		}
 	
@@ -421,45 +421,45 @@ if ( is_admin() ){
 	
 	/****************  Add Custom Meta Box to Pages/Posts  *********/
 	
-	add_action('admin_menu', 'rb_agency_add_custom_box');
+	add_action('admin_menu', 'bb_agency_add_custom_box');
 		// Add Custom Meta Box to Posts / Pages
-		function rb_agency_add_custom_box() {
+		function bb_agency_add_custom_box() {
 		  	if( function_exists( 'add_meta_box' )) {
-				add_meta_box( 'rb_agency_sectionid', __( 'Insert Profiles', rb_agency_TEXTDOMAIN), 
-					'rb_agency_inner_custom_box', 'post', 'advanced' );
-				add_meta_box( 'rb_agency_sectionid', __( 'Insert Profiles', rb_agency_TEXTDOMAIN), 
-					'rb_agency_inner_custom_box', 'page', 'advanced' );
+				add_meta_box( 'bb_agency_sectionid', __( 'Insert Profiles', bb_agency_TEXTDOMAIN), 
+					'bb_agency_inner_custom_box', 'post', 'advanced' );
+				add_meta_box( 'bb_agency_sectionid', __( 'Insert Profiles', bb_agency_TEXTDOMAIN), 
+					'bb_agency_inner_custom_box', 'page', 'advanced' );
 		   	} else {
-				add_action('dbx_post_advanced', 'rb_agency_old_custom_box' );
-				add_action('dbx_page_advanced', 'rb_agency_old_custom_box' );
+				add_action('dbx_post_advanced', 'bb_agency_old_custom_box' );
+				add_action('dbx_page_advanced', 'bb_agency_old_custom_box' );
 		  	}
 		}
 	   
 		/* Prints the inner fields for the custom post/page section */
-		function rb_agency_inner_custom_box() {
+		function bb_agency_inner_custom_box() {
 		  // Use nonce for verification
-		  echo '<input type="hidden" name="rb_agency_noncename" id="rb_agency_noncename" value="'. wp_create_nonce( plugin_basename(__FILE__) ) . '" />';
+		  echo '<input type="hidden" name="bb_agency_noncename" id="bb_agency_noncename" value="'. wp_create_nonce( plugin_basename(__FILE__) ) . '" />';
 		
 			echo "<div class=\"submitbox\" id=\"add_ticket_box\">";
 			?><script type="text/javascript">
 				function create_profile_list(){
 
-					var $rbagency = jQuery.noConflict();
+					var $bbagency = jQuery.noConflict();
 					str='';
 
-					gender=$rbagency('#rb_agency_gender').val();
+					gender=$bbagency('#bb_agency_gender').val();
 					if(gender!=''&& gender!='')
 					str+=' gender="'+gender+'"';
 		
-					age_start=$rbagency('#rb_agency_age_start').val();
+					age_start=$bbagency('#bb_agency_age_start').val();
 					if(age_start!=''&& age_start!='')
 					str+=' age_start="'+age_start+'"';
 		
-					age_stop=$rbagency('#rb_agency_age_stop').val();
+					age_stop=$bbagency('#bb_agency_age_stop').val();
 					if(age_stop!=''&& age_stop!='')
 					str+=' age_stop="'+age_stop+'"';
 		
-					type=$rbagency('#rb_agency_type').val();
+					type=$bbagency('#bb_agency_type').val();
 					if(type!='')
 					str+=' type="'+type+'"';		
 		
@@ -472,21 +472,21 @@ if ( is_admin() ){
 			</script>
 			<?php
 			echo "<table>\n";
-			echo "	<tr><td>Type:</td><td><select id=\"rb_agency_type\" name=\"rb_agency_type\">\n";
+			echo "	<tr><td>Type:</td><td><select id=\"bb_agency_type\" name=\"bb_agency_type\">\n";
 					global $wpdb;
 					$profileDataTypes = mysql_query("SELECT * FROM ". table_agency_data_type ."");
-					echo "<option value=\"\">". __("Any Profile Type", rb_agency_TEXTDOMAIN) ."</option>\n";
+					echo "<option value=\"\">". __("Any Profile Type", bb_agency_TEXTDOMAIN) ."</option>\n";
 					while ($dataType = mysql_fetch_array($profileDataTypes)) {
 						if ($_SESSION['ProfileType']) {
 							if ($dataType["DataTypeID"] ==  $ProfileType) { $selectedvalue = " selected"; } else { $selectedvalue = ""; } 
 						} else { $selectedvalue = ""; }
-						echo "<option value=\"". $dataType["DataTypeID"] ."\"".$selectedvalue.">". $dataType["DataTypeTitle"] ." ". __("Only", rb_agency_TEXTDOMAIN) ."</option>";
+						echo "<option value=\"". $dataType["DataTypeID"] ."\"".$selectedvalue.">". $dataType["DataTypeTitle"] ." ". __("Only", bb_agency_TEXTDOMAIN) ."</option>";
 					}
 					echo "</select></td></tr>\n";
-			echo "	<tr><td>". __("Starting Age", rb_agency_TEXTDOMAIN) .":</td><td><input type=\"text\" id=\"rb_agency_age_start\" name=\"rb_agency_age_start\" value=\"18\" /></td></tr>\n";
-			echo "	<tr><td>". __("Ending Age", rb_agency_TEXTDOMAIN) .":</td><td><input type=\"text\" id=\"rb_agency_age_stop\" name=\"rb_agency_age_stop\" value=\"99\" /></td></tr>\n";
-			echo "	<tr><td>". __("Gender", rb_agency_TEXTDOMAIN) .":</td><td>";
-			echo "<select id=\"rb_agency_gender\" name=\"rb_agency_gender\">";
+			echo "	<tr><td>". __("Starting Age", bb_agency_TEXTDOMAIN) .":</td><td><input type=\"text\" id=\"bb_agency_age_start\" name=\"bb_agency_age_start\" value=\"18\" /></td></tr>\n";
+			echo "	<tr><td>". __("Ending Age", bb_agency_TEXTDOMAIN) .":</td><td><input type=\"text\" id=\"bb_agency_age_stop\" name=\"bb_agency_age_stop\" value=\"99\" /></td></tr>\n";
+			echo "	<tr><td>". __("Gender", bb_agency_TEXTDOMAIN) .":</td><td>";
+			echo "<select id=\"bb_agency_gender\" name=\"bb_agency_gender\">";
 			$query= "SELECT GenderID, GenderTitle FROM " .  table_agency_data_gender . " GROUP BY GenderTitle ";
 				
 				echo "<option value=\"\">All Gender</option>";
@@ -498,20 +498,20 @@ if ( is_admin() ){
 			echo "</td></tr>\n";
 			
 			echo "</table>\n";
-			echo "<p><input type=\"button\" onclick=\"create_profile_list()\" value=\"". __("Insert Profile List", rb_agency_TEXTDOMAIN) ."\" /></p>\n";
-			echo "<p><input type=\"button\" onclick=\"create_profile_search()\" value=\"". __("Insert Search Form", rb_agency_TEXTDOMAIN) ."\" /></p>\n";
+			echo "<p><input type=\"button\" onclick=\"create_profile_list()\" value=\"". __("Insert Profile List", bb_agency_TEXTDOMAIN) ."\" /></p>\n";
+			echo "<p><input type=\"button\" onclick=\"create_profile_search()\" value=\"". __("Insert Search Form", bb_agency_TEXTDOMAIN) ."\" /></p>\n";
 			echo "</div>\n";
 		}
 		
 		/* Prints the edit form for pre-WordPress 2.5 post/page */
-		function rb_agency_old_custom_box() {
+		function bb_agency_old_custom_box() {
 		
 		  echo '<div class="dbx-b-ox-wrapper">' . "\n";
-		  echo '<fieldset id="rb_agency_fieldsetid" class="dbx-box">' . "\n";
-		  echo "<div class=\"dbx-h-andle-wrapper\"><h3 class=\"dbx-handle\">". __("Profile", rb_agency_TEXTDOMAIN) ."</h3></div>";   
+		  echo '<fieldset id="bb_agency_fieldsetid" class="dbx-box">' . "\n";
+		  echo "<div class=\"dbx-h-andle-wrapper\"><h3 class=\"dbx-handle\">". __("Profile", bb_agency_TEXTDOMAIN) ."</h3></div>";   
 		  echo '<div class="dbx-c-ontent-wrapper"><div class="dbx-content">';
 		  // output editing form
-		  rb_agency_inner_custom_box();
+		  bb_agency_inner_custom_box();
 		  // end wrapper
 		  echo "</div></div></fieldset></div>\n";
 		}
@@ -520,41 +520,41 @@ if ( is_admin() ){
 	
 	/****************  Activate Admin Menu Hook ***********************/
 	
-	add_action('admin_menu','set_rb_agency_menu');
+	add_action('admin_menu','set_bb_agency_menu');
 		//Create Admin Menu
-		function set_rb_agency_menu(){
-			add_menu_page( __("Agency", rb_agency_TEXTDOMAIN), __("Agency", rb_agency_TEXTDOMAIN), 1,"rb_agency_menu","rb_agency_dashboard","div");
-			add_submenu_page("rb_agency_menu", __("Overview", rb_agency_TEXTDOMAIN), __("Overview", rb_agency_TEXTDOMAIN), 1,"rb_agency_menu","rb_agency_dashboard");
-			add_submenu_page("rb_agency_menu", __("Manage Profiles", rb_agency_TEXTDOMAIN), __("Manage Profiles", rb_agency_TEXTDOMAIN), 7,"rb_agency_profiles","rb_agency_profiles");
-			if (function_exists(rb_agencyinteract_approvemembers)) {
-			add_submenu_page("rb_agency_menu", __("Approve Pending Profiles", rb_agency_TEXTDOMAIN), __("Approve Profiles", rb_agency_TEXTDOMAIN), 7,"rb_agencyinteract_approvemembers","rb_agencyinteract_approvemembers");
+		function set_bb_agency_menu(){
+			add_menu_page( __("Agency", bb_agency_TEXTDOMAIN), __("Agency", bb_agency_TEXTDOMAIN), 1,"bb_agency_menu","bb_agency_dashboard","div");
+			add_submenu_page("bb_agency_menu", __("Overview", bb_agency_TEXTDOMAIN), __("Overview", bb_agency_TEXTDOMAIN), 1,"bb_agency_menu","bb_agency_dashboard");
+			add_submenu_page("bb_agency_menu", __("Manage Profiles", bb_agency_TEXTDOMAIN), __("Manage Profiles", bb_agency_TEXTDOMAIN), 7,"bb_agency_profiles","bb_agency_profiles");
+			if (function_exists(bb_agencyinteract_approvemembers)) {
+			add_submenu_page("bb_agency_menu", __("Approve Pending Profiles", bb_agency_TEXTDOMAIN), __("Approve Profiles", bb_agency_TEXTDOMAIN), 7,"bb_agencyinteract_approvemembers","bb_agencyinteract_approvemembers");
 			}
-			add_submenu_page("rb_agency_menu", __("Search &amp; Send Profiles", rb_agency_TEXTDOMAIN), __("Search Profiles", rb_agency_TEXTDOMAIN), 7,"rb_agency_search","rb_agency_search");
-			add_submenu_page("rb_agency_menu", __("Saved Searches", rb_agency_TEXTDOMAIN), __("Saved Searches", rb_agency_TEXTDOMAIN), 7,"rb_agency_searchsaved","rb_agency_searchsaved");
-			add_submenu_page("rb_agency_menu", __("Tools &amp; Reports", rb_agency_TEXTDOMAIN), __("Tools &amp; Reports", rb_agency_TEXTDOMAIN), 7,"rb_agency_reports","rb_agency_reports");
-			add_submenu_page("rb_agency_menu", __("Edit Settings", rb_agency_TEXTDOMAIN), __("Settings", rb_agency_TEXTDOMAIN), 7,"rb_agency_settings","rb_agency_settings");
+			add_submenu_page("bb_agency_menu", __("Search &amp; Send Profiles", bb_agency_TEXTDOMAIN), __("Search Profiles", bb_agency_TEXTDOMAIN), 7,"bb_agency_search","bb_agency_search");
+			add_submenu_page("bb_agency_menu", __("Saved Searches", bb_agency_TEXTDOMAIN), __("Saved Searches", bb_agency_TEXTDOMAIN), 7,"bb_agency_searchsaved","bb_agency_searchsaved");
+			add_submenu_page("bb_agency_menu", __("Tools &amp; Reports", bb_agency_TEXTDOMAIN), __("Tools &amp; Reports", bb_agency_TEXTDOMAIN), 7,"bb_agency_reports","bb_agency_reports");
+			add_submenu_page("bb_agency_menu", __("Edit Settings", bb_agency_TEXTDOMAIN), __("Settings", bb_agency_TEXTDOMAIN), 7,"bb_agency_settings","bb_agency_settings");
 		}
 		
 		//Pages
-		function rb_agency_dashboard(){
+		function bb_agency_dashboard(){
 			include_once('admin/overview.php');
 		}
-		function rb_agency_profiles(){
+		function bb_agency_profiles(){
 			include_once('admin/profile.php');
 		}
-		function rb_agency_search(){
+		function bb_agency_search(){
 			include_once('admin/search.php');
 		}
-		function rb_agency_searchsaved(){
+		function bb_agency_searchsaved(){
 			include_once('admin/searchsaved.php');
 		}
-		function rb_agency_reports(){
+		function bb_agency_reports(){
 			include_once('admin/reports.php');
 		}
-		function rb_agency_settings(){
+		function bb_agency_settings(){
 			include_once('admin/settings.php');
 		}
-		function rb_agencyinteract_menu_approvemembers(){
+		function bb_agencyinteract_menu_approvemembers(){
 			include_once('admin/profile-approve.php');
 		}
 }
@@ -563,13 +563,13 @@ if ( is_admin() ){
 // Add Widgets
 
 	// View Featured
-	add_action('widgets_init', create_function('', 'return register_widget("rb_agency_widget_showpromoted");'));
-		class rb_agency_widget_showpromoted extends WP_Widget {
+	add_action('widgets_init', create_function('', 'return register_widget("bb_agency_widget_showpromoted");'));
+		class bb_agency_widget_showpromoted extends WP_Widget {
 			
 			// Setup
-			function rb_agency_widget_showpromoted() {
-				$widget_ops = array('classname' => 'rb_agency_widget_showpromoted', 'description' => __("Displays promoted profiles", rb_agency_TEXTDOMAIN) );
-				$this->WP_Widget('rb_agency_widget_showpromoted', __("RB Agency : Featured", rb_agency_TEXTDOMAIN), $widget_ops);
+			function bb_agency_widget_showpromoted() {
+				$widget_ops = array('classname' => 'bb_agency_widget_showpromoted', 'description' => __("Displays promoted profiles", bb_agency_TEXTDOMAIN) );
+				$this->WP_Widget('bb_agency_widget_showpromoted', __("RB Agency : Featured", bb_agency_TEXTDOMAIN), $widget_ops);
 			}
 		
 			// What Displays
@@ -581,9 +581,9 @@ if ( is_admin() ){
 				$count = $instance['count'];
 					if ( empty( $count ) ) { $count = 1; };		
 					
-				if (function_exists('rb_agency_profilefeatured')) { 
+				if (function_exists('bb_agency_profilefeatured')) { 
 				  $atts = array('count' => $count);
-				  rb_agency_profilefeatured($atts); 
+				  bb_agency_profilefeatured($atts); 
 				} else {
 					echo "Invalid Function.";
 				}
@@ -613,13 +613,13 @@ if ( is_admin() ){
 
 
 	// View Topics
-	add_action('widgets_init', create_function('', 'return register_widget("rb_agency_widget_showsearch");'));
-		class rb_agency_widget_showsearch extends WP_Widget {
+	add_action('widgets_init', create_function('', 'return register_widget("bb_agency_widget_showsearch");'));
+		class bb_agency_widget_showsearch extends WP_Widget {
 			
 			// Setup
-			function rb_agency_widget_showsearch() {
-				$widget_ops = array('classname' => 'rb_agency_widget_showsearch', 'description' => __("Displays profile search fields", rb_agency_TEXTDOMAIN) );
-				$this->WP_Widget('rb_agency_widget_showsearch', __("RB Agency : Search", rb_agency_TEXTDOMAIN), $widget_ops);
+			function bb_agency_widget_showsearch() {
+				$widget_ops = array('classname' => 'bb_agency_widget_showsearch', 'description' => __("Displays profile search fields", bb_agency_TEXTDOMAIN) );
+				$this->WP_Widget('bb_agency_widget_showsearch', __("RB Agency : Search", bb_agency_TEXTDOMAIN), $widget_ops);
 			}
 		
 			// What Displays
@@ -631,9 +631,9 @@ if ( is_admin() ){
 				$showlayout = $instance['showlayout'];
 					if ( empty( $showlayout ) ) { $showlayout = "condensed"; };	
 						
-				if (function_exists('rb_agency_profilesearch')) { 
+				if (function_exists('bb_agency_profilesearch')) { 
 					$atts = array('profilesearch_layout' => $showlayout);
-					rb_agency_profilesearch($atts);
+					bb_agency_profilesearch($atts);
 				} else {
 					echo "Invalid Function";
 				}
@@ -667,28 +667,28 @@ if ( is_admin() ){
 // *************************************************************************************************** //
 // Add Short Codes
 
-	add_shortcode("category_list","rb_agency_shortcode_categorylist");
-		function rb_agency_shortcode_categorylist($atts, $content = null){
+	add_shortcode("category_list","bb_agency_shortcode_categorylist");
+		function bb_agency_shortcode_categorylist($atts, $content = null){
 			ob_start();
-			rb_agency_categorylist($atts);
+			bb_agency_categorylist($atts);
 			$output_string=ob_get_contents();;
 			ob_end_clean();
 			return $output_string;
 		}
 
-	add_shortcode("profile_list","rb_agency_shortcode_profilelist");
-		function rb_agency_shortcode_profilelist($atts, $content = null){
+	add_shortcode("profile_list","bb_agency_shortcode_profilelist");
+		function bb_agency_shortcode_profilelist($atts, $content = null){
 			ob_start();
-			rb_agency_profilelist($atts);
+			bb_agency_profilelist($atts);
 			$output_string=ob_get_contents();;
 			ob_end_clean();
 			return $output_string;
 		}
 	
-	add_shortcode("profile_search","rb_agency_shortcode_profilesearch");
-		function rb_agency_shortcode_profilesearch($atts, $content = null){
+	add_shortcode("profile_search","bb_agency_shortcode_profilesearch");
+		function bb_agency_shortcode_profilesearch($atts, $content = null){
 			ob_start();
-			rb_agency_profilesearch($atts);
+			bb_agency_profilesearch($atts);
 			$output_string=ob_get_contents();;
 			ob_end_clean();
 			return $output_string;
@@ -704,17 +704,17 @@ if ( is_admin() ){
 		/*
 		 * just not to get the tooltip error
 		 */
-		 $bb_agency_options_arr = get_option('rb_agency_options');
+		 $bb_agency_options_arr = get_option('bb_agency_options');
 		 if($bb_agency_options_arr == ""){
-				 $bb_agency_options_arr["rb_agency_options_showtooltip"] = 1;
-				 update_option('rb_agency_options',$bb_agency_options_arr);
+				 $bb_agency_options_arr["bb_agency_options_showtooltip"] = 1;
+				 update_option('bb_agency_options',$bb_agency_options_arr);
 		 }
     if( $bb_agency_options_arr != "" || is_array($bb_agency_options_arr)){    	
-		 $bb_agency_options_showtooltip = $bb_agency_options_arr["rb_agency_options_showtooltip"];
+		 $bb_agency_options_showtooltip = $bb_agency_options_arr["bb_agency_options_showtooltip"];
 		 
-		if(!@in_array("rb_agency_options_showtooltip",$bb_agency_options_arr) && $bb_agency_options_showtooltip == 0){	 
-			$bb_agency_options_arr["rb_agency_options_showtooltip"] = 1;
-			update_option('rb_agency_options',$bb_agency_options_arr);
+		if(!@in_array("bb_agency_options_showtooltip",$bb_agency_options_arr) && $bb_agency_options_showtooltip == 0){	 
+			$bb_agency_options_arr["bb_agency_options_showtooltip"] = 1;
+			update_option('bb_agency_options',$bb_agency_options_arr);
 			wp_enqueue_style('wp-pointer');
 			wp_enqueue_script('wp-pointer');
 			function  add_js_code(){
@@ -722,7 +722,7 @@ if ( is_admin() ){
 				<script type="text/javascript">
 				jQuery(document).ready( function($) {
 					
-				var options = {"content":"<h3>RB Agency Plugin</h3><p>Thanks for installing RB Plugin, we hope you find it useful.  Lets <a href=\'<?php echo admin_url("admin.php?page=rb_agency_settings&ConfigID=1"); ?>\'>check your settings</a> before we get started.</p>","position":{"edge":"left","align":"center"}};
+				var options = {"content":"<h3>RB Agency Plugin</h3><p>Thanks for installing RB Plugin, we hope you find it useful.  Lets <a href=\'<?php echo admin_url("admin.php?page=bb_agency_settings&ConfigID=1"); ?>\'>check your settings</a> before we get started.</p>","position":{"edge":"left","align":"center"}};
 				if ( ! options )
 					return;
 					options = $.extend( options, {
@@ -730,10 +730,10 @@ if ( is_admin() ){
 						//to do
 						}
 					});
-					<?php if(isset($_GET["page"])!="rb_agency_menu" && isset($_GET["page"]) !="rb_agency_settings") { ?>
-					$('#toplevel_page_rb_agency_menu').pointer( options ).pointer("open");
-					<?php } elseif(isset($_GET["page"])=="rb_agency_menu" && isset($_GET["page"]) !="rb_agency_settings") { ?>
-					$('#toplevel_page_rb_agency_menu li a').each(function(){
+					<?php if(isset($_GET["page"])!="bb_agency_menu" && isset($_GET["page"]) !="bb_agency_settings") { ?>
+					$('#toplevel_page_bb_agency_menu').pointer( options ).pointer("open");
+					<?php } elseif(isset($_GET["page"])=="bb_agency_menu" && isset($_GET["page"]) !="bb_agency_settings") { ?>
+					$('#toplevel_page_bb_agency_menu li a').each(function(){
 						if($(this).text() == "Settings"){
 						   $(this).fadeOut().pointer( options ).pointer("open").fadeIn();	
 						   $(this).css("background","#EAF2FA");
@@ -762,7 +762,7 @@ if ( is_admin() ){
 
 
 $running = true;
-function rb_agency_notify_installation(){
+function bb_agency_notify_installation(){
 
     include_once(ABSPATH . 'wp-includes/pluggable.php');		
 	$json_url = 'http://agency.rbplugin.com/rb-license-checklist/';
@@ -770,7 +770,7 @@ function rb_agency_notify_installation(){
 	$client_domain = network_site_url('/');
     $client_sitename = get_bloginfo( 'name' );
 	$client_admin_email = get_bloginfo('admin_email');
-    $client_plugin_version = get_option('rb_agency_version');
+    $client_plugin_version = get_option('bb_agency_version');
 	
 	 
 	$data = array(
@@ -780,8 +780,8 @@ function rb_agency_notify_installation(){
 	"client_plugin_version" => $client_plugin_version,
 	"client_plugin_name" =>"RB Plugin");                                                                    
 	$data_string = json_encode($data);
-		if(function_exists("rb_agencyinteract_install")){
-			$client_interact_exist = get_option('rb_agency_version');	
+		if(function_exists("bb_agencyinteract_install")){
+			$client_interact_exist = get_option('bb_agency_version');	
 			array_push($data,array("client_interact_exist" => $client_interact_exist)); 
 		}
 		
@@ -800,7 +800,7 @@ function rb_agency_notify_installation(){
 	 
 	// Getting results
 	$result =  curl_exec($ch); // Getting jSON result string
-	$isReported = get_option("rb_agency_notify");	
+	$isReported = get_option("bb_agency_notify");	
          
 	if($result){
 	
@@ -816,16 +816,16 @@ function rb_agency_notify_installation(){
 	//	wp_mail("champ.kazban25@gmail.com", sprintf('RB Plugin Installed - Unknown Server/Domain[%s]', get_option('blogname')), $message,$headers);
 	}			
 }
-register_activation_hook(__FILE__,"rb_agency_notify_installation");
+register_activation_hook(__FILE__,"bb_agency_notify_installation");
 
 
 
 /****************************************************************/
 //Uninstall
-	function rb_agency_uninstall() {
+	function bb_agency_uninstall() {
 		
-		register_uninstall_hook(__FILE__, 'rb_agency_uninstall_action');
-		function rb_agency_uninstall_action() {
+		register_uninstall_hook(__FILE__, 'bb_agency_uninstall_action');
+		function bb_agency_uninstall_action() {
 			//delete_option('create_my_taxonomies');
 		}
 	
@@ -844,7 +844,7 @@ register_activation_hook(__FILE__,"rb_agency_notify_installation");
 		$wpdb->query("DROP TABLE " . table_agency_searchsaved_mux);
 
 		// Final Cleanup
-		delete_option('rb_agency_options');
+		delete_option('bb_agency_options');
 		
 		$thepluginfile = "rb-agency/rb-agency.php";
 		$current = get_settings('active_plugins');
@@ -852,7 +852,7 @@ register_activation_hook(__FILE__,"rb_agency_notify_installation");
 		update_option('active_plugins', $current);
 		do_action('deactivate_' . $thepluginfile );
 	
-		echo "<div style=\"padding:50px;font-weight:bold;\"><p>". __("Almost done...", rb_agency_TEXTDOMAIN) ."</p><h1>". __("One More Step", rb_agency_TEXTDOMAIN) ."</h1><a href=\"plugins.php?deactivate=true\">". __("Please click here to complete the uninstallation process", rb_agency_TEXTDOMAIN) ."</a></h1></div>";
+		echo "<div style=\"padding:50px;font-weight:bold;\"><p>". __("Almost done...", bb_agency_TEXTDOMAIN) ."</p><h1>". __("One More Step", bb_agency_TEXTDOMAIN) ."</h1><a href=\"plugins.php?deactivate=true\">". __("Please click here to complete the uninstallation process", bb_agency_TEXTDOMAIN) ."</a></h1></div>";
 		die;
 	}
 ?>

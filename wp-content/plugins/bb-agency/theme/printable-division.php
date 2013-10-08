@@ -1,7 +1,7 @@
 <?php 
-$bb_agency_options_arr = get_option('rb_agency_options');
-$bb_agency_option_agencyname = $bb_agency_options_arr['rb_agency_option_agencyname'];
-$bb_agency_option_agencylogo = $bb_agency_options_arr['rb_agency_option_agencylogo'];
+$bb_agency_options_arr = get_option('bb_agency_options');
+$bb_agency_option_agencyname = $bb_agency_options_arr['bb_agency_option_agencyname'];
+$bb_agency_option_agencylogo = $bb_agency_options_arr['bb_agency_option_agencylogo'];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">

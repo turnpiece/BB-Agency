@@ -1,9 +1,9 @@
 <?php
 #This page that will generate HTML to feed on domPDF
 
-$bb_agency_options_arr = get_option('rb_agency_options');
-$bb_agency_option_agencyname = $bb_agency_options_arr['rb_agency_option_agencyname'];
-$bb_agency_option_agencylogo = $bb_agency_options_arr['rb_agency_option_agencylogo'];
+$bb_agency_options_arr = get_option('bb_agency_options');
+$bb_agency_option_agencyname = $bb_agency_options_arr['bb_agency_option_agencyname'];
+$bb_agency_option_agencylogo = $bb_agency_options_arr['bb_agency_option_agencylogo'];
 
 $header='
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -145,7 +145,7 @@ $blog_title = strtolower(str_replace(" ","_",get_bloginfo('name')));
 $pdfFile="$blog_title-".$pdfFile;
 
 //die($pdfFile);
-$toRedirect=rb_agency_BASEDIR."dompdf/dompdf.php?base_path=htmls/&pper=$paperDef&output_filed=".$pdfFile."&input_file=".$htmlFile;
+$toRedirect=bb_agency_BASEDIR."dompdf/dompdf.php?base_path=htmls/&pper=$paperDef&output_filed=".$pdfFile."&input_file=".$htmlFile;
 $path="wp-content/plugins/bb-agency/dompdf/htmls/";
 
 $fp=fopen($path.$htmlFile,"w");

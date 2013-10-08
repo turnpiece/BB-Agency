@@ -22,8 +22,8 @@ if($ProfileCustomType!=4)	{
 			
 			// SET Label for Measurements
 			// Imperial(in/lb), Metrics(ft/kg)
-			$bb_agency_options_arr = get_option('rb_agency_options');
-			$bb_agency_option_unittype  = $bb_agency_options_arr['rb_agency_option_unittype'];
+			$bb_agency_options_arr = get_option('bb_agency_options');
+			$bb_agency_option_unittype  = $bb_agency_options_arr['bb_agency_option_unittype'];
 			$measurements_label = "";
 			/*
 			0- metric
@@ -75,20 +75,20 @@ if($ProfileCustomType!=4)	{
 			 
 				if(!empty($ProfileCustomOptions_Min_value) && !empty($ProfileCustomOptions_Max_value)){
 					echo "<div>";
-					echo "<label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Min", rb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>";
+					echo "<label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Min", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>";
 					echo "<input type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\" value=\"". $ProfileCustomOptions_Min_value ."\" />";
 					echo "</div>";
 					echo "<div>";
-					echo "<label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Max", rb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>";
+					echo "<label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Max", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>";
 					echo "<input type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\" value=\"". $ProfileCustomOptions_Max_value ."\" />";
 					echo "</div>";
 				} else {
 					echo "<div>";
-					echo "<label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Min", rb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>";
+					echo "<label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Min", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>";
 					echo "<input type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\" value=\"".$_REQUEST["ProfileCustomID". $data1['ProfileCustomID']]."\" />";
 					echo "</div>";
 					echo "<div>";
-					echo "<label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Max", rb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>";
+					echo "<label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Max", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>";
 					echo "<input type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\" value=\"".$_REQUEST["ProfileCustomID". $data1['ProfileCustomID']]."\" />";
 					echo "</div>";		
 				}

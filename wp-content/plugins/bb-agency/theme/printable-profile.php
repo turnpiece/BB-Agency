@@ -1,7 +1,7 @@
 <?php 
-$bb_agency_options_arr = get_option('rb_agency_options');
-$bb_agency_option_agencyname = $bb_agency_options_arr['rb_agency_option_agencyname'];
-$bb_agency_option_agencylogo = $bb_agency_options_arr['rb_agency_option_agencylogo'];
+$bb_agency_options_arr = get_option('bb_agency_options');
+$bb_agency_option_agencyname = $bb_agency_options_arr['bb_agency_option_agencyname'];
+$bb_agency_option_agencylogo = $bb_agency_options_arr['bb_agency_option_agencylogo'];
 
 ?>
 <?php
@@ -144,7 +144,7 @@ ul li{ list-style:none; padding-bottom:5px; padding-top:5px;}
             <h1><?php echo $ProfileContactDisplay; ?></h1>
         
             <ul>
-            <?php rb_agency_getProfileCustomFieldsEcho($ProfileID, $ProfileGender);?>
+            <?php bb_agency_getProfileCustomFieldsEcho($ProfileID, $ProfileGender);?>
             </ul>
         </div>	
 
@@ -162,14 +162,14 @@ ul li{ list-style:none; padding-bottom:5px; padding-top:5px;}
 				  // if($_POST['print_option']!="3-1" AND $_POST['print_option']!="1-1"){ echo "<br clear='all'>";  }
 				 }
 				 else{$left='';}
-		//	 echo "<img $left  $widthAndHeight id='".$dataImg["ProfileMediaID"]."' src=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt='' class='allimages_thumbs' />";
+		//	 echo "<img $left  $widthAndHeight id='".$dataImg["ProfileMediaID"]."' src=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt='' class='allimages_thumbs' />";
 		
 		
 			        $timthumbHW=str_replace('style="width:',"&w=",$widthAndHeight);
 					$timthumbHW=str_replace('px; height:',"&h=",$timthumbHW);
 					$timthumbHW=str_replace('px;"',"",$timthumbHW);
 					
-					echo "<img id='".$dataImg["ProfileMediaID"]."' src=\"".get_bloginfo("url")."/wp-content/plugins/bb-agency/tasks/timthumb.php?src=". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] .$timthumbHW."\" alt='' class='allimages_thumbs' />";
+					echo "<img id='".$dataImg["ProfileMediaID"]."' src=\"".get_bloginfo("url")."/wp-content/plugins/bb-agency/tasks/timthumb.php?src=". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] .$timthumbHW."\" alt='' class='allimages_thumbs' />";
 					
 				if($rowCount==$showFooter){
 				   $rowCount=0; //reset to loop another row 

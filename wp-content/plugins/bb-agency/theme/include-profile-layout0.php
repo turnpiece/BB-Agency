@@ -3,8 +3,8 @@
 Profile View with Scrolling Thumbnails and Primary Image
 */
 	# lightbox.	
-  	//echo "<script type='text/javascript' src='".rb_agency_BASEDIR."js/slimbox2.js'></script>";
-	//echo '<link rel="stylesheet" href="'.rb_agency_BASEDIR.'style/slimbox2.css" type="text/css" media="screen" />';
+  	//echo "<script type='text/javascript' src='".bb_agency_BASEDIR."js/slimbox2.js'></script>";
+	//echo '<link rel="stylesheet" href="'.bb_agency_BASEDIR.'style/slimbox2.css" type="text/css" media="screen" />';
 	
 	echo "<div id=\"profile\">\n";
 	echo " <div id=\"rblayout-zero\" class=\"rblayout\">\n";
@@ -18,9 +18,9 @@ Profile View with Scrolling Thumbnails and Primary Image
 			$countImg = mysql_num_rows($resultsImg);
 			while ($dataImg = mysql_fetch_array($resultsImg)) {
 			  if ($countImg > 1) { 
-				echo "<div class=\"photo\"><a href=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" rel=\"lightbox\" title=\"". $ProfileContactDisplay ."\"><img src=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt=\"". $ProfileContactDisplay ."\" /></a></div>\n";
+				echo "<div class=\"photo\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" rel=\"lightbox\" title=\"". $ProfileContactDisplay ."\"><img src=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt=\"". $ProfileContactDisplay ."\" /></a></div>\n";
 			  } else {
-				echo "<div class=\"photo\"><a href=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" rel=\"lightbox\" title=\"". $ProfileContactDisplay ."\"><img src=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt=\"". $ProfileContactDisplay ."\" /></a></div>\n";
+				echo "<div class=\"photo\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" rel=\"lightbox\" title=\"". $ProfileContactDisplay ."\"><img src=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt=\"". $ProfileContactDisplay ."\" /></a></div>\n";
 			  }
 			}
 
@@ -37,33 +37,33 @@ Profile View with Scrolling Thumbnails and Primary Image
 			if (!empty($ProfileGender)) {
 				$queryGenderResult = mysql_query("SELECT GenderID, GenderTitle FROM ".table_agency_data_gender." WHERE GenderID='".$ProfileGender."' ");
 				$fetchGenderData = mysql_fetch_assoc($queryGenderResult);
-				echo "<li><strong>". __("Gender", rb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". __($fetchGenderData["GenderTitle"], rb_agency_TEXTDOMAIN). "</li>\n";
+				echo "<li><strong>". __("Gender", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". __($fetchGenderData["GenderTitle"], bb_agency_TEXTDOMAIN). "</li>\n";
 			}
 		
 			if (!empty($ProfileStatHeight)) {
 				if ($bb_agency_option_unittype == 0) { // Metric
-					echo "<li><strong>". __("Height", rb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatHeight ." ". __("cm", rb_agency_TEXTDOMAIN). "" ."</li>\n";
+					echo "<li><strong>". __("Height", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatHeight ." ". __("cm", bb_agency_TEXTDOMAIN). "" ."</li>\n";
 				} else { // Imperial
 					$heightraw = $ProfileStatHeight;
 					$heightfeet = floor($heightraw/12);
 					$heightinch = $heightraw - floor($heightfeet*12);
-					echo "<li><strong>". __("Height", rb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $heightfeet ." ". __("ft", rb_agency_TEXTDOMAIN). " ". $heightinch ." ". __("in", rb_agency_TEXTDOMAIN). "" ."</li>\n";
+					echo "<li><strong>". __("Height", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $heightfeet ." ". __("ft", bb_agency_TEXTDOMAIN). " ". $heightinch ." ". __("in", bb_agency_TEXTDOMAIN). "" ."</li>\n";
 				}
 			}
 			if (!empty($ProfileStatWeight)) {
 				if ($bb_agency_option_unittype == 0) { // Metric
-					echo "<li><strong>". __("Weight", rb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatWeight ." ". __("kg", rb_agency_TEXTDOMAIN). "</li>\n";
+					echo "<li><strong>". __("Weight", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatWeight ." ". __("kg", bb_agency_TEXTDOMAIN). "</li>\n";
 				} else { // Imperial
-					echo "<li><strong>". __("Weight", rb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatWeight ." ". __("lb", rb_agency_TEXTDOMAIN). "</li>\n";
+					echo "<li><strong>". __("Weight", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatWeight ." ". __("lb", bb_agency_TEXTDOMAIN). "</li>\n";
 				}
 			}
 
 			// Insert Custom Fields
-			rb_agency_getProfileCustomFields($ProfileID, $ProfileGender);
+			bb_agency_getProfileCustomFields($ProfileID, $ProfileGender);
 			
 
 			if($bb_agency_option_showcontactpage==1){
-				echo "<li class=\"rel\"><strong>". __("Contact: ", rb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> <a href=\"". get_bloginfo("wpurl") ."/profile/".$ProfileGallery	."/contact/\">Click Here</a></li>\n";
+				echo "<li class=\"rel\"><strong>". __("Contact: ", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> <a href=\"". get_bloginfo("wpurl") ."/profile/".$ProfileGallery	."/contact/\">Click Here</a></li>\n";
 			}
 		echo "	  </ul>\n"; // Close ul
 		echo "	  </div>\n"; // Close Stats
@@ -72,7 +72,7 @@ Profile View with Scrolling Thumbnails and Primary Image
 	echo "			<h3>". $AgencyName ." ". $ProfileClassification ."</h3>\n";
 
 					 // Social Link
-					 rb_agency_getSocialLinks();
+					 bb_agency_getSocialLinks();
 	
 	echo "			<ul>\n";
 	
@@ -83,7 +83,7 @@ Profile View with Scrolling Thumbnails and Primary Image
 			if(is_permitted("casting")){
 
 					$query_castingcart = mysql_query("SELECT * FROM ". table_agency_castingcart."  WHERE CastingCartTalentID='".$ProfileID
-													 ."'  AND CastingCartProfileID = '".rb_agency_get_current_userid()."'" ) or die("error");
+													 ."'  AND CastingCartProfileID = '".bb_agency_get_current_userid()."'" ) or die("error");
 					$count_castingcart = mysql_num_rows($query_castingcart);
 
 					if($count_castingcart>0){ $cl2 = "cart_bg"; $tl2="Remove from Casting Cart"; }
@@ -94,7 +94,7 @@ Profile View with Scrolling Thumbnails and Primary Image
 			if(is_permitted("favorite")){
 
 					$query_favorite = mysql_query("SELECT * FROM ".table_agency_savedfavorite." WHERE SavedFavoriteTalentID='".$ProfileID
-												  ."'  AND SavedFavoriteProfileID = '".rb_agency_get_current_userid()."'" ) or die("error");
+												  ."'  AND SavedFavoriteProfileID = '".bb_agency_get_current_userid()."'" ) or die("error");
 					$count_favorite = mysql_num_rows($query_favorite);
 					$datas_favorite = mysql_fetch_assoc($query_favorite);				
 
@@ -108,10 +108,10 @@ Profile View with Scrolling Thumbnails and Primary Image
 						echo '<div id="resultsGoHereAddtoCart"></div>';
 						?>
         
-        <div id="view_casting_cart" style="<?php if($tl2=="Add to Casting Cart"){?>display:none;<?php }else{?>display:block;<?php }?>"><li class="casting"><a class="rb_button" href="<?php echo get_bloginfo('url')?>/profile-casting/"><?php echo __("View Casting Cart", rb_agency_TEXTDOMAIN);?></a></li></div>
+        <div id="view_casting_cart" style="<?php if($tl2=="Add to Casting Cart"){?>display:none;<?php }else{?>display:block;<?php }?>"><li class="casting"><a class="rb_button" href="<?php echo get_bloginfo('url')?>/profile-casting/"><?php echo __("View Casting Cart", bb_agency_TEXTDOMAIN);?></a></li></div>
     
         
-        <div id="view_favorite" style="<?php if($tl1=="Add to Favorites"){?>display:none;<?php }else{?>display:block;<?php }?>"><li class="favorite"><a class="rb_button" href="<?php echo get_bloginfo('url')?>/profile-favorite/"><?php echo __("View favorite", rb_agency_TEXTDOMAIN);?></a></li></div>
+        <div id="view_favorite" style="<?php if($tl1=="Add to Favorites"){?>display:none;<?php }else{?>display:block;<?php }?>"><li class="favorite"><a class="rb_button" href="<?php echo get_bloginfo('url')?>/profile-favorite/"><?php echo __("View favorite", bb_agency_TEXTDOMAIN);?></a></li></div>
     <?php
 
 				// Resume
@@ -119,7 +119,7 @@ Profile View with Scrolling Thumbnails and Primary Image
 				$countMedia = mysql_num_rows($resultsMedia);
 				if ($countMedia > 0) {
 				  while ($dataMedia = mysql_fetch_array($resultsMedia)) {
-				echo "<li class=\"item resume\"><a href=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"rb_button\">Download Resume</a></li>\n";
+				echo "<li class=\"item resume\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"rb_button\">Download Resume</a></li>\n";
 				  }
 				}
 			
@@ -128,7 +128,7 @@ Profile View with Scrolling Thumbnails and Primary Image
 				$countMedia = mysql_num_rows($resultsMedia);
 				if ($countMedia > 0) {
 				  while ($dataMedia = mysql_fetch_array($resultsMedia)) {
-				echo "<li class=\"item compcard\"><a href=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"rb_button\">Download Comp Card</a></li>\n";
+				echo "<li class=\"item compcard\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"rb_button\">Download Comp Card</a></li>\n";
 				  }
 				}
 				// Headshots
@@ -136,7 +136,7 @@ Profile View with Scrolling Thumbnails and Primary Image
 				$countMedia = mysql_num_rows($resultsMedia);
 				if ($countMedia > 0) {
 				  while ($dataMedia = mysql_fetch_array($resultsMedia)) {
-				echo "<li class=\"item headshot\"><a href=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"rb_button\">Download Headshot</a></li>\n";
+				echo "<li class=\"item headshot\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"rb_button\">Download Headshot</a></li>\n";
 				  }
 				}
 				
@@ -145,7 +145,7 @@ Profile View with Scrolling Thumbnails and Primary Image
 				$countMedia = mysql_num_rows($resultsMedia);
 				if ($countMedia > 0) {
 				  while ($dataMedia = mysql_fetch_array($resultsMedia)) {
-				echo "<li class=\"item voice\"><a href=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"rb_button\">Listen to Voice Demo</a></li>\n";
+				echo "<li class=\"item voice\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"rb_button\">Listen to Voice Demo</a></li>\n";
 				  }
 				}
 
@@ -185,15 +185,15 @@ Profile View with Scrolling Thumbnails and Primary Image
 				$countMedia = mysql_num_rows($resultsMedia);
 				if ($countMedia > 0) {
 				  	while ($dataMedia = mysql_fetch_array($resultsMedia)) {
-                        echo "<li class=\"item video demoreel\"><a href=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"rb_button\">".$dataMedia['ProfileMediaType']. "</a></li>\n";
+                        echo "<li class=\"item video demoreel\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"rb_button\">".$dataMedia['ProfileMediaType']. "</a></li>\n";
 				  	}
 				}
                                 
 				// Is Logged?
 				if (is_user_logged_in()) { 
 			
-					if($bb_agency_options_arr['rb_agency_option_profilelist_castingcart']==1){
-			 			if(checkCart(rb_agency_get_current_userid(),$ProfileID)==0 ){ //check if profile is in cart already	?>
+					if($bb_agency_options_arr['bb_agency_option_profilelist_castingcart']==1){
+			 			if(checkCart(bb_agency_get_current_userid(),$ProfileID)==0 ){ //check if profile is in cart already	?>
 							<script>
 
 		                    function addtoCart(pid){
@@ -219,13 +219,13 @@ Profile View with Scrolling Thumbnails and Primary Image
 							
 						} else {
 				  			# removed as required
-							#echo "<li class=\"add to cart\">". __("", rb_agency_TEXTDOMAIN);						  
-						  	#echo " <a href=\"".get_bloginfo('url')."/profile-casting/\" class=\"rb_button\">". __("View Casting Cart", rb_agency_TEXTDOMAIN)."</a></li>\n";
+							#echo "<li class=\"add to cart\">". __("", bb_agency_TEXTDOMAIN);						  
+						  	#echo " <a href=\"".get_bloginfo('url')."/profile-casting/\" class=\"rb_button\">". __("View Casting Cart", bb_agency_TEXTDOMAIN)."</a></li>\n";
 							
 			          	}
-					}	//end if(checkCart(rb_agency_get_current_userid()
+					}	//end if(checkCart(bb_agency_get_current_userid()
 					# removed as required.
-					#echo "		<li class=\"return dashboard\"><a href=\"". get_bloginfo("url") ."/dashboard/\" class=\"rb_button\">". __("Access Dashboard", rb_agency_TEXTDOMAIN). "</a></li>\n";
+					#echo "		<li class=\"return dashboard\"><a href=\"". get_bloginfo("url") ."/dashboard/\" class=\"rb_button\">". __("Access Dashboard", bb_agency_TEXTDOMAIN). "</a></li>\n";
 				}
 				
 
@@ -265,11 +265,11 @@ jQuery(document).ready(function(){
                 
 				if(type == "favorite"){
 					
-					var action_function = "rb_agency_save_favorite";
+					var action_function = "bb_agency_save_favorite";
 						
 				} else if(type == "casting"){
 				
-					var action_function = "rb_agency_save_castingcart";
+					var action_function = "bb_agency_save_castingcart";
 					
 				
 				}

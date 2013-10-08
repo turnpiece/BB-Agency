@@ -4,7 +4,7 @@ $query1 = "SELECT ProfileCustomID, ProfileCustomTitle, ProfileCustomType, Profil
 					$count1 = mysql_num_rows($results1);
 					$pos = 0;
 
-$query2 = "SELECT ProfileGender,ProfileUserLinked  FROM ".table_agency_profile." WHERE ProfileUserLinked = '".rb_agency_get_current_userid()."' ";
+$query2 = "SELECT ProfileGender,ProfileUserLinked  FROM ".table_agency_profile." WHERE ProfileUserLinked = '".bb_agency_get_current_userid()."' ";
 					$results2 = mysql_query($query2);
 				      $dataList2 = mysql_fetch_assoc($results2); 
 					$count2 = mysql_num_rows($results2);

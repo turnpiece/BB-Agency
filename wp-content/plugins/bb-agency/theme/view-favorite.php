@@ -44,9 +44,9 @@ get_header();
 		echo "	    <td class=\"profile-category-results-wrapper\">\n";
 		echo "			<div class=\"profile-category-results\">\n";
 	
-						if (function_exists('rb_agency_profilelist')) { 
+						if (function_exists('bb_agency_profilelist')) { 
 						  $atts = array("type" => $DataTypeID,"profilefavorite" => true);
-						  rb_agency_profilelist($atts); 
+						  bb_agency_profilelist($atts); 
 						}
 									
 		echo "			</div>\n";
@@ -56,7 +56,7 @@ get_header();
 	/*	
 		
 		echo "			<div class=\"profile-category-filter\">\n";
-		echo "			  <h3>". __("Filter Profiles", rb_agency_TEXTDOMAIN) .":</h3>\n";
+		echo "			  <h3>". __("Filter Profiles", bb_agency_TEXTDOMAIN) .":</h3>\n";
 	 
 						  $profilesearch_layout = "condensed";
 						  include("include-profile-search.php"); 	

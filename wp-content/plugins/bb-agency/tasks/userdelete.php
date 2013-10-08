@@ -19,7 +19,7 @@
 	   /*
 		* Just update status to inactive
 		*/
-                $update = "UPDATE rb_agency_profile 
+                $update = "UPDATE bb_agency_profile 
 				           SET ProfileIsActive = 0
 				           WHERE ProfileID = " . $id;
                 

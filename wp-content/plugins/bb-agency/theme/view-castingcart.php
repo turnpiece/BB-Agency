@@ -27,7 +27,7 @@ if(isset($_POST["action"]) && $_POST["action"] == "sendEmailCastingCart"){
 		
 	
 	$SearchID				= time(U);
-	$SearchMuxHash			= rb_agency_random(8);
+	$SearchMuxHash			= bb_agency_random(8);
 	$SearchMuxToName		=$_POST['SearchMuxToName'];
 	$SearchMuxToEmail		=get_option('admin_email');
 	
@@ -37,7 +37,7 @@ if(isset($_POST["action"]) && $_POST["action"] == "sendEmailCastingCart"){
 	$SearchMuxCustomValue	=$_POST['SearchMuxCustomValue'];
 
 	// Get Casting Cart
-	$query = "SELECT  profile.*, profile.ProfileGallery, profile.ProfileContactDisplay, profile.ProfileDateBirth, profile.ProfileLocationState, profile.ProfileID as pID , cart.CastingCartTalentID, cart.CastingCartTalentID, (SELECT media.ProfileMediaURL FROM ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1) AS ProfileMediaURL FROM ". table_agency_profile ." profile INNER JOIN  ".table_agency_castingcart."  cart WHERE  cart.CastingCartTalentID = profile.ProfileID   AND cart.CastingCartProfileID = '".rb_agency_get_current_userid()."' AND ProfileIsActive = 1 ORDER BY profile.ProfileContactNameFirst";
+	$query = "SELECT  profile.*, profile.ProfileGallery, profile.ProfileContactDisplay, profile.ProfileDateBirth, profile.ProfileLocationState, profile.ProfileID as pID , cart.CastingCartTalentID, cart.CastingCartTalentID, (SELECT media.ProfileMediaURL FROM ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1) AS ProfileMediaURL FROM ". table_agency_profile ." profile INNER JOIN  ".table_agency_castingcart."  cart WHERE  cart.CastingCartTalentID = profile.ProfileID   AND cart.CastingCartProfileID = '".bb_agency_get_current_userid()."' AND ProfileIsActive = 1 ORDER BY profile.ProfileContactNameFirst";
 	$result = mysql_query($query);
 	$pID = "";
 	$profileid_arr = array();
@@ -76,8 +76,8 @@ if(isset($_POST["action"]) && $_POST["action"] == "sendEmailCastingCart"){
 			
 	$SearchMuxMessage = str_replace("[casting-link-placeholder]",network_site_url()."/client-view/".$SearchMuxHash,$SearchMuxMessage);
 
-	add_filter('wp_mail_content_type','rb_agency_set_content_type');
-	function rb_agency_set_content_type($content_type){
+	add_filter('wp_mail_content_type','bb_agency_set_content_type');
+	function bb_agency_set_content_type($content_type){
 		return 'text/html';
 	}
 			
@@ -152,9 +152,9 @@ get_header(); ?>
 		  if(isset($_GET["emailSent"])){ echo "<div id=\"emailSent\">Email Sent Succesfully! Go Back to <a href=\"". get_bloginfo("url")."/search/\">Search</a>.</div>";    }
 		echo "			<div class=\"profile-category-results\" id=\"profile-category-results\">\n";
 	
-						if (function_exists('rb_agency_profilelist')) { 
+						if (function_exists('bb_agency_profilelist')) { 
 						  $atts = array("type" => $DataTypeID,"profilecastingcart" => true);
-						  rb_agency_profilelist($atts); 
+						  bb_agency_profilelist($atts); 
 						}
 									
 		echo "			</div>\n";
@@ -162,7 +162,7 @@ get_header(); ?>
 	/*	
 		
 		echo "			<div class=\"profile-category-filter\">\n";
-		echo "			  <h3>". __("Filter Profiles", rb_agency_TEXTDOMAIN) .":</h3>\n";
+		echo "			  <h3>". __("Filter Profiles", bb_agency_TEXTDOMAIN) .":</h3>\n";
 	 
 						  $profilesearch_layout = "condensed";
 						  include("include-profile-search.php"); 	

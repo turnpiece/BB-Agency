@@ -5,9 +5,9 @@ require('../../../../wp-blog-header.php');
 
 	// Get Reseller API Key
 	$rb_empower_options_arr = get_option('rb_empower_options');
-	$bb_agency_option_agencyname = $rb_empower_options_arr['rb_agency_option_agencyname'];
-	$bb_agency_option_agencyemail = $rb_empower_options_arr['rb_agency_option_agencyemail'];
-	$bb_agency_option_agencylogo = $rb_empower_options_arr['rb_agency_option_agencylogo'];
+	$bb_agency_option_agencyname = $rb_empower_options_arr['bb_agency_option_agencyname'];
+	$bb_agency_option_agencyemail = $rb_empower_options_arr['bb_agency_option_agencyemail'];
+	$bb_agency_option_agencylogo = $rb_empower_options_arr['bb_agency_option_agencylogo'];
 
 /* Prepare Request ----------------------------------------------- */
 

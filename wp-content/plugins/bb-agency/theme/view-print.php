@@ -1,7 +1,7 @@
 <?php 
-$bb_agency_options_arr = get_option('rb_agency_options');
-$bb_agency_option_agencyname = $bb_agency_options_arr['rb_agency_option_agencyname'];
-$bb_agency_option_agencylogo = $bb_agency_options_arr['rb_agency_option_agencylogo'];
+$bb_agency_options_arr = get_option('bb_agency_options');
+$bb_agency_option_agencyname = $bb_agency_options_arr['bb_agency_option_agencyname'];
+$bb_agency_option_agencylogo = $bb_agency_options_arr['bb_agency_option_agencylogo'];
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -162,7 +162,7 @@ $bb_agency_option_agencylogo = $bb_agency_options_arr['rb_agency_option_agencylo
 			
 			// Show Cart
 			$query = "SELECT * FROM ". table_agency_profile ." profile, ". table_agency_profile_media ." media $filter ORDER BY ProfileContactNameFirst";
-			$results = mysql_query($query) or die ( __("Error, query failed", rb_agency_TEXTDOMAIN ));
+			$results = mysql_query($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ));
 			$count = mysql_num_rows($results);
 			if ($count < 1) {
 				echo "There are currently no profiles in the casting cart.";
@@ -177,7 +177,7 @@ $bb_agency_option_agencylogo = $bb_agency_options_arr['rb_agency_option_agencylo
 
 			// Show Cart
 			$query = "SELECT * FROM ". table_agency_profile ." profile, ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1 AND profile.ProfileID IN (". $cartString .") ORDER BY ProfileContactNameFirst ASC";
-			$results = mysql_query($query) or die ( __("Error, query failed", rb_agency_TEXTDOMAIN ));
+			$results = mysql_query($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ));
 			$count = mysql_num_rows($results);
 			
 			if ($count < 1) {
@@ -194,7 +194,7 @@ $bb_agency_option_agencylogo = $bb_agency_options_arr['rb_agency_option_agencylo
 			while ($data = mysql_fetch_array($results)) {
 			  	if (1 == 1) {
 					echo "<div style=\"float: left; width: 420px; min-height: 220px; overflow: hidden; margin: 5px; padding: 5px; border: 1px solid #e1e1e1; \">";
-					echo " <div style=\"float: left; width: 150px; height: 180px; margin-right: 5px; overflow: hidden; \"><img style=\"width: 150px; \" src=\"". rb_agency_UPLOADDIR ."". $data["ProfileGallery"] ."/". $data["ProfileMediaURL"] ."\" /></div>\n";
+					echo " <div style=\"float: left; width: 150px; height: 180px; margin-right: 5px; overflow: hidden; \"><img style=\"width: 150px; \" src=\"". bb_agency_UPLOADDIR ."". $data["ProfileGallery"] ."/". $data["ProfileMediaURL"] ."\" /></div>\n";
 					echo " <div style=\"float: left; width: 230px; padding: 15px; \">";
 
 					if ($_GET['cD'] == "1") {
@@ -213,25 +213,25 @@ $bb_agency_option_agencylogo = $bb_agency_options_arr['rb_agency_option_agencylo
 							echo "<div><strong>Location:</strong> ". $data['ProfileLocationCity'] .", ". $data['ProfileLocationState'] ." ". $data['ProfileLocationZip'] ."</div>\n";
 						}
 						if (!empty($data['ProfileLocationCountry'])) {
-							echo "<div><strong>". __("Country", rb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileLocationCountry'] ."</div>\n";
+							echo "<div><strong>". __("Country", bb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileLocationCountry'] ."</div>\n";
 						}
 						if (!empty($data['ProfileDateBirth'])) {
-							echo "<div><strong>". __("Age", rb_agency_TEXTDOMAIN) .":</strong> ". rb_agency_get_age($data['ProfileDateBirth']) ."</div>\n";
+							echo "<div><strong>". __("Age", bb_agency_TEXTDOMAIN) .":</strong> ". bb_agency_get_age($data['ProfileDateBirth']) ."</div>\n";
 						}
 						if (!empty($data['ProfileDateBirth'])) {
-							echo "<div><strong>". __("Birthdate", rb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileDateBirth'] ."</div>\n";
+							echo "<div><strong>". __("Birthdate", bb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileDateBirth'] ."</div>\n";
 						}
 						if (!empty($data['ProfileContactWebsite'])) {
-							echo "<div><strong>". __("Website", rb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileContactWebsite'] ."</div>\n";
+							echo "<div><strong>". __("Website", bb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileContactWebsite'] ."</div>\n";
 						}
 						if (!empty($data['ProfileContactPhoneHome'])) {
-							echo "<div><strong>". __("Phone Home", rb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileContactPhoneHome'] ."</div>\n";
+							echo "<div><strong>". __("Phone Home", bb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileContactPhoneHome'] ."</div>\n";
 						}
 						if (!empty($data['ProfileContactPhoneCell'])) {
-							echo "<div><strong>". __("Phone Cell", rb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileContactPhoneCell'] ."</div>\n";
+							echo "<div><strong>". __("Phone Cell", bb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileContactPhoneCell'] ."</div>\n";
 						}
 						if (!empty($data['ProfileContactPhoneWork'])) {
-							echo "<div><strong>". __("Phone Work", rb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileContactPhoneWork'] ."</div>\n";
+							echo "<div><strong>". __("Phone Work", bb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileContactPhoneWork'] ."</div>\n";
 						}
 */
 						$resultsCustomPrivate =  $wpdb->get_results("SELECT c.ProfileCustomID,c.ProfileCustomTitle, c.ProfileCustomOrder, c.ProfileCustomView, cx.ProfileCustomValue FROM ". table_agency_customfield_mux ." cx LEFT JOIN ". table_agency_customfields ." c ON c.ProfileCustomID = cx.ProfileCustomID WHERE c.ProfileCustomView > 0 AND cx.ProfileID = ". $ProfileID ." GROUP BY cx.ProfileCustomID ORDER BY c.ProfileCustomOrder DESC");
@@ -240,10 +240,10 @@ $bb_agency_option_agencylogo = $bb_agency_options_arr['rb_agency_option_agencylo
 						}
 
 							if (!empty($data['ProfileGender'])) {
-								if(rb_agency_getGenderTitle($data['ProfileGender'])){
-									echo "<div><strong>". __("Gender", rb_agency_TEXTDOMAIN) .":</strong> ".rb_agency_getGenderTitle($data['ProfileGender'])."</div>\n";
+								if(bb_agency_getGenderTitle($data['ProfileGender'])){
+									echo "<div><strong>". __("Gender", bb_agency_TEXTDOMAIN) .":</strong> ".bb_agency_getGenderTitle($data['ProfileGender'])."</div>\n";
 								}else{
-									echo "<div><strong>". __("Gender", rb_agency_TEXTDOMAIN) .":</strong> --</div>\n";	
+									echo "<div><strong>". __("Gender", bb_agency_TEXTDOMAIN) .":</strong> --</div>\n";	
 								}
 							}
 

@@ -46,28 +46,28 @@ function render_content($url,$width,$height,$type, $title){
 					if (!empty($ProfileGender)) {
 						$queryGenderResult = mysql_query("SELECT GenderID, GenderTitle FROM ".table_agency_data_gender." WHERE GenderID='".$ProfileGender."' ");
 						$fetchGenderData = mysql_fetch_assoc($queryGenderResult);
-                                                        echo "<li><strong>". __("Gender", rb_agency_TEXTDOMAIN). "<b class=\"divider\">:</b></strong> ". $fetchGenderData["GenderTitle"] . "</li>\n";
+                                                        echo "<li><strong>". __("Gender", bb_agency_TEXTDOMAIN). "<b class=\"divider\">:</b></strong> ". $fetchGenderData["GenderTitle"] . "</li>\n";
 					}								
 					if (!empty($ProfileStatHeight)) {
 						if ($bb_agency_option_unittype == 0) { // Metric
-							echo "<li><strong>". __("Height", rb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatHeight ." ". __("cm", rb_agency_TEXTDOMAIN). "" ."</li>\n";
+							echo "<li><strong>". __("Height", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatHeight ." ". __("cm", bb_agency_TEXTDOMAIN). "" ."</li>\n";
 						} else { // Imperial
 							$heightraw = $ProfileStatHeight;
 							$heightfeet = floor($heightraw/12);
 							$heightinch = $heightraw - floor($heightfeet*12);
-							echo "<li><strong>". __("Height", rb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $heightfeet ." ". __("ft", rb_agency_TEXTDOMAIN). " ". $heightinch ." ". __("in", rb_agency_TEXTDOMAIN). "" ."</li>\n";
+							echo "<li><strong>". __("Height", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $heightfeet ." ". __("ft", bb_agency_TEXTDOMAIN). " ". $heightinch ." ". __("in", bb_agency_TEXTDOMAIN). "" ."</li>\n";
 						}
 					}
 					if (!empty($ProfileStatWeight)) {
 						if ($bb_agency_option_unittype == 0) { // Metric
-							echo "<li><strong>". __("Weight", rb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatWeight ." ". __("kg", rb_agency_TEXTDOMAIN). "</li>\n";
+							echo "<li><strong>". __("Weight", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatWeight ." ". __("kg", bb_agency_TEXTDOMAIN). "</li>\n";
 						} else { // Imperial
-							echo "<li><strong>". __("Weight", rb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatWeight ." ". __("lb", rb_agency_TEXTDOMAIN). "</li>\n";
+							echo "<li><strong>". __("Weight", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatWeight ." ". __("lb", bb_agency_TEXTDOMAIN). "</li>\n";
 						}
 					}
 							
 					// Insert Custom Fields
-					rb_agency_getNewProfileCustomFields($ProfileID, $ProfileGender); ?>
+					bb_agency_getNewProfileCustomFields($ProfileID, $ProfileGender); ?>
 				</ul>
 			</div><!-- .portfolio-info -->
 
@@ -92,7 +92,7 @@ function render_content($url,$width,$height,$type, $title){
 												echo "<li>";
 										   } 
 
-											echo "<figure class=\"multi\"><a href=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" rel=\"lightbox-profile". $ProfileID ."\" title=\"". $ProfileContactDisplay ."\"><img src=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt=\"". $ProfileContactDisplay ."\" /></a></figure>";
+											echo "<figure class=\"multi\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" rel=\"lightbox-profile". $ProfileID ."\" title=\"". $ProfileContactDisplay ."\"><img src=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt=\"". $ProfileContactDisplay ."\" /></a></figure>";
 
 										   $open++;
 										   if($open == 3){
@@ -103,9 +103,9 @@ function render_content($url,$width,$height,$type, $title){
 								   } else {
 			                              
 										   if($dataImg['ProfileMediaPrimary']==1){
-												$ProfileMediaPrimary= 	"<li><figure><a href=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" rel=\"lightbox-profile". $ProfileID ."\" title=\"". $ProfileContactDisplay ."\"><img src=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt=\"". $ProfileContactDisplay ."\" /></a></figure></li>\n";
+												$ProfileMediaPrimary= 	"<li><figure><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" rel=\"lightbox-profile". $ProfileID ."\" title=\"". $ProfileContactDisplay ."\"><img src=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt=\"". $ProfileContactDisplay ."\" /></a></figure></li>\n";
 											} else {
-												$ProfileMediaSecondry .= "<li><figure><a href=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" rel=\"lightbox-profile". $ProfileID ."\" title=\"". $ProfileContactDisplay ."\"><img src=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt=\"". $ProfileContactDisplay ."\" /></a></figure></li>\n";
+												$ProfileMediaSecondry .= "<li><figure><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" rel=\"lightbox-profile". $ProfileID ."\" title=\"". $ProfileContactDisplay ."\"><img src=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt=\"". $ProfileContactDisplay ."\" /></a></figure></li>\n";
 											}
 											echo $ProfileMediaPrimary; 
 											echo $ProfileMediaSecondry; 
@@ -276,9 +276,9 @@ function render_content($url,$width,$height,$type, $title){
 
 						function ajax_submit(Obj,type){
 						    if(type == "favorite"){
-								var action_function = "rb_agency_save_favorite";
+								var action_function = "bb_agency_save_favorite";
 							} else if(type == "casting"){
-								var action_function = "rb_agency_save_castingcart";
+								var action_function = "bb_agency_save_castingcart";
 							}
 							
 							jQuery.ajax({type: 'POST',url: '<?php echo get_bloginfo('url') ?>/wp-admin/admin-ajax.php',
@@ -309,28 +309,28 @@ function render_content($url,$width,$height,$type, $title){
 				<?php if (is_user_logged_in()) { 	
 
 					$query_favorite = mysql_query("SELECT * FROM ".table_agency_savedfavorite." WHERE SavedFavoriteTalentID='".$ProfileID
-		                              ."'  AND SavedFavoriteProfileID = '".rb_agency_get_current_userid()."'" ) or die("error");
+		                              ."'  AND SavedFavoriteProfileID = '".bb_agency_get_current_userid()."'" ) or die("error");
 		
 					$count_favorite = mysql_num_rows($query_favorite);
 					$datas_favorite = mysql_fetch_assoc($query_favorite);
 					
 					$query_castingcart = mysql_query("SELECT * FROM ". table_agency_castingcart."  WHERE CastingCartTalentID='".$ProfileID
-													 ."'  AND CastingCartProfileID = '".rb_agency_get_current_userid()."'" ) or die("error");
+													 ."'  AND CastingCartProfileID = '".bb_agency_get_current_userid()."'" ) or die("error");
 					
 					$count_castingcart = mysql_num_rows($query_castingcart);
 		
 					if(is_permitted('casting')){ ?>
 
-						<li class="casting"><a  href="<?php echo get_bloginfo('url')?>/profile-casting/"><?php echo __("View Casting Cart", rb_agency_TEXTDOMAIN);?></a></li>
+						<li class="casting"><a  href="<?php echo get_bloginfo('url')?>/profile-casting/"><?php echo __("View Casting Cart", bb_agency_TEXTDOMAIN);?></a></li>
 						<?php }else{ ?>
-						<li><a  class="save_cart" id="mycart_add" href="javascript:;" id="mycart" title="<?php echo __("Add to Casting Cart", rb_agency_TEXTDOMAIN);?>" ><?php echo __("Add to Casting Cart", rb_agency_TEXTDOMAIN);?></a></li>
-						<li id="mycart_view" style="display:none" ><a  href="<?php echo get_bloginfo('url')?>/profile-casting/"><?php echo __("View Casting Cart", rb_agency_TEXTDOMAIN);?></a></li>
+						<li><a  class="save_cart" id="mycart_add" href="javascript:;" id="mycart" title="<?php echo __("Add to Casting Cart", bb_agency_TEXTDOMAIN);?>" ><?php echo __("Add to Casting Cart", bb_agency_TEXTDOMAIN);?></a></li>
+						<li id="mycart_view" style="display:none" ><a  href="<?php echo get_bloginfo('url')?>/profile-casting/"><?php echo __("View Casting Cart", bb_agency_TEXTDOMAIN);?></a></li>
 						<?php } 
 						if(is_permitted('favorite')){	 ?>
-						<li class="favorite"><a  href="<?php echo get_bloginfo('url')?>/profile-casting/"><?php echo __("View to Favorites", rb_agency_TEXTDOMAIN);?></a></li>
+						<li class="favorite"><a  href="<?php echo get_bloginfo('url')?>/profile-casting/"><?php echo __("View to Favorites", bb_agency_TEXTDOMAIN);?></a></li>
 						<?php }else{ ?>
-						<li><a  class="save_fav" id="myfav_add" href="javascript:;" id="mycart" title="<?php echo __("Add to Favorites", rb_agency_TEXTDOMAIN);?>" ><?php echo __("Add to Favorites", rb_agency_TEXTDOMAIN);?></a></li>
-						<li id="myfav_view" style="display:none" ><a  href="<?php echo get_bloginfo('url')?>/profile-casting/"><?php echo __("View to Favorites", rb_agency_TEXTDOMAIN);?></a></li>
+						<li><a  class="save_fav" id="myfav_add" href="javascript:;" id="mycart" title="<?php echo __("Add to Favorites", bb_agency_TEXTDOMAIN);?>" ><?php echo __("Add to Favorites", bb_agency_TEXTDOMAIN);?></a></li>
+						<li id="myfav_view" style="display:none" ><a  href="<?php echo get_bloginfo('url')?>/profile-casting/"><?php echo __("View to Favorites", bb_agency_TEXTDOMAIN);?></a></li>
 					<?php
 					} ?> 
 				
@@ -362,7 +362,7 @@ function render_content($url,$width,$height,$type, $title){
 													  echo "<li><figure class=\"multi\">";
 												} 
 								
-													echo "<span style=\"background-image: url(". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] .")\" title=\"". $ProfileContactDisplay ."\" ></span>";
+													echo "<span style=\"background-image: url(". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] .")\" title=\"". $ProfileContactDisplay ."\" ></span>";
 								
 												$open++;
 												if($open == 3){
@@ -373,9 +373,9 @@ function render_content($url,$width,$height,$type, $title){
 								} else {
 								
 												if($dataImg['ProfileMediaPrimary']==1){
-															$ProfileMediaPrimary= 	"<li><figure><span style=\"background-image: url(". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] .")\" title=\"". $ProfileContactDisplay ."\" ></span></figure></li>\n";
+															$ProfileMediaPrimary= 	"<li><figure><span style=\"background-image: url(". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] .")\" title=\"". $ProfileContactDisplay ."\" ></span></figure></li>\n";
 													} else {
-															$ProfileMediaSecondry .= "<li><figure><span style=\"background-image: url(". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] .")\" title=\"". $ProfileContactDisplay ."\" ></span></figure></li>\n";
+															$ProfileMediaSecondry .= "<li><figure><span style=\"background-image: url(". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] .")\" title=\"". $ProfileContactDisplay ."\" ></span></figure></li>\n";
 													}
 													echo $ProfileMediaPrimary; 
 													echo $ProfileMediaSecondry; 
@@ -426,9 +426,9 @@ function render_content($url,$width,$height,$type, $title){
 
 		<div id="experience" class="col_12 column targetexperience" style="display:none">
 			<?php
-			rb_agency_getSocialLinks();
+			bb_agency_getSocialLinks();
 			$title_to_exclude = array("Experience");
-			print_r(rb_agency_getProfileCustomFieldsExperienceDescription($ProfileID, $ProfileGender, 'Experience(s):')); ?>
+			print_r(bb_agency_getProfileCustomFieldsExperienceDescription($ProfileID, $ProfileGender, 'Experience(s):')); ?>
 		</div>
 	</div>
 	

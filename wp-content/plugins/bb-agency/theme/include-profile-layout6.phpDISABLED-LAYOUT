@@ -83,7 +83,7 @@ Large featured image and scrolling thumbnails
 
 					<div id="model-stats">
 						<ul>
-						<?php rb_agency_getProfileCustomFieldsEcho($ProfileID, $ProfileGender);?>
+						<?php bb_agency_getProfileCustomFieldsEcho($ProfileID, $ProfileGender);?>
 						</ul>
 					</div>
 
@@ -92,18 +92,18 @@ Large featured image and scrolling thumbnails
 						<?php
 						echo "<ul>\n";
 
-							echo "<li class=\"item resume\"><a href=\"/profile/".$ProfileGallery."/print-images/\">". __("Print Photos", rb_agency_TEXTDOMAIN)."</a></li>\n"; //MODS 2012-11-28
-							echo "<li class=\"item resume\"><a href=\"/profile/".$ProfileGallery."/print-polaroids/\">". __("Print Polaroids", rb_agency_TEXTDOMAIN)."</a></li>\n"; //MODS 2012-11-28
-							echo "<li class=\"item resume\"><a href=\"/profile/".$ProfileGallery."/polaroids/\">". __("View Polaroids", rb_agency_TEXTDOMAIN)."</a></li>\n"; //MODS 2012-11-30
-							echo "<li class=\"item resume\"><a href=\"/profile/".$ProfileGallery."/\">". __("View Slideshow", rb_agency_TEXTDOMAIN)."</a></li>\n"; //MODS 2012-11-29
-							echo "<li class=\"item resume\"><a href=\"/profile/".$ProfileGallery."/lightbox/\">". __("View in Lightbox", rb_agency_TEXTDOMAIN)."</a></li>\n"; //MODS 2012-11-29
+							echo "<li class=\"item resume\"><a href=\"/profile/".$ProfileGallery."/print-images/\">". __("Print Photos", bb_agency_TEXTDOMAIN)."</a></li>\n"; //MODS 2012-11-28
+							echo "<li class=\"item resume\"><a href=\"/profile/".$ProfileGallery."/print-polaroids/\">". __("Print Polaroids", bb_agency_TEXTDOMAIN)."</a></li>\n"; //MODS 2012-11-28
+							echo "<li class=\"item resume\"><a href=\"/profile/".$ProfileGallery."/polaroids/\">". __("View Polaroids", bb_agency_TEXTDOMAIN)."</a></li>\n"; //MODS 2012-11-30
+							echo "<li class=\"item resume\"><a href=\"/profile/".$ProfileGallery."/\">". __("View Slideshow", bb_agency_TEXTDOMAIN)."</a></li>\n"; //MODS 2012-11-29
+							echo "<li class=\"item resume\"><a href=\"/profile/".$ProfileGallery."/lightbox/\">". __("View in Lightbox", bb_agency_TEXTDOMAIN)."</a></li>\n"; //MODS 2012-11-29
 
 							// Resume
 							$resultsMedia = mysql_query("SELECT * FROM ". table_agency_profile_media ." media WHERE ProfileID =  \"". $ProfileID ."\" AND ProfileMediaType = \"Resume\"");
 							$countMedia = mysql_num_rows($resultsMedia);
 							if ($countMedia > 0) {
 								while ($dataMedia = mysql_fetch_array($resultsMedia)) {
-									echo "<li class=\"item resume\"><a href=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\">Print Resume</a></li>\n";
+									echo "<li class=\"item resume\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\">Print Resume</a></li>\n";
 								}
 							}
 
@@ -116,7 +116,7 @@ Large featured image and scrolling thumbnails
 									elseif($cpCnt == "3"){$cpCount="3rd";}
 									else{$cpCount="";}
 
-									echo "<li class=\"item compcard\"><a href=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\">Download $cpCount Comp Card</a></li>\n";
+									echo "<li class=\"item compcard\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\">Download $cpCount Comp Card</a></li>\n";
 								}
 							}
 
@@ -125,7 +125,7 @@ Large featured image and scrolling thumbnails
 							$countMedia = mysql_num_rows($resultsMedia);
 							if ($countMedia > 0) {
 								while ($dataMedia = mysql_fetch_array($resultsMedia)) {
-									echo "<li class=\"item headshot\"><a href=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\">". __("Download Headshot", rb_agency_TEXTDOMAIN)."</a></li>\n";
+									echo "<li class=\"item headshot\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\">". __("Download Headshot", bb_agency_TEXTDOMAIN)."</a></li>\n";
 								}
 							}
 
@@ -137,7 +137,7 @@ Large featured image and scrolling thumbnails
 									if($vdCnt == "2"){$vdCount="2nd";}
 									elseif($vdCnt == "3"){$vdCount="3rd";}
 									else{$vdCount="";}
-									echo "<li class=\"item voice\"><a target='_blank' href=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\">Listen to $vdCount Voice Demo</a></li>\n";
+									echo "<li class=\"item voice\"><a target='_blank' href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\">Listen to $vdCount Voice Demo</a></li>\n";
 								}
 							}
 
@@ -147,7 +147,7 @@ Large featured image and scrolling thumbnails
 							if ($countMedia > 0) {
 								while ($dataMedia = mysql_fetch_array($resultsMedia)) {
 									$profileVideoEmbed = $dataMedia['ProfileMediaURL'];
-									echo "<li class=\"item video slate\"><a href=\"http://www.youtube.com/watch?v=". $dataMedia['ProfileMediaURL'] ."\" target=\"_blank\">". __("Watch Video Slate", rb_agency_TEXTDOMAIN)."</a></li>\n";
+									echo "<li class=\"item video slate\"><a href=\"http://www.youtube.com/watch?v=". $dataMedia['ProfileMediaURL'] ."\" target=\"_blank\">". __("Watch Video Slate", bb_agency_TEXTDOMAIN)."</a></li>\n";
 								}
 							}
 
@@ -165,15 +165,15 @@ Large featured image and scrolling thumbnails
 							$countMedia = mysql_num_rows($resultsMedia);
 							if ($countMedia > 0) {
 								while ($dataMedia = mysql_fetch_array($resultsMedia)) {
-									echo "<li class=\"item video demoreel\"><a href=\"http://www.youtube.com/watch?v=". $dataMedia['ProfileMediaURL'] ."\" target=\"_blank\">". __("Watch Demo Reel", rb_agency_TEXTDOMAIN)."</a></li>\n";
+									echo "<li class=\"item video demoreel\"><a href=\"http://www.youtube.com/watch?v=". $dataMedia['ProfileMediaURL'] ."\" target=\"_blank\">". __("Watch Demo Reel", bb_agency_TEXTDOMAIN)."</a></li>\n";
 								}
 							}
 
 							// Is Logged?
-							if (is_user_logged_in() AND $bb_agency_options_arr['rb_agency_option_profilelist_castingcart']==1) { 
-								echo "<li class=\"return dashboard\"><a href=\"". get_bloginfo("url") ."/dashboard/\">". __("Access Dashboard", rb_agency_TEXTDOMAIN). "</a></li>\n";?>
+							if (is_user_logged_in() AND $bb_agency_options_arr['bb_agency_option_profilelist_castingcart']==1) { 
+								echo "<li class=\"return dashboard\"><a href=\"". get_bloginfo("url") ."/dashboard/\">". __("Access Dashboard", bb_agency_TEXTDOMAIN). "</a></li>\n";?>
              <?php         
-			 if(checkCart(rb_agency_get_current_userid(),$ProfileID)==0 ){ //check if profile is in cart already
+			 if(checkCart(bb_agency_get_current_userid(),$ProfileID)==0 ){ //check if profile is in cart already
 			 ?>
 					<script>
                     function addtoCart(pid){
@@ -196,11 +196,11 @@ Large featured image and scrolling thumbnails
                      </script>
                          <?php
 						 
-							echo "<li id=\"casting_cart_li\" class=\"add to cart\"><a id=\"addtocart\" onclick=\"javascript:addtoCart('$ProfileID');\" href=\"javascript:void(0)\">". __("Add to Casting Cart", rb_agency_TEXTDOMAIN). "</a></li>\n";
+							echo "<li id=\"casting_cart_li\" class=\"add to cart\"><a id=\"addtocart\" onclick=\"javascript:addtoCart('$ProfileID');\" href=\"javascript:void(0)\">". __("Add to Casting Cart", bb_agency_TEXTDOMAIN). "</a></li>\n";
 							}else{
-				  		  echo "<li class=\"add to cart\">". __("Profile is in your ", rb_agency_TEXTDOMAIN);
+				  		  echo "<li class=\"add to cart\">". __("Profile is in your ", bb_agency_TEXTDOMAIN);
 						  
-						  echo " <a href=\"".get_bloginfo('url')."/profile-casting/\">". __("Casting Cart", rb_agency_TEXTDOMAIN)."</a></li>\n";
+						  echo " <a href=\"".get_bloginfo('url')."/profile-casting/\">". __("Casting Cart", bb_agency_TEXTDOMAIN)."</a></li>\n";
 							
 				          }
 				}
@@ -210,7 +210,7 @@ Large featured image and scrolling thumbnails
                 
 				</div> <!-- .model-links -->
 				<div id="resultsGoHereAddtoCart"></div>
-                <div id="view_casting_cart" style="display:none;"><a href="<?php echo get_bloginfo('url')?>/profile-casting/"><?php echo __("View Casting Cart", rb_agency_TEXTDOMAIN);?></a></div>
+                <div id="view_casting_cart" style="display:none;"><a href="<?php echo get_bloginfo('url')?>/profile-casting/"><?php echo __("View Casting Cart", bb_agency_TEXTDOMAIN);?></a></div>
 				<?php
 				//decides what division URL should be
 				$age = floor( (strtotime(date('Y-m-d')) - strtotime($ProfileDateBirth)) / 31556926);	 //calculate age
@@ -224,9 +224,9 @@ Large featured image and scrolling thumbnails
 				?>
 				<div id="model-nav">
 					<ul>
-						<li class="prev"><a href="<?php  get_bloginfo("url");?>/profile/<?php echo linkPrevNext($ProfileGallery,"previous",$ProfileGender,$divisionDir);?>/" title=""><?php echo __("Previous", rb_agency_TEXTDOMAIN)?></a> </li>
-						<li class="back"><a href="<?php  get_bloginfo("url");?>/divisions<?php echo $divisionDir;?>" title=""><?php echo __("Back to", rb_agency_TEXTDOMAIN)?><br />Division</a></li>
-						<li class="next"><a href="<?php  get_bloginfo("url");?>/profile/<?php echo linkPrevNext($ProfileGallery,"next",$ProfileGender,$divisionDir);?>/" title=""><?php echo __("Next", rb_agency_TEXTDOMAIN)?></a>  </li>
+						<li class="prev"><a href="<?php  get_bloginfo("url");?>/profile/<?php echo linkPrevNext($ProfileGallery,"previous",$ProfileGender,$divisionDir);?>/" title=""><?php echo __("Previous", bb_agency_TEXTDOMAIN)?></a> </li>
+						<li class="back"><a href="<?php  get_bloginfo("url");?>/divisions<?php echo $divisionDir;?>" title=""><?php echo __("Back to", bb_agency_TEXTDOMAIN)?><br />Division</a></li>
+						<li class="next"><a href="<?php  get_bloginfo("url");?>/profile/<?php echo linkPrevNext($ProfileGallery,"next",$ProfileGender,$divisionDir);?>/" title=""><?php echo __("Next", bb_agency_TEXTDOMAIN)?></a>  </li>
 					</ul>
 				</div>
 				</div> <!-- .panel -->
@@ -258,7 +258,7 @@ Large featured image and scrolling thumbnails
 
 							}
 						</script>
-						<span class="allimages_text"><?php echo __("Next", rb_agency_TEXTDOMAIN)?><br /></span><br />
+						<span class="allimages_text"><?php echo __("Next", bb_agency_TEXTDOMAIN)?><br /></span><br />
 						<form action="../print-images/" method="post" id="allimageform">
 							<input type="hidden" id="selected_image" name="selected_image" />
 							<?php  
@@ -267,7 +267,7 @@ Large featured image and scrolling thumbnails
 							$countImg = mysql_num_rows($resultsImg);
 							while ($dataImg = mysql_fetch_array($resultsImg)) {
 								echo '<a class="allimages_print" href="javascript:void(0)" onClick="selectImg('.$dataImg["ProfileMediaID"].')">';
-								echo "<img id='".$dataImg["ProfileMediaID"]."' src=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt='' class='allimages_thumbs' /></a><input type='hidden'  name='".$dataImg["ProfileMediaID"]."' id='p".$dataImg["ProfileMediaID"]."'>\n";
+								echo "<img id='".$dataImg["ProfileMediaID"]."' src=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt='' class='allimages_thumbs' /></a><input type='hidden'  name='".$dataImg["ProfileMediaID"]."' id='p".$dataImg["ProfileMediaID"]."'>\n";
 							}
 							?> <br clear="all" />
 							<input type="submit" value="Next, Select Print Format" />
@@ -285,8 +285,8 @@ Large featured image and scrolling thumbnails
 							$resultsImg = mysql_query($queryImg);
 							$countImg = mysql_num_rows($resultsImg);
 							while ($dataImg = mysql_fetch_array($resultsImg)) {
-							echo '<a class="allimages_print" href="'. rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] .'" rel="lightbox-mygallery">';
-							echo "<img id='".$dataImg["ProfileMediaID"]."' src=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt='' class='allimages_thumbs' /></a><input type='hidden'  name='".$dataImg["ProfileMediaID"]."' id='p".$dataImg["ProfileMediaID"]."'>\n";
+							echo '<a class="allimages_print" href="'. bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] .'" rel="lightbox-mygallery">';
+							echo "<img id='".$dataImg["ProfileMediaID"]."' src=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt='' class='allimages_thumbs' /></a><input type='hidden'  name='".$dataImg["ProfileMediaID"]."' id='p".$dataImg["ProfileMediaID"]."'>\n";
 						}
 						?> <br clear="all" />
 
@@ -330,8 +330,8 @@ Large featured image and scrolling thumbnails
 						<input type="hidden" id="selected_image" name="selected_image" />
 						<?php  
 						while ($dataImg = mysql_fetch_array($resultsImg)) {
-							echo '<a href="'. rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] .'" rel="lightbox-mygallery" class="allimages_print" href="javascript:void(0)">'; // onClick="selectImg('.$dataImg["ProfileMediaID"].')"
-							echo "<img id='".$dataImg["ProfileMediaID"]."' src=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt='' class='allimages_thumbs' /></a><input type='hidden'  name='".$dataImg["ProfileMediaID"]."' id='p".$dataImg["ProfileMediaID"]."'>\n";
+							echo '<a href="'. bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] .'" rel="lightbox-mygallery" class="allimages_print" href="javascript:void(0)">'; // onClick="selectImg('.$dataImg["ProfileMediaID"].')"
+							echo "<img id='".$dataImg["ProfileMediaID"]."' src=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt='' class='allimages_thumbs' /></a><input type='hidden'  name='".$dataImg["ProfileMediaID"]."' id='p".$dataImg["ProfileMediaID"]."'>\n";
 						}
 						?> <br clear="all" />
 
@@ -482,8 +482,8 @@ Large featured image and scrolling thumbnails
 									while ($dataImg = mysql_fetch_array($resultsImg)) {
 									?>
 									<li>
-									<a href="<?php echo  rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'];?>" title=""> 
-									<?php echo "<img src=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt='' style='width:106px; height:130px;' />\n";?></a>
+									<a href="<?php echo  bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'];?>" title=""> 
+									<?php echo "<img src=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt='' style='width:106px; height:130px;' />\n";?></a>
 									</li>
 									<?php } //$i++; endwhile; ?>
 								</ul>

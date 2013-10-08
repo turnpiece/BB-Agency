@@ -87,11 +87,11 @@ if (is_user_logged_in()) {
   if (isset($_SESSION['ProfileLastViewed']) && ($_SESSION['ProfileLastViewed'])) {
 	
 	// What do we call them?
-	$bb_agency_options_arr = get_option('rb_agency_options');
-	$bb_agency_option_profilenaming = $bb_agency_options_arr['rb_agency_option_profilenaming'];
+	$bb_agency_options_arr = get_option('bb_agency_options');
+	$bb_agency_option_profilenaming = $bb_agency_options_arr['bb_agency_option_profilenaming'];
 	  
 	$query = "SELECT * FROM " . table_agency_profile . " WHERE ProfileGallery='". $_SESSION['ProfileLastViewed'] ."'";
-	$results = mysql_query($query) or die ( __("Error, query failed", rb_agency_TEXTDOMAIN ));
+	$results = mysql_query($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ));
 	$count = mysql_num_rows($results);
 	while ($data = mysql_fetch_array($results)) {
 		$ProfileGallery			=stripslashes($data['ProfileGallery']);
@@ -111,7 +111,7 @@ if (is_user_logged_in()) {
 
 		echo "<div class=\"event\">\n";
 		echo "<h3>You have successfully logged in!</h3>\n";
-		echo "You may now access the profile data.  You may now return to <strong><a href=\"". rb_agency_PROFILEDIR ."". $ProfileGallery ."\">". $ProfileContactDisplay ."'s</strong></a> profile.\n";
+		echo "You may now access the profile data.  You may now return to <strong><a href=\"". bb_agency_PROFILEDIR ."". $ProfileGallery ."\">". $ProfileContactDisplay ."'s</strong></a> profile.\n";
 		echo "</div>\n";
 		$_SESSION['ProfileLastViewed'] = "";
 	}
@@ -148,7 +148,7 @@ if (isset($curauth->user_login)) {
 	echo "  </div>\n";
 }
 	/* GET ROLE
-	echo rb_agency_get_userrole();
+	echo bb_agency_get_userrole();
 	*/
 	echo "</div>\n";
 

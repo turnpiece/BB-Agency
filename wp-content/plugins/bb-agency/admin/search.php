@@ -12,13 +12,13 @@ global $wpdb;
 
 $cusFields = array("Suit","Bust","Shirt","Dress");  //for custom fields min and max
 
-$bb_agency_options_arr = get_option('rb_agency_options');
-$bb_agency_option_unittype =  $bb_agency_options_arr['rb_agency_option_unittype'];
-$bb_agency_option_persearch = (int)$bb_agency_options_arr['rb_agency_option_persearch'];
-$bb_agency_option_agencyemail = (int)$bb_agency_options_arr['rb_agency_option_agencyemail'];
+$bb_agency_options_arr = get_option('bb_agency_options');
+$bb_agency_option_unittype =  $bb_agency_options_arr['bb_agency_option_unittype'];
+$bb_agency_option_persearch = (int)$bb_agency_options_arr['bb_agency_option_persearch'];
+$bb_agency_option_agencyemail = (int)$bb_agency_options_arr['bb_agency_option_agencyemail'];
 if ($bb_agency_option_persearch < 0) { $bb_agency_option_persearch = 100; }
 
-echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=rb_agency_search';}</script>"; 
+echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=bb_agency_search';}</script>"; 
 
 // *************************************************************************************************** //
 // Setup Functions 
@@ -32,7 +32,7 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
 		  	}
 		}
 		// Clean It!
-		$sessionString = rb_agency_cleanString($sessionString);
+		$sessionString = bb_agency_cleanString($sessionString);
 
 // *************************************************************************************************** //
 // Get Actions 
@@ -48,7 +48,7 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
 				}
 			}
 			// Clean It!
-			echo $cartString = rb_agency_cleanString($cartString);
+			echo $cartString = bb_agency_cleanString($cartString);
 			
 			if (isset($_SESSION['cartArray'])) {
 				$cartArray = $_SESSION['cartArray'];
@@ -75,7 +75,7 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
 			$cartString = implode(",", $cartArray);
 			$cartRemoveID = $_GET["RemoveID"];
 			$cartString = str_replace($_GET['RemoveID'] ."", "", $cartString);
-			$cartString = rb_agency_cleanString($cartString);
+			$cartString = bb_agency_cleanString($cartString);
 			// Put it back in the array, and wash your hands
 			$_SESSION['cartArray'] = array($cartString);
 		
@@ -453,21 +453,21 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
         echo "        <thead>\n";
         echo "            <tr class=\"thead\">\n";
         echo "                <th class=\"manage-column column-cb check-column\" id=\"cb\" scope=\"col\"><input type=\"checkbox\"/></th>\n";
-        echo "                <th class=\"column-ProfileID\" id=\"ProfileID\" scope=\"col\" style=\"width:50px;\"><a href=\"admin.php?page=rb_agency_profiles&sort=ProfileID&dir=". $sortDirection ."\">". __("ID", rb_agency_TEXTDOMAIN) ."</a></th>\n";
-        echo "                <th class=\"column-ProfileContact\" id=\"ProfileContact\" scope=\"col\">". __("Contact Information", rb_agency_TEXTDOMAIN) ."</th>\n";
-        echo "                <th class=\"column-ProfileStats\" id=\"ProfileStats\" scope=\"col\">". __("Private Details", rb_agency_TEXTDOMAIN) ."</th>\n";
-        echo "                <th class=\"column-ProfileDetails\" id=\"ProfileDetails\" scope=\"col\">". __("Public Details", rb_agency_TEXTDOMAIN) ."</th>\n";
-        echo "                <th class=\"column-ProfileImage\" id=\"ProfileImage\" scope=\"col\" style=\"width:150px;\">". __("Headshot", rb_agency_TEXTDOMAIN) ."</th>\n";
+        echo "                <th class=\"column-ProfileID\" id=\"ProfileID\" scope=\"col\" style=\"width:50px;\"><a href=\"admin.php?page=bb_agency_profiles&sort=ProfileID&dir=". $sortDirection ."\">". __("ID", bb_agency_TEXTDOMAIN) ."</a></th>\n";
+        echo "                <th class=\"column-ProfileContact\" id=\"ProfileContact\" scope=\"col\">". __("Contact Information", bb_agency_TEXTDOMAIN) ."</th>\n";
+        echo "                <th class=\"column-ProfileStats\" id=\"ProfileStats\" scope=\"col\">". __("Private Details", bb_agency_TEXTDOMAIN) ."</th>\n";
+        echo "                <th class=\"column-ProfileDetails\" id=\"ProfileDetails\" scope=\"col\">". __("Public Details", bb_agency_TEXTDOMAIN) ."</th>\n";
+        echo "                <th class=\"column-ProfileImage\" id=\"ProfileImage\" scope=\"col\" style=\"width:150px;\">". __("Headshot", bb_agency_TEXTDOMAIN) ."</th>\n";
         echo "            </tr>\n";
         echo "        </thead>\n";
         echo "        <tfoot>\n";
         echo "            <tr class=\"thead\">\n";
         echo "                <th class=\"manage-column column-cb check-column\" id=\"cb\" scope=\"col\"><input type=\"checkbox\"/></th>\n";
-        echo "                <th class=\"column-ProfileID\" id=\"ProfileID\" scope=\"col\">". __("ID", rb_agency_TEXTDOMAIN) ."</th>\n";
-        echo "                <th class=\"column-ProfileContact\" id=\"ProfileContact\" scope=\"col\">". __("Contact Information", rb_agency_TEXTDOMAIN) ."</th>\n";
-        echo "                <th class=\"column-ProfileStats\" id=\"ProfileStats\" scope=\"col\">". __("Private Details", rb_agency_TEXTDOMAIN) ."</th>\n";
-        echo "                <th class=\"column-ProfileDetails\" id=\"ProfileDetails\" scope=\"col\">". __("Public Details", rb_agency_TEXTDOMAIN) ."</th>\n";
-        echo "                <th class=\"column-image\" id=\"col-image\" scope=\"col\">". __("Headshot", rb_agency_TEXTDOMAIN) ."</th>\n";
+        echo "                <th class=\"column-ProfileID\" id=\"ProfileID\" scope=\"col\">". __("ID", bb_agency_TEXTDOMAIN) ."</th>\n";
+        echo "                <th class=\"column-ProfileContact\" id=\"ProfileContact\" scope=\"col\">". __("Contact Information", bb_agency_TEXTDOMAIN) ."</th>\n";
+        echo "                <th class=\"column-ProfileStats\" id=\"ProfileStats\" scope=\"col\">". __("Private Details", bb_agency_TEXTDOMAIN) ."</th>\n";
+        echo "                <th class=\"column-ProfileDetails\" id=\"ProfileDetails\" scope=\"col\">". __("Public Details", bb_agency_TEXTDOMAIN) ."</th>\n";
+        echo "                <th class=\"column-image\" id=\"col-image\" scope=\"col\">". __("Headshot", bb_agency_TEXTDOMAIN) ."</th>\n";
         echo "            </tr>\n";
         echo "        </tfoot>\n";
         echo "        <tbody>\n";
@@ -494,9 +494,9 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
         echo "                	<h2>". $data['ProfileContactNameFirst'] ." ". $data['ProfileContactNameLast'] ."</h2>\n";
         echo "                </div>\n";
         echo "                <div class=\"row-actions\">\n";
-        echo "                    <span class=\"edit\"><a href=\"". str_replace('%7E', '~', $_SERVER['SCRIPT_NAME']) . "?page=rb_agency_profiles&amp;action=editRecord&amp;ProfileID=". $ProfileID ."\" title=\"Edit this post\">Edit</a> | </span>\n";
-        echo "                    <span class=\"review\"><a href=\"". rb_agency_PROFILEDIR . $bb_agency_UPLOADDIR . $data['ProfileGallery'] ."/\" target=\"_blank\">View</a> | </span>\n";
-        echo "                    <span class=\"delete\"><a class=\"submitdelete\" title=\"Remove this Profile\" href=\"". str_replace('%7E', '~', $_SERVER['SCRIPT_NAME']) . "?page=rb_agency_profiles&amp;deleteRecord&amp;ProfileID=". $ProfileID ."' onclick=\"if ( confirm('You are about to delete the model \'". $ProfileContactNameFirst ." ". $ProfileContactNameLast ."\'\n \'Cancel\' to stop, \'OK\' to delete.') ) { return true;}return false;\">Delete</a></span>\n";
+        echo "                    <span class=\"edit\"><a href=\"". str_replace('%7E', '~', $_SERVER['SCRIPT_NAME']) . "?page=bb_agency_profiles&amp;action=editRecord&amp;ProfileID=". $ProfileID ."\" title=\"Edit this post\">Edit</a> | </span>\n";
+        echo "                    <span class=\"review\"><a href=\"". bb_agency_PROFILEDIR . $bb_agency_UPLOADDIR . $data['ProfileGallery'] ."/\" target=\"_blank\">View</a> | </span>\n";
+        echo "                    <span class=\"delete\"><a class=\"submitdelete\" title=\"Remove this Profile\" href=\"". str_replace('%7E', '~', $_SERVER['SCRIPT_NAME']) . "?page=bb_agency_profiles&amp;deleteRecord&amp;ProfileID=". $ProfileID ."' onclick=\"if ( confirm('You are about to delete the model \'". $ProfileContactNameFirst ." ". $ProfileContactNameLast ."\'\n \'Cancel\' to stop, \'OK\' to delete.') ) { return true;}return false;\">Delete</a></span>\n";
         echo "                </div>\n";
 	            if(!empty($isInactiveDisable)){
 					echo "<div><strong>Profile Status:</strong> <span style=\"color:red;\">Inactive</span></div>\n";
@@ -517,25 +517,25 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
 					echo "<div><strong>Location:</strong> ". $data['ProfileLocationCity'] .", ". $data['ProfileLocationState'] ." ". $data['ProfileLocationZip'] ."</div>\n";
 				}
 				if (!empty($data['ProfileLocationCountry'])) {
-					echo "<div><strong>". __("Country", rb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileLocationCountry'] ."</div>\n";
+					echo "<div><strong>". __("Country", bb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileLocationCountry'] ."</div>\n";
 				}
 				if (!empty($data['ProfileDateBirth'])) {
-					echo "<div><strong>". __("Age", rb_agency_TEXTDOMAIN) .":</strong> ". rb_agency_get_age($data['ProfileDateBirth']) ."</div>\n";
+					echo "<div><strong>". __("Age", bb_agency_TEXTDOMAIN) .":</strong> ". bb_agency_get_age($data['ProfileDateBirth']) ."</div>\n";
 				}
 				if (!empty($data['ProfileDateBirth'])) {
-					echo "<div><strong>". __("Birthdate", rb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileDateBirth'] ."</div>\n";
+					echo "<div><strong>". __("Birthdate", bb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileDateBirth'] ."</div>\n";
 				}
 				if (!empty($data['ProfileContactWebsite'])) {
-					echo "<div><strong>". __("Website", rb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileContactWebsite'] ."</div>\n";
+					echo "<div><strong>". __("Website", bb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileContactWebsite'] ."</div>\n";
 				}
 				if (!empty($data['ProfileContactPhoneHome'])) {
-					echo "<div><strong>". __("Phone Home", rb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileContactPhoneHome'] ."</div>\n";
+					echo "<div><strong>". __("Phone Home", bb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileContactPhoneHome'] ."</div>\n";
 				}
 				if (!empty($data['ProfileContactPhoneCell'])) {
-					echo "<div><strong>". __("Phone Cell", rb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileContactPhoneCell'] ."</div>\n";
+					echo "<div><strong>". __("Phone Cell", bb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileContactPhoneCell'] ."</div>\n";
 				}
 				if (!empty($data['ProfileContactPhoneWork'])) {
-					echo "<div><strong>". __("Phone Work", rb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileContactPhoneWork'] ."</div>\n";
+					echo "<div><strong>". __("Phone Work", bb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileContactPhoneWork'] ."</div>\n";
 				}
 
 						$resultsCustomPrivate =  $wpdb->get_results("SELECT c.ProfileCustomID,c.ProfileCustomTitle, c.ProfileCustomOrder, c.ProfileCustomView, cx.ProfileCustomValue FROM ". table_agency_customfield_mux ." cx LEFT JOIN ". table_agency_customfields ." c ON c.ProfileCustomID = cx.ProfileCustomID WHERE c.ProfileCustomView > 0 AND cx.ProfileID = ". $ProfileID ." GROUP BY cx.ProfileCustomID ORDER BY c.ProfileCustomOrder DESC");
@@ -548,10 +548,10 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
         echo "            <td class=\"ProfileDetails column-ProfileDetails\">\n";
 
 				if (!empty($data['ProfileGender'])) {
-					if(rb_agency_getGenderTitle($data['ProfileGender'])){
-						echo "<div><strong>". __("Gender", rb_agency_TEXTDOMAIN) .":</strong> ".rb_agency_getGenderTitle($data['ProfileGender'])."</div>\n";
+					if(bb_agency_getGenderTitle($data['ProfileGender'])){
+						echo "<div><strong>". __("Gender", bb_agency_TEXTDOMAIN) .":</strong> ".bb_agency_getGenderTitle($data['ProfileGender'])."</div>\n";
 					}else{
-						echo "<div><strong>". __("Gender", rb_agency_TEXTDOMAIN) .":</strong> --</div>\n";	
+						echo "<div><strong>". __("Gender", bb_agency_TEXTDOMAIN) .":</strong> --</div>\n";	
 					}
 				}
 
@@ -564,7 +564,7 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
        echo "            </td>\n";
         echo "            <td class=\"ProfileImage column-ProfileImage\">\n";
 							if (isset($data['ProfileMediaURL']) && !empty($data['ProfileMediaURL'])) {
-		echo "				<div class=\"image\"><img style=\"width: 150px; \" src=\"". rb_agency_UPLOADDIR ."". $data['ProfileGallery'] ."/". $data['ProfileMediaURL'] ."\" /></div>\n";
+		echo "				<div class=\"image\"><img style=\"width: 150px; \" src=\"". bb_agency_UPLOADDIR ."". $data['ProfileGallery'] ."/". $data['ProfileMediaURL'] ."\" /></div>\n";
 							} else {
 		echo "				<div class=\"image no-image\">NO IMAGE</div>\n";
 							}
@@ -577,14 +577,14 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
         echo "        <tr>\n";
         echo "            <th class=\"check-column\" scope=\"row\"></th>\n";
         echo "            <td class=\"name column-name\" colspan=\"5\">\n";
-        echo "                <p>". __("No profiles found with this criteria!", rb_agency_TEXTDOMAIN) .".</p>\n";
+        echo "                <p>". __("No profiles found with this criteria!", bb_agency_TEXTDOMAIN) .".</p>\n";
         echo "            </td>\n";
         echo "        </tr>\n";
 				} else {
         echo "        <tr>\n";
         echo "            <th class=\"check-column\" scope=\"row\"></th>\n";
         echo "            <td class=\"name column-name\" colspan=\"5\">\n";
-        echo "                <p>". __("There aren't any Profiles loaded yet!", rb_agency_TEXTDOMAIN) ."</p>\n";
+        echo "                <p>". __("There aren't any Profiles loaded yet!", bb_agency_TEXTDOMAIN) ."</p>\n";
         echo "            </td>\n";
         echo "        </tr>\n";
 				} 
@@ -593,9 +593,9 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
         echo "    </table>\n";
    
         echo "     <p>\n";
-        echo "      	<input type=\"submit\" name=\"CastingCart\" value=\"". __('Add to Casting Cart','rb_agency_search') ."\" class=\"button-primary\" />\n";
-		echo "          <a href=\"#\" onClick=\"window.open('". get_bloginfo("url") ."/profile-print/?action=quickPrint&cD=1','mywindow','width=930,height=600,left=0,top=50,screenX=0,screenY=50,scrollbars=yes')\" title=\"Quick Print\" class=\"button-primary\">". __("Quick Print", rb_agency_TEXTDOMAIN) ."</a>\n";
-        echo "          <a href=\"#\" onClick=\"window.open('". get_bloginfo("url") ."/profile-print/?action=quickPrint&cD=0','mywindow','width=930,height=600,left=0,top=50,screenX=0,screenY=50,scrollbars=yes')\" title=\"Quick Print - Without Details\" class=\"button-primary\">". __("Quick Print", rb_agency_TEXTDOMAIN) ." - ". __("Without Details", rb_agency_TEXTDOMAIN) ."</a>\n";
+        echo "      	<input type=\"submit\" name=\"CastingCart\" value=\"". __('Add to Casting Cart','bb_agency_search') ."\" class=\"button-primary\" />\n";
+		echo "          <a href=\"#\" onClick=\"window.open('". get_bloginfo("url") ."/profile-print/?action=quickPrint&cD=1','mywindow','width=930,height=600,left=0,top=50,screenX=0,screenY=50,scrollbars=yes')\" title=\"Quick Print\" class=\"button-primary\">". __("Quick Print", bb_agency_TEXTDOMAIN) ."</a>\n";
+        echo "          <a href=\"#\" onClick=\"window.open('". get_bloginfo("url") ."/profile-print/?action=quickPrint&cD=0','mywindow','width=930,height=600,left=0,top=50,screenX=0,screenY=50,scrollbars=yes')\" title=\"Quick Print - Without Details\" class=\"button-primary\">". __("Quick Print", bb_agency_TEXTDOMAIN) ." - ". __("Without Details", bb_agency_TEXTDOMAIN) ."</a>\n";
 		echo "     </p>\n";
 		echo "  </form>\n";
       
@@ -608,27 +608,27 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 
 	echo "<div class=\"boxblock-container\" style=\"float: left; width: 49%; min-width: 500px;\">\n";
 	echo " <div class=\"boxblock\">\n";
-	echo "  <h2>". __("Casting Cart", rb_agency_TEXTDOMAIN) ."</h2>\n";
+	echo "  <h2>". __("Casting Cart", bb_agency_TEXTDOMAIN) ."</h2>\n";
 	echo "    <div class=\"inner\">\n";
         if (isset($_SESSION['cartArray']) && !empty($_SESSION['cartArray'])) {
 			 
             $cartArray = $_SESSION['cartArray'];
             	$cartString = implode(",", array_unique($cartArray));
-				$cartString = rb_agency_cleanString($cartString);
+				$cartString = bb_agency_cleanString($cartString);
             
 			// Show Cart  
             $query = "SELECT  profile.*,media.* FROM ". table_agency_profile ." profile, ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1 AND profile.ProfileID IN (". $cartString .") ORDER BY profile.ProfileContactNameFirst ASC";
-			$results = mysql_query($query) or  die( "<a href=\"?page=". $_GET['page'] ."&action=cartEmpty\" class=\"button-secondary\">". __("No profile selected. Try again", rb_agency_TEXTDOMAIN) ."</a>"); //die ( __("Error, query failed", rb_agency_TEXTDOMAIN ));
+			$results = mysql_query($query) or  die( "<a href=\"?page=". $_GET['page'] ."&action=cartEmpty\" class=\"button-secondary\">". __("No profile selected. Try again", bb_agency_TEXTDOMAIN) ."</a>"); //die ( __("Error, query failed", bb_agency_TEXTDOMAIN ));
             $count = mysql_num_rows($results);
             
-            echo "<div style=\"float: right; width: 100px; \"><a href=\"?page=". $_GET['page'] ."&action=cartEmpty\" class=\"button-secondary\">". __("Empty Cart", rb_agency_TEXTDOMAIN) ."</a></div>";
-            echo "<div style=\"float: left; line-height: 22px; font-family:Georgia; font-size:13px; font-style: italic; color: #777777; \">". __("Currently", rb_agency_TEXTDOMAIN) ." <strong>". $count ."</strong> ". __("in Cart", rb_agency_TEXTDOMAIN) ."</div>";
+            echo "<div style=\"float: right; width: 100px; \"><a href=\"?page=". $_GET['page'] ."&action=cartEmpty\" class=\"button-secondary\">". __("Empty Cart", bb_agency_TEXTDOMAIN) ."</a></div>";
+            echo "<div style=\"float: left; line-height: 22px; font-family:Georgia; font-size:13px; font-style: italic; color: #777777; \">". __("Currently", bb_agency_TEXTDOMAIN) ." <strong>". $count ."</strong> ". __("in Cart", bb_agency_TEXTDOMAIN) ."</div>";
             echo "<div style=\"clear: both; border-top: 2px solid #c0c0c0; \" class=\"profile\">";
 			
             if ($count == 1) {
                 $cartAction = "cartEmpty";
             } elseif ($count < 1) {
-                echo "". __("There are currently no profiles in the casting cart", rb_agency_TEXTDOMAIN) .".";
+                echo "". __("There are currently no profiles in the casting cart", bb_agency_TEXTDOMAIN) .".";
                 $cartAction = "cartEmpty";
             } else {
                 $cartAction = "cartRemove";
@@ -639,16 +639,16 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 				
                 echo "<div style=\"position: relative; border: 1px solid #e1e1e1; line-height: 22px; float: left; padding: 10px; width: 210px; margin: 6px; \">";
                 echo " <div style=\"text-align: center; \"><h3>". stripslashes($data['ProfileContactNameFirst']) ." ". stripslashes($data['ProfileContactNameLast']) . "</h3></div>"; 
-                echo " <div style=\"float: left; width: 100px; height: 100px; overflow: hidden; margin-top: 2px; \"><img style=\"width: 100px; \" src=\"". rb_agency_UPLOADDIR ."". $data['ProfileGallery'] ."/". $data['ProfileMediaURL'] ."\" /></div>\n";
+                echo " <div style=\"float: left; width: 100px; height: 100px; overflow: hidden; margin-top: 2px; \"><img style=\"width: 100px; \" src=\"". bb_agency_UPLOADDIR ."". $data['ProfileGallery'] ."/". $data['ProfileMediaURL'] ."\" /></div>\n";
                 echo " <div style=\"float: left; width: 100px; height: 100px; overflow: scroll-y; margin-left: 10px; line-height: 11px; font-size: 9px; \">\n";
                 
                     if (!empty($data['ProfileDateBirth'])) {
-                        echo "<strong>Age:</strong> ". rb_agency_get_age($data['ProfileDateBirth']) ."<br />\n";
+                        echo "<strong>Age:</strong> ". bb_agency_get_age($data['ProfileDateBirth']) ."<br />\n";
                     }
   
                     
                 echo " </div>";
-                echo " <div style=\"position: absolute; z-index: 20; top: 120px; left: 200px; width: 20px; height: 20px; overflow: hidden; \"><a href=\"?page=". $_GET['page'] ."&action=". $cartAction ."&RemoveID=". $data['ProfileID'] ."\" title=\"". __("Remove from Cart", rb_agency_TEXTDOMAIN) ."\"><img src=\"". rb_agency_BASEDIR ."style/remove.png\" style=\"width: 20px; \" alt=\"". __("Remove from Cart", rb_agency_TEXTDOMAIN) ."\" /></a></div>";
+                echo " <div style=\"position: absolute; z-index: 20; top: 120px; left: 200px; width: 20px; height: 20px; overflow: hidden; \"><a href=\"?page=". $_GET['page'] ."&action=". $cartAction ."&RemoveID=". $data['ProfileID'] ."\" title=\"". __("Remove from Cart", bb_agency_TEXTDOMAIN) ."\"><img src=\"". bb_agency_BASEDIR ."style/remove.png\" style=\"width: 20px; \" alt=\"". __("Remove from Cart", bb_agency_TEXTDOMAIN) ."\" /></a></div>";
                 echo " <div style=\"clear: both; \"></div>";
                 echo "</div>";
             }
@@ -667,12 +667,12 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 	 if (($cartAction == "cartEmpty") || ($cartAction == "cartRemove")) {
 		echo "<a name=\"compose\">&nbsp;</a>"; 
         echo "     <div class=\"boxblock\">\n";
-        echo "        <h3>". __("Cart Actions", rb_agency_TEXTDOMAIN) ."</h3>\n";
+        echo "        <h3>". __("Cart Actions", bb_agency_TEXTDOMAIN) ."</h3>\n";
         echo "        <div class=\"inner\">\n";
-        echo "      	<a href=\"?page=rb_agency_searchsaved&action=searchSave\" title=\"". __("Save Search & Email", rb_agency_TEXTDOMAIN) ."\" class=\"button-primary\">". __("Save Search & Email", rb_agency_TEXTDOMAIN) ."</a>\n";
-        echo "      	<a href=\"?page=rb_agency_search&action=massEmail#compose\" title=\"". __("Mass Email", rb_agency_TEXTDOMAIN) ."\" class=\"button-primary\">". __("Mass Email", rb_agency_TEXTDOMAIN) ."</a>\n";
-        echo "          <a href=\"#\" onClick=\"window.open('". get_bloginfo("url") ."/profile-print/?action=castingCart&cD=1','mywindow','width=930,height=600,left=0,top=50,screenX=0,screenY=50,scrollbars=yes')\" title=\"Quick Print\" class=\"button-primary\">". __("Quick Print", rb_agency_TEXTDOMAIN) ."</a>\n";
-        echo "          <a href=\"#\" onClick=\"window.open('". get_bloginfo("url") ."/profile-print/?action=castingCart&cD=0','mywindow','width=930,height=600,left=0,top=50,screenX=0,screenY=50,scrollbars=yes')\" title=\"Quick Print - Without Details\" class=\"button-primary\">". __("Quick Print", rb_agency_TEXTDOMAIN) ." - ". __("Without Details", rb_agency_TEXTDOMAIN) ."</a>\n";
+        echo "      	<a href=\"?page=bb_agency_searchsaved&action=searchSave\" title=\"". __("Save Search & Email", bb_agency_TEXTDOMAIN) ."\" class=\"button-primary\">". __("Save Search & Email", bb_agency_TEXTDOMAIN) ."</a>\n";
+        echo "      	<a href=\"?page=bb_agency_search&action=massEmail#compose\" title=\"". __("Mass Email", bb_agency_TEXTDOMAIN) ."\" class=\"button-primary\">". __("Mass Email", bb_agency_TEXTDOMAIN) ."</a>\n";
+        echo "          <a href=\"#\" onClick=\"window.open('". get_bloginfo("url") ."/profile-print/?action=castingCart&cD=1','mywindow','width=930,height=600,left=0,top=50,screenX=0,screenY=50,scrollbars=yes')\" title=\"Quick Print\" class=\"button-primary\">". __("Quick Print", bb_agency_TEXTDOMAIN) ."</a>\n";
+        echo "          <a href=\"#\" onClick=\"window.open('". get_bloginfo("url") ."/profile-print/?action=castingCart&cD=0','mywindow','width=930,height=600,left=0,top=50,screenX=0,screenY=50,scrollbars=yes')\" title=\"Quick Print - Without Details\" class=\"button-primary\">". __("Quick Print", bb_agency_TEXTDOMAIN) ." - ". __("Without Details", bb_agency_TEXTDOMAIN) ."</a>\n";
 
 		echo "        </div>\n";
 		echo "     </div>\n";
@@ -681,13 +681,13 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 	if(isset($_POST["SendEmail"])){
 		
 
-		$bb_agency_options_arr = get_option('rb_agency_options');
-            $bb_agency_value_agencyname = $bb_agency_options_arr['rb_agency_option_agencyname'];
-      	$bb_agency_value_agencyemail = $bb_agency_options_arr['rb_agency_option_agencyemail'];
+		$bb_agency_options_arr = get_option('bb_agency_options');
+            $bb_agency_value_agencyname = $bb_agency_options_arr['bb_agency_option_agencyname'];
+      	$bb_agency_value_agencyemail = $bb_agency_options_arr['bb_agency_option_agencyemail'];
 		
 		  
-		     add_filter('wp_mail_content_type','rb_agency_set_content_type');
-						function rb_agency_set_content_type($content_type){
+		     add_filter('wp_mail_content_type','bb_agency_set_content_type');
+						function bb_agency_set_content_type($content_type){
 							return 'text/html';
 		}
   
@@ -738,12 +738,12 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 			
 	  }
 		// Email
-		$bb_agency_options_arr = get_option('rb_agency_options');
-            $bb_agency_value_agencyname = $bb_agency_options_arr['rb_agency_option_agencyname'];
-      	$bb_agency_value_agencyemail = $bb_agency_options_arr['rb_agency_option_agencyemail'];
+		$bb_agency_options_arr = get_option('bb_agency_options');
+            $bb_agency_value_agencyname = $bb_agency_options_arr['bb_agency_option_agencyname'];
+      	$bb_agency_value_agencyemail = $bb_agency_options_arr['bb_agency_option_agencyemail'];
 		echo "<form method=\"post\">";
 		echo "     <div class=\"boxblock\">\n";
-        echo "        <h3>". __("Compose Email", rb_agency_TEXTDOMAIN) ."</h3>\n";
+        echo "        <h3>". __("Compose Email", bb_agency_TEXTDOMAIN) ."</h3>\n";
         echo "        <div class=\"inner\">\n";
 	  if($isSent){
 	  echo "<div id=\"message\" class=\"updated\"><p>Email Messages successfully sent!</p></div>";	
@@ -752,7 +752,7 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
         echo "        <strong>Subject:</strong> <br/><input type=\"text\" name=\"MassEmailSubject\" style=\"width:100%\"/>";
 		echo "<br/>";
 		echo "      <strong>Message:</strong><br/>     <textarea name=\"MassEmailMessage\"  style=\"width:100%;height:300px;\">this message was sent to you by ".$bb_agency_value_agencyname." ".network_site_url( '/' )."</textarea>";
-		echo "				<input type=\"submit\" value=\"". __("Send Email", rb_agency_TEXTDOMAIN) . "\" name=\"SendEmail\"class=\"button-primary\" />\n";
+		echo "				<input type=\"submit\" value=\"". __("Send Email", bb_agency_TEXTDOMAIN) . "\" name=\"SendEmail\"class=\"button-primary\" />\n";
 		echo "        </div>\n";
 		echo "     </div>\n";
 	    echo "</form>";
@@ -763,28 +763,28 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 
 		echo "    <div class=\"boxblock-container\" style=\"float: left; width: 49%;\">\n";
 		echo "     <div class=\"boxblock\">\n";
-		echo "      <h3>". __("Advance Search", rb_agency_TEXTDOMAIN) ."</h3>\n";
+		echo "      <h3>". __("Advance Search", bb_agency_TEXTDOMAIN) ."</h3>\n";
 		echo "        <div class=\"inner\">\n";
 		echo "        	<form method=\"GET\" action=\"". admin_url("admin.php?page=". $_GET['page']) ."\">\n";
-		echo "        		<input type=\"hidden\" name=\"page\" id=\"page\" value=\"rb_agency_search\" />\n";
+		echo "        		<input type=\"hidden\" name=\"page\" id=\"page\" value=\"bb_agency_search\" />\n";
 		echo "        		<input type=\"hidden\" name=\"action\" value=\"search\" />\n";
 		echo "				<table cellspacing=\"0\" class=\"widefat fixed\">\n";
 		echo "				  <thead>\n";
 		echo "				    <tr>\n";
-		echo "				        <th scope=\"row\">". __("First Name", rb_agency_TEXTDOMAIN) . ":</th>\n";
+		echo "				        <th scope=\"row\">". __("First Name", bb_agency_TEXTDOMAIN) . ":</th>\n";
 		echo "				        <td><input type=\"text\" id=\"ProfileContactNameFirst\" name=\"ProfileContactNameFirst\" value=\"". $_SESSION['ProfileContactNameFirst'] ."\" />\n";               
 		echo "				        </td>\n";
 		echo "				    </tr>\n";
 		echo "				    <tr>\n";
-		echo "				        <th scope=\"row\">". __("Last Name", rb_agency_TEXTDOMAIN) . ":</th>\n";
+		echo "				        <th scope=\"row\">". __("Last Name", bb_agency_TEXTDOMAIN) . ":</th>\n";
 		echo "				        <td><input type=\"text\" id=\"ProfileContactNameLast\" name=\"ProfileContactNameLast\" value=\"". $_SESSION['ProfileContactNameLast'] ."\" />\n";               
 		echo "				        </td>\n";
 		echo "				    </tr>\n";
 		
 		echo "				    <tr>\n";
-		echo "				        <th scope=\"row\">". __("Classification", rb_agency_TEXTDOMAIN) . ":</th>\n";
+		echo "				        <th scope=\"row\">". __("Classification", bb_agency_TEXTDOMAIN) . ":</th>\n";
 		echo "				        <td><select name=\"ProfileType\" id=\"ProfileType\">\n";               
-		echo "							<option value=\"\">". __("Any Profile Type", rb_agency_TEXTDOMAIN) . "</option>";
+		echo "							<option value=\"\">". __("Any Profile Type", bb_agency_TEXTDOMAIN) . "</option>";
 		                                /* 
 										 * set filter from theis array
 										 * to block the following profile types 
@@ -803,9 +803,9 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 		echo "				        </td>\n";
 		echo "				    </tr>\n";
 		echo "				    <tr>\n";
-		echo "				        <th scope=\"row\">". __("Gender", rb_agency_TEXTDOMAIN) . ":</th>\n";
+		echo "				        <th scope=\"row\">". __("Gender", bb_agency_TEXTDOMAIN) . ":</th>\n";
 		echo "				        <td><select name=\"ProfileGender\" id=\"ProfileGender\">\n";               
-		echo "						<option value=\"\">". __("Any Gender", rb_agency_TEXTDOMAIN) . "</option>\n";
+		echo "						<option value=\"\">". __("Any Gender", bb_agency_TEXTDOMAIN) . "</option>\n";
 											$query2 = "SELECT GenderID, GenderTitle FROM ". table_agency_data_gender ." ORDER BY GenderID";
 											$results2 = mysql_query($query2);
 											while ($dataGender = mysql_fetch_array($results2)) {
@@ -815,20 +815,20 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 		echo "				        </td>\n";
 		echo "				    </tr>\n";
 		echo "				    <tr>\n";
-		echo "				        <th scope=\"row\">". __("Age", rb_agency_TEXTDOMAIN) . ":</th>\n";
+		echo "				        <th scope=\"row\">". __("Age", bb_agency_TEXTDOMAIN) . ":</th>\n";
 		echo "				        <td>\n";
 		echo "				        <fieldset>\n";
-		echo "				       <div> <label for=\"ProfileDateBirth_min\">". __("Min", rb_agency_TEXTDOMAIN) . "</label>\n";
+		echo "				       <div> <label for=\"ProfileDateBirth_min\">". __("Min", bb_agency_TEXTDOMAIN) . "</label>\n";
 		echo "						<input type=\"text\" class=\"min_max\" id=\"ProfileDateBirth_min\" name=\"ProfileDateBirth_min\" />";
 		echo "						</div>";
 		
-		echo "				        <div><label for=\"ProfileDateBirth_max\">". __("Max", rb_agency_TEXTDOMAIN) . "</label>\n";
+		echo "				        <div><label for=\"ProfileDateBirth_max\">". __("Max", bb_agency_TEXTDOMAIN) . "</label>\n";
 		echo "						<input type=\"text\" class=\"min_max\" id=\"ProfileDateBirth_max\" name=\"ProfileDateBirth_max\" />";
 		echo "						</div>";
 		           
-	/*	echo "				        	". __("Minimum", rb_agency_TEXTDOMAIN) . ":\n";
+	/*	echo "				        	". __("Minimum", bb_agency_TEXTDOMAIN) . ":\n";
 		echo "				        	<input type=\"text\" class=\"stubby\" id=\"ProfileDateBirth_min\" name=\"ProfileDateBirth_min\" value=\"". $_GET['ProfileDateBirth_min'] ."\" /><br />\n";
-		echo "				        	". __("Maximum", rb_agency_TEXTDOMAIN) . ":\n";
+		echo "				        	". __("Maximum", bb_agency_TEXTDOMAIN) . ":\n";
 		echo "				        	<input type=\"text\" class=\"stubby\" id=\"ProfileDateBirth_max\" name=\"ProfileDateBirth_max\" value=\"". $_GET['ProfileDateBirth_max'] ."\" />\n";
 	*/
 		echo "				        </fieldset>\n";
@@ -837,9 +837,9 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 	
 
 		echo "				    <tr>\n";
-		echo "				        <th scope=\"row\">". __("City", rb_agency_TEXTDOMAIN) . ":</th>\n";
+		echo "				        <th scope=\"row\">". __("City", bb_agency_TEXTDOMAIN) . ":</th>\n";
 		echo "				        <td><select name=\"ProfileLocationCity\" id=\"ProfileLocationCity\">\n";               
-		echo "							<option value=\"\">". __("Any City", rb_agency_TEXTDOMAIN) . "</option>";
+		echo "							<option value=\"\">". __("Any City", bb_agency_TEXTDOMAIN) . "</option>";
 										  /*
 										   * lets get the variables first for use
 										   * in city 
@@ -848,9 +848,9 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 										
 										while ($dataLocation = mysql_fetch_array($profilecity)) {
 					                          if (isset($_GET['ProfileLocationCity']) && !empty($_GET['ProfileLocationCity']) && $_SESSION['ProfileLocationCity'] == $dataLocation["ProfileLocationCity"]) {
-										  	     echo "<option value=\"". $dataLocation["ProfileLocationCity"] ."\" selected>". rb_agency_strtoproper($dataLocation["ProfileLocationCity"]) .", ". strtoupper($dataLocation["ProfileLocationState"]) ."</option>";
+										  	     echo "<option value=\"". $dataLocation["ProfileLocationCity"] ."\" selected>". bb_agency_strtoproper($dataLocation["ProfileLocationCity"]) .", ". strtoupper($dataLocation["ProfileLocationState"]) ."</option>";
 										      } else {
-										   	     echo "<option value=\"". $dataLocation["ProfileLocationCity"] ."\">". rb_agency_strtoproper($dataLocation["ProfileLocationCity"]) .", ". strtoupper($dataLocation["ProfileLocationState"]) ."</option>";
+										   	     echo "<option value=\"". $dataLocation["ProfileLocationCity"] ."\">". bb_agency_strtoproper($dataLocation["ProfileLocationCity"]) .", ". strtoupper($dataLocation["ProfileLocationState"]) ."</option>";
 										      }
 										}
 										
@@ -859,9 +859,9 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 		echo "				    </tr>\n";
 
 		echo "				    <tr>\n";
-		echo "				        <th scope=\"row\">". __("State", rb_agency_TEXTDOMAIN) . ":</th>\n";
+		echo "				        <th scope=\"row\">". __("State", bb_agency_TEXTDOMAIN) . ":</th>\n";
 		echo "				        <td><select name=\"ProfileLocationState\" id=\"ProfileLocationState\">\n";               
-		echo "							<option value=\"\">". __("Any State", rb_agency_TEXTDOMAIN) . "</option>";
+		echo "							<option value=\"\">". __("Any State", bb_agency_TEXTDOMAIN) . "</option>";
 										  /*
 										   * lets get the variables first for use
 										   * in state
@@ -870,9 +870,9 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 										
 										while ($dataLocation = mysql_fetch_array($profilestate)) {
 					                          if (isset($_GET['ProfileLocationState']) && !empty($_GET['ProfileLocationState']) && $_SESSION['ProfileLocationState'] == $dataLocation["ProfileLocationState"]) {
-										  	     echo "<option value=\"". $dataLocation["ProfileLocationState"] ."\" selected>". rb_agency_strtoproper($dataLocation["ProfileLocationState"]) .", ". strtoupper($dataLocation["ProfileLocationState"]) ."</option>";
+										  	     echo "<option value=\"". $dataLocation["ProfileLocationState"] ."\" selected>". bb_agency_strtoproper($dataLocation["ProfileLocationState"]) .", ". strtoupper($dataLocation["ProfileLocationState"]) ."</option>";
 										      } else {
-										   	     echo "<option value=\"". $dataLocation["ProfileLocationState"] ."\">". rb_agency_strtoproper($dataLocation["ProfileLocationState"]) .", ". strtoupper($dataLocation["ProfileLocationState"]) ."</option>";
+										   	     echo "<option value=\"". $dataLocation["ProfileLocationState"] ."\">". bb_agency_strtoproper($dataLocation["ProfileLocationState"]) .", ". strtoupper($dataLocation["ProfileLocationState"]) ."</option>";
 										      }
 										}
 										
@@ -881,9 +881,9 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 		echo "				    </tr>\n";
 
 		echo "				    <tr>\n";
-		echo "				        <th scope=\"row\">". __("Zip", rb_agency_TEXTDOMAIN) . ":</th>\n";
+		echo "				        <th scope=\"row\">". __("Zip", bb_agency_TEXTDOMAIN) . ":</th>\n";
 		echo "				        <td><select name=\"ProfileLocationZip\" id=\"ProfileLocationZip\">\n";               
-		echo "							<option value=\"\">". __("Any Zip", rb_agency_TEXTDOMAIN) . "</option>";
+		echo "							<option value=\"\">". __("Any Zip", bb_agency_TEXTDOMAIN) . "</option>";
 										  /*
 										   * lets get the variables first for use
 										   * in sip
@@ -892,9 +892,9 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 										
 										while ($dataLocation = mysql_fetch_array($profilestate)) {
 					                          if (isset($_GET['ProfileLocationZip']) && !empty($_GET['ProfileLocationZip']) && $_SESSION['ProfileLocationZip'] == $dataLocation["ProfileLocationZip"]) {
-										  	     echo "<option value=\"". $dataLocation["ProfileLocationZip"] ."\" selected>". rb_agency_strtoproper($dataLocation["ProfileLocationZip"]) .", ". strtoupper($dataLocation["ProfileLocationZip"]) ."</option>";
+										  	     echo "<option value=\"". $dataLocation["ProfileLocationZip"] ."\" selected>". bb_agency_strtoproper($dataLocation["ProfileLocationZip"]) .", ". strtoupper($dataLocation["ProfileLocationZip"]) ."</option>";
 										      } else {
-										   	     echo "<option value=\"". $dataLocation["ProfileLocationZip"] ."\">". rb_agency_strtoproper($dataLocation["ProfileLocationZip"]) .", ". strtoupper($dataLocation["ProfileLocationZip"]) ."</option>";
+										   	     echo "<option value=\"". $dataLocation["ProfileLocationZip"] ."\">". bb_agency_strtoproper($dataLocation["ProfileLocationZip"]) .", ". strtoupper($dataLocation["ProfileLocationZip"]) ."</option>";
 										      }
 										}
 		echo "				        	</select>\n";
@@ -921,8 +921,8 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 
 			 // SET Label for Measurements
 			 // Imperial(in/lb), Metrics(ft/kg)
-			 $bb_agency_options_arr = get_option('rb_agency_options');
-			  $bb_agency_option_unittype  = $bb_agency_options_arr['rb_agency_option_unittype'];
+			 $bb_agency_options_arr = get_option('bb_agency_options');
+			  $bb_agency_option_unittype  = $bb_agency_options_arr['bb_agency_option_unittype'];
 			  $measurements_label = "";
 			  /*
 			    0- metric
@@ -969,9 +969,9 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 
 					if(in_array($data1['ProfileCustomTitle'], $cusFields)) { //used alternative inputs for custom fields defined on top of this page
 						echo  "			<fieldset class=\"rbtext\">";
-						echo "<div><label for=\"ProfileCustomLabel_min\">". __("Min", rb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+						echo "<div><label for=\"ProfileCustomLabel_min\">". __("Min", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
 						echo "<input class=\"min_max\" type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."_min\" value=\"". $ProfileCustomOptions_Min_value ."\" /></div>\n";
-						echo "<div><label for=\"ProfileCustomLabel_min\">". __("Max", rb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+						echo "<div><label for=\"ProfileCustomLabel_min\">". __("Max", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
 						echo "<input class=\"min_max\"  type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."_max\" value=\"". $ProfileCustomOptions_Max_value ."\" /></div>\n";
 						echo  "			</fieldset>";
 					}else{
@@ -991,16 +991,16 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 									   
 									 
 										if(!empty($ProfileCustomOptions_Min_value) && !empty($ProfileCustomOptions_Max_value)){
-											      echo "<div><label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Min", rb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+											      echo "<div><label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Min", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
 												echo "<input class=\"min_max\" type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\" value=\"". $ProfileCustomOptions_Min_value ."\" /></div>\n";
-												echo "<div><label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Max", rb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+												echo "<div><label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Max", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
 												echo "<input class=\"min_max\" type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\" value=\"". $ProfileCustomOptions_Max_value ."\" /></div>\n";
 									
 											
 										}else{
-											      echo "<div><label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Min", rb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+											      echo "<div><label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Min", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
 												echo "<input class=\"min_max\" type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\" value=\"".$_SESSION["ProfileCustomID". $data1['ProfileCustomID']]."\" /></div>\n";
-											      echo "<div><label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Max", rb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+											      echo "<div><label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Max", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
 												echo "<input class=\"min_max\" type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\" value=\"".$_SESSION["ProfileCustomID". $data1['ProfileCustomID']]."\" /></div>\n";
 									
 										   
@@ -1218,13 +1218,13 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
         // status filter
 
 		echo "				    <tr>\n";
-		echo "				        <th scope=\"row\">". __("Status", rb_agency_TEXTDOMAIN) . ":</th>\n";
+		echo "				        <th scope=\"row\">". __("Status", bb_agency_TEXTDOMAIN) . ":</th>\n";
 		echo "				        <td><select name=\"ProfileIsActive\" id=\"ProfileIsActive\">\n";               
-		echo "							<option value=\"\">". __("Any Status", rb_agency_TEXTDOMAIN) . "</option>\n";
-		echo "							<option value=\"1\"". selected($_SESSION['ProfileIsActive'], 1) .">". __("Active", rb_agency_TEXTDOMAIN) . "</option>\n";
-		echo "							<option value=\"4\"". selected($_SESSION['ProfileIsActive'], 4) .">". __("Not Visible", rb_agency_TEXTDOMAIN) . "</option>\n";
-        echo "							<option value=\"0\"". selected($_SESSION['ProfileIsActive'], 0) .">". __("Inactive", rb_agency_TEXTDOMAIN) . "</option>\n";
-		echo "							<option value=\"2\"". selected($_SESSION['ProfileIsActive'], 2) .">". __("Archived", rb_agency_TEXTDOMAIN) . "</option>\n";
+		echo "							<option value=\"\">". __("Any Status", bb_agency_TEXTDOMAIN) . "</option>\n";
+		echo "							<option value=\"1\"". selected($_SESSION['ProfileIsActive'], 1) .">". __("Active", bb_agency_TEXTDOMAIN) . "</option>\n";
+		echo "							<option value=\"4\"". selected($_SESSION['ProfileIsActive'], 4) .">". __("Not Visible", bb_agency_TEXTDOMAIN) . "</option>\n";
+        echo "							<option value=\"0\"". selected($_SESSION['ProfileIsActive'], 0) .">". __("Inactive", bb_agency_TEXTDOMAIN) . "</option>\n";
+		echo "							<option value=\"2\"". selected($_SESSION['ProfileIsActive'], 2) .">". __("Archived", bb_agency_TEXTDOMAIN) . "</option>\n";
 		echo "				        	</select>\n";
 		echo "				        </td>\n";
 		echo "				    </tr>\n";
@@ -1232,8 +1232,8 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 		echo "				  </thead>\n";
 		echo "				</table>\n";
 		echo "				<p class=\"submit\">\n";
-		echo "				<input type=\"submit\" value=\"". __("Search Profiles", rb_agency_TEXTDOMAIN) . "\" class=\"button-primary\" />\n";
-		echo "				<input type=\"reset\" onclick=\"redirectSearch();\" name=\"reset\" value=\"". __("Reset Form", rb_agency_TEXTDOMAIN) . "\" class=\"button-secondary\" />\n";
+		echo "				<input type=\"submit\" value=\"". __("Search Profiles", bb_agency_TEXTDOMAIN) . "\" class=\"button-primary\" />\n";
+		echo "				<input type=\"reset\" onclick=\"redirectSearch();\" name=\"reset\" value=\"". __("Reset Form", bb_agency_TEXTDOMAIN) . "\" class=\"button-secondary\" />\n";
 		echo "				</p>\n";
 		echo "        	<form>\n";
 

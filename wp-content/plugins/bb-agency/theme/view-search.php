@@ -157,10 +157,10 @@ if ($_REQUEST["action"] == "search") {
 		echo "<div id=\"profile-search\">\n";
 	    
 			if ($_REQUEST["action"] == "search") {
-		echo "  <h1 class=\"entry-title\">". __("Search Results", rb_agency_TEXTDOMAIN) ."</h1>\n";
+		echo "  <h1 class=\"entry-title\">". __("Search Results", bb_agency_TEXTDOMAIN) ."</h1>\n";
 			} else {
-		echo "  <h1 class=\"entry-title\">". __("Advanced Search", rb_agency_TEXTDOMAIN) ."</h1>\n";
-		//echo "  <h1 class=\"entry-title\">". __("Search Results", rb_agency_TEXTDOMAIN) ."</h1>\n";
+		echo "  <h1 class=\"entry-title\">". __("Advanced Search", bb_agency_TEXTDOMAIN) ."</h1>\n";
+		//echo "  <h1 class=\"entry-title\">". __("Search Results", bb_agency_TEXTDOMAIN) ."</h1>\n";
 			}
 	
 		echo "  <div class=\"cb\"></div>\n";
@@ -169,17 +169,17 @@ if ($_REQUEST["action"] == "search") {
 		echo "		    <div id=\"profile-search-results\">\n";
 						if ($_REQUEST["action"] == "search") {
 	                                 
-							if (function_exists('rb_agency_profilelist')) { 
-								rb_agency_profilelist($filterArray); 
+							if (function_exists('bb_agency_profilelist')) { 
+								bb_agency_profilelist($filterArray); 
 							}
 						} else {
-							echo "<strong>". __("No search chriteria selected, please initiate your search.", rb_agency_TEXTDOMAIN) ."</strong>";
+							echo "<strong>". __("No search chriteria selected, please initiate your search.", bb_agency_TEXTDOMAIN) ."</strong>";
 						}
 
 /* Phel Comment: Removed Extra Search, We have already a Search widget
 		echo "		    </div>\n";
 		echo "		    <div id=\"profile-search-filter\" class=\"three column\">\n";
-		echo "			<h3 class=\"title\">". __("Search Profiles", rb_agency_TEXTDOMAIN) ."</h3>\n";
+		echo "			<h3 class=\"title\">". __("Search Profiles", bb_agency_TEXTDOMAIN) ."</h3>\n";
 		                        $isSearchPage = (get_query_var('type') == "search") ? 1 : 0;
 						$profilesearch_layout = "advanced";
 						include("include-profile-search.php"); 	

@@ -6,10 +6,10 @@
 .loading-profile{  height:32px; width: 25%; margin-right: 50px !important; float: right !important; background:transparent url(../style/loader.gif) no-repeat scroll; }
 .error-profile{  height:32px; width: 25%; margin-right: 50px !important; float: right !important; background:transparent url(../style/error.png) no-repeat scroll; }
 
-#toplevel_page_rb_agency_menu div.wp-menu-image { background:transparent url(../style/rb-icon-gray.png) no-repeat scroll; } 
-#toplevel_page_rb_agency_menu:hover div.wp-menu-image { background:transparent url(../style/rb-icon-color.png) no-repeat scroll; } 
-#toplevel_page_rb_agency_menu.wp-has-current-submenu div.wp-menu-image,
-#toplevel_page_rb_agency_menu.current div.wp-menu-image { background: transparent url(../style/rb-icon-white.png) no-repeat scroll; } 
+#toplevel_page_bb_agency_menu div.wp-menu-image { background:transparent url(../style/rb-icon-gray.png) no-repeat scroll; } 
+#toplevel_page_bb_agency_menu:hover div.wp-menu-image { background:transparent url(../style/rb-icon-color.png) no-repeat scroll; } 
+#toplevel_page_bb_agency_menu.wp-has-current-submenu div.wp-menu-image,
+#toplevel_page_bb_agency_menu.current div.wp-menu-image { background: transparent url(../style/rb-icon-white.png) no-repeat scroll; } 
 
 /*Remove icon*/
 #profile-manage-media .rotateimage {background: transparent url(../style/rotate.png); width:16px; height:16px; display:block; float:left;  }
@@ -26,7 +26,7 @@
 
 hr { border: none; }
 
-/* /wp-admin/admin.php?page=rb_agency_profiles : Filter Profiles */
+/* /wp-admin/admin.php?page=bb_agency_profiles : Filter Profiles */
 #filter-profiles span { float: left; width: 25%; min-height: 50px; }
 #filter-profiles span label { display: inline-block; width: 100%; }
 #filter-profiles span.submit { width: auto; margin: 0!important; float: left!important; }

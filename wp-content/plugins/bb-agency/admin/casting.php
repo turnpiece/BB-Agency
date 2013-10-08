@@ -18,7 +18,7 @@ if (isset($_POST['action'])) {
 	$CastingContactPhoneHome	=$_POST['CastingContactPhoneHome'];
 	$CastingContactPhoneCell	=$_POST['CastingContactPhoneCell'];
 	$CastingContactPhoneWork	=$_POST['CastingContactPhoneWork'];
-	$CastingLocationCity		=rb_agency_strtoproper($_POST['CastingLocationCity']);
+	$CastingLocationCity		=bb_agency_strtoproper($_POST['CastingLocationCity']);
 	$CastingLocationState		=strtoupper($_POST['CastingLocationState']);
 	$CastingLocationZip			=$_POST['CastingLocationZip'];
 	$CastingLocationCountry		=$_POST['CastingLocationCountry'];
@@ -47,9 +47,9 @@ if (isset($_POST['action'])) {
 			    $results = $wpdb->query($insert);
 				$lastid = $wpdb->insert_id;
 
-				echo ('<div id="message" class="updated"><p>'. __("New Casting added successfully!", rb_agency_TEXTDOMAIN) .' <a href="'. admin_url("admin.php?page=". $_GET['page']) .'&action=editRecord&xCastingID='. $lastid .'">'. __("Update and add media", rb_agency_TEXTDOMAIN) .'</a></p></div>'); 
+				echo ('<div id="message" class="updated"><p>'. __("New Casting added successfully!", bb_agency_TEXTDOMAIN) .' <a href="'. admin_url("admin.php?page=". $_GET['page']) .'&action=editRecord&xCastingID='. $lastid .'">'. __("Update and add media", bb_agency_TEXTDOMAIN) .'</a></p></div>'); 
 			} else {
-	       		echo ('<div id="message" class="error"><p>'. __("Error creating record, please ensure you have filled out all required fields.", rb_agency_TEXTDOMAIN) .'</p></div>'); 
+	       		echo ('<div id="message" class="error"><p>'. __("Error creating record, please ensure you have filled out all required fields.", bb_agency_TEXTDOMAIN) .'</p></div>'); 
 			}
 			rb_display_list();
 			exit;
@@ -124,7 +124,7 @@ if (isset($_POST['action'])) {
 
 		$xCastingID = $_GET['xCastingID'];
 		$query = "SELECT * FROM " . table_agency_casting . " WHERE CastingID='$xCastingID'";
-		$results = mysql_query($query) or die ( __("Error, query failed", rb_agency_TEXTDOMAIN ));
+		$results = mysql_query($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ));
 		$count = mysql_num_rows($results);
 		while ($data = mysql_fetch_array($results)) {
 			$CastingID				=$data['CastingID'];
@@ -205,7 +205,7 @@ if (isset($_POST['action'])) {
 		       	<tr valign="top">
 					<th scope="row">City</th>
 					<td>
-						<input type="text" id="CastingLocationCity" name="CastingLocationCity" value="<?php echo rb_agency_strtoproper($CastingLocationCity); ?>" />
+						<input type="text" id="CastingLocationCity" name="CastingLocationCity" value="<?php echo bb_agency_strtoproper($CastingLocationCity); ?>" />
 					</td>
 				</tr>
 		       	<tr valign="top">
@@ -348,9 +348,9 @@ function rb_display_list() { ?>
 									echo "<option value=\"\">Any Location</option>";
 								while ($dataLocation = mysql_fetch_array($CastingLocations)) {
 								  	if (isset($_GET['CastingLocationCity']) && !empty($_GET['CastingLocationCity']) && $selectedCity == $dataLocation["CastingLocationCity"]) {
-										echo "<option value=\"". $dataLocation["CastingLocationCity"] ."\" selected>". rb_agency_strtoproper($dataLocation["CastingLocationCity"]) .", ". strtoupper($dataLocation["CastingLocationState"]) ."</option>";
+										echo "<option value=\"". $dataLocation["CastingLocationCity"] ."\" selected>". bb_agency_strtoproper($dataLocation["CastingLocationCity"]) .", ". strtoupper($dataLocation["CastingLocationState"]) ."</option>";
 								  	} else {
-										echo "<option value=\"". $dataLocation["CastingLocationCity"] ."\">". rb_agency_strtoproper($dataLocation["CastingLocationCity"]) .", ". strtoupper($dataLocation["CastingLocationState"]) ."</option>";
+										echo "<option value=\"". $dataLocation["CastingLocationCity"] ."\">". bb_agency_strtoproper($dataLocation["CastingLocationCity"]) .", ". strtoupper($dataLocation["CastingLocationState"]) ."</option>";
 								  	}
 								}
 							?>
@@ -394,7 +394,7 @@ function rb_display_list() { ?>
 		           	$CastingCompany = stripslashes($data['CastingCompany']);
 		           	$CastingContactNameFirst = stripslashes($data['CastingContactNameFirst']);
 		           	$CastingContactNameLast = stripslashes($data['CastingContactNameLast']);
-		           	$CastingLocationCity = rb_agency_strtoproper(stripslashes($data['CastingLocationCity']));
+		           	$CastingLocationCity = bb_agency_strtoproper(stripslashes($data['CastingLocationCity']));
 		           	$CastingLocationState = stripslashes($data['CastingLocationState']);
 					if ($data['CastingIsActive']) { $rowColor = ""; } else { $rowColor = " style=\"background: #FFEBE8\""; } ?>
 			       	<tr<?php echo $rowColor; ?>>

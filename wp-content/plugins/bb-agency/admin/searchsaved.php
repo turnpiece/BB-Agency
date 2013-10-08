@@ -6,13 +6,13 @@ global $wpdb;
 
 
 
-$bb_agency_options_arr = get_option('rb_agency_options');
+$bb_agency_options_arr = get_option('bb_agency_options');
 
-	$bb_agency_option_agencyname		= $bb_agency_options_arr['rb_agency_option_agencyname'];
+	$bb_agency_option_agencyname		= $bb_agency_options_arr['bb_agency_option_agencyname'];
 
-	$bb_agency_option_agencyemail	= $bb_agency_options_arr['rb_agency_option_agencyemail'];
+	$bb_agency_option_agencyemail	= $bb_agency_options_arr['bb_agency_option_agencyemail'];
 
-	$bb_agency_option_agencyheader	= $bb_agency_options_arr['rb_agency_option_agencyheader'];
+	$bb_agency_option_agencyheader	= $bb_agency_options_arr['bb_agency_option_agencyheader'];
 
 	$SearchMuxHash			= $_GET["SearchMuxHash"]; // Set Hash
 
@@ -130,9 +130,9 @@ if (isset($_POST['action'])) {
 
 			
 
-			add_filter('wp_mail_content_type','rb_agency_set_content_type');
+			add_filter('wp_mail_content_type','bb_agency_set_content_type');
 
-			function rb_agency_set_content_type($content_type){
+			function bb_agency_set_content_type($content_type){
 
 				return 'text/html';
 
@@ -212,7 +212,7 @@ if (isset($_POST['action'])) {
 
 	?>
    <div style="width:500px; float:left;">
-     <h2><?php echo __("Search Saved", rb_agency_TEXTDOMAIN); ?></h2>
+     <h2><?php echo __("Search Saved", bb_agency_TEXTDOMAIN); ?></h2>
       <form method="post" enctype="multipart/form-data" action="<?php echo admin_url("admin.php?page=". $_GET['page'])."&SearchID=".$_GET['SearchID']."&SearchMuxHash=".$_GET["SearchMuxHash"]; ?>">
        <input type="hidden" name="action" value="cartEmail" />
        <div><label for="SearchMuxToName"><strong>Send to Name:</strong></label><br/><input style="width:300px;" type="text" id="SearchMuxToName" name="SearchMuxToName" value="<?php echo $dataSearchSavedMux["SearchMuxToName"]; ?>" /></div>
@@ -258,8 +258,8 @@ if (isset($_POST['action'])) {
                         echo " <div style=\"background:black; color:white;float: left; max-width: 100px; height: 180px; margin: 2px; overflow:hidden;  \">";
 				echo " <div style=\"margin:3px;max-width:250px; max-height:300px; overflow:hidden;\">";
 				echo stripslashes($data2['ProfileContactNameFirst']) ." ". stripslashes($data2['ProfileContactNameLast']);
-				echo "<br /><a href=\"". rb_agency_PROFILEDIR . $data2['ProfileGallery'] ."/\" target=\"_blank\">";
-				echo "<img style=\"max-width:130px; max-height:150px; \" src=\"". rb_agency_UPLOADDIR ."". $data2['ProfileGallery'] ."/". $data2['ProfileMediaURL'] ."\" /></a>";
+				echo "<br /><a href=\"". bb_agency_PROFILEDIR . $data2['ProfileGallery'] ."/\" target=\"_blank\">";
+				echo "<img style=\"max-width:130px; max-height:150px; \" src=\"". bb_agency_UPLOADDIR ."". $data2['ProfileGallery'] ."/". $data2['ProfileMediaURL'] ."\" /></a>";
 				echo "</div>\n";
 				echo "</div>\n";
                   }
@@ -316,7 +316,7 @@ if (isset($_POST['action'])) {
                                    
 						$query = "SELECT * FROM ". table_agency_profile ." profile, ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1 AND profile.ProfileID IN (". $cartString .") ORDER BY ProfileContactNameFirst ASC";
 
-						$results = mysql_query($query) or die ( __("Error, query failed", rb_agency_TEXTDOMAIN ));
+						$results = mysql_query($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ));
 
 						$count = mysql_num_rows($results);
 
@@ -324,7 +324,7 @@ if (isset($_POST['action'])) {
 
 						while ($data = mysql_fetch_array($results)) {
 
-							echo " <div style=\"float: left; width: 80px; height: 100px; margin-right: 5px; overflow: hidden; \">". stripslashes($data['ProfileContactNameFirst']) ." ". stripslashes($data['ProfileContactNameLast']) . "<br /><a href=\"". rb_agency_PROFILEDIR . $data['ProfileGallery'] ."/\" target=\"_blank\"><img style=\"width: 80px; \" src=\"". rb_agency_UPLOADDIR ."". $data['ProfileGallery'] ."/". $data['ProfileMediaURL'] ."\" /></a></div>\n";
+							echo " <div style=\"float: left; width: 80px; height: 100px; margin-right: 5px; overflow: hidden; \">". stripslashes($data['ProfileContactNameFirst']) ." ". stripslashes($data['ProfileContactNameLast']) . "<br /><a href=\"". bb_agency_PROFILEDIR . $data['ProfileGallery'] ."/\" target=\"_blank\"><img style=\"width: 80px; \" src=\"". bb_agency_UPLOADDIR ."". $data['ProfileGallery'] ."/". $data['ProfileMediaURL'] ."\" /></a></div>\n";
 
 						}
 
@@ -365,9 +365,9 @@ if (isset($_POST['action'])) {
 
 
 
-		  $bb_agency_options_arr = get_option('rb_agency_options');
+		  $bb_agency_options_arr = get_option('bb_agency_options');
 
-			$bb_agency_option_locationtimezone 		= (int)$bb_agency_options_arr['rb_agency_option_locationtimezone'];
+			$bb_agency_option_locationtimezone 		= (int)$bb_agency_options_arr['bb_agency_option_locationtimezone'];
 
 		
 
@@ -439,7 +439,7 @@ if (isset($_POST['action'])) {
 
 		if($items > 0) {
 
-			$p = new rb_agency_pagination;
+			$p = new bb_agency_pagination;
 
 			$p->items($items);
 
@@ -653,7 +653,7 @@ if (isset($_POST['action'])) {
 
 				?>
 
-					<span class="send"><a href="admin.php?page=<?php echo $_GET['page']; ?>&action=emailCompose&SearchID=<?php echo $SearchID."&SearchMuxHash=".rb_agency_random(8); ?>">Create Email</a> | </span>
+					<span class="send"><a href="admin.php?page=<?php echo $_GET['page']; ?>&action=emailCompose&SearchID=<?php echo $SearchID."&SearchMuxHash=".bb_agency_random(8); ?>">Create Email</a> | </span>
 
 				<?php
 
@@ -692,7 +692,7 @@ if (isset($_POST['action'])) {
 
 					} 
 
-					echo "(". rb_agency_makeago(rb_agency_convertdatetime( $data3["SearchMuxSent"]), $bb_agency_option_locationtimezone) .") ";
+					echo "(". bb_agency_makeago(bb_agency_convertdatetime( $data3["SearchMuxSent"]), $bb_agency_option_locationtimezone) .") ";
 
 					echo "<strong>". $data3["SearchMuxToName"]."&lt;".$data3["SearchMuxToEmail"]."&gt;"."</strong> ";
 
@@ -794,7 +794,7 @@ if (isset($_POST['action'])) {
 
 		<input type="hidden" value="deleteRecord" name="action" />
 
-		<input type="submit" value="<?php echo __('Delete','rb_agency_profiles'); ?>" class="button-primary" name="submit" />		
+		<input type="submit" value="<?php echo __('Delete','bb_agency_profiles'); ?>" class="button-primary" name="submit" />		
 
 	</p>
 

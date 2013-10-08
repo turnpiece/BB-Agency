@@ -1,14 +1,14 @@
 <?php
 global $wpdb;
-$bb_agency_options_arr = get_option('rb_agency_options');
-	$bb_agency_option_profilenaming = $bb_agency_options_arr['rb_agency_option_profilenaming'];
-	$bb_agency_option_unittype = $bb_agency_options_arr['rb_agency_option_unittype'];
+$bb_agency_options_arr = get_option('bb_agency_options');
+	$bb_agency_option_profilenaming = $bb_agency_options_arr['bb_agency_option_profilenaming'];
+	$bb_agency_option_unittype = $bb_agency_options_arr['bb_agency_option_unittype'];
 
 	//Custom fields display options
-	$bb_agency_option_customfields_profilepage = $bb_agency_options_arr['rb_agency_option_customfield_profilepage'];
-	$bb_agency_option_customfields_searchpage = $bb_agency_options_arr['rb_agency_option_customfield_searchpage'];
-	$bb_agency_option_customfields_loggedin_all = $bb_agency_options_arr['rb_agency_option_customfield_loggedin_all'];
-	$bb_agency_option_customfields_loggedin_admin = $bb_agency_options_arr['rb_agency_option_customfield_loggedin_admin'];
+	$bb_agency_option_customfields_profilepage = $bb_agency_options_arr['bb_agency_option_customfield_profilepage'];
+	$bb_agency_option_customfields_searchpage = $bb_agency_options_arr['bb_agency_option_customfield_searchpage'];
+	$bb_agency_option_customfields_loggedin_all = $bb_agency_options_arr['bb_agency_option_customfield_loggedin_all'];
+	$bb_agency_option_customfields_loggedin_admin = $bb_agency_options_arr['bb_agency_option_customfield_loggedin_admin'];
 	
 	if (isset($_REQUEST['ProfileType']) && !empty($_REQUEST['ProfileType'])) { $_SESSION['ProfileType'] = $_REQUEST['ProfileType']; }
 	if (isset($DataTypeID) && !empty($DataTypeID)) { $_SESSION['ProfileType'] = $DataTypeID; }
@@ -27,19 +27,19 @@ $bb_agency_options_arr = get_option('rb_agency_options');
 		echo "        		<div><input type=\"hidden\" name=\"action\" value=\"search\" /></div>\n";
 
 		echo "	 			      <div class=\"search-field single\">\n";
-		echo "		 				<label for=\"ProfileFirstName\">". __("First Name", rb_agency_TEXTDOMAIN) ."</label>\n";
+		echo "		 				<label for=\"ProfileFirstName\">". __("First Name", bb_agency_TEXTDOMAIN) ."</label>\n";
 	      echo "		 				<input type=\"text\" id=\"ProfileContactNameFirst\" name=\"ProfileContactNameFirst\" value=\"". $_SESSION["ProfileContactNameFirst"] ."\" />\n";
 	      echo "	 				</div>\n";
 /*		
 		echo "	 				<div class=\"search-field single\">\n";
-		echo "		 				<label for=\"ProfileLastName\">". __("Last Name", rb_agency_TEXTDOMAIN) ."</label>\n";
+		echo "		 				<label for=\"ProfileLastName\">". __("Last Name", bb_agency_TEXTDOMAIN) ."</label>\n";
 	      echo "						 <input type=\"text\" id=\"ProfileContactNameLast\" name=\"ProfileContactNameLast\" value=\"". $_SESSION["ProfileContactNameLast"] ."\" />\n";
 		echo "					 </div>\n";		
 */		
 		echo "				    <div class=\"search-field single\">\n";
-		echo "				       <label for=\"ProfileType\">". __("Type", rb_agency_TEXTDOMAIN) . "</label>\n";
+		echo "				       <label for=\"ProfileType\">". __("Type", bb_agency_TEXTDOMAIN) . "</label>\n";
 		echo "				        	<select name=\"ProfileType\" id=\"ProfileType\">\n";               
-		echo "								<option value=\"\">". __("Any Profile Type", rb_agency_TEXTDOMAIN) . "</option>";
+		echo "								<option value=\"\">". __("Any Profile Type", bb_agency_TEXTDOMAIN) . "</option>";
 											$query = "SELECT DataTypeID, DataTypeTitle FROM ". table_agency_data_type ." ORDER BY DataTypeTitle";
 											$results2 = mysql_query($query);
 											while ($dataType = mysql_fetch_array($results2)) {
@@ -52,9 +52,9 @@ $bb_agency_options_arr = get_option('rb_agency_options');
 		echo "				    </div>\n";
 /*
 		echo "				    <div class=\"search-field single\">\n";
-		echo "				       <label for=\"ProfileGender\">". __("Gender", rb_agency_TEXTDOMAIN) . "</label>\n";
+		echo "				       <label for=\"ProfileGender\">". __("Gender", bb_agency_TEXTDOMAIN) . "</label>\n";
 		echo "				        <select name=\"ProfileGender\" id=\"ProfileGender\">\n";               
-		echo "							<option value=\"\">". __("All Gender", rb_agency_TEXTDOMAIN) . "</option>\n";
+		echo "							<option value=\"\">". __("All Gender", bb_agency_TEXTDOMAIN) . "</option>\n";
 											$query2 = "SELECT GenderID, GenderTitle FROM ". table_agency_data_gender ." ORDER BY GenderID";
 											$results2 = mysql_query($query2);
 											while ($dataGender = mysql_fetch_array($results2)) {
@@ -64,48 +64,48 @@ $bb_agency_options_arr = get_option('rb_agency_options');
 		echo "				    </div>\n";
 		
 		echo "				    <fieldset class=\"search-field multi\">";
-		echo "				        <legend>". __("Age", rb_agency_TEXTDOMAIN) . "</legend>";
+		echo "				        <legend>". __("Age", bb_agency_TEXTDOMAIN) . "</legend>";
 		
 		echo "				    <div>";
-		echo "				        <label for=\"ProfileDateBirth_min\">". __("Min", rb_agency_TEXTDOMAIN) . "</label>";
+		echo "				        <label for=\"ProfileDateBirth_min\">". __("Min", bb_agency_TEXTDOMAIN) . "</label>";
 		echo "				        	<input type=\"text\" class=\"stubby\" id=\"ProfileDateBirth_min\" name=\"ProfileDateBirth_min\" value=\"". $_SESSION['ProfileDateBirth_min'] ."\" /></div>";
-		echo "				        <div><label for=\"ProfileDateBirth_max\">". __("Max", rb_agency_TEXTDOMAIN) . "</label>\n";
+		echo "				        <div><label for=\"ProfileDateBirth_max\">". __("Max", bb_agency_TEXTDOMAIN) . "</label>\n";
 		echo "				        	<input type=\"text\" class=\"stubby\" id=\"ProfileDateBirth_max\" name=\"ProfileDateBirth_max\" value=\"". $_SESSION['ProfileDateBirth_max'] ."\" /></div>";
 		echo "				    </fieldset>";
 */                
 		echo "				<div><input type=\"hidden\" name=\"ProfileIsActive\" value=\"1\" /></div>\n";
 		echo "				<div class=\"search-field submit\">";
-		echo "				<input type=\"submit\" value=\"". __("Search Profiles", rb_agency_TEXTDOMAIN) . "\" class=\"button-primary\" onclick=\"this.form.action='".get_bloginfo("wpurl")."/profile-search/'\" />";
+		echo "				<input type=\"submit\" value=\"". __("Search Profiles", bb_agency_TEXTDOMAIN) . "\" class=\"button-primary\" onclick=\"this.form.action='".get_bloginfo("wpurl")."/profile-search/'\" />";
 		
-		echo "				<input type=\"submit\" name=\"advanced_search\" value=\"". __("Advanced Search", rb_agency_TEXTDOMAIN) . "\" class=\"button-primary\" onclick=\"this.form.action='".get_bloginfo("wpurl")."/search/?srch=1'\" />";
+		echo "				<input type=\"submit\" name=\"advanced_search\" value=\"". __("Advanced Search", bb_agency_TEXTDOMAIN) . "\" class=\"button-primary\" onclick=\"this.form.action='".get_bloginfo("wpurl")."/search/?srch=1'\" />";
 		
 		
 		/* Phel Comment
-		echo "					<input type=\"submit\" value=\"". __("Search Profiles", rb_agency_TEXTDOMAIN) . "\" class=\"button-primary\" />";
-        echo '					<a href="'. get_bloginfo('siteurl') .'/profile-search/?srch=1">'. __("Advanced Search", rb_agency_TEXTDOMAIN) . '</a>';*/
+		echo "					<input type=\"submit\" value=\"". __("Search Profiles", bb_agency_TEXTDOMAIN) . "\" class=\"button-primary\" />";
+        echo '					<a href="'. get_bloginfo('siteurl') .'/profile-search/?srch=1">'. __("Advanced Search", bb_agency_TEXTDOMAIN) . '</a>';*/
 		echo "				</div>\n";
 		echo "        	</form>\n";
 		echo "		</div>\n";
    } else {
 	   // Advanced
 		echo "  <form method=\"post\" id=\"search-form-advanced\" action=\"". get_bloginfo("wpurl") ."/profile-search/\" class=\"rbsearch-form\">\n";
-		echo "        		<input type=\"hidden\" name=\"page\" id=\"page\" value=\"rb_agency_search\" />\n";
+		echo "        		<input type=\"hidden\" name=\"page\" id=\"page\" value=\"bb_agency_search\" />\n";
 		echo "        		<input type=\"hidden\" name=\"action\" value=\"search\" />\n";
 		
 		echo "	 			      <div class=\"search-field single\">\n";
-		echo "		 				<label for=\"ProfileFirstName\">". __("First Name", rb_agency_TEXTDOMAIN) ."</label>\n";
+		echo "		 				<label for=\"ProfileFirstName\">". __("First Name", bb_agency_TEXTDOMAIN) ."</label>\n";
 	      echo "		 				<input type=\"text\" id=\"ProfileContactNameFirst\" name=\"ProfileContactNameFirst\" value=\"". $_SESSION["ProfileContactNameFirst"] ."\" />\n";
 	      echo "	 				</div>\n";
 		
 		echo "	 				<div class=\"search-field single\">\n";
-		echo "		 				<label for=\"ProfileLastName\">". __("Last Name", rb_agency_TEXTDOMAIN) ."</label>\n";
+		echo "		 				<label for=\"ProfileLastName\">". __("Last Name", bb_agency_TEXTDOMAIN) ."</label>\n";
 	      echo "						 <input type=\"text\" id=\"ProfileContactNameLast\" name=\"ProfileContactNameLast\" value=\"". $_SESSION["ProfileContactNameLast"] ."\" />\n";
 		echo "					 </div>\n";
 	
 		echo "				    <div class=\"search-field single\">\n";
-		echo "				       <label for=\"ProfileType\">". __("Type", rb_agency_TEXTDOMAIN) . "</label>\n";
+		echo "				       <label for=\"ProfileType\">". __("Type", bb_agency_TEXTDOMAIN) . "</label>\n";
 		echo "						<select name=\"ProfileType\" id=\"ProfileType\">\n";               
-		echo "								<option value=\"\">". __("Any Profile Type", rb_agency_TEXTDOMAIN) . "</option>";
+		echo "								<option value=\"\">". __("Any Profile Type", bb_agency_TEXTDOMAIN) . "</option>";
 											$query = "SELECT DataTypeID, DataTypeTitle FROM ". table_agency_data_type ." ORDER BY DataTypeTitle";
 											$results2 = mysql_query($query);
 											while ($dataType = mysql_fetch_array($results2)) {
@@ -115,9 +115,9 @@ $bb_agency_options_arr = get_option('rb_agency_options');
 		echo "				    </div>\n";
 		
 		echo "				    <div class=\"search-field single\">\n";
-		echo "				       <label for=\"ProfileGender\">". __("Gender", rb_agency_TEXTDOMAIN) . "</label>\n";
+		echo "				       <label for=\"ProfileGender\">". __("Gender", bb_agency_TEXTDOMAIN) . "</label>\n";
 		echo "				       <select name=\"ProfileGender\" id=\"ProfileGender\">\n";               
-		echo "							<option value=\"\">". __("All Gender", rb_agency_TEXTDOMAIN) . "</option>\n";
+		echo "							<option value=\"\">". __("All Gender", bb_agency_TEXTDOMAIN) . "</option>\n";
 											$query2 = "SELECT GenderID, GenderTitle FROM ". table_agency_data_gender ." ORDER BY GenderID";
 											$results2 = mysql_query($query2);
 											while ($dataGender = mysql_fetch_array($results2)) {
@@ -130,12 +130,12 @@ $bb_agency_options_arr = get_option('rb_agency_options');
 		echo "				    </div>\n";
 		
 		echo "				    <fieldset class=\"search-field multi\">";
-		echo "				        <legend>". __("Age", rb_agency_TEXTDOMAIN) . "</legend>";
+		echo "				        <legend>". __("Age", bb_agency_TEXTDOMAIN) . "</legend>";
 		
 		echo "				    <div>";
-		echo "				        <label for=\"ProfileDateBirth_min\">". __("Min", rb_agency_TEXTDOMAIN) . "</label>";
+		echo "				        <label for=\"ProfileDateBirth_min\">". __("Min", bb_agency_TEXTDOMAIN) . "</label>";
 		echo "				        	<input type=\"text\" class=\"stubby\" id=\"ProfileDateBirth_min\" name=\"ProfileDateBirth_min\" value=\"". $_SESSION['ProfileDateBirth_min'] ."\" /></div>";
-		echo "				        <div><label for=\"ProfileDateBirth_max\">". __("Max", rb_agency_TEXTDOMAIN) . "</label>\n";
+		echo "				        <div><label for=\"ProfileDateBirth_max\">". __("Max", bb_agency_TEXTDOMAIN) . "</label>\n";
 		echo "				        	<input type=\"text\" class=\"stubby\" id=\"ProfileDateBirth_max\" name=\"ProfileDateBirth_max\" value=\"". $_SESSION['ProfileDateBirth_max'] ."\" /></div>";
 		echo "				    </fieldset>";
 							
@@ -169,29 +169,29 @@ $bb_agency_options_arr = get_option('rb_agency_options');
 		if(isset($_GET['srch'])){
 				    	include("include-custom-fields.php");
 								echo "	 			      <div class=\"search-field single\">\n";
-		echo "		 				<label for=\"ProfileCity\">". __("City", rb_agency_TEXTDOMAIN) ."</label>\n";
+		echo "		 				<label for=\"ProfileCity\">". __("City", bb_agency_TEXTDOMAIN) ."</label>\n";
 	    echo "		 				<input type=\"text\" id=\"ProfileCity\" name=\"ProfileCity\" value=\"". $_SESSION["ProfileCity"] ."\" />\n";
 	    echo "	 				</div>\n";
 
 		echo "	 			      <div class=\"search-field single\">\n";
-		echo "		 				<label for=\"ProfileState\">". __("State", rb_agency_TEXTDOMAIN) ."</label>\n";
+		echo "		 				<label for=\"ProfileState\">". __("State", bb_agency_TEXTDOMAIN) ."</label>\n";
 	    echo "		 				<input type=\"text\" id=\"ProfileState\" name=\"ProfileState\" value=\"". $_SESSION["ProfileState"] ."\" />\n";
 	    echo "	 				</div>\n";
 
 		echo "	 			      <div class=\"search-field single\">\n";
-		echo "		 				<label for=\"ProfileZip\">". __("Zip", rb_agency_TEXTDOMAIN) ."</label>\n";
+		echo "		 				<label for=\"ProfileZip\">". __("Zip", bb_agency_TEXTDOMAIN) ."</label>\n";
 	    echo "		 				<input type=\"text\" id=\"ProfileZip\" name=\"ProfileZip\" value=\"". $_SESSION["ProfileZip"] ."\" />\n";
 	    echo "	 				</div>\n";
 		}
 		
 		echo "				<div><input type=\"hidden\" name=\"ProfileIsActive\" value=\"1\" /></div>\n";
 		echo "				<div class=\"search-field submit\">";
-		echo "				<input type=\"submit\" value=\"". __("Search Profiles", rb_agency_TEXTDOMAIN) . "\" class=\"button-primary\" onclick=\"this.form.action='".get_bloginfo("wpurl")."/profile-search/'\" />";
+		echo "				<input type=\"submit\" value=\"". __("Search Profiles", bb_agency_TEXTDOMAIN) . "\" class=\"button-primary\" onclick=\"this.form.action='".get_bloginfo("wpurl")."/profile-search/'\" />";
 		echo '<input type="reset" class=\"button-primary\" value="Empty Form">';
 		if(!isset($_GET[srch])){
-		echo "				<input type=\"submit\" name=\"advanced_search\" value=\"". __("Advanced Search", rb_agency_TEXTDOMAIN) . "\" class=\"button-primary\" onclick=\"this.form.action='".get_bloginfo("wpurl")."/search/?srch=1'\" />";}else{
+		echo "				<input type=\"submit\" name=\"advanced_search\" value=\"". __("Advanced Search", bb_agency_TEXTDOMAIN) . "\" class=\"button-primary\" onclick=\"this.form.action='".get_bloginfo("wpurl")."/search/?srch=1'\" />";}else{
 		
-		echo "				<input type=\"submit\" name=\"basic_search\" value=\"". __("Basic Search", rb_agency_TEXTDOMAIN) . "\" class=\"button-primary\" onclick=\"this.form.action='".get_bloginfo("wpurl")."/search'\" />";
+		echo "				<input type=\"submit\" name=\"basic_search\" value=\"". __("Basic Search", bb_agency_TEXTDOMAIN) . "\" class=\"button-primary\" onclick=\"this.form.action='".get_bloginfo("wpurl")."/search'\" />";
 		}
 
 		echo "				</div>";

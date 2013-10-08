@@ -11,16 +11,16 @@ header("Cache-control: private"); //IE 6 Fix
 // Get Profile
 $profileURL = get_query_var('target'); //$_REQUEST["profile"];
 
-$bb_agency_options_arr = get_option('rb_agency_options');
-$bb_agency_option_agencyname = $bb_agency_options_arr['rb_agency_option_agencyname'];
-$bb_agency_option_privacy = $bb_agency_options_arr['rb_agency_option_privacy'];
-$bb_agency_option_unittype = $bb_agency_options_arr['rb_agency_option_unittype'];
-$bb_agency_option_galleryorder = $bb_agency_options_arr['rb_agency_option_galleryorder'];
-$bb_agency_option_showcontactpage = $bb_agency_options_arr['rb_agency_option_showcontactpage'];
+$bb_agency_options_arr = get_option('bb_agency_options');
+$bb_agency_option_agencyname = $bb_agency_options_arr['bb_agency_option_agencyname'];
+$bb_agency_option_privacy = $bb_agency_options_arr['bb_agency_option_privacy'];
+$bb_agency_option_unittype = $bb_agency_options_arr['bb_agency_option_unittype'];
+$bb_agency_option_galleryorder = $bb_agency_options_arr['bb_agency_option_galleryorder'];
+$bb_agency_option_showcontactpage = $bb_agency_options_arr['bb_agency_option_showcontactpage'];
 
 	if ($bb_agency_option_galleryorder == 1) { $orderBy = "ProfileMediaID DESC, ProfileMediaPrimary DESC"; } else { $orderBy = "ProfileMediaID ASC, ProfileMediaPrimary DESC"; }
-		$bb_agency_option_layoutprofile = (int)$bb_agency_options_arr['rb_agency_option_layoutprofile'];
-		$bb_agency_option_gallerytype = (int)$bb_agency_options_arr['rb_agency_option_gallerytype'];
+		$bb_agency_option_layoutprofile = (int)$bb_agency_options_arr['bb_agency_option_layoutprofile'];
+		$bb_agency_option_gallerytype = (int)$bb_agency_options_arr['bb_agency_option_gallerytype'];
 	if ($bb_agency_option_gallerytype == 1) {
 		// Slimbox
 		$reltype = "rel=\"lightbox-profile\"";
@@ -34,14 +34,14 @@ $bb_agency_option_showcontactpage = $bb_agency_options_arr['rb_agency_option_sho
 		$reltype = "rel=\"lightbox-profile\"";
 		$reltypev = "target=\"_blank\"";
 	}
-$bb_agency_option_agency_urlcontact = $bb_agency_options_arr['rb_agency_option_agency_urlcontact'];
-$bb_agency_option_profilenaming = $bb_agency_options_arr['rb_agency_option_profilenaming'];
-$bb_agency_option_profilelist_sidebar = $bb_agency_options_arr['rb_agency_option_profilelist_sidebar'];
+$bb_agency_option_agency_urlcontact = $bb_agency_options_arr['bb_agency_option_agency_urlcontact'];
+$bb_agency_option_profilenaming = $bb_agency_options_arr['bb_agency_option_profilenaming'];
+$bb_agency_option_profilelist_sidebar = $bb_agency_options_arr['bb_agency_option_profilelist_sidebar'];
 
 global $wpdb;
 
 $query = "SELECT * FROM " . table_agency_profile . " WHERE ProfileGallery='$profileURL'";
-$results = mysql_query($query) or die ( __("Error, query failed", rb_agency_TEXTDOMAIN ));
+$results = mysql_query($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ));
 $count = mysql_num_rows($results);
 while ($data = mysql_fetch_array($results)) {
 	$ProfileID					=$data['ProfileID'];
@@ -69,7 +69,7 @@ while ($data = mysql_fetch_array($results)) {
 	$ProfileContactPhoneWork	=stripslashes($data['ProfileContactPhoneWork']);
 	$ProfileGender    			=stripslashes($data['ProfileGender']);
 	$ProfileDateBirth	    	=stripslashes($data['ProfileDateBirth']);
-	$ProfileAge 				= rb_agency_get_age($ProfileDateBirth);
+	$ProfileAge 				= bb_agency_get_age($ProfileDateBirth);
 	$ProfileLocationCity		=stripslashes($data['ProfileLocationCity']);
 	$ProfileLocationState		=stripslashes($data['ProfileLocationState']);
 	$ProfileLocationZip			=stripslashes($data['ProfileLocationZip']);
@@ -83,9 +83,9 @@ while ($data = mysql_fetch_array($results)) {
 	$updateStats = $wpdb->query("UPDATE ". table_agency_profile ." SET ProfileStatHits = ProfileStatHits + 1, ProfileDateViewLast = NOW() WHERE ProfileID = '". $ProfileID ."' LIMIT 1");
 } 
 	// Change Title
-	if(!function_exists("rb_agency_override_title")){
-	add_filter('wp_title', 'rb_agency_override_title', 10, 2);
-		function rb_agency_override_title(){
+	if(!function_exists("bb_agency_override_title")){
+	add_filter('wp_title', 'bb_agency_override_title', 10, 2);
+		function bb_agency_override_title(){
 			global $ProfileContactDisplay;
 			return bloginfo('name') ." > ". $ProfileContactDisplay ."";
 		}
@@ -111,16 +111,16 @@ while ($data = mysql_fetch_array($results)) {
 	}
 	*/
 
-	if(!function_exists("rb_agency_inserthead_profile")){
-		add_action('wp_head', 'rb_agency_inserthead_profile');
+	if(!function_exists("bb_agency_inserthead_profile")){
+		add_action('wp_head', 'bb_agency_inserthead_profile');
 			// Call Custom Code to put in header
-			function rb_agency_inserthead_profile() {
+			function bb_agency_inserthead_profile() {
 				global $bb_agency_option_layoutprofile;
 
-				$bb_agency_options_arr = get_option('rb_agency_options');
+				$bb_agency_options_arr = get_option('bb_agency_options');
 				
-				if (isset($bb_agency_options_arr['rb_agency_option_layoutprofile'])) {
-					$layouttype = (int)$bb_agency_options_arr['rb_agency_option_layoutprofile'];
+				if (isset($bb_agency_options_arr['bb_agency_option_layoutprofile'])) {
+					$layouttype = (int)$bb_agency_options_arr['bb_agency_option_layoutprofile'];
 
 					if ($layouttype == 99) {
 						// Slimbox
@@ -209,7 +209,7 @@ while ($data = mysql_fetch_array($results)) {
 					}
 		        } // end if
           } // function end
-    }// if function exist(rb_agency_inserthead_profile)
+    }// if function exist(bb_agency_inserthead_profile)
    
 // GET HEADER  
 	get_header();
@@ -243,7 +243,7 @@ while ($data = mysql_fetch_array($results)) {
 			if(strpos($_SERVER['HTTP_REFERER'],'client-view') > 0){
 				include ("include-profile-layout". $bb_agency_option_layoutprofile .".php"); 	
 			} else {
-				echo "". __("Inactive Profile", rb_agency_TEXTDOMAIN) ."\n";
+				echo "". __("Inactive Profile", bb_agency_TEXTDOMAIN) ."\n";
 			}
 		  }
 		} else {
@@ -255,7 +255,7 @@ while ($data = mysql_fetch_array($results)) {
 		}
 	} else {
 		// There is no record found.
-			echo "". __("Invalid Profile", rb_agency_TEXTDOMAIN) ."\n";
+			echo "". __("Invalid Profile", bb_agency_TEXTDOMAIN) ."\n";
 	}
 	echo "  </div>\n";
 	echo "</div>\n";

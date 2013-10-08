@@ -10,20 +10,20 @@ header("Cache-control: private"); //IE 6 Fix
 	$CurrentUser = $current_user->id;
 
 // Set Values
-$bb_agency_options_arr = get_option('rb_agency_options');
-$bb_agency_option_privacy = $bb_agency_options_arr['rb_agency_option_privacy'];
-$bb_agency_option_layoutprofile = (int)$bb_agency_options_arr['rb_agency_option_layoutprofile'];
-$bb_agency_option_profilenaming = $bb_agency_options_arr['rb_agency_option_profilenaming'];
-$bb_agency_option_profilelist_sidebar = $bb_agency_options_arr['rb_agency_option_profilelist_sidebar'];
-$bb_agency_option_agencyemail = $bb_agency_options_arr['rb_agency_option_agencyemail'];
-$bb_agency_option_showcontactpage = $bb_agency_options_arr['rb_agency_option_showcontactpage'];
+$bb_agency_options_arr = get_option('bb_agency_options');
+$bb_agency_option_privacy = $bb_agency_options_arr['bb_agency_option_privacy'];
+$bb_agency_option_layoutprofile = (int)$bb_agency_options_arr['bb_agency_option_layoutprofile'];
+$bb_agency_option_profilenaming = $bb_agency_options_arr['bb_agency_option_profilenaming'];
+$bb_agency_option_profilelist_sidebar = $bb_agency_options_arr['bb_agency_option_profilelist_sidebar'];
+$bb_agency_option_agencyemail = $bb_agency_options_arr['bb_agency_option_agencyemail'];
+$bb_agency_option_showcontactpage = $bb_agency_options_arr['bb_agency_option_showcontactpage'];
 
 // Get Profile
 $profileURL = get_query_var('target'); //$_REQUEST["profile"];
 
 
 	$query = "SELECT * FROM " . table_agency_profile . " WHERE ProfileGallery='$profileURL'";
-	$results = mysql_query($query) or die ( __("Error, query failed", rb_agency_TEXTDOMAIN ));
+	$results = mysql_query($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ));
 	$count = mysql_num_rows($results);
 	while ($data = mysql_fetch_array($results)) {
 		$ProfileID					=$data['ProfileID'];
@@ -51,7 +51,7 @@ $profileURL = get_query_var('target'); //$_REQUEST["profile"];
 		$ProfileContactPhoneWork	=stripslashes($data['ProfileContactPhoneWork']);
 		$ProfileGender    			=stripslashes($data['ProfileGender']);
 		$ProfileDateBirth	    	=stripslashes($data['ProfileDateBirth']);
-		$ProfileAge 				= rb_agency_get_age($ProfileDateBirth);
+		$ProfileAge 				= bb_agency_get_age($ProfileDateBirth);
 		$ProfileLocationCity		=stripslashes($data['ProfileLocationCity']);
 		$ProfileLocationState		=stripslashes($data['ProfileLocationState']);
 		$ProfileLocationZip			=stripslashes($data['ProfileLocationZip']);
@@ -103,8 +103,8 @@ if ($_POST["contact-action"] == "contact") {
 		// To send HTML mail, the Content-type header must be set
 		//$headers .= 'To: '. $SearchMuxToName .' <'. $SearchMuxToEmail .'>' . "\r\n";
 		
-		add_filter('wp_mail_content_type','rb_agency_set_content_type');
-			function rb_agency_set_content_type($content_type){
+		add_filter('wp_mail_content_type','bb_agency_set_content_type');
+			function bb_agency_set_content_type($content_type){
 				return 'text/html';
 			}
 		
@@ -124,15 +124,15 @@ if ($_POST["contact-action"] == "contact") {
 }
 	
 	// Change Title
-	add_filter('wp_title', 'rb_agency_override_title', 10, 2);
-		function rb_agency_override_title(){
+	add_filter('wp_title', 'bb_agency_override_title', 10, 2);
+		function bb_agency_override_title(){
 			global $ProfileContactDisplay;
 			return bloginfo('name') ." > Contact ". $ProfileContactDisplay ."";
 		}
 	
 	// Remove All Known Scripts which effect
-	add_action( 'wp_print_scripts', 'rb_agency_deregister_scripts', 100 );
-		function rb_agency_deregister_scripts() {
+	add_action( 'wp_print_scripts', 'bb_agency_deregister_scripts', 100 );
+		function bb_agency_deregister_scripts() {
 			//lightbox
 			wp_deregister_script('woo-shortcodes');
 			//jquery
@@ -148,12 +148,12 @@ if ($_POST["contact-action"] == "contact") {
 
 			wp_enqueue_script('jquery');
 			wp_enqueue_script('jquery-ui-core');
-			wp_enqueue_script('jquery-ui-datepicker', rb_agency_BASEDIR .'/js/jquery.ui.datepicker.min.js', array('jquery', 'jquery-ui-core') );
-			//wp_enqueue_style('jquery.ui.theme', rb_agency_BASEDIR .'/js/jquery-ui-1.8.12.custom.css');
+			wp_enqueue_script('jquery-ui-datepicker', bb_agency_BASEDIR .'/js/jquery.ui.datepicker.min.js', array('jquery', 'jquery-ui-core') );
+			//wp_enqueue_style('jquery.ui.theme', bb_agency_BASEDIR .'/js/jquery-ui-1.8.12.custom.css');
 		}
 
-	add_action('wp_footer', 'rb_agency_wp_footer');
-		function rb_agency_wp_footer() {
+	add_action('wp_footer', 'bb_agency_wp_footer');
+		function bb_agency_wp_footer() {
 			echo "<script type=\"text/javascript\">\n";
 			echo "jQuery(document).ready(function(){\n";
 			echo "	jQuery('.rbdatepicker').datepicker({\n";
@@ -192,7 +192,7 @@ if ($_POST["contact-action"] == "contact") {
 			  	}
 			 	
 		  	} else {
-				echo "". __("Inactive Profile", rb_agency_TEXTDOMAIN) ."\n";
+				echo "". __("Inactive Profile", bb_agency_TEXTDOMAIN) ."\n";
 		  	}
 		} else {
 			// hold last model requested as session so we can return them where we found them 
@@ -202,7 +202,7 @@ if ($_POST["contact-action"] == "contact") {
 		}
 	} else {
 		// There is no record found.
-		echo "". __("Invalid Profile", rb_agency_TEXTDOMAIN) ."\n";
+		echo "". __("Invalid Profile", bb_agency_TEXTDOMAIN) ."\n";
 	}
 	echo "  </div>\n";
 	echo "</div>\n";

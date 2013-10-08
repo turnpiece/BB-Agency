@@ -13,9 +13,9 @@ jQuery(document).ready(function(){
     function ajax_submit(Obj,type){
                 
 		if(type == "favorite"){					
-			var action_function = "rb_agency_save_favorite";				
+			var action_function = "bb_agency_save_favorite";				
 		} else if(type == "casting"){				
-			var action_function = "rb_agency_save_castingcart";				
+			var action_function = "bb_agency_save_castingcart";				
 		}
 		
 		jQuery.ajax({type: 'POST',url: '<?php echo get_bloginfo('url') ?>/wp-admin/admin-ajax.php',
@@ -78,22 +78,22 @@ echo "		  		<div class=\"col_4 column\">\n";
 						$resultsImg = mysql_query($queryImg);
 						$countImg = mysql_num_rows($resultsImg);
 						while ($dataImg = mysql_fetch_array($resultsImg)) {
-							echo "<div id=\"profile-picture\"><a href=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" rel=\"lightbox-profile". $ProfileID ."\"><img src=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" /></a></div>\n";
+							echo "<div id=\"profile-picture\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" rel=\"lightbox-profile". $ProfileID ."\"><img src=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" /></a></div>\n";
 						}
 	
 						/*  Use this instead of text;
 						 *  this will display heart and star for favorite and casting respectively.
 						 *  This can update database for favorites and casting cart
 						 */
-						echo '<input type="hidden" id="aps12-id" value="'. $ProfileID .' - ' .rb_agency_get_current_userid().'">';
+						echo '<input type="hidden" id="aps12-id" value="'. $ProfileID .' - ' .bb_agency_get_current_userid().'">';
 						$query_favorite = mysql_query("SELECT * FROM ".table_agency_savedfavorite." WHERE SavedFavoriteTalentID='".$ProfileID
-						                              ."'  AND SavedFavoriteProfileID = '".rb_agency_get_current_userid()."'" ) or die("error");
+						                              ."'  AND SavedFavoriteProfileID = '".bb_agency_get_current_userid()."'" ) or die("error");
 						
 						$count_favorite = mysql_num_rows($query_favorite);
 						$datas_favorite = mysql_fetch_assoc($query_favorite);
 						
 						$query_castingcart = mysql_query("SELECT * FROM ". table_agency_castingcart."  WHERE CastingCartTalentID='".$ProfileID
-						                                 ."'  AND CastingCartProfileID = '".rb_agency_get_current_userid()."'" ) or die("error");
+						                                 ."'  AND CastingCartProfileID = '".bb_agency_get_current_userid()."'" ) or die("error");
 						
 						$count_castingcart = mysql_num_rows($query_castingcart);
 						
@@ -118,7 +118,7 @@ echo "	  				<div id=\"profile-info\">\n";
 echo "	      				<h1>". $ProfileContactDisplay ."</h1>\n";
 echo "	      				<p>\n";
 								if (isset($ProfileDateBirth)) {
-echo "								<span class=\"age\">". rb_agency_get_age($ProfileDateBirth) ."</span>\n";
+echo "								<span class=\"age\">". bb_agency_get_age($ProfileDateBirth) ."</span>\n";
 								}
 								if (isset($ProfileLocationCity)) {
 echo "								from <span class=\"city\"> ". $ProfileLocationCity ."</span>,<span class=\"state\"> ". $ProfileLocationState ."</span>\n";
@@ -134,7 +134,7 @@ echo "		  				<ul>\n";
 echo "		  				</ul>\n";
 
 							// Social Link
-							rb_agency_getSocialLinks();
+							bb_agency_getSocialLinks();
 echo "		  				<p>". $ProfileExperience ."</p>\n";
 
 echo "	  				</div> <!-- #profile-info -->\n";
@@ -146,7 +146,7 @@ echo "			  		<div id=\"profile-actions\">\n";
 
 							//Contact Profile
 							if (isset($bb_agency_option_agency_urlcontact) && !empty($bb_agency_option_agency_urlcontact)) {
-echo "	      					<div id=\"profile-actions-contact\"><span><a href=\"". $bb_agency_option_agency_urlcontact ."\">". __("Contact", rb_agency_TEXTDOMAIN). " ". $ProfileClassification ."</a></span></div>\n";
+echo "	      					<div id=\"profile-actions-contact\"><span><a href=\"". $bb_agency_option_agency_urlcontact ."\">". __("Contact", bb_agency_TEXTDOMAIN). " ". $ProfileClassification ."</a></span></div>\n";
 echo "							<li class=\"item contact\"></li>\n";
 							}
 
@@ -217,9 +217,9 @@ echo " 						<div class=\"tab-panel\">\n";
 								$countImg = mysql_num_rows($resultsImg);
 								while ($dataImg = mysql_fetch_array($resultsImg)) {
 								  	if ($countImg > 1) { 
-										echo "<div class=\"photo\"><a href=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" rel=\"lightbox-profile". $ProfileID ."\" style=\"background-image: url(". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] .")\"></a></div>\n";
+										echo "<div class=\"photo\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" rel=\"lightbox-profile". $ProfileID ."\" style=\"background-image: url(". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] .")\"></a></div>\n";
 								  	} else {
-										echo "<div class=\"photo\"><a href=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" rel=\"lightbox-profile". $ProfileID ."\" style=\"background-image: url(". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] .")\"></a></div>\n";
+										echo "<div class=\"photo\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" rel=\"lightbox-profile". $ProfileID ."\" style=\"background-image: url(". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] .")\"></a></div>\n";
 								  	}
 								}
 echo " 						</div>\n"; // .tab-panel
@@ -231,16 +231,16 @@ echo "							<ul>";
 									if (!empty($ProfileGender)) {
 										$queryGenderResult = mysql_query("SELECT GenderID, GenderTitle FROM ".table_agency_data_gender." WHERE GenderID='".$ProfileGender."' ");
 										$fetchGenderData = mysql_fetch_assoc($queryGenderResult);
-										echo "<li><strong>". __("Gender", rb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". __($fetchGenderData["GenderTitle"], rb_agency_TEXTDOMAIN). "</li>\n";
+										echo "<li><strong>". __("Gender", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". __($fetchGenderData["GenderTitle"], bb_agency_TEXTDOMAIN). "</li>\n";
 									}
 
 									// Insert Custom Fields
 									$title_to_exclude = array("Experience");
-									rb_agency_getProfileCustomFieldsExTitle($ProfileID, $ProfileGender, $title_to_exclude);
+									bb_agency_getProfileCustomFieldsExTitle($ProfileID, $ProfileGender, $title_to_exclude);
 
 
 									if($bb_agency_option_showcontactpage==1){
-										echo "<li class=\"rel\"><strong>". __("Contact: ", rb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> <a href=\"". get_bloginfo("wpurl") ."/profile/".$ProfileGallery	."/contact/\">Click Here</a></li>\n";
+										echo "<li class=\"rel\"><strong>". __("Contact: ", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> <a href=\"". get_bloginfo("wpurl") ."/profile/".$ProfileGallery	."/contact/\">Click Here</a></li>\n";
 									}
 echo "							</ul>";
 echo " 						</div>\n"; // .tab-panel
@@ -308,7 +308,7 @@ echo " 					</div>\n"; // Row booking
 echo "					<div class=\"col_12 column row-downloads clear tab\">\n";
 echo " 						<div class=\"tab-panel\">\n";
 echo "							<p>". __("The following files (pdf, audio file, etc.) are associated with this profile",
-					        	rb_agencyinteract_TEXTDOMAIN) .".</p>\n";
+					        	bb_agencyinteract_TEXTDOMAIN) .".</p>\n";
 				
 								$queryMedia = "SELECT * FROM ". table_agency_profile_media ." 
 								              WHERE ProfileID =  \"". $ProfileID ."\" AND ProfileMediaType <> \"Image\"";
@@ -324,7 +324,7 @@ echo "							<p>". __("The following files (pdf, audio file, etc.) are associate
 										
 										$outVideoMedia .= "<div style=\"float: left; width: 120px; text-align: center; padding: 10px; \">"
 										. $dataMedia['ProfileMediaType'] ."<br />". 
-										rb_agency_get_videothumbnail($dataMedia['ProfileMediaURL']) 
+										bb_agency_get_videothumbnail($dataMedia['ProfileMediaURL']) 
 										."<br /><a href=\"http://www.youtube.com/watch?v="
 										. $dataMedia['ProfileMediaURL'] .
 										"\" target=\"_blank\">Link to Video</a><br />[<a href=\"javascript:confirmDelete('".
@@ -334,7 +334,7 @@ echo "							<p>". __("The following files (pdf, audio file, etc.) are associate
 									} elseif ($dataMedia['ProfileMediaType'] == "VoiceDemo") {
 										
 										$outLinkVoiceDemo .= $dataMedia['ProfileMediaType'] .
-										": <a href=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] .
+										": <a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] .
 										"\" target=\"_blank\">". $dataMedia['ProfileMediaTitle'] .
 										"</a> [<a href=\"javascript:confirmDelete('". $dataMedia['ProfileMediaID'] 
 										."','".$dataMedia['ProfileMediaType']."')\">DELETE</a>]\n";
@@ -342,7 +342,7 @@ echo "							<p>". __("The following files (pdf, audio file, etc.) are associate
 									} elseif ($dataMedia['ProfileMediaType'] == "Resume") {
 									
 										$outLinkResume .= $dataMedia['ProfileMediaType'] 
-										.": <a href=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] .
+										.": <a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] .
 										"\" target=\"_blank\">". $dataMedia['ProfileMediaTitle'] .
 										"</a> [<a href=\"javascript:confirmDelete('". $dataMedia['ProfileMediaID'] ."','".
 										$dataMedia['ProfileMediaType']."')\">DELETE</a>]\n";
@@ -350,7 +350,7 @@ echo "							<p>". __("The following files (pdf, audio file, etc.) are associate
 									} elseif ($dataMedia['ProfileMediaType'] == "Headshot") {
 									
 										$outLinkHeadShot .= $dataMedia['ProfileMediaType'] .": <a href=\"". 
-										rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] .
+										bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] .
 										"\" target=\"_blank\">". $dataMedia['ProfileMediaTitle'] .
 										"</a> [<a href=\"javascript:confirmDelete('". $dataMedia['ProfileMediaID'] ."','".
 										$dataMedia['ProfileMediaType']."')\">DELETE</a>]\n";
@@ -358,7 +358,7 @@ echo "							<p>". __("The following files (pdf, audio file, etc.) are associate
 									} elseif ($dataMedia['ProfileMediaType'] == "CompCard") {
 									
 										$outLinkComCard .= $dataMedia['ProfileMediaType'] .": <a href=\"". 
-										rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] .
+										bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] .
 										"\" target=\"_blank\">". $dataMedia['ProfileMediaTitle'] .
 										"</a> [<a href=\"javascript:confirmDelete('". $dataMedia['ProfileMediaID'] ."','".
 										$dataMedia['ProfileMediaType']."')\">DELETE</a>]\n";
@@ -366,7 +366,7 @@ echo "							<p>". __("The following files (pdf, audio file, etc.) are associate
 									} else{
 									
 										$outCustomMediaLink .= $dataMedia['ProfileMediaType'] .": <a href=\"".
-									 	rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] .
+									 	bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] .
 										"\" target=\"_blank\">". $dataMedia['ProfileMediaTitle'] .
 									 	"</a> [<a href=\"javascript:confirmDelete('". $dataMedia['ProfileMediaID'] ."','".
 									 	$dataMedia['ProfileMediaType']."')\">DELETE</a>]\n";

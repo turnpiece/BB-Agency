@@ -21,7 +21,7 @@ Flip Book
 							$resultsImg = mysql_query($queryImg);
 							$countImg = mysql_num_rows($resultsImg);
 							while ($dataImg = mysql_fetch_array($resultsImg)) {
-							  	echo "<div class=\"page\"><img src=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt=\"". $ProfileContactDisplay ."\" /></div>\n";
+							  	echo "<div class=\"page\"><img src=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt=\"". $ProfileContactDisplay ."\" /></div>\n";
 							}
 				?>
 		    </div><!-- .col_12 -->
@@ -38,7 +38,7 @@ Flip Book
 			<ul id="profile-info">
 				<?php
 				// Insert Custom Fields
-				rb_agency_getNewProfileCustomFields($ProfileID, $ProfileGender, $LabelTag="em");
+				bb_agency_getNewProfileCustomFields($ProfileID, $ProfileGender, $LabelTag="em");
 				?>			
 			</ul>
 		</div>

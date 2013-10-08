@@ -78,38 +78,38 @@ Custom Layout: Shake it like a polaroid picture
 	echo "				<div style=\"float:left; width:900px;min-height:200px; font-family:Arial Narrow, Helvetica, sans-serif; font-size:18px; color:#877; border:1px solid #999; margin-top:12px;\">\n";
 	echo "					<div class=\"stats\" >\n";
  // Social Link
-	 rb_agency_getSocialLinks();
+	 bb_agency_getSocialLinks();
  			if (!empty($ProfileGender)) {
 			$queryGenderResult = mysql_query("SELECT GenderID, GenderTitle FROM ".table_agency_data_gender." WHERE GenderID='".$ProfileGender."' ");
 			$fetchGenderData = mysql_fetch_assoc($queryGenderResult);
-			echo "<div><strong>". __("Gender", rb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". __($fetchGenderData["GenderTitle"], rb_agency_TEXTDOMAIN). "</div>\n";
+			echo "<div><strong>". __("Gender", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". __($fetchGenderData["GenderTitle"], bb_agency_TEXTDOMAIN). "</div>\n";
 		}
 	
 		if (!empty($ProfileStatHeight)) {
 			if ($bb_agency_option_unittype == 0) { // Metric
-				echo "<div class=\"rel\"><strong>". __("Height", rb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatHeight ." ". __("cm", rb_agency_TEXTDOMAIN). "" ."</div>\n";
+				echo "<div class=\"rel\"><strong>". __("Height", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatHeight ." ". __("cm", bb_agency_TEXTDOMAIN). "" ."</div>\n";
 			} else { // Imperial
 				$heightraw = $ProfileStatHeight;
 				$heightfeet = floor($heightraw/12);
 				$heightinch = $heightraw - floor($heightfeet*12);
-				echo "<div class=\"rel\"><strong>". __("Height", rb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $heightfeet ." ". __("ft", rb_agency_TEXTDOMAIN). " ". $heightinch ." ". __("in", rb_agency_TEXTDOMAIN). "" ."</div>\n";
+				echo "<div class=\"rel\"><strong>". __("Height", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $heightfeet ." ". __("ft", bb_agency_TEXTDOMAIN). " ". $heightinch ." ". __("in", bb_agency_TEXTDOMAIN). "" ."</div>\n";
 			}
 		}
 		if (!empty($ProfileStatWeight)) {
 			if ($bb_agency_option_unittype == 0) { // Metric
-				echo "<div class=\"rel\"><strong>". __("Weight", rb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatWeight ." ". __("kg", rb_agency_TEXTDOMAIN). "</div>\n";
+				echo "<div class=\"rel\"><strong>". __("Weight", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatWeight ." ". __("kg", bb_agency_TEXTDOMAIN). "</div>\n";
 			} else { // Imperial
-				echo "<div class=\"rel\"><strong>". __("Weight", rb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatWeight ." ". __("lb", rb_agency_TEXTDOMAIN). "</div>\n";
+				echo "<div class=\"rel\"><strong>". __("Weight", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatWeight ." ". __("lb", bb_agency_TEXTDOMAIN). "</div>\n";
 			}
 		}
 		
 
 		// Insert Custom Fields
-		rb_agency_getProfileCustomFields($ProfileID, $ProfileGender);
+		bb_agency_getProfileCustomFields($ProfileID, $ProfileGender);
 
 
 	          	if($bb_agency_option_showcontactpage==1){
-		    		echo "<div class=\"rel\"><strong>". __("Contact: ", rb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> <a href=\"". get_bloginfo("wpurl") ."/profile/".$ProfileGallery	."/contact/\">Click Here</a></div>\n";
+		    		echo "<div class=\"rel\"><strong>". __("Contact: ", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> <a href=\"". get_bloginfo("wpurl") ."/profile/".$ProfileGallery	."/contact/\">Click Here</a></div>\n";
 			}
 	echo "					</div>\n";
 	echo "				</div>\n";	
@@ -136,7 +136,7 @@ Custom Layout: Shake it like a polaroid picture
 			$countImg = mysql_num_rows($resultsImg);
 			while ($dataImg = mysql_fetch_array($resultsImg)) {
 	echo "		  	<div class=\"content\">\n";
-	echo "		  		<img src=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt=\"". rb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" />\n";
+	echo "		  		<img src=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" />\n";
 	echo "		  		<span>". $ProfileContactDisplay ."</span>\n";
 	echo "		  	</div>\n";
 			}

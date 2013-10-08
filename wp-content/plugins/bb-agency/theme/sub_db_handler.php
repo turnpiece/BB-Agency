@@ -18,9 +18,9 @@ if($_POST['usage']=="addtocart"){ //for add to cart
     session_start();
 	
 	//check if its already in cart for this current user
-	$currentUserID=rb_agency_get_current_userid();
+	$currentUserID=bb_agency_get_current_userid();
 	$query="SELECT * FROM  ".table_agency_castingcart." WHERE CastingCartProfileID='".$currentUserID."' AND CastingCartTalentID='".$_POST['pid']."' ";
-	$results = mysql_query($query) or die ( __("Error, query failed", rb_agency_TEXTDOMAIN ));
+	$results = mysql_query($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ));
 	if(mysql_num_rows($results)==0){
 		mysql_query("INSERT INTO ".table_agency_castingcart." (CastingCartProfileID,CastingCartTalentID) VALUES('".$currentUserID."','".$_POST['pid']."'); ") or die(mysql_error());
 			echo "Profile has been added to cart casting.";
@@ -51,7 +51,7 @@ if($_POST['usage']=="addtocart"){ //for add to cart
 			BETWEEN '1' AND '12' AND ProfileGender ='2' ";}
 
 			$query.=" ORDER BY ProfileContactDisplay ASC ";
-		$results = mysql_query($query) or die ( __("Error, query failed", rb_agency_TEXTDOMAIN ));
+		$results = mysql_query($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ));
 		$count = mysql_num_rows($results);
 		for($cnt=1;$data=mysql_fetch_array($results);$cnt++){
 			$option.='<option value="'.'/profile/'.$data["ProfileGallery"].'/">'.$data["ProfileContactDisplay"].'</option>';

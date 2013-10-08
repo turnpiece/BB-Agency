@@ -166,21 +166,21 @@ get_header();
 		echo "<div id=\"profile-category\">\n";
 
 		echo "	<h1 class=\"profile-category-title entry-title\">\n";
-		echo "	". __("Directory", rb_agency_TEXTDOMAIN) ." ";
+		echo "	". __("Directory", bb_agency_TEXTDOMAIN) ." ";
 				if ($DataTypeTitle) { echo " > ". $DataTypeTitle; }
 		echo "	</h1>\n";
 
 		echo "	<div class=\"cb\"></div>\n";
 
-			if (function_exists('rb_agency_categorylist')) { 
+			if (function_exists('bb_agency_categorylist')) { 
 				$atts = array('currentcategory' => $DataTypeID);
-				rb_agency_categorylist($atts); }
+				bb_agency_categorylist($atts); }
 
 		echo "			<div id=\"profile-category-results\">\n";
 	
-						if (function_exists('rb_agency_profilelist')) { 
+						if (function_exists('bb_agency_profilelist')) { 
 						  $atts = array("type" => $DataTypeID);
-						  rb_agency_profilelist($atts); 
+						  bb_agency_profilelist($atts); 
 						}
 									
 		echo "			</div><!-- #profile-category-results -->\n";

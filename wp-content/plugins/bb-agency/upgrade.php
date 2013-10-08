@@ -5,55 +5,55 @@ global $wpdb;
 // Set Default Values for Options
 
 	$bb_agency_options_arr = array(
-		"rb_agency_option_agencyname" => "",
-		"rb_agency_option_agencyemail" => "",
-		"rb_agency_option_agencyheader" => "",
-		"rb_agency_option_agencylogo" => "",
-		"rb_agency_option_unittype" => "1",
-		"rb_agency_option_showsocial" => "1",
-		"rb_agency_option_galleryorder" => "1",
-		"rb_agency_option_gallerytype" => "1",
-		"rb_agency_option_layoutprofile" => "0",
-		"rb_agency_option_advertise" => "1",
-		"rb_agency_option_privacy" => "0",
-		"rb_agency_option_agencyimagemaxwidth" => "1000",
-		"rb_agency_option_agencyimagemaxheight" => "800",
-		"rb_agency_option_profilenaming" => "0",
-		"rb_agency_option_showcontactpage" =>"1",
-		"rb_agency_option_customfield_profilepage" => "1",
-		"rb_agency_option_customfield_searchpage" => "1",
-		"rb_agency_option_customfield_loggedin_all" => "1",
-		"rb_agency_option_customfield_loggedin_admin" => "1"
+		"bb_agency_option_agencyname" => "",
+		"bb_agency_option_agencyemail" => "",
+		"bb_agency_option_agencyheader" => "",
+		"bb_agency_option_agencylogo" => "",
+		"bb_agency_option_unittype" => "1",
+		"bb_agency_option_showsocial" => "1",
+		"bb_agency_option_galleryorder" => "1",
+		"bb_agency_option_gallerytype" => "1",
+		"bb_agency_option_layoutprofile" => "0",
+		"bb_agency_option_advertise" => "1",
+		"bb_agency_option_privacy" => "0",
+		"bb_agency_option_agencyimagemaxwidth" => "1000",
+		"bb_agency_option_agencyimagemaxheight" => "800",
+		"bb_agency_option_profilenaming" => "0",
+		"bb_agency_option_showcontactpage" =>"1",
+		"bb_agency_option_customfield_profilepage" => "1",
+		"bb_agency_option_customfield_searchpage" => "1",
+		"bb_agency_option_customfield_loggedin_all" => "1",
+		"bb_agency_option_customfield_loggedin_admin" => "1"
 		);
 
 /*
 // *************************************************************************************************** //
 // Set default version #
 	if (!isset($bb_agency_storedversion) && empty($bb_agency_storedversion)) { // Upgrade from ??
-		update_option('rb_agency_version', "1.9");
+		update_option('bb_agency_version', "1.9");
 	}*/
  // Safe Add column
-   function rb_agency_addColumn($tbl = "",$column = "", $atts = ""){
+   function bb_agency_addColumn($tbl = "",$column = "", $atts = ""){
 	 global $wpdb;
 	$debug = debug_backtrace();
       if($wpdb->get_var("SHOW COLUMNS FROM ".trim($tbl)." LIKE '%".trim($column)."%' ") != trim($column)){
 	
-		$result = mysql_query(" ALTER TABLE ".trim($tbl)." ADD ".trim($column)." ".$atts.";");// or die("rb_agency_addColumn()  - Adding column ".trim($column)." in line ".$debug["line"]." <br/> ".mysql_error());	
+		$result = mysql_query(" ALTER TABLE ".trim($tbl)." ADD ".trim($column)." ".$atts.";");// or die("bb_agency_addColumn()  - Adding column ".trim($column)." in line ".$debug["line"]." <br/> ".mysql_error());	
 		 
 		return $result;
 	}
    }
 // *************************************************************************************************** //
 // Upgrade to 1.8.1
-	if (get_option('rb_agency_version') == "1.8" || get_option('rb_agency_version') == "1.8.1") { 
+	if (get_option('bb_agency_version') == "1.8" || get_option('bb_agency_version') == "1.8.1") { 
 
 		$results = $wpdb->query("ALTER TABLE ". table_agency_data_type ." ADD DataTypeTag VARCHAR(55)");
 		
 		$query = "SELECT DataTypeID, DataTypeTitle, DataTypeTag FROM ". table_agency_data_type ."";
-		$results = mysql_query($query) or die ( __("Cant load types", rb_agency_TEXTDOMAIN ));
+		$results = mysql_query($query) or die ( __("Cant load types", bb_agency_TEXTDOMAIN ));
 		while ($data = mysql_fetch_array($results)) {
 			if (!isset($data['DataTypeTag']) || empty($data['DataTypeTag'])) {
-				$DataTypeTag = rb_agency_safenames($data['DataTypeTitle']);
+				$DataTypeTag = bb_agency_safenames($data['DataTypeTitle']);
 				
 				$update = "UPDATE " . table_agency_data_type . " SET DataTypeTag='" . $wpdb->escape($DataTypeTag) . "' WHERE DataTypeID='". $data['DataTypeID'] ."'";
 				$updated = $wpdb->query($update);
@@ -62,19 +62,19 @@ global $wpdb;
 		}
 
 		// Privacy in Custom Fields
-		 rb_agency_addColumn(table_agency_customfields,"ProfileCustomView","INT(10) NOT NULL DEFAULT '0'");
+		 bb_agency_addColumn(table_agency_customfields,"ProfileCustomView","INT(10) NOT NULL DEFAULT '0'");
 
 		// Updating version number!
-		update_option('rb_agency_version', "1.8.2");
+		update_option('bb_agency_version', "1.8.2");
 	}
-   if (get_option('rb_agency_version') == "1.8.2") { 
+   if (get_option('bb_agency_version') == "1.8.2") { 
 	
 		$results = $wpdb->query("ALTER TABLE ". table_agency_customfields ." CHANGE ProfileCustomOptions ProfileCustomOptions TEXT");
 		$results = $wpdb->query("ALTER TABLE ". table_agency_customfield_mux ." CHANGE ProfileCustomValue ProfileCustomValue TEXT");
 	 
-		rb_agency_addColumn( table_agency_profile,"ProfileIsFeatured","INT(10) NOT NULL DEFAULT '0'");
+		bb_agency_addColumn( table_agency_profile,"ProfileIsFeatured","INT(10) NOT NULL DEFAULT '0'");
 		
-		rb_agency_addColumn( table_agency_profile,"ProfileIsPromoted","INT(10) NOT NULL DEFAULT '0'");
+		bb_agency_addColumn( table_agency_profile,"ProfileIsPromoted","INT(10) NOT NULL DEFAULT '0'");
 		// Setup > Save Favorited
 		if ($wpdb->get_var("show tables like '".  table_agency_savedfavorite ."'") !=  table_agency_savedfavorite ) { 
 			 $results = $wpdb->query("CREATE TABLE ". table_agency_savedfavorite." (
@@ -90,9 +90,9 @@ global $wpdb;
 					);");
 		}
 		// Updating version number!
-		update_option('rb_agency_version', "1.8.5");
+		update_option('bb_agency_version', "1.8.5");
 	}
-	if (get_option('rb_agency_version') == "1.8.5") { 
+	if (get_option('bb_agency_version') == "1.8.5") { 
 
 		// Setup > Taxonomy: Gender
           if ($wpdb->get_var("show tables like '".  table_agency_data_gender ."'") !=  table_agency_data_gender ) { 
@@ -106,15 +106,15 @@ global $wpdb;
 			$results = $wpdb->query("INSERT INTO " . table_agency_data_gender . " (GenderID, GenderTitle) VALUES ('','Female')");
 	    }
 	    // Custom Order in Custom Fields
-		 rb_agency_addColumn(table_agency_customfields,"ProfileCustomOrder","INT(10) NOT NULL DEFAULT '0'");
+		 bb_agency_addColumn(table_agency_customfields,"ProfileCustomOrder","INT(10) NOT NULL DEFAULT '0'");
 		
 		// Updating version number!
-		update_option('rb_agency_version', "1.9");
+		update_option('bb_agency_version', "1.9");
 	}
- if (get_option('rb_agency_version') == "1.8.9") {	
-        update_option('rb_agency_version', "1.9");
+ if (get_option('bb_agency_version') == "1.8.9") {	
+        update_option('bb_agency_version', "1.9");
   }
-  if (get_option('rb_agency_version') == "1.9") {
+  if (get_option('bb_agency_version') == "1.9") {
 	 
 		// Setup > Save Favorited
 		if ($wpdb->get_var("show tables like '".  table_agency_savedfavorite ."'") !=  table_agency_savedfavorite ) { 
@@ -166,15 +166,15 @@ global $wpdb;
 					mysql_query($sql14);			
 			}	
 	   	// Custom Order in Custom Fields
-		 rb_agency_addColumn(table_agency_customfields,"ProfileCustomOrder"," INT(10) NOT NULL DEFAULT '0'");
+		 bb_agency_addColumn(table_agency_customfields,"ProfileCustomOrder"," INT(10) NOT NULL DEFAULT '0'");
 
 	   	// Custom Visibility in Custom Fields
-		rb_agency_addColumn(table_agency_customfields,"ProfileCustomShowProfile"," INT(10) NOT NULL DEFAULT '1'");
-		rb_agency_addColumn(table_agency_customfields,"ProfileCustomShowGender"," INT(10) NOT NULL DEFAULT '0'");
-		rb_agency_addColumn(table_agency_customfields,"ProfileCustomShowSearch"," INT(10) NOT NULL DEFAULT '1'");
-		rb_agency_addColumn(table_agency_customfields,"ProfileCustomShowLogged"," INT(10) NOT NULL DEFAULT '1'");
-		rb_agency_addColumn(table_agency_customfields,"ProfileCustomShowRegistration"," INT(10) NOT NULL DEFAULT '1'");
-		rb_agency_addColumn(table_agency_customfields,"ProfileCustomShowAdmin"," INT(10) NOT NULL DEFAULT '1'");
+		bb_agency_addColumn(table_agency_customfields,"ProfileCustomShowProfile"," INT(10) NOT NULL DEFAULT '1'");
+		bb_agency_addColumn(table_agency_customfields,"ProfileCustomShowGender"," INT(10) NOT NULL DEFAULT '0'");
+		bb_agency_addColumn(table_agency_customfields,"ProfileCustomShowSearch"," INT(10) NOT NULL DEFAULT '1'");
+		bb_agency_addColumn(table_agency_customfields,"ProfileCustomShowLogged"," INT(10) NOT NULL DEFAULT '1'");
+		bb_agency_addColumn(table_agency_customfields,"ProfileCustomShowRegistration"," INT(10) NOT NULL DEFAULT '1'");
+		bb_agency_addColumn(table_agency_customfields,"ProfileCustomShowAdmin"," INT(10) NOT NULL DEFAULT '1'");
 		
 		
 	 	// Populate Custom Fields
@@ -228,10 +228,10 @@ global $wpdb;
 		}
 			     
 		// Updating version number!
-           update_option('rb_agency_version', "1.9.1");
+           update_option('bb_agency_version', "1.9.1");
   }
   
-if (get_option('rb_agency_version')== "1.9.1") {
+if (get_option('bb_agency_version')== "1.9.1") {
   
 		// Fix Gender compatibility
 		$q4 = mysql_query("SELECT ProfileID, ProfileGender FROM ".table_agency_profile." ") or die("1".mysql_error());
@@ -246,9 +246,9 @@ if (get_option('rb_agency_version')== "1.9.1") {
 			 
 		endwhile;
    		// Updating version number!
-		update_option('rb_agency_version', "1.9.1.1");
+		update_option('bb_agency_version', "1.9.1.1");
   }	
-  if (get_option('rb_agency_version') == "1.9.1.1") {	
+  if (get_option('bb_agency_version') == "1.9.1.1") {	
 		$resultsProfile = mysql_query("SELECT * FROM ".table_agency_profile." ");
 		while($f_Profile = mysql_fetch_assoc($resultsProfile)){
 			$ProfileID = $f_Profile["ProfileID"];
@@ -280,24 +280,24 @@ if (get_option('rb_agency_version')== "1.9.1") {
 		}// end while data fetch
 		
 		// Updating version number!
-		update_option('rb_agency_version', "1.9.1.2");
+		update_option('bb_agency_version', "1.9.1.2");
   } 
-  if (get_option('rb_agency_version') == "1.9.1.2") {	
-        update_option('rb_agency_version', "1.9.1.3");
+  if (get_option('bb_agency_version') == "1.9.1.2") {	
+        update_option('bb_agency_version', "1.9.1.3");
   } 
- if (get_option('rb_agency_version') == "1.9.1.3") {	
-        update_option('rb_agency_version', "1.9.1.4");
+ if (get_option('bb_agency_version') == "1.9.1.3") {	
+        update_option('bb_agency_version', "1.9.1.4");
   }
-  if (get_option('rb_agency_version') == "1.9.1.4") {	
-        update_option('rb_agency_version', "1.9.1.5");
+  if (get_option('bb_agency_version') == "1.9.1.4") {	
+        update_option('bb_agency_version', "1.9.1.5");
   }
-  if (get_option('rb_agency_version') == "1.9.1.5") {	
-        update_option('rb_agency_version', "1.9.1.6");
+  if (get_option('bb_agency_version') == "1.9.1.5") {	
+        update_option('bb_agency_version', "1.9.1.6");
   }
-  if (get_option('rb_agency_version') == "1.9.1.6") {	
-        update_option('rb_agency_version', "1.9.2");
+  if (get_option('bb_agency_version') == "1.9.1.6") {	
+        update_option('bb_agency_version', "1.9.2");
   }
-  if (get_option('rb_agency_version') == "1.9.2") {
+  if (get_option('bb_agency_version') == "1.9.2") {
 	   
 	    /*/
 	    // *  Update custom fields
@@ -346,21 +346,21 @@ if (get_option('rb_agency_version')== "1.9.1") {
 		      endforeach;
 		}// end while data fetch
 			
-        update_option('rb_agency_version', "1.9.2.1");
+        update_option('bb_agency_version', "1.9.2.1");
   }
-  if (get_option('rb_agency_version') == "1.9.2.1") {	
-        update_option('rb_agency_version', "1.9.7");
+  if (get_option('bb_agency_version') == "1.9.2.1") {	
+        update_option('bb_agency_version', "1.9.7");
   }
-  if (get_option('rb_agency_version') <> "1.9.7") {	
-	  update_option('rb_agency_version', "1.9.9");
+  if (get_option('bb_agency_version') <> "1.9.7") {	
+	  update_option('bb_agency_version', "1.9.9");
   }
-  if (substr(get_option('rb_agency_version'), 0, 3) == "1.9") {	
-	  update_option('rb_agency_version', "2.0.0");
+  if (substr(get_option('bb_agency_version'), 0, 3) == "1.9") {	
+	  update_option('bb_agency_version', "2.0.0");
   }
 	
 // Ensure directory is setup
-if (!is_dir(rb_agency_UPLOADPATH)) {
-	mkdir(rb_agency_UPLOADPATH, 0755);
-	chmod(rb_agency_UPLOADPATH, 0777);
+if (!is_dir(bb_agency_UPLOADPATH)) {
+	mkdir(bb_agency_UPLOADPATH, 0755);
+	chmod(bb_agency_UPLOADPATH, 0777);
 }
 ?>
