@@ -140,7 +140,7 @@ $bb_agency_options_arr = get_option('bb_agency_options');
 		echo "				    </fieldset>";
 */
 		echo "				    <fieldset class=\"search-field multi\">";
-		echo "				        <legend>". __("Due date", bb_agency_TEXTDOMAIN) . "</legend>";
+		echo "				        <legend>". __("Due date / date of birth", bb_agency_TEXTDOMAIN) . "</legend>";
 		
 		echo "				    <div>";
 		echo "				        <label for=\"ProfileDateDue_min\">". __("From", bb_agency_TEXTDOMAIN) . "</label>";

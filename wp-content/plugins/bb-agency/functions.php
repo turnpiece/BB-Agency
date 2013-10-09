@@ -68,7 +68,7 @@ error_reporting(0);
 			global $wp_meta_boxes;
 
 			// Create Dashboard Widgets
-			wp_add_dashboard_widget('bb_agency_dashboard_quicklinks', __("RB Agency Updates", bb_agency_TEXTDOMAIN), 'bb_agency_dashboard_quicklinks');
+			wp_add_dashboard_widget('bb_agency_dashboard_quicklinks', __("BB Agency Updates", bb_agency_TEXTDOMAIN), 'bb_agency_dashboard_quicklinks');
 		
 			// reorder the boxes - first save the left and right columns into variables
 			$left_dashboard = $wp_meta_boxes['dashboard']['normal']['core'];
@@ -121,7 +121,7 @@ error_reporting(0);
 			}
 			echo "</div>\n";
 			echo "<hr />\n";
-			echo "Need help? Check out RB Agency <a href=\"http://rbplugin.com\" target=\"_blank\" title=\"RB Agency Documentation\">Documentation</a>.<br />";
+			echo "Need help? Check out RB Agency <a href=\"http://rbplugin.com\" target=\"_blank\" title=\"RB Agency Documentation\">Documentation</a>. (This plugin is a based on the RB Agency plugin but it's not identical.)<br />";
 		}
 	}
 
@@ -1102,10 +1102,18 @@ error_reporting(0);
 
 		// Due date
 		if (isset($ProfileDateDue_min) && !empty($ProfileDateDue_min)){
-			$filter .= " AND profile.ProfileDateDue >= '$ProfileDateDue_min'";
+			// if the date given is in the past assume it's a date of birth
+			if (bb_agency_datepassed($ProfileDateDue_min))
+				$filter .= " AND profile.ProfileDateDue >= '$ProfileDateDue_min'";
+			else
+				$filter .= " AND profile.ProfileDateBirth >= '$ProfileDateDue_min'";
 		}
 		if (isset($ProfileDateDue_max) && !empty($ProfileDateDue_max)){
-			$filter .= " AND profile.ProfileDateDue <= '$ProfileDateDue_max'";
+			// if the date given is in the past assume it's a date of birth
+			if (bb_agency_datepassed($ProfileDateDue_max))
+				$filter .= " AND profile.ProfileDateDue <= '$ProfileDateDue_max'";
+			else
+				$filter .= " AND profile.ProfileDateBirth <= '$ProfileDateDue_max'";
 		}
 
 		if (isset($ProfileIsFeatured)){
@@ -1354,11 +1362,11 @@ error_reporting(0);
 				$countFav = 0;
 				while ($dataList = mysql_fetch_assoc($resultsList)) {
 					// check due date to make sure she hasn't already given birth
-					if (intval($dataList['ProfileType']) === bb_agency_MUMSTOBE_ID && $dataList['ProfileGivenBirth'] === "yes") {
+					if (bb_agency_ismumtobe($dataList['ProfileType']) && $dataList['ProfileGivenBirth'] === "yes") {
 
 						//echo $type.': '.$dataList['ProfileDateDue'].' given birth = "'.$dataList['ProfileGivenBirth'].'"<br />';
 						
-						// recategorize
+						// recategorize as family
 						$wpdb->update(
 							table_agency_profile, 
 							array('ProfileType' => bb_agency_AFTERBIRTH_ID), 
@@ -1367,8 +1375,8 @@ error_reporting(0);
 							array('%d')
 						);
 						
-						if (intval($type) == bb_agency_MUMSTOBE_ID) {
-							continue; // don't display this one
+						if (bb_agency_ismumtobe($type)) {
+							continue; // don't display this one as she's nolonger pregnant
 						}
 					}
 					$profileDisplay++;
@@ -1636,6 +1644,22 @@ error_reporting(0);
 		return date("jS F", $timestamp);
 	}
 
+	// has given date already passed?
+	function bb_agency_datepassed($date) {
+		return strtotime($date) > time();	
+	}
+
+	// Is this model a mum to be?
+	function bb_agency_ismumtobe($type) {
+		$types = explode(',',$type);
+		return in_array(bb_agency_MUMSTOBE_ID, $types);
+	}
+
+	// Is this model a family?
+	function bb_agency_isfamily($type) {
+		$types = explode(',',$type);
+		return in_array(bb_agency_AFTERBIRTH_ID, $types);
+	}
 
 
 
@@ -2897,7 +2921,7 @@ function bb_agency_callafter_setup() {
 		function bb_agency_add_toolbar($wp_toolbar) {
 			$wp_toolbar->add_node(array(
 				'id' => 'bb-agency-toolbar-settings',
-				'title' => 'RB Agency Settings',
+				'title' => 'BB Agency Settings',
 				'href' =>  get_admin_url().'admin.php?page=bb_agency_settings',
 				'meta' => array('target' => 'bb-agency-toolbar-settings')
 			));
@@ -3273,13 +3297,13 @@ function bulk_register_and_send_email(){
 function send_email_lp($login, $password, $email){
     $admin_email = get_bloginfo('admin_email');
 
-    $headers = 'From: RB Agency <' . $admin_email . '>\r\n';
+    $headers = 'From: BB Agency <' . $admin_email . '>\r\n';
 
     $subject = 'Your new Login and Password';
     
     $message = read_email_content(true);
     if($message == 'empty'){
-        $message = 'Hello, we generated new login and password for you at RB Agency\n\n[login]\n[password]\n\nYou can login [url]\n\nThanks.';
+        $message = 'Hello, we generated new login and password for you at BB Agency\n\n[login]\n[password]\n\nYou can login [url]\n\nThanks.';
     }
 
     $message = str_replace('[login]', 'Login: <strong>' . $login . '</strong>', $message);

@@ -28,50 +28,60 @@ Profile View with Scrolling Thumbnails and Primary Image
 	echo "	  </div>\n";
 	echo "	</div>\n"; // close #photos
 	
-		echo "	  <div id=\"stats\" class=\"col_3 column\">\n";
+	echo "	  <div id=\"stats\" class=\"col_3 column\">\n";
 
-		echo "	  <h2>". $ProfileContactDisplay ."</h2>\n";
+	echo "	  <h2>". $ProfileContactDisplay;
+	if (bb_agency_isfamily($ProfileType)) {
+		echo __(' and family', bb_agency_TEXTDOMAIN);
+	}	
+	echo "</h2>\n";
 
-		echo "	  <ul>\n";
+	echo "	  <ul>\n";
 
-			if (!empty($ProfileGender)) {
-				$queryGenderResult = mysql_query("SELECT GenderID, GenderTitle FROM ".table_agency_data_gender." WHERE GenderID='".$ProfileGender."' ");
-				$fetchGenderData = mysql_fetch_assoc($queryGenderResult);
-				echo "<li><strong>". __("Gender", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". __($fetchGenderData["GenderTitle"], bb_agency_TEXTDOMAIN). "</li>\n";
-			}
-			/*
-			if (!empty($ProfileStatHeight)) {
-				if ($bb_agency_option_unittype == 0) { // Metric
-					echo "<li><strong>". __("Height", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatHeight ." ". __("cm", bb_agency_TEXTDOMAIN). "" ."</li>\n";
-				} else { // Imperial
-					$heightraw = $ProfileStatHeight;
-					$heightfeet = floor($heightraw/12);
-					$heightinch = $heightraw - floor($heightfeet*12);
-					echo "<li><strong>". __("Height", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $heightfeet ." ". __("ft", bb_agency_TEXTDOMAIN). " ". $heightinch ." ". __("in", bb_agency_TEXTDOMAIN). "" ."</li>\n";
-				}
-			}
-			if (!empty($ProfileStatWeight)) {
-				if ($bb_agency_option_unittype == 0) { // Metric
-					echo "<li><strong>". __("Weight", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatWeight ." ". __("kg", bb_agency_TEXTDOMAIN). "</li>\n";
-				} else { // Imperial
-					echo "<li><strong>". __("Weight", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatWeight ." ". __("lb", bb_agency_TEXTDOMAIN). "</li>\n";
-				}
-			}
-			*/
+	if (!empty($ProfileGender)) {
+		$queryGenderResult = mysql_query("SELECT GenderID, GenderTitle FROM ".table_agency_data_gender." WHERE GenderID='".$ProfileGender."' ");
+		$fetchGenderData = mysql_fetch_assoc($queryGenderResult);
+		echo "<li><strong>". __("Gender", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". __($fetchGenderData["GenderTitle"], bb_agency_TEXTDOMAIN). "</li>\n";
+	}
+	/*
+	if (!empty($ProfileStatHeight)) {
+		if ($bb_agency_option_unittype == 0) { // Metric
+			echo "<li><strong>". __("Height", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatHeight ." ". __("cm", bb_agency_TEXTDOMAIN). "" ."</li>\n";
+		} else { // Imperial
+			$heightraw = $ProfileStatHeight;
+			$heightfeet = floor($heightraw/12);
+			$heightinch = $heightraw - floor($heightfeet*12);
+			echo "<li><strong>". __("Height", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $heightfeet ." ". __("ft", bb_agency_TEXTDOMAIN). " ". $heightinch ." ". __("in", bb_agency_TEXTDOMAIN). "" ."</li>\n";
+		}
+	}
+	if (!empty($ProfileStatWeight)) {
+		if ($bb_agency_option_unittype == 0) { // Metric
+			echo "<li><strong>". __("Weight", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatWeight ." ". __("kg", bb_agency_TEXTDOMAIN). "</li>\n";
+		} else { // Imperial
+			echo "<li><strong>". __("Weight", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatWeight ." ". __("lb", bb_agency_TEXTDOMAIN). "</li>\n";
+		}
+	}
+	*/
 
-			if (!empty($ProfileDateDue)) {
-				echo "<li><strong>". __("Due date", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". bb_agency_displaydate($ProfileDateDue) ."</li>\n";
-			}
+	if (bb_agency_ismumtobe($ProfileType) && !empty($ProfileDateDue)) {
+		// if pregnant display due date
+		echo "<li><strong>". __("Due date", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". bb_agency_displaydate($ProfileDateDue) ."</li>\n";
+	}
 
-			// Insert Custom Fields
-			bb_agency_getProfileCustomFields($ProfileID, $ProfileGender);
-			
+	if (bb_agency_isfamily($ProfileType) && !empty($ProfileDateBirth)) {
+		// if a family display the baby's date of birth
+		echo "<li><strong>". __("Baby's date of birth", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". bb_agency_displaydate($ProfileDateBirth) ."</li>\n";
+	}
 
-			if($bb_agency_option_showcontactpage==1){
-				echo "<li class=\"rel\"><strong>". __("Contact: ", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> <a href=\"". get_bloginfo("wpurl") ."/profile/".$ProfileGallery	."/contact/\">Click Here</a></li>\n";
-			}
-		echo "	  </ul>\n"; // Close ul
-		echo "	  </div>\n"; // Close Stats
+	// Insert Custom Fields
+	bb_agency_getProfileCustomFields($ProfileID, $ProfileGender);
+	
+
+	if($bb_agency_option_showcontactpage==1){
+		echo "<li class=\"rel\"><strong>". __("Contact: ", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> <a href=\"". get_bloginfo("wpurl") ."/profile/".$ProfileGallery	."/contact/\">Click Here</a></li>\n";
+	}
+	echo "	  </ul>\n"; // Close ul
+	echo "	  </div>\n"; // Close Stats
 	
 	echo "		<div id=\"links\" class=\"col_3 column\">\n";
 	echo "			<h3>". $AgencyName ." ". $ProfileClassification ."</h3>\n";

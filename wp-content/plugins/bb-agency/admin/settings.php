@@ -47,7 +47,7 @@ if ($ConfigID == 0) {
 	// Core Settings
     echo "<div class=\"boxlinkgroup\">\n";
     echo "  <h2>". __("Configuration", bb_agency_TEXTDOMAIN) . "</h2>\n";
-    echo "  <p>". __("The following settings modify the core RB Agency settings.", bb_agency_TEXTDOMAIN) . "</p>\n";
+    echo "  <p>". __("The following settings modify the core BB Agency settings.", bb_agency_TEXTDOMAIN) . "</p>\n";
     echo "    <div class=\"boxlink\">\n";
     echo "      <h3>". __("Features", bb_agency_TEXTDOMAIN) . "</h3>\n";
     echo "      <a class=\"button-primary\" href=\"?page=". $_GET["page"] ."&ConfigID=1\" title=\"". __("Settings", bb_agency_TEXTDOMAIN) . "\">". __("Settings", bb_agency_TEXTDOMAIN) . "</a><br />\n";
@@ -106,7 +106,7 @@ if ($ConfigID == 0) {
 	// Uninstall
     echo "<div class=\"boxlinkgroup\">\n";
     echo "  <h2>". __("Uninstall", bb_agency_TEXTDOMAIN) . "</h2>\n";
-    echo "  <p>". __("Uninstall RB Agency software and completely remove all data", bb_agency_TEXTDOMAIN) . "</p>\n";
+    echo "  <p>". __("Uninstall BB Agency software and completely remove all data", bb_agency_TEXTDOMAIN) . "</p>\n";
     echo "    <div class=\"boxlink\">\n";
     echo "      <a class=\"button-secondary\" href=\"?page=". $_GET["page"] ."&ConfigID=99\" title=\"". __("Uninstall", bb_agency_TEXTDOMAIN) . "\">". __("Uninstall", bb_agency_TEXTDOMAIN) . "</a><br />\n";
     echo "    </div>\n";
