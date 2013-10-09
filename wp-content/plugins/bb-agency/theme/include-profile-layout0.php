@@ -39,7 +39,7 @@ Profile View with Scrolling Thumbnails and Primary Image
 				$fetchGenderData = mysql_fetch_assoc($queryGenderResult);
 				echo "<li><strong>". __("Gender", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". __($fetchGenderData["GenderTitle"], bb_agency_TEXTDOMAIN). "</li>\n";
 			}
-		
+			/*
 			if (!empty($ProfileStatHeight)) {
 				if ($bb_agency_option_unittype == 0) { // Metric
 					echo "<li><strong>". __("Height", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatHeight ." ". __("cm", bb_agency_TEXTDOMAIN). "" ."</li>\n";
@@ -56,6 +56,11 @@ Profile View with Scrolling Thumbnails and Primary Image
 				} else { // Imperial
 					echo "<li><strong>". __("Weight", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatWeight ." ". __("lb", bb_agency_TEXTDOMAIN). "</li>\n";
 				}
+			}
+			*/
+
+			if (!empty($ProfileDateDue)) {
+				echo "<li><strong>". __("Due date", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". bb_agency_displaydate($ProfileDateDue) ."</li>\n";
 			}
 
 			// Insert Custom Fields

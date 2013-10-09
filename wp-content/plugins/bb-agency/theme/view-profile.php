@@ -69,6 +69,7 @@ while ($data = mysql_fetch_array($results)) {
 	$ProfileContactPhoneWork	=stripslashes($data['ProfileContactPhoneWork']);
 	$ProfileGender    			=stripslashes($data['ProfileGender']);
 	$ProfileDateBirth	    	=stripslashes($data['ProfileDateBirth']);
+	$ProfileDateDue	    		=stripslashes($data['ProfileDateDue']);
 	$ProfileAge 				= bb_agency_get_age($ProfileDateBirth);
 	$ProfileLocationCity		=stripslashes($data['ProfileLocationCity']);
 	$ProfileLocationState		=stripslashes($data['ProfileLocationState']);
