@@ -1362,16 +1362,24 @@ error_reporting(0);
 				$countFav = 0;
 				while ($dataList = mysql_fetch_assoc($resultsList)) {
 					// check due date to make sure she hasn't already given birth
+
 					if (bb_agency_ismumtobe($dataList['ProfileType']) && $dataList['ProfileGivenBirth'] === "yes") {
 
 						//echo $type.': '.$dataList['ProfileDateDue'].' given birth = "'.$dataList['ProfileGivenBirth'].'"<br />';
+
+						// switch category
+						$ptypes = explode(',', $dataList['ProfileType']);
+						for($i = 0; $i < count($ptypes); $i++){
+							if ($ptypes[$i] == bb_agency_MUMSTOBE_ID)
+								$ptypes[$i] = bb_agency_AFTERBIRTH_ID;
+						}
 						
 						// recategorize as family
 						$wpdb->update(
 							table_agency_profile, 
-							array('ProfileType' => bb_agency_AFTERBIRTH_ID), 
+							array('ProfileType' => implode(',', $ptypes)), 
 							array('ProfileID' => $dataList['ProfileID']),
-							array('%d'),
+							array('%s'),
 							array('%d')
 						);
 						

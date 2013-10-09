@@ -122,7 +122,6 @@ while ($data = mysql_fetch_array($results)) {
 				
 				if (isset($bb_agency_options_arr['bb_agency_option_layoutprofile'])) {
 					$layouttype = (int)$bb_agency_options_arr['bb_agency_option_layoutprofile'];
-
 					if ($layouttype == 99) {
 						// Slimbox
 						wp_enqueue_script( 'slimbox2', plugins_url('/js/slimbox2.js', __FILE__) );
