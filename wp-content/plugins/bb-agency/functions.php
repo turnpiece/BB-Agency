@@ -741,7 +741,8 @@ error_reporting(0);
      * @param array $atts 
      */
 	function bb_agency_profilelist($atts, $content = NULL) {
-		print_r($atts);
+		global $wpdb;
+
 		// Get Preferences
 		$bb_agency_options_arr = get_option('bb_agency_options');
 		$bb_agency_option_privacy					 = isset($bb_agency_options_arr['bb_agency_option_privacy']) ? $bb_agency_options_arr['bb_agency_option_privacy'] :0;
@@ -794,10 +795,10 @@ error_reporting(0);
 			"profilezip" => NULL
 		), $atts));
 
-		// Filter It
-		$sort = "profile.ProfileContactDisplay";
+		// Sort by due date if a mum to be, otherwise sort alphabetically
+		$sort = intval($type) == bb_agency_MUMSTOBE_ID ? "profile.ProfileDateDue" : "profile.ProfileContactDisplay";
 
-		//$limit = " LIMIT 0,". $bb_agency_option_profilelist_perpage;
+		// Sort ascending whether by due date or alphabetical
 		$dir = "asc";
 
 		// Should we override the privacy settings?
@@ -1061,7 +1062,6 @@ error_reporting(0);
 		}
 		
 		// Type
-		echo $ProfileType;
 		if (isset($ProfileType) && !empty($ProfileType)){
 			$ProfileType = $ProfileType;
 			$filter .= " AND FIND_IN_SET(". $ProfileType .", profile.ProfileType) ";
@@ -1284,6 +1284,8 @@ error_reporting(0);
 						profile.ProfileID as pID, 
 						profile.ProfileGallery,
 						profile.ProfileContactDisplay, 
+						profile.ProfileType,
+						IF(DATE(profile.ProfileDateDue) < CURDATE(),'yes','no') AS ProfileGivenBirth,
 						(   SELECT media.ProfileMediaURL 
 							FROM ". table_agency_profile_media ." media 
 							WHERE profile.ProfileID = media.ProfileID 
@@ -1328,7 +1330,7 @@ error_reporting(0);
 			}
 			
 			$bb_agency_option_profilenaming = isset($bb_agency_options_arr['bb_agency_option_profilenaming']) ?$bb_agency_options_arr['bb_agency_option_profilenaming']:0;
-	                   
+
 			$resultsList = mysql_query($queryList);
 			$countList = mysql_num_rows($resultsList);
 	                
@@ -1339,122 +1341,133 @@ error_reporting(0);
 
 			if($countList > 0){
 				
-			# this will replace the timthumb function as it is not working properly all the time.	
-		  	$displayHTML ="	<script type='text/javascript' src='".bb_agency_BASEDIR."js/resize.js'></script>";
+				# this will replace the timthumb function as it is not working properly all the time.	
+			  	$displayHTML ="	<script type='text/javascript' src='".bb_agency_BASEDIR."js/resize.js'></script>";
 
-	        $profileDisplay = 0;
-			$countFav = 0;
-			while ($dataList = mysql_fetch_assoc($resultsList)) {
-				if (intval($dataList['ProfileType']) === bb_agency_MUMSTOBE_ID && $dataList['ProfileGivenBirth'] === "yes") {
-					// check due date to make sure she hasn't yet given birth
-					echo $type.': '.$dataList['ProfileDateDue'].' given birth = "'.$dataList['ProfileGivenBirth'].'"<br />';
+		        $profileDisplay = 0;
+				$countFav = 0;
+				while ($dataList = mysql_fetch_assoc($resultsList)) {
+					// check due date to make sure she hasn't already given birth
+					if (intval($dataList['ProfileType']) === bb_agency_MUMSTOBE_ID && $dataList['ProfileGivenBirth'] === "yes") {
 
-					if (intval($type) == bb_agency_MUMSTOBE_ID) {
-						continue; // skip this one
+						//echo $type.': '.$dataList['ProfileDateDue'].' given birth = "'.$dataList['ProfileGivenBirth'].'"<br />';
+						
+						// recategorize
+						$wpdb->update(
+							table_agency_profile, 
+							array('ProfileType' => bb_agency_AFTERBIRTH_ID), 
+							array('ProfileID' => $dataList['ProfileID']),
+							array('%d'),
+							array('%d')
+						);
+						
+						if (intval($type) == bb_agency_MUMSTOBE_ID) {
+							continue; // don't display this one
+						}
 					}
-				}
-				$profileDisplay++;
-				if ($profileDisplay == 1 ){
-					 
-					/*********** Show Count/Pages **************/
-					 $displayHTML .= "  <div id=\"profile-results-info\" class=\"six column\">\n";
-						
-						# Temporarily removed this as required
-						#if(count($dataList) > 0){
-						#	$displayHTML .="    <div class=\"profile-results-info-countpage\">\n";
-						#		echo "<strong>Item on this list: ".count($countList)."</strong>";
-						#	$displayHTML .="    </div>\n";
-						#}
-						
-						if($items > 0) {
-							if ((!isset($profilefavorite) && empty($profilefavorite)) && (!isset($profilecastingcart) && empty($profilecastingcart))){ 
-								$displayHTML .="    <div class=\"profile-results-info-countpage\">\n";
-									echo $p->show();  // Echo out the list of paging. 
-								$displayHTML .= "    </div>\n";
+					$profileDisplay++;
+					if ($profileDisplay == 1 ){
+						 
+						/*********** Show Count/Pages **************/
+						 $displayHTML .= "  <div id=\"profile-results-info\" class=\"six column\">\n";
+							
+							# Temporarily removed this as required
+							#if(count($dataList) > 0){
+							#	$displayHTML .="    <div class=\"profile-results-info-countpage\">\n";
+							#		echo "<strong>Item on this list: ".count($countList)."</strong>";
+							#	$displayHTML .="    </div>\n";
+							#}
+							
+							if($items > 0) {
+								if ((!isset($profilefavorite) && empty($profilefavorite)) && (!isset($profilecastingcart) && empty($profilecastingcart))){ 
+									$displayHTML .="    <div class=\"profile-results-info-countpage\">\n";
+										echo $p->show();  // Echo out the list of paging. 
+									$displayHTML .= "    </div>\n";
+								}
 							}
-						}
-						
-						if ($bb_agency_option_profilelist_count) {
-							if ((!isset($profilefavorite) && empty($profilefavorite)) && (!isset($profilecastingcart) && empty($profilecastingcart))){  
-								$displayHTML .= "    <div id=\"profile-results-info-countrecord\">\n";
-								$displayHTML .="    	". __("Displaying", bb_agency_TEXTDOMAIN) ." <strong>". $countList ."</strong> ". __("of", bb_agency_TEXTDOMAIN) ." ". $items ." ". __(" records", bb_agency_TEXTDOMAIN) ."\n";
-								$displayHTML .="    </div>\n";
-							}				
-						}
+							
+							if ($bb_agency_option_profilelist_count) {
+								if ((!isset($profilefavorite) && empty($profilefavorite)) && (!isset($profilecastingcart) && empty($profilecastingcart))){  
+									$displayHTML .= "    <div id=\"profile-results-info-countrecord\">\n";
+									$displayHTML .="    	". __("Displaying", bb_agency_TEXTDOMAIN) ." <strong>". $countList ."</strong> ". __("of", bb_agency_TEXTDOMAIN) ." ". $items ." ". __(" records", bb_agency_TEXTDOMAIN) ."\n";
+									$displayHTML .="    </div>\n";
+								}				
+							}
 
-					$displayHTML.="  </div><!-- #profile-results-info -->\n";
-					$displayHTML.="  <div class=\"rbclear\"></div>\n";
-				}	           
-				
-				if($profileDisplay == 1){
-					$displayHTML.="  <div id=\"profile-list\">\n";
-				}
-				$displayHTML .= "<div id=\"rbprofile-".$dataList["ProfileID"]."\" class=\"rbprofile-list profile-list-layout0\" >\n";
-
-				if (isset($dataList["ProfileMediaURL"]) ) { // && (file_exists(bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"] ."/". $dataList["ProfileMediaURL"])) ) {
+						$displayHTML.="  </div><!-- #profile-results-info -->\n";
+						$displayHTML.="  <div class=\"rbclear\"></div>\n";
+					}	           
 					
-					//dont need other image for hover if its for print or pdf download view and dont use timthubm
-					if(get_query_var('target')!="print" AND get_query_var('target')!="pdf"){
-								 
-						if($bb_agency_options_arr['bb_agency_option_profilelist_thumbsslide']==1){  //show profile sub thumbs for thumb slide on hover
-							$images=getAllImages($dataList["ProfileID"]);
-						    $images=str_replace("{PHOTO_PATH}",bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"]."/",$images);
-						}
-
-						# this is removed as timthumb always has an issue.
-						#$displayHTML .="<div class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\"><img src=\"".bb_agency_BASEDIR."tasks/timthumb.php?src=".bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"] ."/". $dataList["ProfileMediaURL"]."&w=200&q=60\" id=\"roll".$dataList["ProfileID"]."\"  /></a>".$images."</div>\n";
-						
-						#phel comment: i decided to remove the actual image, and put the url on anchor as background to fix the image resizing issue
-						#$displayHTML .="<div  class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\"><img src=\"".bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"] ."/". $dataList["ProfileMediaURL"]."\"  /></a>".$images."</div>\n";
-						$displayHTML .="<div  class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\" style=\"background-image: url(".bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"] ."/". $dataList["ProfileMediaURL"].")\"></a>".$images."</div>\n";
-
-					} else {
-						#phel comment: i decided to remove the actual image, and put the url on anchor as background to fix the image resizing issue
-						#$displayHTML .="<div  class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\"><img src=\"".bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"] ."/". $dataList["ProfileMediaURL"]."\"  /></a>".$images."</div>\n";
-						$displayHTML .="<div  class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\" style=\"background-image: url(".bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"] ."/". $dataList["ProfileMediaURL"].")\"></a>".$images."</div>\n";
+					if($profileDisplay == 1){
+						$displayHTML.="  <div id=\"profile-list\">\n";
 					}
-				
-				} else {
-				 	$displayHTML .= "  <div class=\"image image-broken\"><a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\">No Image</a></div>\n";
-				}
+					$displayHTML .= "<div id=\"rbprofile-".$dataList["ProfileID"]."\" class=\"rbprofile-list profile-list-layout0\" >\n";
+
+					if (isset($dataList["ProfileMediaURL"]) ) { // && (file_exists(bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"] ."/". $dataList["ProfileMediaURL"])) ) {
+						
+						//dont need other image for hover if its for print or pdf download view and dont use timthubm
+						if(get_query_var('target')!="print" AND get_query_var('target')!="pdf"){
+									 
+							if($bb_agency_options_arr['bb_agency_option_profilelist_thumbsslide']==1){  //show profile sub thumbs for thumb slide on hover
+								$images=getAllImages($dataList["ProfileID"]);
+							    $images=str_replace("{PHOTO_PATH}",bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"]."/",$images);
+							}
+
+							# this is removed as timthumb always has an issue.
+							#$displayHTML .="<div class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\"><img src=\"".bb_agency_BASEDIR."tasks/timthumb.php?src=".bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"] ."/". $dataList["ProfileMediaURL"]."&w=200&q=60\" id=\"roll".$dataList["ProfileID"]."\"  /></a>".$images."</div>\n";
+							
+							#phel comment: i decided to remove the actual image, and put the url on anchor as background to fix the image resizing issue
+							#$displayHTML .="<div  class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\"><img src=\"".bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"] ."/". $dataList["ProfileMediaURL"]."\"  /></a>".$images."</div>\n";
+							$displayHTML .="<div  class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\" style=\"background-image: url(".bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"] ."/". $dataList["ProfileMediaURL"].")\"></a>".$images."</div>\n";
+
+						} else {
+							#phel comment: i decided to remove the actual image, and put the url on anchor as background to fix the image resizing issue
+							#$displayHTML .="<div  class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\"><img src=\"".bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"] ."/". $dataList["ProfileMediaURL"]."\"  /></a>".$images."</div>\n";
+							$displayHTML .="<div  class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\" style=\"background-image: url(".bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"] ."/". $dataList["ProfileMediaURL"].")\"></a>".$images."</div>\n";
+						}
 					
-				$displayHTML .= "  <div class=\"profile-info\">\n";
-				
+					} else {
+					 	$displayHTML .= "  <div class=\"image image-broken\"><a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\">No Image</a></div>\n";
+					}
+						
+					$displayHTML .= "  <div class=\"profile-info\">\n";
+					
+			
+					$displayHTML .= "     <h3 class=\"name\"><a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\" class=\"scroll\">". stripslashes($dataList["ProfileContactDisplay"]) ."</a></h3>\n";
+
+					if ($bb_agency_option_profilelist_expanddetails) {
+						echo "expanded details";
+					 	$displayHTML .= "     <div class=\"details\"><span class=\"details-age\">". bb_agency_get_age($dataList["ProfileDateBirth"]) ."</span><span class=\"divider\">, </span><span class=\"details-state\">". $dataList["ProfileLocationState"] ."</span></div>\n";
+					 	/*
+					 	TODO - get due date if applicable
+					 	$displayHTML .= "     <div class=\"details\"><span class=\"details-due\">". bb_agency_get_age($dataList["ProfileDateDue"]) ."</span><span class=\"divider\">, </span><span class=\"details-state\">". $dataList["ProfileLocationState"] ."</span></div>\n";
+					 	*/
+					}
+					
+		         	//echo "loaded: ".microtime()." ms";				
+					if($bb_user_isLogged ){
+					   	//Get Favorite & Casting Cart links
+				        $displayHTML .= bb_agency_get_miscellaneousLinks($dataList["ProfileID"]);
+					}
+
+					$displayHTML .=" </div> <!-- .profile-info --> \n";
+					$displayHTML .=" </div><!-- .rbprofile-list -->\n";
+				}	// endwhile datalist
+
+				$displayHTML .= "  <div class=\"rbclear\"></div>\n";
+				$displayHTML .= "  </div><!-- #profile-list -->\n";		
+			}	// endif countlist
+
+			/*
+			 *  There are no profiles returned.  Display empty message
+			 */
+			if ($countList < 1) {
+				$displayHTML .= __("No Profiles Found", bb_agency_TEXTDOMAIN);
+			}
 		
-				$displayHTML .= "     <h3 class=\"name\"><a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\" class=\"scroll\">". stripslashes($dataList["ProfileContactDisplay"]) ."</a></h3>\n";
-
-				if ($bb_agency_option_profilelist_expanddetails) {
-				 	$displayHTML .= "     <div class=\"details\"><span class=\"details-age\">". bb_agency_get_age($dataList["ProfileDateBirth"]) ."</span><span class=\"divider\">, </span><span class=\"details-state\">". $dataList["ProfileLocationState"] ."</span></div>\n";
-				 	/*
-				 	TODO - get due date if applicable
-				 	$displayHTML .= "     <div class=\"details\"><span class=\"details-due\">". bb_agency_get_age($dataList["ProfileDateDue"]) ."</span><span class=\"divider\">, </span><span class=\"details-state\">". $dataList["ProfileLocationState"] ."</span></div>\n";
-				 	*/
-				}
-				
-	         	//echo "loaded: ".microtime()." ms";				
-				if($bb_user_isLogged ){
-				   	//Get Favorite & Casting Cart links
-			        $displayHTML .= bb_agency_get_miscellaneousLinks($dataList["ProfileID"]);
-				}
-
-				$displayHTML .=" </div> <!-- .profile-info --> \n";
-				$displayHTML .=" </div><!-- .rbprofile-list -->\n";
-			}	// endwhile datalist
-
+			// Close Formatting
 			$displayHTML .= "  <div class=\"rbclear\"></div>\n";
-			$displayHTML .= "  </div><!-- #profile-list -->\n";		
-		}	// endif countlist
-
-		/*
-		 *  There are no profiles returned.  Display empty message
-		 */
-		if ($countList < 1) {
-			$displayHTML .= __("No Profiles Found", bb_agency_TEXTDOMAIN);
-		}
-		
-		// Close Formatting
-		$displayHTML .= "  <div class=\"rbclear\"></div>\n";
-		$displayHTML .= "</div><!-- #profile-results -->\n";
+			$displayHTML .= "</div><!-- #profile-results -->\n";
 				
 		} else {
 			if($bb_agency_option_privacy == 3 && is_user_logged_in() && !is_client_profiletype()){
