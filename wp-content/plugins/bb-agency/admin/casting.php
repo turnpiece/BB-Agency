@@ -203,19 +203,19 @@ if (isset($_POST['action'])) {
 					</td>
 				</tr>
 		       	<tr valign="top">
-					<th scope="row">City</th>
+					<th scope="row">Town</th>
 					<td>
 						<input type="text" id="CastingLocationCity" name="CastingLocationCity" value="<?php echo bb_agency_strtoproper($CastingLocationCity); ?>" />
 					</td>
 				</tr>
 		       	<tr valign="top">
-					<th scope="row">State</th>
+					<th scope="row">County</th>
 					<td>
 						<input type="text" id="CastingLocationState" name="CastingLocationState" value="<?php echo strtoupper($CastingLocationState); ?>" />
 					</td>
 				</tr>
 		      	<tr valign="top">
-					<th scope="row">Zip</th>
+					<th scope="row">Post code</th>
 					<td>
 						<input type="text" id="CastingLocationZip" name="CastingLocationZip" value="<?php echo $CastingLocationZip; ?>" />
 					</td>

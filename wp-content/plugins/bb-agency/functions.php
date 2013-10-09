@@ -741,7 +741,8 @@ error_reporting(0);
      * @param array $atts 
      */
 	function bb_agency_profilelist($atts, $content = NULL) {
-		global $wpdb;
+
+		?><pre><?php print_r($atts) ?></pre><?php
 
 		// Get Preferences
 		$bb_agency_options_arr = get_option('bb_agency_options');
@@ -758,7 +759,7 @@ error_reporting(0);
 		$bb_agency_option_profilelist_printpdf 	     = isset($bb_agency_options_arr['bb_agency_option_profilelist_printpdf']) ?(int)$bb_agency_options_arr['bb_agency_option_profilelist_printpdf']:0;
 
 		// Set It Up	
-		global $wp_rewrite;
+		global $wp_rewrite, $wpdb;
 	    $cusFields = array("Suit","Bust","Shirt","Dress");  //for custom fields min and max
 	    
 	    // Exctract from Shortcode
@@ -1082,6 +1083,7 @@ error_reporting(0);
 		}
 
 		// Age
+		/*
 		$date = gmdate('Y-m-d', time() + $bb_agency_option_locationtimezone *60 *60);
 		if (isset($ProfileDateBirth_min) && !empty($ProfileDateBirth_min)){
 			$selectedYearMin = date('Y-m-d', strtotime('-'. $ProfileDateBirth_min .' year'. $date));
@@ -1091,15 +1093,21 @@ error_reporting(0);
 			$selectedYearMax = date('Y-m-d', strtotime('-'. $ProfileDateBirth_max - 1 .' year'. $date));
 			$filter .= " AND profile.ProfileDateBirth >= '$selectedYearMax'";
 		}
+		*/
+		// Date of birth
+		if (isset($ProfileDateBirth_min) && !empty($ProfileDateBirth_min)){
+			$filter .= " AND profile.ProfileDateBirth >= '$ProfileDateBirth_min'";
+		}
+		if (isset($ProfileDateBirth_max) && !empty($ProfileDateBirth_max)){
+			$filter .= " AND profile.ProfileDateBirth <= '$ProfileDateBirth_max'";
+		}
 
 		// Due date
 		if (isset($ProfileDateDue_min) && !empty($ProfileDateDue_min)){
-			$selectedYearMin = date('Y-m-d', strtotime('-'. $ProfileDateDue_min .' year'. $date));
-			$filter .= " AND profile.ProfileDateDue <= '$selectedYearMin'";
+			$filter .= " AND profile.ProfileDateDue >= '$ProfileDateDue_min'";
 		}
 		if (isset($ProfileDateDue_max) && !empty($ProfileDateDue_max)){
-			$selectedYearMax = date('Y-m-d', strtotime('-'. $ProfileDateDue_max - 1 .' year'. $date));
-			$filter .= " AND profile.ProfileDateDue >= '$selectedYearMax'";
+			$filter .= " AND profile.ProfileDateDue <= '$ProfileDateDue_max'";
 		}
 
 		if (isset($ProfileIsFeatured)){
@@ -1337,7 +1345,7 @@ error_reporting(0);
 			$bb_user_isLogged = is_user_logged_in();
 
 			#DEBUG!
-			// echo $queryList;
+			echo $queryList;
 
 			if($countList > 0){
 				
@@ -1613,9 +1621,12 @@ error_reporting(0);
 		
 		if ( ($bb_agency_option_privacy > 1 && is_user_logged_in()) || ($bb_agency_option_privacy < 2) ) {
 		 	$isSearchPage = 1;
+		 	
 			//echo "<div id=\"profile-search-form-embed\">\n";
 				include("theme/include-profile-search.php"); 	
 			//echo "</div>\n";
+			
+			//echo '<a href="'.get_bloginfo("wpurl").'/search/">'.__("Search again", bb_agency_TEXTDOMAIN).'</a>';
 		} else {
 			//include("theme/include-login.php"); 	
 		}

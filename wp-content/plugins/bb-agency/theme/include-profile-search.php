@@ -96,12 +96,12 @@ $bb_agency_options_arr = get_option('bb_agency_options');
 		echo "		 				<label for=\"ProfileFirstName\">". __("First Name", bb_agency_TEXTDOMAIN) ."</label>\n";
 	      echo "		 				<input type=\"text\" id=\"ProfileContactNameFirst\" name=\"ProfileContactNameFirst\" value=\"". $_SESSION["ProfileContactNameFirst"] ."\" />\n";
 	      echo "	 				</div>\n";
-		
+/*		
 		echo "	 				<div class=\"search-field single\">\n";
 		echo "		 				<label for=\"ProfileLastName\">". __("Last Name", bb_agency_TEXTDOMAIN) ."</label>\n";
 	      echo "						 <input type=\"text\" id=\"ProfileContactNameLast\" name=\"ProfileContactNameLast\" value=\"". $_SESSION["ProfileContactNameLast"] ."\" />\n";
 		echo "					 </div>\n";
-	
+*/	
 		echo "				    <div class=\"search-field single\">\n";
 		echo "				       <label for=\"ProfileType\">". __("Type", bb_agency_TEXTDOMAIN) . "</label>\n";
 		echo "						<select name=\"ProfileType\" id=\"ProfileType\">\n";               
@@ -113,7 +113,7 @@ $bb_agency_options_arr = get_option('bb_agency_options');
 											}
 		echo "				        	</select>";
 		echo "				    </div>\n";
-		
+/*		
 		echo "				    <div class=\"search-field single\">\n";
 		echo "				       <label for=\"ProfileGender\">". __("Gender", bb_agency_TEXTDOMAIN) . "</label>\n";
 		echo "				       <select name=\"ProfileGender\" id=\"ProfileGender\">\n";               
@@ -138,7 +138,16 @@ $bb_agency_options_arr = get_option('bb_agency_options');
 		echo "				        <div><label for=\"ProfileDateBirth_max\">". __("Max", bb_agency_TEXTDOMAIN) . "</label>\n";
 		echo "				        	<input type=\"text\" class=\"stubby\" id=\"ProfileDateBirth_max\" name=\"ProfileDateBirth_max\" value=\"". $_SESSION['ProfileDateBirth_max'] ."\" /></div>";
 		echo "				    </fieldset>";
-							
+*/
+		echo "				    <fieldset class=\"search-field multi\">";
+		echo "				        <legend>". __("Due date", bb_agency_TEXTDOMAIN) . "</legend>";
+		
+		echo "				    <div>";
+		echo "				        <label for=\"ProfileDateDue_min\">". __("From", bb_agency_TEXTDOMAIN) . "</label>";
+		echo "				        	<input type=\"text\" class=\"stubby\" id=\"ProfileDateDue_min\" name=\"ProfileDateDue_min\" value=\"". $_SESSION['ProfileDateDue_min'] ."\" /></div>";
+		echo "				        <div><label for=\"ProfileDateDue_max\">". __("To", bb_agency_TEXTDOMAIN) . "</label>\n";
+		echo "				        	<input type=\"text\" class=\"stubby\" id=\"ProfileDateDue_max\" name=\"ProfileDateDue_max\" value=\"". $_SESSION['ProfileDateDue_max'] ."\" /></div>";
+		echo "				    </fieldset>";							
 			
 		if($bb_agency_option_customfields_searchpage == 1 || $bb_agency_option_customfield_profilepage == 1 OR $_POST['advanced_search']){ // Show on Search Page or Profile Page
 
@@ -169,17 +178,17 @@ $bb_agency_options_arr = get_option('bb_agency_options');
 		if(isset($_GET['srch'])){
 				    	include("include-custom-fields.php");
 								echo "	 			      <div class=\"search-field single\">\n";
-		echo "		 				<label for=\"ProfileCity\">". __("City", bb_agency_TEXTDOMAIN) ."</label>\n";
+		echo "		 				<label for=\"ProfileCity\">". __("Town", bb_agency_TEXTDOMAIN) ."</label>\n";
 	    echo "		 				<input type=\"text\" id=\"ProfileCity\" name=\"ProfileCity\" value=\"". $_SESSION["ProfileCity"] ."\" />\n";
 	    echo "	 				</div>\n";
 
 		echo "	 			      <div class=\"search-field single\">\n";
-		echo "		 				<label for=\"ProfileState\">". __("State", bb_agency_TEXTDOMAIN) ."</label>\n";
+		echo "		 				<label for=\"ProfileState\">". __("County", bb_agency_TEXTDOMAIN) ."</label>\n";
 	    echo "		 				<input type=\"text\" id=\"ProfileState\" name=\"ProfileState\" value=\"". $_SESSION["ProfileState"] ."\" />\n";
 	    echo "	 				</div>\n";
 
 		echo "	 			      <div class=\"search-field single\">\n";
-		echo "		 				<label for=\"ProfileZip\">". __("Zip", bb_agency_TEXTDOMAIN) ."</label>\n";
+		echo "		 				<label for=\"ProfileZip\">". __("Post code", bb_agency_TEXTDOMAIN) ."</label>\n";
 	    echo "		 				<input type=\"text\" id=\"ProfileZip\" name=\"ProfileZip\" value=\"". $_SESSION["ProfileZip"] ."\" />\n";
 	    echo "	 				</div>\n";
 		}

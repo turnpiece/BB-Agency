@@ -532,11 +532,16 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
 				if (!empty($data['ProfileLocationCountry'])) {
 					echo "<div><strong>". __("Country", bb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileLocationCountry'] ."</div>\n";
 				}
+				/*
 				if (!empty($data['ProfileDateBirth'])) {
 					echo "<div><strong>". __("Age", bb_agency_TEXTDOMAIN) .":</strong> ". bb_agency_get_age($data['ProfileDateBirth']) ."</div>\n";
 				}
+				*/
 				if (!empty($data['ProfileDateBirth'])) {
 					echo "<div><strong>". __("Birthdate", bb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileDateBirth'] ."</div>\n";
+				}
+				if (!empty($data['ProfileDateDue'])) {
+					echo "<div><strong>". __("Due date", bb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileDateDue'] ."</div>\n";
 				}
 				if (!empty($data['ProfileContactWebsite'])) {
 					echo "<div><strong>". __("Website", bb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileContactWebsite'] ."</div>\n";
@@ -850,9 +855,9 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 	
 
 		echo "				    <tr>\n";
-		echo "				        <th scope=\"row\">". __("City", bb_agency_TEXTDOMAIN) . ":</th>\n";
+		echo "				        <th scope=\"row\">". __("Town", bb_agency_TEXTDOMAIN) . ":</th>\n";
 		echo "				        <td><select name=\"ProfileLocationCity\" id=\"ProfileLocationCity\">\n";               
-		echo "							<option value=\"\">". __("Any City", bb_agency_TEXTDOMAIN) . "</option>";
+		echo "							<option value=\"\">". __("Any town", bb_agency_TEXTDOMAIN) . "</option>";
 										  /*
 										   * lets get the variables first for use
 										   * in city 
@@ -872,9 +877,9 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 		echo "				    </tr>\n";
 
 		echo "				    <tr>\n";
-		echo "				        <th scope=\"row\">". __("State", bb_agency_TEXTDOMAIN) . ":</th>\n";
+		echo "				        <th scope=\"row\">". __("County", bb_agency_TEXTDOMAIN) . ":</th>\n";
 		echo "				        <td><select name=\"ProfileLocationState\" id=\"ProfileLocationState\">\n";               
-		echo "							<option value=\"\">". __("Any State", bb_agency_TEXTDOMAIN) . "</option>";
+		echo "							<option value=\"\">". __("Any county", bb_agency_TEXTDOMAIN) . "</option>";
 										  /*
 										   * lets get the variables first for use
 										   * in state
@@ -894,9 +899,9 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 		echo "				    </tr>\n";
 
 		echo "				    <tr>\n";
-		echo "				        <th scope=\"row\">". __("Zip", bb_agency_TEXTDOMAIN) . ":</th>\n";
+		echo "				        <th scope=\"row\">". __("Post code", bb_agency_TEXTDOMAIN) . ":</th>\n";
 		echo "				        <td><select name=\"ProfileLocationZip\" id=\"ProfileLocationZip\">\n";               
-		echo "							<option value=\"\">". __("Any Zip", bb_agency_TEXTDOMAIN) . "</option>";
+		echo "							<option value=\"\">". __("Any post code", bb_agency_TEXTDOMAIN) . "</option>";
 										  /*
 										   * lets get the variables first for use
 										   * in sip

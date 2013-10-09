@@ -102,6 +102,14 @@ if ($_REQUEST["action"] == "search") {
 		$filterArray['profiledatebirth_max'] = $_REQUEST['ProfileDateBirth_max'];
 	}
 
+	// Due date
+	if (isset($_REQUEST['ProfileDateDue_min']) && !empty($_REQUEST['ProfileDateDue_min'])){
+		$filterArray['profiledatedue_min'] = $_REQUEST['ProfileDateDue_min'];
+	}
+	if (isset($_REQUEST['ProfileDateDue_max']) && !empty($_REQUEST['ProfileDateDue_max'])){
+		$filterArray['profiledatedue_max'] = $_REQUEST['ProfileDateDue_max'];
+	}
+
 	// City
 	if (isset($_REQUEST['ProfileCity']) && !empty($_REQUEST['ProfileCity'])){
 		$filterArray['profilecity'] = $_REQUEST['ProfileCity'];
