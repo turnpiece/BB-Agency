@@ -742,8 +742,6 @@ error_reporting(0);
      */
 	function bb_agency_profilelist($atts, $content = NULL) {
 
-		?><pre><?php print_r($atts) ?></pre><?php
-
 		// Get Preferences
 		$bb_agency_options_arr = get_option('bb_agency_options');
 		$bb_agency_option_privacy					 = isset($bb_agency_options_arr['bb_agency_option_privacy']) ? $bb_agency_options_arr['bb_agency_option_privacy'] :0;
@@ -1345,7 +1343,7 @@ error_reporting(0);
 			$bb_user_isLogged = is_user_logged_in();
 
 			#DEBUG!
-			echo $queryList;
+			//echo $queryList;
 
 			if($countList > 0){
 				
