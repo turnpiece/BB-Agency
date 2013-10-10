@@ -690,13 +690,13 @@ function bb_display_manage($ProfileID) {
     echo "    <tr valign=\"top\">\n";
     echo "      <th scope=\"row\">" . __("Birthdate", bb_agency_TEXTDOMAIN) . " <em>YYYY-MM-DD</em></th>\n";
     echo "      <td>\n";
-    echo "          <input type=\"text\" id=\"ProfileDateBirth\" name=\"ProfileDateBirth\" value=\"" . $ProfileDateBirth . "\" />\n";
+    echo "          <input class=\"bbdatepicker\" type=\"text\" id=\"ProfileDateBirth\" name=\"ProfileDateBirth\" value=\"" . $ProfileDateBirth . "\" />\n";
     echo "      </td>\n";
     echo "    </tr>\n";
     echo "    <tr valign=\"top\">\n";
     echo "      <th scope=\"row\">" . __("Due date", bb_agency_TEXTDOMAIN) . " <em>YYYY-MM-DD</em></th>\n";
     echo "      <td>\n";
-    echo "          <input type=\"text\" id=\"ProfileDateDue\" name=\"ProfileDateDue\" value=\"" . $ProfileDateDue . "\" />\n";
+    echo "          <input class=\"bbdatepicker\" type=\"text\" id=\"ProfileDateDue\" name=\"ProfileDateDue\" value=\"" . $ProfileDateDue . "\" />\n";
     echo "      </td>\n";
     echo "    </tr>\n";
     echo "    <tr valign=\"top\">\n";
@@ -1432,6 +1432,7 @@ function bb_display_list() {
         $ProfileLocationState = stripslashes($data['ProfileLocationState']);
         $ProfileGender = stripslashes($data['ProfileGender']);
         $ProfileDateDue = stripslashes($data['ProfileDateDue']);
+        $ProfileDateBirth = stripslashes($data['ProfileDateBirth']);
         $ProfileStatHits = stripslashes($data['ProfileStatHits']);
         $ProfileDateViewLast = stripslashes($data['ProfileDateViewLast']);
         if ($data['ProfileIsActive'] == 0) {
@@ -1504,7 +1505,7 @@ function bb_display_list() {
         echo "        </td>\n";
 //     echo "        <td class=\"ProfileContactNameLast column-ProfileContactNameLast\">" . $ProfileContactNameLast . "</td>\n";
 //        echo "        <td class=\"ProfileGender column-ProfileGender\">" . $ProfileGender . "</td>\n";
-        echo "        <td class=\"ProfilesProfileDate column-ProfilesProfileDate\">" . $ProfileDateDue . "</td>\n";
+        echo "        <td class=\"ProfilesProfileDate column-ProfilesProfileDate\">" . (is_null($ProfileDateDue) || $ProfileDateDue == '0000-00-00' || bb_agency_datepassed($ProfileDateDue) ? $ProfileDateBirth : $ProfileDateDue) . "</td>\n";
         echo "        <td class=\"ProfileLocationCity column-ProfileLocationCity\">" . $ProfileLocationCity . "</td>\n";
         echo "        <td class=\"ProfileLocationCity column-ProfileLocationState\">" . $ProfileLocationState . "</td>\n";
         echo "        <td class=\"ProfileDetails column-ProfileDetails\">" . $DataTypeTitle . "</td>\n";

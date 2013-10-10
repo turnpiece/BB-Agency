@@ -1671,7 +1671,7 @@ error_reporting(0);
 	// Display human readable date
 	function bb_agency_displaydate($date) {
 		$timestamp = strtotime($date);
-		return date("jS F", $timestamp);
+		return date("jS F Y", $timestamp);
 	}
 
 	// has given date already passed?
