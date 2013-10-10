@@ -1448,6 +1448,27 @@ function bb_display_list() {
             // Pending Approval
             $rowColor = " style=\"background: #DD4B39\"";
         }
+
+        // check if she's given birth
+        if (bb_agency_ismumtobe($data['ProfileType']) && bb_agency_datepassed($ProfileDateDue)) {
+            // switch category
+            $ptypes = explode(',', $data['ProfileType']);
+            for($i = 0; $i < count($ptypes); $i++){
+                if ($ptypes[$i] == bb_agency_MUMSTOBE_ID)
+                    $ptypes[$i] = bb_agency_AFTERBIRTH_ID;
+            }
+
+            $data['ProfileType'] = implode(',', $ptypes);
+            
+            // recategorize as family
+            $wpdb->update(
+                table_agency_profile, 
+                array('ProfileType' => $data['ProfileType']), 
+                array('ProfileID' => $data['ProfileID']),
+                array('%s'),
+                array('%d')
+            );               
+        }
         
         /*
          * Get Data Type Title

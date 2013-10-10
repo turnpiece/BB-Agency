@@ -1676,7 +1676,7 @@ error_reporting(0);
 
 	// has given date already passed?
 	function bb_agency_datepassed($date) {
-		return strtotime($date) > time();	
+		return strtotime($date) < time();	
 	}
 
 	// Is this model a mum to be?
