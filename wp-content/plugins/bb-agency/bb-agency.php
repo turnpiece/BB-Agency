@@ -564,6 +564,42 @@ if ( is_admin() ){
 }
 
 // *************************************************************************************************** //
+// Scripts
+
+	// Remove All Known Scripts which effect
+	add_action( 'wp_print_scripts', 'bb_agency_deregister_scripts', 100 );
+		function bb_agency_deregister_scripts() {
+			//lightbox
+			wp_deregister_script('woo-shortcodes');
+			//jquery
+			wp_deregister_script('woocommerce_plugins');
+			wp_deregister_script('woocommerce');
+			wp_deregister_script('fancybox');
+			wp_deregister_script('jqueryui');
+			wp_deregister_script('wc_price_slider');
+			wp_deregister_script('widgetSlider');
+			wp_deregister_script('woo-feedback');
+			wp_deregister_script('prettyPhoto');
+			wp_deregister_script('general');
+
+
+			wp_enqueue_script('jquery');
+			wp_enqueue_script('jquery-ui-script', bb_agency_BASEDIR .'/js/jquery-ui-1.10.3.custom.min.js', array('jquery') );
+			wp_enqueue_style('jquery-ui-style', bb_agency_BASEDIR .'/js/jquery-ui-1.10.3.custom.min.css' );
+		}
+
+	add_action('wp_footer', 'bb_agency_wp_footer');
+		function bb_agency_wp_footer() {
+			echo "<script type=\"text/javascript\">\n";
+			echo "jQuery(document).ready(function(){\n";
+			echo "	jQuery('.bbdatepicker').datepicker({\n";
+			echo "		dateFormat : 'yy-mm-dd'\n";
+			echo "	});\n";
+			echo "});\n";
+			echo "</script>\n";
+		}
+
+// *************************************************************************************************** //
 // Add Widgets
 
 	// View Featured

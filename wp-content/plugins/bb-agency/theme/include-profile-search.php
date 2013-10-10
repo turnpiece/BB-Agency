@@ -144,9 +144,9 @@ $bb_agency_options_arr = get_option('bb_agency_options');
 		
 		echo "				    <div>";
 		echo "				        <label for=\"ProfileDateDue_min\">". __("From", bb_agency_TEXTDOMAIN) . "</label>";
-		echo "				        	<input type=\"text\" class=\"stubby\" id=\"ProfileDateDue_min\" name=\"ProfileDateDue_min\" value=\"". $_SESSION['ProfileDateDue_min'] ."\" /></div>";
+		echo "				        	<input type=\"text\" class=\"stubby bbdatepicker\" id=\"ProfileDateDue_min\" name=\"ProfileDateDue_min\" value=\"". $_SESSION['ProfileDateDue_min'] ."\" /></div>";
 		echo "				        <div><label for=\"ProfileDateDue_max\">". __("To", bb_agency_TEXTDOMAIN) . "</label>\n";
-		echo "				        	<input type=\"text\" class=\"stubby\" id=\"ProfileDateDue_max\" name=\"ProfileDateDue_max\" value=\"". $_SESSION['ProfileDateDue_max'] ."\" /></div>";
+		echo "				        	<input type=\"text\" class=\"stubby bbdatepicker\" id=\"ProfileDateDue_max\" name=\"ProfileDateDue_max\" value=\"". $_SESSION['ProfileDateDue_max'] ."\" /></div>";
 		echo "				    </fieldset>";							
 			
 		if($bb_agency_option_customfields_searchpage == 1 || $bb_agency_option_customfield_profilepage == 1 OR $_POST['advanced_search']){ // Show on Search Page or Profile Page

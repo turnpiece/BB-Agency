@@ -130,38 +130,7 @@ if ($_POST["contact-action"] == "contact") {
 			return bloginfo('name') ." > Contact ". $ProfileContactDisplay ."";
 		}
 	
-	// Remove All Known Scripts which effect
-	add_action( 'wp_print_scripts', 'bb_agency_deregister_scripts', 100 );
-		function bb_agency_deregister_scripts() {
-			//lightbox
-			wp_deregister_script('woo-shortcodes');
-			//jquery
-			wp_deregister_script('woocommerce_plugins');
-			wp_deregister_script('woocommerce');
-			wp_deregister_script('fancybox');
-			wp_deregister_script('jqueryui');
-			wp_deregister_script('wc_price_slider');
-			wp_deregister_script('widgetSlider');
-			wp_deregister_script('woo-feedback');
-			wp_deregister_script('prettyPhoto');
-			wp_deregister_script('general');
 
-			wp_enqueue_script('jquery');
-			wp_enqueue_script('jquery-ui-core');
-			wp_enqueue_script('jquery-ui-datepicker', bb_agency_BASEDIR .'/js/jquery.ui.datepicker.min.js', array('jquery', 'jquery-ui-core') );
-			//wp_enqueue_style('jquery.ui.theme', bb_agency_BASEDIR .'/js/jquery-ui-1.8.12.custom.css');
-		}
-
-	add_action('wp_footer', 'bb_agency_wp_footer');
-		function bb_agency_wp_footer() {
-			echo "<script type=\"text/javascript\">\n";
-			echo "jQuery(document).ready(function(){\n";
-			echo "	jQuery('.rbdatepicker').datepicker({\n";
-			echo "		dateFormat : 'yy-mm-dd'\n";
-			echo "	});\n";
-			echo "});\n";
-			echo "</script>\n";
-		}
 
    
 // GET HEADER  

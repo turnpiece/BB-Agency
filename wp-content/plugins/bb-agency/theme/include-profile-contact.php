@@ -27,7 +27,7 @@ Default Contact
 	echo "	  	<form method=\"post\" action=\"". $bb_agency_WPURL ."/profile/". $profileURL ."/contact/\">\n";
 	echo "	  	  <div><span>Your Name</span><input name=\"contact-your-name\" /></div>\n";
 	echo "	  	  <div><span>Your Email</span><input name=\"contact-your-email\" /></div>\n";
-	echo "	  	  <div><span>Date</span><input name=\"contact-your-date\" class=\"rbdatepicker\" /></div>\n";
+	echo "	  	  <div><span>Date</span><input name=\"contact-your-date\" class=\"bbdatepicker\" /></div>\n";
 	echo "	  	  <div><span>Message</span><textarea name=\"contact-your-message\" /></textarea></div>\n";
 	echo "	  	  <div><input type=\"submit\" name=\"submit\" /></div>\n";
 	echo "	  	  <input type=\"hidden\" name=\"contact-profileid\" value=\"". $ProfileID ."\" /></div>\n";
