@@ -176,21 +176,23 @@ $bb_agency_options_arr = get_option('bb_agency_options');
 		}
 		
 		if(isset($_GET['srch'])){
-				    	include("include-custom-fields.php");
-								echo "	 			      <div class=\"search-field single\">\n";
-		echo "		 				<label for=\"ProfileCity\">". __("Town", bb_agency_TEXTDOMAIN) ."</label>\n";
-	    echo "		 				<input type=\"text\" id=\"ProfileCity\" name=\"ProfileCity\" value=\"". $_SESSION["ProfileCity"] ."\" />\n";
-	    echo "	 				</div>\n";
+			include("include-custom-fields.php");
+			/*
+			echo "	 			      <div class=\"search-field single\">\n";
+			echo "		 				<label for=\"ProfileCity\">". __("Town", bb_agency_TEXTDOMAIN) ."</label>\n";
+		    echo "		 				<input type=\"text\" id=\"ProfileCity\" name=\"ProfileCity\" value=\"". $_SESSION["ProfileCity"] ."\" />\n";
+		    echo "	 				</div>\n";
 
-		echo "	 			      <div class=\"search-field single\">\n";
-		echo "		 				<label for=\"ProfileState\">". __("County", bb_agency_TEXTDOMAIN) ."</label>\n";
-	    echo "		 				<input type=\"text\" id=\"ProfileState\" name=\"ProfileState\" value=\"". $_SESSION["ProfileState"] ."\" />\n";
-	    echo "	 				</div>\n";
+			echo "	 			      <div class=\"search-field single\">\n";
+			echo "		 				<label for=\"ProfileState\">". __("County", bb_agency_TEXTDOMAIN) ."</label>\n";
+		    echo "		 				<input type=\"text\" id=\"ProfileState\" name=\"ProfileState\" value=\"". $_SESSION["ProfileState"] ."\" />\n";
+		    echo "	 				</div>\n";
 
-		echo "	 			      <div class=\"search-field single\">\n";
-		echo "		 				<label for=\"ProfileZip\">". __("Post code", bb_agency_TEXTDOMAIN) ."</label>\n";
-	    echo "		 				<input type=\"text\" id=\"ProfileZip\" name=\"ProfileZip\" value=\"". $_SESSION["ProfileZip"] ."\" />\n";
-	    echo "	 				</div>\n";
+			echo "	 			      <div class=\"search-field single\">\n";
+			echo "		 				<label for=\"ProfileZip\">". __("Post code", bb_agency_TEXTDOMAIN) ."</label>\n";
+		    echo "		 				<input type=\"text\" id=\"ProfileZip\" name=\"ProfileZip\" value=\"". $_SESSION["ProfileZip"] ."\" />\n";
+		    echo "	 				</div>\n";
+		    */
 		}
 		
 		echo "				<div><input type=\"hidden\" name=\"ProfileIsActive\" value=\"1\" /></div>\n";
@@ -198,9 +200,9 @@ $bb_agency_options_arr = get_option('bb_agency_options');
 		echo "				<input type=\"submit\" value=\"". __("Search Profiles", bb_agency_TEXTDOMAIN) . "\" class=\"button-primary\" onclick=\"this.form.action='".get_bloginfo("wpurl")."/profile-search/'\" />";
 		echo '<input type="reset" class=\"button-primary\" value="Empty Form">';
 		if(!isset($_GET[srch])){
-		echo "				<input type=\"submit\" name=\"advanced_search\" value=\"". __("Advanced Search", bb_agency_TEXTDOMAIN) . "\" class=\"button-primary\" onclick=\"this.form.action='".get_bloginfo("wpurl")."/search/?srch=1'\" />";}else{
+			echo "				<input type=\"submit\" name=\"advanced_search\" value=\"". __("Advanced Search", bb_agency_TEXTDOMAIN) . "\" class=\"button-primary\" onclick=\"this.form.action='".get_bloginfo("wpurl")."/search/?srch=1'\" />";}else{
 		
-		echo "				<input type=\"submit\" name=\"basic_search\" value=\"". __("Basic Search", bb_agency_TEXTDOMAIN) . "\" class=\"button-primary\" onclick=\"this.form.action='".get_bloginfo("wpurl")."/search'\" />";
+			echo "				<input type=\"submit\" name=\"basic_search\" value=\"". __("Basic Search", bb_agency_TEXTDOMAIN) . "\" class=\"button-primary\" onclick=\"this.form.action='".get_bloginfo("wpurl")."/search'\" />";
 		}
 
 		echo "				</div>";

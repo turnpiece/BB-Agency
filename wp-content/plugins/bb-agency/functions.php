@@ -868,7 +868,7 @@ error_reporting(0);
 			foreach($atts as $key => $val){
 				
 	            if (substr($key,0,15) == "ProfileCustomID") {
-	            
+	            		
 	                  /*
 	                   *  Check if this is array or not
 	                   *  because sometimes $val is an array so
@@ -883,25 +883,24 @@ error_reporting(0);
 	                         */
 	                        if(is_array($val)){
 	                          
-	                                if(count(array_filter($val)) > 1) {
-	                                    $ct =1;
-	                                    foreach($val as $v){
-	                                        if($ct == 1){
-	                                            $val = $v;
-	                                            $ct++;
+                                if(count(array_filter($val)) > 1) {
+                                    $ct =1;
+                                    foreach($val as $v){
+                                        if($ct == 1){
+                                            $val = $v;
+                                            $ct++;
 
-	                                        } else {
-	                                            $val = $val .",".$v;
-	                                        }
-	                                    }
-	                                } else {
-	                                    $val = array_shift(array_values($val));
-	                                } 
+                                        } else {
+                                            $val = $val .",".$v;
+                                        }
+                                    }
+                                } else {
+                                    $val = array_shift(array_values($val));
+                                } 
 	                        }
 		    
 	                        $q = mysql_query("SELECT * FROM ". table_agency_customfields ." WHERE ProfileCustomID = '".substr($key,15)."' ");
-		                    $ProfileCustomType = mysql_fetch_assoc($q);
-			
+		                    $ProfileCustomType = mysql_fetch_assoc($q);			
 		
 	                            /*
 	                             * Have created a holder $filter2 and
@@ -1015,18 +1014,42 @@ error_reporting(0);
                                     }
                                     elseif ($ProfileCustomType["ProfileCustomType"] == 7) { //Measurements 
 
-                                                list($Min_val,$Max_val) = explode(",",$val);
-													$Min_val = trim($Min_val);
-													$Max_val = trim($Max_val);
-                                                    if(!empty($Min_val) && !empty($Max_val)){
-                                                        if($filter2==""){
-                                                                $filter2  .= " AND (( customfield_mux.ProfileCustomValue BETWEEN '".$Min_val."' AND '".$Max_val."' AND customfield_mux.ProfileCustomID = '".substr($key,15)."' )";
-                                                        } else {
-                                                                $filter2  .= " OR (customfield_mux.ProfileCustomValue BETWEEN '".$Min_val."' AND '".$Max_val."' AND customfield_mux.ProfileCustomID = '".substr($key,15)."') ";
+                                    	if (substr($key, -3) == 'min') {
+                                    		$name = str_replace('_min', '', $key);
+                                    		$id = substr($name, 15);
+                                            if($filter2==""){
+                                                $filter2  .= " AND (( customfield_mux.ProfileCustomValue >= '".$val."' AND customfield_mux.ProfileCustomID = '".$id."' )";
+                                            } else {
+                                                $filter2  .= " OR (customfield_mux.ProfileCustomValue >= '".$val."' AND customfield_mux.ProfileCustomID = '".$id."') ";
 
-                                                        }
-                                                    $_SESSION[$key] = $val;
-                                                    }
+                                            }
+                                    	}
+                                    	elseif (substr($key, -3) == 'max') {
+                                    		$name = str_replace('_max', '', $key);
+                                    		$id = substr($name, 15);
+                                            if($filter2==""){
+                                                $filter2  .= " AND (( customfield_mux.ProfileCustomValue <= '".$val."' AND customfield_mux.ProfileCustomID = '".$id."' )";
+                                            } else {
+                                                $filter2  .= " OR (customfield_mux.ProfileCustomValue <= '".$val."' AND customfield_mux.ProfileCustomID = '".$id."') ";
+
+                                            }
+                                    	}
+                                    	else {
+	                                        list($Min_val,$Max_val) = explode(",",$val);
+											$Min_val = trim($Min_val);
+											$Max_val = trim($Max_val);
+	                                        if(!empty($Min_val) && !empty($Max_val)){
+	                                            if($filter2==""){
+	                                                    $filter2  .= " AND (( customfield_mux.ProfileCustomValue BETWEEN '".$Min_val."' AND '".$Max_val."' AND customfield_mux.ProfileCustomID = '".substr($key,15)."' )";
+	                                            } else {
+	                                                    $filter2  .= " OR (customfield_mux.ProfileCustomValue BETWEEN '".$Min_val."' AND '".$Max_val."' AND customfield_mux.ProfileCustomID = '".substr($key,15)."') ";
+
+	                                            }
+	                                        	$_SESSION[$key] = $val;
+	                                        }                                   		
+                                    	}
+
+
 
                                     }
 	                            }
