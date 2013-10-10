@@ -1390,11 +1390,11 @@ function bb_display_list() {
     echo "        <th class=\"manage-column column-cb check-column\" id=\"cb\" scope=\"col\"><input type=\"checkbox\"/></th>\n";
     echo "        <th class=\"column-ProfileID\" id=\"ProfileID\" scope=\"col\" style=\"width:50px;\"><a href=\"" . admin_url("admin.php?page=" . $_GET['page'] . "&sort=ProfileID&dir=" . $sortDirection) . "\">ID</a></th>\n";
     echo "        <th class=\"column-ProfileContactNameFirst\" id=\"ProfileContactNameFirst\" scope=\"col\" style=\"width:150px;\"><a href=\"" . admin_url("admin.php?page=" . $_GET['page'] . "&sort=ProfileContactNameFirst&dir=" . $sortDirection) . "\">First Name</a></th>\n";
-    echo "        <th class=\"column-ProfileContactNameLast\" id=\"ProfileContactNameLast\" scope=\"col\"><a href=\"" . admin_url("admin.php?page=" . $_GET['page'] . "&sort=ProfileContactNameLast&dir=" . $sortDirection) . "\">Last Name</a></th>\n";
-    echo "        <th class=\"column-ProfileGender\" id=\"ProfileGender\" scope=\"col\"><a href=\"" . admin_url("admin.php?page=" . $_GET['page'] . "&sort=ProfileGender&dir=" . $sortDirection) . "\">Gender</a></th>\n";
+//    echo "        <th class=\"column-ProfileContactNameLast\" id=\"ProfileContactNameLast\" scope=\"col\"><a href=\"" . admin_url("admin.php?page=" . $_GET['page'] . "&sort=ProfileContactNameLast&dir=" . $sortDirection) . "\">Last Name</a></th>\n";
+//    echo "        <th class=\"column-ProfileGender\" id=\"ProfileGender\" scope=\"col\"><a href=\"" . admin_url("admin.php?page=" . $_GET['page'] . "&sort=ProfileGender&dir=" . $sortDirection) . "\">Gender</a></th>\n";
     echo "        <th class=\"column-ProfilesProfileDate\" id=\"ProfilesProfileDate\" scope=\"col\"><a href=\"" . admin_url("admin.php?page=" . $_GET['page'] . "&sort=ProfileDateDue&dir=" . $sortDirection) . "\">Due date</a></th>\n";
-    echo "        <th class=\"column-ProfileLocationCity\" id=\"ProfileLocationCity\" scope=\"col\"><a href=\"" . admin_url("admin.php?page=" . $_GET['page'] . "&sort=ProfileLocationCity&dir=" . $sortDirection) . "\">City</a></th>\n";
-    echo "        <th class=\"column-ProfileLocationState\" id=\"ProfileLocationState\" scope=\"col\"><a href=\"" . admin_url("admin.php?page=" . $_GET['page'] . "&sort=ProfileLocationState&dir=" . $sortDirection) . "\">State</a></th>\n";
+    echo "        <th class=\"column-ProfileLocationCity\" id=\"ProfileLocationCity\" scope=\"col\"><a href=\"" . admin_url("admin.php?page=" . $_GET['page'] . "&sort=ProfileLocationCity&dir=" . $sortDirection) . "\">Town</a></th>\n";
+    echo "        <th class=\"column-ProfileLocationState\" id=\"ProfileLocationState\" scope=\"col\"><a href=\"" . admin_url("admin.php?page=" . $_GET['page'] . "&sort=ProfileLocationState&dir=" . $sortDirection) . "\">County</a></th>\n";
     echo "        <th class=\"column-ProfileDetails\" id=\"ProfileDetails\" scope=\"col\">Category</th>\n";
     echo "        <th class=\"column-ProfileDetails\" id=\"ProfileDetails\" scope=\"col\">Images</th>\n";
     echo "        <th class=\"column-ProfileStatHits\" id=\"ProfileStatHits\" scope=\"col\">Views</th>\n";
@@ -1406,11 +1406,11 @@ function bb_display_list() {
     echo "        <th class=\"manage-column column-cb check-column\" id=\"cb\" scope=\"col\"><input type=\"checkbox\"/></th>\n";
     echo "        <th class=\"column\" scope=\"col\">ID</th>\n";
     echo "        <th class=\"column\" scope=\"col\">First Name</th>\n";
-    echo "        <th class=\"column\" scope=\"col\">Last Name</th>\n";
-    echo "        <th class=\"column\" scope=\"col\">Gender</th>\n";
+//    echo "        <th class=\"column\" scope=\"col\">Last Name</th>\n";
+//    echo "        <th class=\"column\" scope=\"col\">Gender</th>\n";
     echo "        <th class=\"column\" scope=\"col\">Due date</th>\n";
-    echo "        <th class=\"column\" scope=\"col\">City</th>\n";
-    echo "        <th class=\"column\" scope=\"col\">State</th>\n";
+    echo "        <th class=\"column\" scope=\"col\">Town</th>\n";
+    echo "        <th class=\"column\" scope=\"col\">County</th>\n";
     echo "        <th class=\"column\" scope=\"col\">Category</th>\n";
     echo "        <th class=\"column\" scope=\"col\">Images</th>\n";
     echo "        <th class=\"column\" scope=\"col\">Views</th>\n";
@@ -1466,15 +1466,15 @@ function bb_display_list() {
             }
             $new_title = substr($new_title,1);
         } else {
-                $new_title = "";
-                $id = (int)$data['ProfileType'];
-                $get_title = "SELECT DataTypeTitle FROM " . table_agency_data_type .  
-                             " WHERE DataTypeID = " . $id;   
-                $resource = mysql_query($get_title);             
-                $get = mysql_fetch_assoc($resource);
-                if (mysql_num_rows($resource) > 0 ){
-                    $new_title = $get['DataTypeTitle']; 
-                }
+            $new_title = "";
+            $id = (int)$data['ProfileType'];
+            $get_title = "SELECT DataTypeTitle FROM " . table_agency_data_type .  
+                         " WHERE DataTypeID = " . $id;   
+            $resource = mysql_query($get_title);             
+            $get = mysql_fetch_assoc($resource);
+            if (mysql_num_rows($resource) > 0 ){
+                $new_title = $get['DataTypeTitle']; 
+            }
         }
          
         
@@ -1484,9 +1484,9 @@ function bb_display_list() {
         $profileImageCount = mysql_num_rows($resultImageCount);
 
 
-        $resultProfileGender = mysql_query("SELECT * FROM " . table_agency_data_gender . " WHERE GenderID = '" . $ProfileGender . "' ");
-        $fetchProfileGender = mysql_fetch_assoc($resultProfileGender);
-        $ProfileGender = $fetchProfileGender["GenderTitle"];
+//        $resultProfileGender = mysql_query("SELECT * FROM " . table_agency_data_gender . " WHERE GenderID = '" . $ProfileGender . "' ");
+//        $fetchProfileGender = mysql_fetch_assoc($resultProfileGender);
+//        $ProfileGender = $fetchProfileGender["GenderTitle"];
 
 
         echo "    <tr" . $rowColor . ">\n";
@@ -1502,9 +1502,9 @@ function bb_display_list() {
         echo "            <span class=\"delete\"><a class=\"submitdelete\" href=\"" . admin_url("admin.php?page=" . $_GET['page']) . "&amp;action=deleteRecord&amp;ProfileID=" . $ProfileID . "\"  onclick=\"if ( confirm('" . __("You are about to delete the profile for ", bb_agency_TEXTDOMAIN) . " " . $ProfileContactNameFirst . " " . $ProfileContactNameLast . "'" . __("Cancel", bb_agency_TEXTDOMAIN) . "\' " . __("to stop", bb_agency_TEXTDOMAIN) . ", \'" . __("OK", bb_agency_TEXTDOMAIN) . "\' " . __("to delete", bb_agency_TEXTDOMAIN) . ".') ) { return true;}return false;\" title=\"" . __("Delete this Record", bb_agency_TEXTDOMAIN) . "\">" . __("Delete", bb_agency_TEXTDOMAIN) . "</a> </span>\n";
         echo "          </div>\n";
         echo "        </td>\n";
-        echo "        <td class=\"ProfileContactNameLast column-ProfileContactNameLast\">" . $ProfileContactNameLast . "</td>\n";
-        echo "        <td class=\"ProfileGender column-ProfileGender\">" . $ProfileGender . "</td>\n";
-        echo "        <td class=\"ProfilesProfileDate column-ProfilesProfileDate\">" . bb_agency_get_date_due($ProfileDateDue) . "</td>\n";
+//     echo "        <td class=\"ProfileContactNameLast column-ProfileContactNameLast\">" . $ProfileContactNameLast . "</td>\n";
+//        echo "        <td class=\"ProfileGender column-ProfileGender\">" . $ProfileGender . "</td>\n";
+        echo "        <td class=\"ProfilesProfileDate column-ProfilesProfileDate\">" . $ProfileDateDue . "</td>\n";
         echo "        <td class=\"ProfileLocationCity column-ProfileLocationCity\">" . $ProfileLocationCity . "</td>\n";
         echo "        <td class=\"ProfileLocationCity column-ProfileLocationState\">" . $ProfileLocationState . "</td>\n";
         echo "        <td class=\"ProfileDetails column-ProfileDetails\">" . $DataTypeTitle . "</td>\n";

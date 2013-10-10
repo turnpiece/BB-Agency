@@ -12,7 +12,7 @@ global $wpdb;
     echo "  	<a class=\"button-secondary\" href=\"?page=". $_GET["page"] ."&ConfigID=1\">". __("Features", bb_agency_TEXTDOMAIN) . "</a> | \n";
     echo "  	<a class=\"button-secondary\" href=\"?page=". $_GET["page"] ."&ConfigID=10\">". __("Style", bb_agency_TEXTDOMAIN) . "</a> | \n";
     echo "  	<a class=\"button-secondary\" href=\"?page=". $_GET["page"] ."&ConfigID=5\">". __("Gender", bb_agency_TEXTDOMAIN) . "</a> | \n";
-    echo "  	<a class=\"button-secondary\" href=\"?page=". $_GET["page"] ."&ConfigID=6\">". __("Profile Types", bb_agency_TEXTDOMAIN) . "</a> | \n";
+//    echo "  	<a class=\"button-secondary\" href=\"?page=". $_GET["page"] ."&ConfigID=6\">". __("Profile Types", bb_agency_TEXTDOMAIN) . "</a> | \n";
     echo "  	<a class=\"button-secondary\" href=\"?page=". $_GET["page"] ."&ConfigID=7\">". __("Custom Fields", bb_agency_TEXTDOMAIN) . "</a> | \n";
     echo "  	<a class=\"button-secondary\" href=\"?page=". $_GET["page"] ."&ConfigID=8\">". __("Media Categories", bb_agency_TEXTDOMAIN) . "</a> | \n";
     echo "  </p>\n";
@@ -146,7 +146,8 @@ elseif ($ConfigID == 1) {
 	
 		$bb_agency_option_privacy = $bb_agency_options_arr['bb_agency_option_privacy'];
 			if (empty($bb_agency_option_privacy)) { $bb_agency_option_privacy = "0"; }
-		
+
+		 echo "<input type=\"hidden\" name=\"bb_agency_options[bb_agency_option_layoutprofile]\" value=\"0\" />\n";	// only have one layout for now	
 		 echo "<table class=\"form-table\">\n";
 		 echo " <tr valign=\"top\">\n";
 		 echo "   <th scope=\"row\">". __('Database Version', bb_agency_TEXTDOMAIN); echo "</th>\n";
@@ -284,6 +285,7 @@ elseif ($ConfigID == 1) {
 		 echo "     </select>\n";
 		 echo "   </td>\n";
 		 echo " </tr>\n";
+		 /*
 		 echo " <tr valign=\"top\">\n";
 		 echo "   <th scope=\"row\">". __('Profile Layout Style', bb_agency_TEXTDOMAIN) ."</th>\n";
 		 echo "   <td>\n";
@@ -308,6 +310,7 @@ elseif ($ConfigID == 1) {
 				}
 		 echo "     </select>\n";
 		 echo "   </td>\n";
+		 */
 		 echo " <tr valign=\"top\">\n";
 		 echo "   <th scope=\"row\">". __('Profile List Style', bb_agency_TEXTDOMAIN) ."</th>\n";
 		 echo "   <td>\n";
