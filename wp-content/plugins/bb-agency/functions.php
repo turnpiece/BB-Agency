@@ -1479,12 +1479,11 @@ error_reporting(0);
 				$displayHTML .= "  <div class=\"rbclear\"></div>\n";
 				$displayHTML .= "  </div><!-- #profile-list -->\n";		
 			}	// endif countlist
-
-			/*
-			 *  There are no profiles returned.  Display empty message
-			 */
-			if ($countList < 1) {
-				$displayHTML .= __("No Profiles Found", bb_agency_TEXTDOMAIN);
+			else {
+				/*
+				 *  There are no profiles returned.  Display empty message
+				 */
+				$displayHTML .= sprintf(__('Sorry, none of our current models matched your search requirements but you can <a href="%s" title="advanced search">click here</a> to search again.', bb_agency_TEXTDOMAIN), get_bloginfo('wpurl').'/search/?srch=1');
 			}
 		
 			// Close Formatting

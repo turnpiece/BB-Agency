@@ -40,7 +40,7 @@ $bb_agency_options_arr = get_option('bb_agency_options');
 		echo "				       <label for=\"ProfileType\">". __("Type", bb_agency_TEXTDOMAIN) . "</label>\n";
 		echo "				        	<select name=\"ProfileType\" id=\"ProfileType\">\n";               
 		echo "								<option value=\"\">". __("Any Profile Type", bb_agency_TEXTDOMAIN) . "</option>";
-											$query = "SELECT DataTypeID, DataTypeTitle FROM ". table_agency_data_type ." ORDER BY DataTypeTitle";
+											$query = "SELECT DataTypeID, DataTypeTitle FROM ". table_agency_data_type ." WHERE DataTypeID <> ".bb_agency_CLIENTS_ID." ORDER BY DataTypeTitle DESC";
 											$results2 = mysql_query($query);
 											while ($dataType = mysql_fetch_array($results2)) {
 												if ($_SESSION['ProfileType']) {
@@ -106,7 +106,7 @@ $bb_agency_options_arr = get_option('bb_agency_options');
 		echo "				       <label for=\"ProfileType\">". __("Type", bb_agency_TEXTDOMAIN) . "</label>\n";
 		echo "						<select name=\"ProfileType\" id=\"ProfileType\">\n";               
 		echo "								<option value=\"\">". __("Any Profile Type", bb_agency_TEXTDOMAIN) . "</option>";
-											$query = "SELECT DataTypeID, DataTypeTitle FROM ". table_agency_data_type ." ORDER BY DataTypeTitle";
+											$query = "SELECT DataTypeID, DataTypeTitle FROM ". table_agency_data_type ." WHERE DataTypeID <> ".bb_agency_CLIENTS_ID." ORDER BY DataTypeTitle DESC";
 											$results2 = mysql_query($query);
 											while ($dataType = mysql_fetch_array($results2)) {
 												echo "<option value=\"". $dataType["DataTypeID"] ."\"".selected($_SESSION['ProfileType'],$dataType["DataTypeID"] ,false).">". $dataType["DataTypeTitle"] ."</option>";

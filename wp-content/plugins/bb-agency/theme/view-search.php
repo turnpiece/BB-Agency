@@ -200,6 +200,6 @@ if ($_REQUEST["action"] == "search") {
 
 	echo "  </div><!-- #primary -->\n"; // #primary
 
-get_sidebar(); 
+//get_sidebar(); 
 get_footer(); 
 ?>

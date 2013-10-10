@@ -37,13 +37,13 @@ Profile View with Scrolling Thumbnails and Primary Image
 	echo "</h2>\n";
 
 	echo "	  <ul>\n";
-
+	/*
 	if (!empty($ProfileGender)) {
 		$queryGenderResult = mysql_query("SELECT GenderID, GenderTitle FROM ".table_agency_data_gender." WHERE GenderID='".$ProfileGender."' ");
 		$fetchGenderData = mysql_fetch_assoc($queryGenderResult);
 		echo "<li><strong>". __("Gender", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". __($fetchGenderData["GenderTitle"], bb_agency_TEXTDOMAIN). "</li>\n";
 	}
-	/*
+	*/
 	if (!empty($ProfileStatHeight)) {
 		if ($bb_agency_option_unittype == 0) { // Metric
 			echo "<li><strong>". __("Height", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatHeight ." ". __("cm", bb_agency_TEXTDOMAIN). "" ."</li>\n";
@@ -54,6 +54,7 @@ Profile View with Scrolling Thumbnails and Primary Image
 			echo "<li><strong>". __("Height", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $heightfeet ." ". __("ft", bb_agency_TEXTDOMAIN). " ". $heightinch ." ". __("in", bb_agency_TEXTDOMAIN). "" ."</li>\n";
 		}
 	}
+	/*
 	if (!empty($ProfileStatWeight)) {
 		if ($bb_agency_option_unittype == 0) { // Metric
 			echo "<li><strong>". __("Weight", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatWeight ." ". __("kg", bb_agency_TEXTDOMAIN). "</li>\n";
