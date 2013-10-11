@@ -69,7 +69,7 @@ Profile View with Scrolling Thumbnails and Primary Image
 		echo "<li><strong>". __("Due date", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". bb_agency_displaydate($ProfileDateDue) ."</li>\n";
 	}
 
-	if ((bb_agency_isfamily($ProfileType) || bbagency_isbaby($ProfileType)) && !empty($ProfileDateBirth)) {
+	if ((bb_agency_isfamily($ProfileType) || bb_agency_isbaby($ProfileType)) && !empty($ProfileDateBirth)) {
 		// if a family display the baby's date of birth
 		echo "<li><strong>". (bb_agency_isfamily($ProfileType) ? __("Baby's date of birth", bb_agency_TEXTDOMAIN) : __("Date of birth", bb_agency_TEXTDOMAIN)) . "<span class=\"divider\">:</span></strong> ". bb_agency_displaydate($ProfileDateBirth) ."</li>\n";
 	}
