@@ -647,14 +647,14 @@ function bb_display_manage($ProfileID) {
         echo "      </td>\n";
         echo "  </tr>\n";
     }
-    echo "    <tr valign=\"top\">\n";
-    echo "      <th scope=\"row\">" . __("First Name", bb_agency_TEXTDOMAIN) . "</th>\n";
+    echo "    <tr valign=\"top\" class=\"required\">\n";
+    echo "      <th scope=\"row\">" . __("First Name", bb_agency_TEXTDOMAIN) . "*</th>\n";
     echo "      <td>\n";
     echo "          <input type=\"text\" id=\"ProfileContactNameFirst\" name=\"ProfileContactNameFirst\" value=\"" . $ProfileContactNameFirst . "\" />\n";
     echo "      </td>\n";
     echo "    </tr>\n";
-    echo "    <tr valign=\"top\">\n";
-    echo "      <th scope=\"row\">" . __("Last Name", bb_agency_TEXTDOMAIN) . "</th>\n";
+    echo "    <tr valign=\"top\" class=\"required\">\n";
+    echo "      <th scope=\"row\">" . __("Last Name", bb_agency_TEXTDOMAIN) . "*</th>\n";
     echo "      <td>\n";
     echo "          <input type=\"text\" id=\"ProfileContactNameLast\" name=\"ProfileContactNameLast\" value=\"" . $ProfileContactNameLast . "\" />\n";
     echo "      </td>\n";
@@ -687,20 +687,8 @@ function bb_display_manage($ProfileID) {
     echo "    <tr valign=\"top\">\n";
     echo "      <th scope=\"row\" colspan=\"2\"><h3>" . __("Private Information", bb_agency_TEXTDOMAIN) . "</h3>" . __("The following information will NOT appear in public areas and is for administrative use only.", bb_agency_TEXTDOMAIN) . "</th>\n";
     echo "    </tr>\n";
-    echo "    <tr valign=\"top\">\n";
-    echo "      <th scope=\"row\">" . __("Birthdate", bb_agency_TEXTDOMAIN) . " <em>YYYY-MM-DD</em></th>\n";
-    echo "      <td>\n";
-    echo "          <input class=\"bbdatepicker\" type=\"text\" id=\"ProfileDateBirth\" name=\"ProfileDateBirth\" value=\"" . $ProfileDateBirth . "\" />\n";
-    echo "      </td>\n";
-    echo "    </tr>\n";
-    echo "    <tr valign=\"top\">\n";
-    echo "      <th scope=\"row\">" . __("Due date", bb_agency_TEXTDOMAIN) . " <em>YYYY-MM-DD</em></th>\n";
-    echo "      <td>\n";
-    echo "          <input class=\"bbdatepicker\" type=\"text\" id=\"ProfileDateDue\" name=\"ProfileDateDue\" value=\"" . $ProfileDateDue . "\" />\n";
-    echo "      </td>\n";
-    echo "    </tr>\n";
-    echo "    <tr valign=\"top\">\n";
-    echo "      <th scope=\"row\">" . __("Email Address", bb_agency_TEXTDOMAIN) . "</th>\n";
+    echo "    <tr valign=\"top\" class=\"required\">\n";
+    echo "      <th scope=\"row\">" . __("Email Address", bb_agency_TEXTDOMAIN) . "*</th>\n";
     echo "      <td>\n";
     echo "          <input type=\"text\" id=\"ProfileContactEmail\" name=\"ProfileContactEmail\" value=\"" . $ProfileContactEmail . "\" />\n";
     echo "      </td>\n";
@@ -716,7 +704,7 @@ function bb_display_manage($ProfileID) {
     echo "      <td>\n";
     echo "      <fieldset>\n";
     echo "          <label>Home:</label><br /><input type=\"text\" id=\"ProfileContactPhoneHome\" name=\"ProfileContactPhoneHome\" value=\"" . $ProfileContactPhoneHome . "\" /><br />\n";
-    echo "          <label>Cell:</label><br /><input type=\"text\" id=\"ProfileContactPhoneCell\" name=\"ProfileContactPhoneCell\" value=\"" . $ProfileContactPhoneCell . "\" /><br />\n";
+    echo "          <label>Mobile:</label><br /><input type=\"text\" id=\"ProfileContactPhoneCell\" name=\"ProfileContactPhoneCell\" value=\"" . $ProfileContactPhoneCell . "\" /><br />\n";
     echo "          <label>Work:</label><br /><input type=\"text\" id=\"ProfileContactPhoneWork\" name=\"ProfileContactPhoneWork\" value=\"" . $ProfileContactPhoneWork . "\" /><br />\n";
     echo "      </fieldset>\n";
     echo "      </td>\n";
@@ -795,6 +783,19 @@ function bb_display_manage($ProfileID) {
     }
     echo "        </td>\n";
     echo "    </tr>\n";
+    echo "    <tr valign=\"top\">\n";
+    echo "      <th scope=\"row\">" . __("Birth date", bb_agency_TEXTDOMAIN) . " <em>YYYY-MM-DD</em></th>\n";
+    echo "      <td>\n";
+    echo "          <input class=\"bbdatepicker\" type=\"text\" id=\"ProfileDateBirth\" name=\"ProfileDateBirth\" value=\"" . $ProfileDateBirth . "\" />\n";
+    echo "      </td>\n";
+    echo "    </tr>\n";
+    echo "    <tr valign=\"top\">\n";
+    echo "      <th scope=\"row\">" . __("Due date", bb_agency_TEXTDOMAIN) . " <em>YYYY-MM-DD</em></th>\n";
+    echo "      <td>\n";
+    echo "          <input class=\"bbdatepicker\" type=\"text\" id=\"ProfileDateDue\" name=\"ProfileDateDue\" value=\"" . $ProfileDateDue . "\" />\n";
+    echo "      </td>\n";
+    echo "    </tr>\n";
+
     // Load custom fields , Public  = 0, ProfileCustomGender = true
     // ProfileCustomView = 1 , Private
     if (isset($_GET["ProfileGender"])) {

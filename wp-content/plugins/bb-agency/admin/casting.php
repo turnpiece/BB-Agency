@@ -223,7 +223,7 @@ if (isset($_POST['action'])) {
 		       	<tr valign="top">
 					<th scope="row">Country</th>
 					<td>
-						<input type="text" id="CastingLocationCountry" name="CastingLocationCountry" value="<?php if (isset($CastingLocationCountry)) { echo $CastingLocationCountry; } else { echo "USA"; } ?>" />
+						<input type="text" id="CastingLocationCountry" name="CastingLocationCountry" value="<?php if (isset($CastingLocationCountry)) { echo $CastingLocationCountry; } else { echo "UK"; } ?>" />
 					</td>
 				</tr>
 		       	<tr valign="top">

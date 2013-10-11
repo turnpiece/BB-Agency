@@ -1,6 +1,6 @@
 <?php
-global $wpdb;
-$bb_agency_options_arr = get_option('bb_agency_options');
+	global $wpdb, $bb_agency_CURRENT_TYPE_ID;
+	$bb_agency_options_arr = get_option('bb_agency_options');
 	$bb_agency_option_profilenaming = $bb_agency_options_arr['bb_agency_option_profilenaming'];
 	$bb_agency_option_unittype = $bb_agency_options_arr['bb_agency_option_unittype'];
 
@@ -43,9 +43,18 @@ $bb_agency_options_arr = get_option('bb_agency_options');
 											$query = "SELECT DataTypeID, DataTypeTitle FROM ". table_agency_data_type ." WHERE DataTypeID <> ".bb_agency_CLIENTS_ID." ORDER BY DataTypeTitle DESC";
 											$results2 = mysql_query($query);
 											while ($dataType = mysql_fetch_array($results2)) {
-												if ($_SESSION['ProfileType']) {
-													if ($dataType["DataTypeID"] ==  $_SESSION['ProfileType']) { $selectedvalue = " selected"; } else { $selectedvalue = ""; } 
-												} else { $selectedvalue = ""; }
+												if (isset($bb_agency_CURRENT_TYPE_ID) && $bb_agency_CURRENT_TYPE_ID > 0) {
+													$selectedvalue = $dataType["DataTypeID"] ==  $bb_agency_CURRENT_TYPE_ID ? " selected" : "";
+												}
+												elseif ($_SESSION['ProfileType']) {
+													if ($dataType["DataTypeID"] ==  $_SESSION['ProfileType']) { 
+														$selectedvalue = " selected"; 
+													} else { 
+														$selectedvalue = ""; 
+													} 
+												} else { 
+													$selectedvalue = ""; 
+												}
 												echo "<option value=\"". $dataType["DataTypeID"] ."\"".$selectedvalue.">". $dataType["DataTypeTitle"] ."</option>";
 											}
 		echo "				        	</select>\n";

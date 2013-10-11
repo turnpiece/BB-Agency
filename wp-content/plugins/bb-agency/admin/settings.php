@@ -131,7 +131,7 @@ elseif ($ConfigID == 1) {
 		$bb_agency_value_maxheight = $bb_agency_options_arr['bb_agency_option_agencyimagemaxheight'];
 			if (empty($bb_agency_value_maxheight)) { $bb_agency_value_maxheight = "800"; }
 		$bb_agency_option_locationcountry = $bb_agency_options_arr['bb_agency_option_locationcountry'];
-			if (empty($bb_agency_option_locationcountry)) { $bb_agency_option_locationcountry = "USA"; }
+			if (empty($bb_agency_option_locationcountry)) { $bb_agency_option_locationcountry = "UK"; }
 		$bb_agency_option_profilelist_perpage = $bb_agency_options_arr['bb_agency_option_profilelist_perpage'];
 			if (empty($bb_agency_option_profilelist_perpage)) { $bb_agency_option_profilelist_perpage = "20"; }
 		$bb_agency_option_persearch = $bb_agency_options_arr['bb_agency_option_persearch'];

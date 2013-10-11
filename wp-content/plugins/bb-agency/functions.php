@@ -757,7 +757,7 @@ error_reporting(0);
 		$bb_agency_option_profilelist_printpdf 	     = isset($bb_agency_options_arr['bb_agency_option_profilelist_printpdf']) ?(int)$bb_agency_options_arr['bb_agency_option_profilelist_printpdf']:0;
 
 		// Set It Up	
-		global $wp_rewrite, $wpdb;
+		global $wp_rewrite, $wpdb, $bb_agency_CURRENT_TYPE_ID;
 	    $cusFields = array("Suit","Bust","Shirt","Dress");  //for custom fields min and max
 	    
 	    // Exctract from Shortcode
@@ -794,8 +794,20 @@ error_reporting(0);
 			"profilezip" => NULL
 		), $atts));
 
-		// Sort by due date if a mum to be, otherwise sort alphabetically
-		$sort = intval($type) == bb_agency_MUMSTOBE_ID ? "profile.ProfileDateDue" : "profile.ProfileContactDisplay";
+		// Sort by due date if a mum to be, by date of birth if a baby, otherwise sort alphabetically
+		switch(intval($type)) {
+			case bb_agency_MUMSTOBE_ID:
+			$sort = "profile.ProfileDateDue";
+			break;
+
+			case bb_agency_BABIES_ID:
+			$sort = "profile.ProfileDateBirth";
+			break;
+
+			default:
+			$sort = "profile.ProfileContactDisplay";
+			break;
+		}
 
 		// Sort ascending whether by due date or alphabetical
 		$dir = "asc";
@@ -857,6 +869,9 @@ error_reporting(0);
 		$City						= $profilecity;
 		$State						= $profilestate;
 		$Zip						= $profilezip;  
+
+		// set type global
+		$bb_agency_CURRENT_TYPE_ID = $ProfileType;
 	    
 	    // ?
 	   	$filterDropdown = array();

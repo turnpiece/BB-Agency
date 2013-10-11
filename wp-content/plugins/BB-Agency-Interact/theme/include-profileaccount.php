@@ -109,7 +109,7 @@
 		echo "    <tr valign=\"top\">\n";
 		echo "		<td scope=\"row\">". __("Birthdate", bb_agencyinteract_TEXTDOMAIN) ." <em>YYYY-MM-DD</em></th>\n";
 		echo "		<td>\n";
-		echo "			<input type=\"text\" id=\"ProfileDateBirth\" name=\"ProfileDateBirth\" value=\"". $ProfileDateBirth ."\" />\n";
+		echo "			<input class="bbdatepicker" type=\"text\" id=\"ProfileDateBirth\" name=\"ProfileDateBirth\" value=\"". $ProfileDateBirth ."\" />\n";
 		echo "		</td>\n";
 		echo "	  </tr>\n";
 		// Address

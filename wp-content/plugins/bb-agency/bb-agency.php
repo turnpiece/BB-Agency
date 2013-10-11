@@ -40,6 +40,8 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 	define("bb_agency_MUMSTOBE_ID", 1); // id of mums to be data type
 	define("bb_agency_AFTERBIRTH_ID", 2); // id of data type to move mums to be to once they've given birth
 	define("bb_agency_CLIENTS_ID", 7); // id of clients
+	define("bb_agency_BABIES_ID", 8); // id of babies
+	$bb_agency_CURRENT_TYPE_ID = 0; // will contain current type
 	// Clean Up:
 	$pageURL = '';
  	if ($_SERVER["SERVER_PORT"] != "80") {
