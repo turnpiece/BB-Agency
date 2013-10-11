@@ -798,19 +798,19 @@ error_reporting(0);
 		switch(intval($type)) {
 			case bb_agency_MUMSTOBE_ID:
 			$sort = "profile.ProfileDateDue";
+			$dir = "asc";
 			break;
 
 			case bb_agency_BABIES_ID:
 			$sort = "profile.ProfileDateBirth";
+			$dir = "desc";
 			break;
 
 			default:
 			$sort = "profile.ProfileContactDisplay";
+			$dir = "asc";
 			break;
 		}
-
-		// Sort ascending whether by due date or alphabetical
-		$dir = "asc";
 
 		// Should we override the privacy settings?
 		if(strpos($pageURL,'client-view') > 0 && (get_query_var('type') == "profilesecure")){
@@ -1708,7 +1708,7 @@ error_reporting(0);
 	// Is this model a baby?
 	function bb_agency_isbaby($type) {
 		$types = explode(',',$type);
-		return in_array(bb_agency_BABY_ID, $types);
+		return in_array(bb_agency_BABIES_ID, $types);
 	}
 
 
