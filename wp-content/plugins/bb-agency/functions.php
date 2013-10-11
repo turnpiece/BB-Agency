@@ -1073,19 +1073,18 @@ error_reporting(0);
 							
 							mysql_free_result($q);
 					} // if not empty
-				 }  // end if
-		       } // end for each
-		  
-	                    
-	           /*
-	            * Refine filter and add the created 
-	            * holder $filter to $filter if not
-	            * equals to blanks
-	            */
-	           if($filter2 != ""){
-	            $filter2 .= " ) ";
-	            $filter .= $filter2;
-	           }
+				}  // end if
+		    } // end for each
+		  	                    
+           /*
+            * Refine filter and add the created 
+            * holder $filter to $filter if not
+            * equals to blanks
+            */
+           	if($filter2 != ""){
+            	$filter2 .= " ) ";
+            	$filter .= $filter2;
+        	}
 		}
 
 	  	// Name

@@ -10,6 +10,7 @@
 	$bb_agency_option_customfields_loggedin_all = $bb_agency_options_arr['bb_agency_option_customfield_loggedin_all'];
 	$bb_agency_option_customfields_loggedin_admin = $bb_agency_options_arr['bb_agency_option_customfield_loggedin_admin'];
 	
+	if (!empty($bb_agency_CURRENT_TYPE_ID)) $_SESSION['ProfileType'] = $bb_agency_CURRENT_TYPE_ID;
 	if (isset($_REQUEST['ProfileType']) && !empty($_REQUEST['ProfileType'])) { $_SESSION['ProfileType'] = $_REQUEST['ProfileType']; }
 	if (isset($DataTypeID) && !empty($DataTypeID)) { $_SESSION['ProfileType'] = $DataTypeID; }
 	if (isset($_REQUEST['ProfileGender']) && !empty($_REQUEST['ProfileGender'])) {  $_SESSION['ProfileGender'] = $_REQUEST['ProfileGender']; }
@@ -24,16 +25,15 @@
 	
 		echo "		<div id=\"profile-search-form-condensed\" class=\"rbsearch-form\">\n";
 		echo "        	<form method=\"post\" id=\"search-form-condensed\" action=\"". get_bloginfo("wpurl") ."/profile-search/\">\n";
-		echo "        		<div><input type=\"hidden\" name=\"action\" value=\"search\" /></div>\n";
-
-		echo "	 			      <div class=\"search-field single\">\n";
+		echo "        		<input type=\"hidden\" name=\"action\" value=\"search\" />\n";
+		echo "	 			    <div class=\"search-field single\">\n";
 		echo "		 				<label for=\"ProfileFirstName\">". __("First Name", bb_agency_TEXTDOMAIN) ."</label>\n";
-	      echo "		 				<input type=\"text\" id=\"ProfileContactNameFirst\" name=\"ProfileContactNameFirst\" value=\"". $_SESSION["ProfileContactNameFirst"] ."\" />\n";
-	      echo "	 				</div>\n";
+	    echo "		 				<input type=\"text\" id=\"ProfileContactNameFirst\" name=\"ProfileContactNameFirst\" value=\"". $_SESSION["ProfileContactNameFirst"] ."\" />\n";
+	    echo "	 				</div>\n";
 /*		
 		echo "	 				<div class=\"search-field single\">\n";
 		echo "		 				<label for=\"ProfileLastName\">". __("Last Name", bb_agency_TEXTDOMAIN) ."</label>\n";
-	      echo "						 <input type=\"text\" id=\"ProfileContactNameLast\" name=\"ProfileContactNameLast\" value=\"". $_SESSION["ProfileContactNameLast"] ."\" />\n";
+	    echo "						 <input type=\"text\" id=\"ProfileContactNameLast\" name=\"ProfileContactNameLast\" value=\"". $_SESSION["ProfileContactNameLast"] ."\" />\n";
 		echo "					 </div>\n";		
 */		
 		echo "				    <div class=\"search-field single\">\n";
@@ -43,10 +43,7 @@
 											$query = "SELECT DataTypeID, DataTypeTitle FROM ". table_agency_data_type ." WHERE DataTypeID <> ".bb_agency_CLIENTS_ID." ORDER BY DataTypeTitle DESC";
 											$results2 = mysql_query($query);
 											while ($dataType = mysql_fetch_array($results2)) {
-												if (isset($bb_agency_CURRENT_TYPE_ID) && $bb_agency_CURRENT_TYPE_ID > 0) {
-													$selectedvalue = $dataType["DataTypeID"] ==  $bb_agency_CURRENT_TYPE_ID ? " selected" : "";
-												}
-												elseif ($_SESSION['ProfileType']) {
+												if ($_SESSION['ProfileType']) {
 													if ($dataType["DataTypeID"] ==  $_SESSION['ProfileType']) { 
 														$selectedvalue = " selected"; 
 													} else { 
@@ -207,7 +204,7 @@
 		echo "				<div><input type=\"hidden\" name=\"ProfileIsActive\" value=\"1\" /></div>\n";
 		echo "				<div class=\"search-field submit\">";
 		echo "				<input type=\"submit\" value=\"". __("Search Profiles", bb_agency_TEXTDOMAIN) . "\" class=\"button-primary\" onclick=\"this.form.action='".get_bloginfo("wpurl")."/profile-search/'\" />";
-		echo '<input type="reset" class=\"button-primary\" value="Empty Form">';
+		echo "				<input type=\"reset\" class=\"button-primary\" value=\"". __("Empty Form", bb_agency_TEXTDOMAIN) . "\">";
 		if(!isset($_GET[srch])){
 			echo "				<input type=\"submit\" name=\"advanced_search\" value=\"". __("Advanced Search", bb_agency_TEXTDOMAIN) . "\" class=\"button-primary\" onclick=\"this.form.action='".get_bloginfo("wpurl")."/search/?srch=1'\" />";}else{
 		
