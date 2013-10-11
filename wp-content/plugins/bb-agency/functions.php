@@ -1705,6 +1705,12 @@ error_reporting(0);
 		return in_array(bb_agency_AFTERBIRTH_ID, $types);
 	}
 
+	// Is this model a baby?
+	function bb_agency_isbaby($type) {
+		$types = explode(',',$type);
+		return in_array(bb_agency_BABY_ID, $types);
+	}
+
 
 
 
