@@ -14,11 +14,11 @@ global $wpdb;
 global $current_user;
 get_currentuserinfo();
 
-$rb_agency_options_arr = get_option('rb_agency_options');
-	$rb_agency_option_agencyimagemaxheight 	= $rb_agency_options_arr['rb_agency_option_agencyimagemaxheight'];
-		if (empty($rb_agency_option_agencyimagemaxheight) || $rb_agency_option_agencyimagemaxheight < 500) { $rb_agency_option_agencyimagemaxheight = 800; }
-	$rb_agency_option_profilenaming 		= (int)$rb_agency_options_arr['rb_agency_option_profilenaming'];
-	$rb_agency_option_locationtimezone 		= (int)$rb_agency_options_arr['rb_agency_option_locationtimezone'];
+$bb_agency_options_arr = get_option('bb_agency_options');
+	$bb_agency_option_agencyimagemaxheight 	= $bb_agency_options_arr['bb_agency_option_agencyimagemaxheight'];
+		if (empty($bb_agency_option_agencyimagemaxheight) || $bb_agency_option_agencyimagemaxheight < 500) { $bb_agency_option_agencyimagemaxheight = 800; }
+	$bb_agency_option_profilenaming 		= (int)$bb_agency_options_arr['bb_agency_option_profilenaming'];
+	$bb_agency_option_locationtimezone 		= (int)$bb_agency_options_arr['bb_agency_option_locationtimezone'];
 
 // Change Title
 add_filter('wp_title', 'bb_agencyinteractive_override_title', 10, 2);
@@ -52,7 +52,7 @@ if (isset($_POST['action'])) {
 		if (!$have_error){
 		
         // fixed error of folder is not created 
-		$ProfileGallery = rb_agency_createdir($ProfileGallery);  // Check Directory - create directory if does not exist	
+		$ProfileGallery = bb_agency_createdir($ProfileGallery);  // Check Directory - create directory if does not exist	
 		
 		// Upload Image & Add to Database
 			$i = 1;
@@ -66,7 +66,7 @@ if (isset($_POST['action'])) {
 
 						// Upload if it doesnt exist already
 						$path_parts = pathinfo($_FILES['profileMedia'. $i]['name']);
-						$safeProfileMediaFilename =  rb_agency_safenames($path_parts['filename'].".".$path_parts['extension']);
+						$safeProfileMediaFilename =  bb_agency_safenames($path_parts['filename'].".".$path_parts['extension']);
 						$results = mysql_query("SELECT * FROM " . table_agency_profile_media . " WHERE ProfileID='". $ProfileID ."' AND ProfileMediaURL = '".$safeProfileMediaFilename ."'");
 						$count = mysql_num_rows($results);
 
@@ -74,13 +74,13 @@ if (isset($_POST['action'])) {
 							if($uploadMediaType == "Image") { 
 							    if($_FILES['profileMedia'. $i]['type'] == "image/pjpeg" || $_FILES['profileMedia'. $i]['type'] == "image/jpeg" || $_FILES['profileMedia'. $i]['type'] == "image/gif" || $_FILES['profileMedia'. $i]['type'] == "image/png"){
 							
-										$image = new rb_agency_image();
+										$image = new bb_agency_image();
 										$image->load($_FILES['profileMedia'. $i]['tmp_name']);
 				
-										if ($image->getHeight() > $rb_agency_option_agencyimagemaxheight) {
-											$image->resizeToHeight($rb_agency_option_agencyimagemaxheight);
+										if ($image->getHeight() > $bb_agency_option_agencyimagemaxheight) {
+											$image->resizeToHeight($bb_agency_option_agencyimagemaxheight);
 										}
-										$image->save(rb_agency_UPLOADPATH . $ProfileGallery ."/". $safeProfileMediaFilename);
+										$image->save(bb_agency_UPLOADPATH . $ProfileGallery ."/". $safeProfileMediaFilename);
 										// Add to database
 									$results = $wpdb->query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL) VALUES ('". $ProfileID ."','". $uploadMediaType ."','". $safeProfileMediaFilename ."','". $safeProfileMediaFilename ."')");
 							    }else{
@@ -93,7 +93,7 @@ if (isset($_POST['action'])) {
 								$MIME = array('audio/mpeg', 'audio/mp3');
 								if(in_array($_FILES['profileMedia'. $i]['type'], $MIME)){
 									$results = $wpdb->query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL) VALUES ('". $ProfileID ."','". $uploadMediaType ."','". $safeProfileMediaFilename ."','". $safeProfileMediaFilename ."')");
-				                 	move_uploaded_file($_FILES['profileMedia'. $i]['tmp_name'], rb_agency_UPLOADPATH . $ProfileGallery ."/".$safeProfileMediaFilename);
+				                 	move_uploaded_file($_FILES['profileMedia'. $i]['tmp_name'], bb_agency_UPLOADPATH . $ProfileGallery ."/".$safeProfileMediaFilename);
 								}else{
 									$error .= "<b><i>".__("Please upload a mp3 file only", bb_agencyinteract_TEXTDOMAIN) ."</i></b><br />";
 									$have_error = true;
@@ -104,7 +104,7 @@ if (isset($_POST['action'])) {
 								 if ($_FILES['profileMedia'. $i]['type'] == "application/msword" || $_FILES['profileMedia'. $i]['type'] == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"  || $_FILES['profileMedia'. $i]['type'] == "application/pdf" || $_FILES['profileMedia'. $i]['type'] == "application/rtf")
 								{
 								  	$results = $wpdb->query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL) VALUES ('". $ProfileID ."','". $uploadMediaType ."','". $safeProfileMediaFilename ."','". $safeProfileMediaFilename ."')");
-				                  	move_uploaded_file($_FILES['profileMedia'. $i]['tmp_name'], rb_agency_UPLOADPATH . $ProfileGallery ."/".$safeProfileMediaFilename);
+				                  	move_uploaded_file($_FILES['profileMedia'. $i]['tmp_name'], bb_agency_UPLOADPATH . $ProfileGallery ."/".$safeProfileMediaFilename);
 								}else{
 								   	$error .= "<b><i>".__("Please upload PDF/MSword/RTF files only", bb_agencyinteract_TEXTDOMAIN) ."</i></b><br />";
 							        $have_error = true;	
@@ -115,7 +115,7 @@ if (isset($_POST['action'])) {
 								if ($_FILES['profileMedia'. $i]['type'] == "application/msword"|| $_FILES['profileMedia'. $i]['type'] == "application/pdf" || $_FILES['profileMedia'. $i]['type'] == "application/rtf" || $_FILES['profileMedia'. $i]['type'] == "image/jpeg" || $_FILES['profileMedia'. $i]['type'] == "image/gif" || $_FILES['profileMedia'. $i]['type'] == "image/png")
 								{
 									$results = $wpdb->query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL) VALUES ('". $ProfileID ."','". $uploadMediaType ."','". $safeProfileMediaFilename ."','". $safeProfileMediaFilename ."')");
-				                  	move_uploaded_file($_FILES['profileMedia'. $i]['tmp_name'], rb_agency_UPLOADPATH . $ProfileGallery ."/".$safeProfileMediaFilename);
+				                  	move_uploaded_file($_FILES['profileMedia'. $i]['tmp_name'], bb_agency_UPLOADPATH . $ProfileGallery ."/".$safeProfileMediaFilename);
 								}else{
 								   	$error .= "<b><i>".__("Please upload PDF/MSWord/RTF/Image files only", bb_agencyinteract_TEXTDOMAIN) ."</i></b><br />";
 							        $have_error = true;	
@@ -126,7 +126,7 @@ if (isset($_POST['action'])) {
 								 if ($_FILES['profileMedia'. $i]['type'] == "image/jpeg" || $_FILES['profileMedia'. $i]['type'] == "image/png")
 								{
 								  $results = $wpdb->query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL) VALUES ('". $ProfileID ."','". $uploadMediaType ."','". $safeProfileMediaFilename ."','". $safeProfileMediaFilename ."')");
-				                  move_uploaded_file($_FILES['profileMedia'. $i]['tmp_name'], rb_agency_UPLOADPATH . $ProfileGallery ."/".$safeProfileMediaFilename);
+				                  move_uploaded_file($_FILES['profileMedia'. $i]['tmp_name'], bb_agency_UPLOADPATH . $ProfileGallery ."/".$safeProfileMediaFilename);
 								}else{
 								   	$error .= "<b><i>".__("Please upload jpeg or png files only", bb_agencyinteract_TEXTDOMAIN) ."</i></b><br />";
 									$have_error = true;	
@@ -135,7 +135,7 @@ if (isset($_POST['action'])) {
 								// Add to database
 								  if($_FILES['profileMedia'. $i]['type'] == "image/pjpeg" || $_FILES['profileMedia'. $i]['type'] == "image/jpeg" || $_FILES['profileMedia'. $i]['type'] == "image/gif" || $_FILES['profileMedia'. $i]['type'] == "image/png"){
 								  $results = $wpdb->query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL) VALUES ('". $ProfileID ."','". $uploadMediaType ."','". $safeProfileMediaFilename ."','". $safeProfileMediaFilename ."')");
-				                 		 move_uploaded_file($_FILES['profileMedia'. $i]['tmp_name'], rb_agency_UPLOADPATH . $ProfileGallery ."/".$safeProfileMediaFilename);
+				                 		 move_uploaded_file($_FILES['profileMedia'. $i]['tmp_name'], bb_agency_UPLOADPATH . $ProfileGallery ."/".$safeProfileMediaFilename);
 								}else{
 								   	$error .= "<b><i>".__("Please upload jpeg or png files only", bb_agencyinteract_TEXTDOMAIN) ."</i></b><br />";
 									$have_error = true;	
@@ -150,17 +150,17 @@ if (isset($_POST['action'])) {
 			// Upload Videos to Database
 			if (isset($_POST['profileMediaV1']) && !empty($_POST['profileMediaV1'])) {
 				$profileMediaType = $_POST['profileMediaV1Type'];
-				$profileMediaURL = rb_agency_get_VideoFromObject($_POST['profileMediaV1']);
+				$profileMediaURL = bb_agency_get_VideoFromObject($_POST['profileMediaV1']);
 				$results = $wpdb->query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL) VALUES ('". $ProfileID ."','". $profileMediaType ."','". $profileMediaType ."','". $profileMediaURL ."')");
 			}
 			if (isset($_POST['profileMediaV2']) && !empty($_POST['profileMediaV2'])) {
 				$profileMediaType	=$_POST['profileMediaV2Type'];
-				$profileMediaURL = rb_agency_get_VideoFromObject($_POST['profileMediaV2']);
+				$profileMediaURL = bb_agency_get_VideoFromObject($_POST['profileMediaV2']);
 				$results = $wpdb->query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL) VALUES ('". $ProfileID ."','". $profileMediaType ."','". $profileMediaType ."','". $profileMediaURL ."')");
 			}
 			if (isset($_POST['profileMediaV3']) && !empty($_POST['profileMediaV3'])) {
 				$profileMediaType	=$_POST['profileMediaV3Type'];
-				$profileMediaURL = rb_agency_get_VideoFromObject($_POST['profileMediaV3']);
+				$profileMediaURL = bb_agency_get_VideoFromObject($_POST['profileMediaV3']);
 				$results = $wpdb->query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL) VALUES ('". $ProfileID ."','". $profileMediaType ."','". $profileMediaType ."','". $profileMediaURL ."')");
 			}
 

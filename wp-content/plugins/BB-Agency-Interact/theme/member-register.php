@@ -139,8 +139,8 @@
 			
 			
 			// Model or Client
-			update_usermeta($new_user, 'rb_agency_interact_profiletype', $new_user_type);
-			update_usermeta($new_user, 'rb_agency_interact_pgender', $gender);
+			update_usermeta($new_user, 'bb_agency_interact_profiletype', $new_user_type);
+			update_usermeta($new_user, 'bb_agency_interact_pgender', $gender);
 			
 			//Custom Fields
 			$arr = array();
@@ -158,7 +158,7 @@
 				}
 			}
 			
-			add_user_meta($new_user, 'rb_agency_new_registeredUser',$arr);			
+			add_user_meta($new_user, 'bb_agency_new_registeredUser',$arr);			
 			
 			// Log them in if no confirmation required.			
 			if ($bb_agencyinteract_option_registerconfirm == 1) {

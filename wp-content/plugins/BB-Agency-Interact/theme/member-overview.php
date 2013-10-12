@@ -15,8 +15,8 @@ global $current_user;
 get_currentuserinfo();
 
 // Get Settings
-$rb_agency_options_arr 							= get_option('rb_agency_options');
-$rb_agency_option_profilenaming 				= (int)$rb_agency_options_arr['rb_agency_option_profilenaming'];
+$bb_agency_options_arr 							= get_option('bb_agency_options');
+$bb_agency_option_profilenaming 				= (int)$bb_agency_options_arr['bb_agency_option_profilenaming'];
 $bb_agencyinteract_options_arr 					= get_option('bb_agencyinteract_options');
 $bb_agencyinteract_option_registerallow 		= (int)$bb_agencyinteract_options_arr['bb_agencyinteract_option_registerallow'];
 $bb_agencyinteract_option_overviewpagedetails 	= (int)$bb_agencyinteract_options_arr['bb_agencyinteract_option_overviewpagedetails'];
@@ -24,10 +24,10 @@ $bb_agencyinteract_option_overviewpagedetails 	= (int)$bb_agencyinteract_options
 // Check Sidebar
 $bb_agencyinteract_options_arr = get_option('bb_agencyinteract_options');
 $bb_agencyinteract_option_profilemanage_sidebar = $bb_agencyinteract_options_arr['bb_agencyinteract_option_profilemanage_sidebar'];
-$rb_subscription = $rb_agency_options_arr['rb_agency_option_profilelist_subscription'];
+$bb_subscription = $bb_agency_options_arr['bb_agency_option_profilelist_subscription'];
 
 // Were they users or agents?
-$profiletype = (int)get_user_meta($current_user->id, "rb_agency_interact_profiletype", true);
+$profiletype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
 if ($profiletype == 1) { $profiletypetext = __("Agent/Producer", bb_agencyinteract_TEXTDOMAIN); } else { $profiletypetext = __("Model/Talent", bb_agencyinteract_TEXTDOMAIN); }
 
 // Change Title
@@ -43,7 +43,7 @@ get_header();
 	echo "  	<div id=\"content\">\n";
 
 		// get profile Custom fields value
-		$rb_agency_new_registeredUser = get_user_meta($current_user->id,'rb_agency_new_registeredUser',true);
+		$bb_agency_new_registeredUser = get_user_meta($current_user->id,'bb_agency_new_registeredUser',true);
 	
 		// ****************************************************************************************** //
 		// Check if User is Logged in or not
@@ -53,7 +53,7 @@ get_header();
 			 * Set Media to not show to
 			 * client/s, agents, producers,
 			 */
-                        $ptype = (int)get_user_meta($current_user->id, "rb_agency_interact_profiletype", true);
+                        $ptype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
 	                $ptype = retrieve_title($ptype);
 			$restrict = array('client','clients','agents','agent','producer','producers');
 			if(in_array(strtolower($ptype),$restrict)){
@@ -87,7 +87,7 @@ get_header();
 				echo "      <li><a href=\"account/\">Edit Your Account Details</a></li>\n";
 				echo "      <li><a href=\"manage/\">Manage Your Profile Information</a></li>\n";
 				echo "      <li><a href=\"media/\">Manage Photos and Media</a></li>\n";
-				if($rb_subscription){
+				if($bb_subscription){
 				echo "      <li><a href=\"subscription/\">Manage your Subscription</a></li>\n";
 				}
 				echo "	</ul>\n";

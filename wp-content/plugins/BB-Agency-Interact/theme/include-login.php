@@ -83,7 +83,7 @@ echo "            <h3>". __("Talent", bb_agencyinteract_TEXTDOMAIN). " - ". __("
 echo "            <ul>\n";
 echo "              <li>". __("Create your free profile page", bb_agencyinteract_TEXTDOMAIN). "</li>\n";
 echo "              <li>". __("Apply to Auditions & Jobs", bb_agencyinteract_TEXTDOMAIN). "</li>\n";
-echo "              <li><a href=\"". get_bloginfo("wpurl") ."/profile-register/\" class=\"rb_button\">". __("Register as Talent / Model", bb_agencyinteract_TEXTDOMAIN). "</a></li>\n";
+echo "              <li><a href=\"". get_bloginfo("wpurl") ."/profile-register/\" class=\"bb_button\">". __("Register as Talent / Model", bb_agencyinteract_TEXTDOMAIN). "</a></li>\n";
 echo "            </ul>\n";
 echo "          </div> <!-- talent-register -->\n";
 echo "          <div class=\"clear line\"></div>\n";
@@ -93,7 +93,7 @@ echo "            <h3>". __("Casting Agents & Producers", bb_agencyinteract_TEXT
 echo "            <ul>\n";
 echo "              <li>". __("List Auditions & Jobs free", bb_agencyinteract_TEXTDOMAIN). "</li>\n";
 echo "              <li>". __("Contact People in the Talent Directory", bb_agencyinteract_TEXTDOMAIN). "</li>\n";
-echo "              <li><a href=\"". get_bloginfo("wpurl") ."/profile-register/\" class=\"rb_button\">". __("Register as Agent / Producer", bb_agencyinteract_TEXTDOMAIN). "</a></li>\n";
+echo "              <li><a href=\"". get_bloginfo("wpurl") ."/profile-register/\" class=\"bb_button\">". __("Register as Agent / Producer", bb_agencyinteract_TEXTDOMAIN). "</a></li>\n";
 echo "            </ul>\n";
 echo "          </div> <!-- talent-register -->\n";
 }

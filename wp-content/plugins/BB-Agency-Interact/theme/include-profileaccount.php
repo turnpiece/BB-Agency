@@ -3,16 +3,16 @@
 	global $current_user;
 	get_currentuserinfo();
 	$ProfileUserLinked = $current_user->id;
-        $ptype = (int)get_user_meta($current_user->id, "rb_agency_interact_profiletype", true);
+        $ptype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
 	$ptype = retrieve_title($ptype);
-	$ProfileGender  = get_user_meta($current_user->id, "rb_agency_interact_pgender", true);
+	$ProfileGender  = get_user_meta($current_user->id, "bb_agency_interact_pgender", true);
 
 	// Get Settings
-	$rb_agency_options_arr = get_option('rb_agency_options');
+	$bb_agency_options_arr = get_option('bb_agency_options');
 	
-		$rb_agency_option_showsocial 			= $rb_agency_options_arr['rb_agency_option_showsocial'];
-		$rb_agency_option_profilenaming 		= (int)$rb_agency_options_arr['rb_agency_option_profilenaming'];
-		$rb_agency_option_locationtimezone 		= (int)$rb_agency_options_arr['rb_agency_option_locationtimezone'];
+		$bb_agency_option_showsocial 			= $bb_agency_options_arr['bb_agency_option_showsocial'];
+		$bb_agency_option_profilenaming 		= (int)$bb_agency_options_arr['bb_agency_option_profilenaming'];
+		$bb_agency_option_locationtimezone 		= (int)$bb_agency_options_arr['bb_agency_option_locationtimezone'];
       
 	$bb_agencyinteract_options_arr = get_option('bb_agencyinteract_options');
 	$bb_agencyinteract_option_registerallow = (int)$bb_agencyinteract_options_arr['bb_agencyinteract_option_registerallow'];
@@ -58,7 +58,7 @@
 		echo "    <tr valign=\"top\">\n";
 		echo "		<td scope=\"row\">". __("Gallery Folder", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 		echo "		<td>\n";
-					if (!empty($ProfileGallery) && is_dir(rb_agency_UPLOADPATH .$ProfileGallery)) { 
+					if (!empty($ProfileGallery) && is_dir(bb_agency_UPLOADPATH .$ProfileGallery)) { 
 						echo "<div id=\"message\"><span class=\"updated\"><a href=\"".network_site_url("/")."profile/". $ProfileGallery ."/\" target=\"_blank\">/profile/". $ProfileGallery ."/</a></span></div>\n";
 						echo "<input type=\"hidden\" id=\"ProfileGallery\" name=\"ProfileGallery\" value=\"". $ProfileGallery ."\" />\n";
 					} else {
@@ -198,7 +198,7 @@
 
 
 		// Show Social Media Links
-		if ($rb_agency_option_showsocial == "1") { 
+		if ($bb_agency_option_showsocial == "1") { 
 		echo "    <tr valign=\"top\">\n";
 		echo "		<td scope=\"row\" colspan=\"2\"><h3>". __("Social Media Profiles", bb_agencyinteract_TEXTDOMAIN) ."</h3></th>\n";
 		echo "	  </tr>\n";
@@ -252,10 +252,10 @@
 		echo "		</td>\n";
 		echo "	  </tr>\n";
 		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\">". __("Last updated ", bb_agencyinteract_TEXTDOMAIN) ." ". rb_agency_makeago(rb_agency_convertdatetime($ProfileDateUpdated), $rb_agency_option_locationtimezone) ."</th>\n";
+		echo "		<td scope=\"row\">". __("Last updated ", bb_agencyinteract_TEXTDOMAIN) ." ". bb_agency_makeago(bb_agency_convertdatetime($ProfileDateUpdated), $bb_agency_option_locationtimezone) ."</th>\n";
 		echo "		<td>\n";
 		echo "			<input type=\"hidden\" name=\"action\" value=\"editRecord\" />\n";
-		echo "			<input type=\"submit\" name=\"submit\" value=\"". __("Save and Continue", rb_restaurant_TEXTDOMAIN) ."\" class=\"button-primary\" />\n";
+		echo "			<input type=\"submit\" name=\"submit\" value=\"". __("Save and Continue", bb_restaurant_TEXTDOMAIN) ."\" class=\"button-primary\" />\n";
 		echo "		</td>\n";
 		echo "	  </tr>\n";
 		echo "	</tbody>\n";

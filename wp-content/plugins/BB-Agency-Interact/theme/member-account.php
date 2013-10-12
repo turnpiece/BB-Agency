@@ -12,13 +12,13 @@ global $wpdb;
 global $current_user, $wp_roles;
 get_currentuserinfo();
 // Get Settings
-$rb_agency_options_arr = get_option('rb_agency_options');
-	$rb_agency_option_profilenaming 		= (int)$rb_agency_options_arr['rb_agency_option_profilenaming'];
+$bb_agency_options_arr = get_option('bb_agency_options');
+	$bb_agency_option_profilenaming 		= (int)$bb_agency_options_arr['bb_agency_option_profilenaming'];
 $bb_agencyinteract_options_arr = get_option('bb_agencyinteract_options');
 	$bb_agencyinteract_option_registerallow = (int)$bb_agencyinteract_options_arr['bb_agencyinteract_option_registerallow'];
 
 // Were they users or agents?
-$profiletype = (int)get_user_meta($current_user->id, "rb_agency_interact_profiletype", true);
+$profiletype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
 if ($profiletype == 1) { $profiletypetext = __("Agent/Producer", bb_agencyinteract_TEXTDOMAIN); } else { $profiletypetext = __("Model/Talent", bb_agencyinteract_TEXTDOMAIN); }
 
 	// Change Title
@@ -43,16 +43,16 @@ if (isset($_POST['action'])) {
 	$ProfileContactDisplay		=trim($_POST['ProfileContactDisplay']);
 
   	if (empty($ProfileContactDisplay)) {  // Probably a new record... 
-		if ($rb_agency_option_profilenaming == 0) { 
+		if ($bb_agency_option_profilenaming == 0) { 
 			$ProfileContactDisplay = $ProfileContactNameFirst . " ". $ProfileContactNameLast;
-		} elseif ($rb_agency_option_profilenaming == 1) { 
+		} elseif ($bb_agency_option_profilenaming == 1) { 
 			$ProfileContactDisplay = $ProfileContactNameFirst . " ". substr($ProfileContactNameLast, 0, 1);
-		} elseif ($rb_agency_option_profilenaming == 2) { 
+		} elseif ($bb_agency_option_profilenaming == 2) { 
 			$error .= "<b><i>". __(LabelSingular ." must have a display name identified", bb_agencyinteract_TEXTDOMAIN) . ".</i></b><br>";
 			$have_error = true;
-		} elseif ($rb_agency_option_profilenaming == 3) { // by firstname
+		} elseif ($bb_agency_option_profilenaming == 3) { // by firstname
 			$ProfileContactDisplay = "ID ". $ProfileID;
-		} elseif ($rb_agency_option_profilenaming == 4) {
+		} elseif ($bb_agency_option_profilenaming == 4) {
                         $ProfileContactDisplay = $ProfileContactNameFirst;
                 }
   	}
@@ -60,7 +60,7 @@ if (isset($_POST['action'])) {
 	$ProfileGallery				=$_POST['ProfileGallery'];
 
   	if (empty($ProfileGallery)) {  // Probably a new record... 
-		$ProfileGallery = rb_agency_safenames($ProfileContactDisplay); 
+		$ProfileGallery = bb_agency_safenames($ProfileContactDisplay); 
   	}
 
 	$ProfileContactEmail		=$_POST['ProfileContactEmail'];
@@ -76,7 +76,7 @@ if (isset($_POST['action'])) {
 	$ProfileType    		=$_POST['ProfileType'];
 	$ProfileDateBirth	    		=$_POST['ProfileDateBirth'];
 	$ProfileLocationStreet		=$_POST['ProfileLocationStreet'];
-	$ProfileLocationCity		=rb_agency_strtoproper($_POST['ProfileLocationCity']);
+	$ProfileLocationCity		=bb_agency_strtoproper($_POST['ProfileLocationCity']);
 	$ProfileLocationState		=strtoupper($_POST['ProfileLocationState']);
 	$ProfileLocationZip		=$_POST['ProfileLocationZip'];
 	$ProfileLocationCountry		=$_POST['ProfileLocationCountry'];
@@ -160,7 +160,7 @@ if (isset($_POST['action'])) {
  			
 
 			// delete temporary storage
-			delete_user_meta($ProfileUserLinked, 'rb_agency_new_registeredUser');
+			delete_user_meta($ProfileUserLinked, 'bb_agency_new_registeredUser');
             
 			// Add New Custom Field Values
 			$pos = 0;
@@ -191,7 +191,7 @@ if (isset($_POST['action'])) {
 			update_usermeta( $current_user->id, 'nickname', esc_attr( $ProfileContactDisplay ) );
 			update_usermeta( $current_user->id, 'display_name', esc_attr( $ProfileContactDisplay ) );
 			update_usermeta( $current_user->id, 'user_email', esc_attr( $ProfileContactEmail ) );
-			update_usermeta( $current_user->id, 'rb_agency_interact_pgender', esc_attr( $ProfileGender ) );			
+			update_usermeta( $current_user->id, 'bb_agency_interact_pgender', esc_attr( $ProfileGender ) );			
 			
 	#DEBUG
 	#echo "<script>alert('".$ProfileUsername."');<\/script>";		 
@@ -222,7 +222,7 @@ if (isset($_POST['action'])) {
 			}
 
 			// Set Display Name as Record ID (We have to do this after so we know what record ID to use... right ;)
-			if ($rb_agency_option_profilenaming == 3) {
+			if ($bb_agency_option_profilenaming == 3) {
 				$ProfileContactDisplay = "ID-". $ProfileID;
 				$ProfileGallery = "ID". $ProfileID."-";
 				$update = $wpdb->query("UPDATE " . table_agency_profile . " SET ProfileContactDisplay='". $ProfileContactDisplay. "', ProfileGallery='". $ProfileGallery. "' WHERE ProfileID='". $ProfileID ."'");
@@ -278,7 +278,7 @@ if (isset($_POST['action'])) {
 			update_usermeta( $current_user->id, 'nickname', esc_attr( $ProfileContactDisplay ) );
 			update_usermeta( $current_user->id, 'display_name', esc_attr( $ProfileContactDisplay ) );
 			update_usermeta( $current_user->id, 'user_email', esc_attr( $ProfileContactEmail ) );
-			update_usermeta( $current_user->id, 'rb_agency_interact_pgender', esc_attr( $ProfileGender ) );	
+			update_usermeta( $current_user->id, 'bb_agency_interact_pgender', esc_attr( $ProfileGender ) );	
 
 			// Add New Custom Field Values			 
 			foreach($_POST as $key => $value) {
@@ -341,7 +341,7 @@ if (is_user_logged_in()) {
 			 * Set Media to not show to
 			 * client/s, agents, producers,
 			 */
-			$ptype = (int)get_user_meta($current_user->id, "rb_agency_interact_profiletype", true);
+			$ptype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
 	                $ptype = retrieve_title($ptype);
 			$restrict = array('client','clients','agents','agent','producer','producers');
 			if(in_array(strtolower($ptype),$restrict)){
@@ -352,7 +352,7 @@ if (is_user_logged_in()) {
 			
 			
 			echo "<div id=\"profile-manage\" class=\"profile-account\">\n";
-			$rb_agency_new_registeredUser = get_user_meta($current_user->id,'rb_agency_new_registeredUser');
+			$bb_agency_new_registeredUser = get_user_meta($current_user->id,'bb_agency_new_registeredUser');
 			
 			// Menu
 			include("include-menu.php"); 	

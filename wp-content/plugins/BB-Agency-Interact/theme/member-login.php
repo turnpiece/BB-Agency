@@ -32,7 +32,7 @@ function get_user_login_info(){
 
 			// If Admin, redirect to plugin
 			if( $user_info->user_level > 7) {
-				header("Location: ". admin_url("admin.php?page=rb_agency_menu"));
+				header("Location: ". admin_url("admin.php?page=bb_agency_menu"));
 			}
 
 			// Message will show for 48hrs after registration

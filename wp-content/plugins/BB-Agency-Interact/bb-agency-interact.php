@@ -191,21 +191,21 @@ if ( is_admin() ){
 						 
 					 } else {
 						   if(current_user_can('level_10')){
-							  if ( !empty( $title ) ) { echo $before_title . "RB Agency Settings" . $after_title; };
+							  if ( !empty( $title ) ) { echo $before_title . "BB Agency Settings" . $after_title; };
 							  echo "<ul>";
-							  echo "<li><a href=\"".admin_url("admin.php?page=rb_agency_menu")."\">Overview</a></li>";
-							  echo "<li><a href=\"".admin_url("admin.php?page=rb_agency_menu_profiles")."\">Manage Profiles</a></li>";
+							  echo "<li><a href=\"".admin_url("admin.php?page=bb_agency_menu")."\">Overview</a></li>";
+							  echo "<li><a href=\"".admin_url("admin.php?page=bb_agency_menu_profiles")."\">Manage Profiles</a></li>";
 							  echo "<li><a href=\"".admin_url("admin.php?page=bb_agencyinteract_menu_approvemembers")."\">Approve Profiles</a></li>";
-							  echo "<li><a href=\"".admin_url("admin.php?page=rb_agency_menu_search")."\">Search Profiles</a></li>";
-							  echo "<li><a href=\"".admin_url("admin.php?page=rb_agency_menu_searchsaved")."\">Saved Searches</a></li>";
-							  echo "<li><a href=\"".admin_url("admin.php?page=rb_agency_menu_reports")."\">Tools &amp; Reports</a></li>";
-							  echo "<li><a href=\"".admin_url("admin.php?page=rb_agency_menu_settings")."\">Settings</a></li>";
+							  echo "<li><a href=\"".admin_url("admin.php?page=bb_agency_menu_search")."\">Search Profiles</a></li>";
+							  echo "<li><a href=\"".admin_url("admin.php?page=bb_agency_menu_searchsaved")."\">Saved Searches</a></li>";
+							  echo "<li><a href=\"".admin_url("admin.php?page=bb_agency_menu_reports")."\">Tools &amp; Reports</a></li>";
+							  echo "<li><a href=\"".admin_url("admin.php?page=bb_agency_menu_settings")."\">Settings</a></li>";
 							  echo "<li><a href=\"/wp-login.php?action=logout&_wpnonce=3bb3c87a3d\">Logout</a></li>";	    
 								  echo "</ul>";
 							
 							 } else{
 							  
-								rb_agency_profilesearch(array("profilesearch_layout" =>"simple"));   
+								bb_agency_profilesearch(array("profilesearch_layout" =>"simple"));   
 								   
 							 }
 							 

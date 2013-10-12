@@ -2,13 +2,13 @@
 global $wpdb;
 define("LabelPlural", "Pending Profiles");
 define("LabelSingular", "Pending Profiles");
-$rb_agency_options_arr = get_option('rb_agency_options');
-	$rb_agency_option_unittype  			= $rb_agency_options_arr['rb_agency_option_unittype'];
-	$rb_agency_option_showsocial 			= $rb_agency_options_arr['rb_agency_option_showsocial'];
-	$rb_agency_option_agencyimagemaxheight 	= $rb_agency_options_arr['rb_agency_option_agencyimagemaxheight'];
-		if (empty($rb_agency_option_agencyimagemaxheight) || $rb_agency_option_agencyimagemaxheight < 500) { $rb_agency_option_agencyimagemaxheight = 800; }
-	$rb_agency_option_profilenaming 		= (int)$rb_agency_options_arr['rb_agency_option_profilenaming'];
-	$rb_agency_option_locationtimezone 		= (int)$rb_agency_options_arr['rb_agency_option_locationtimezone'];
+$bb_agency_options_arr = get_option('bb_agency_options');
+	$bb_agency_option_unittype  			= $bb_agency_options_arr['bb_agency_option_unittype'];
+	$bb_agency_option_showsocial 			= $bb_agency_options_arr['bb_agency_option_showsocial'];
+	$bb_agency_option_agencyimagemaxheight 	= $bb_agency_options_arr['bb_agency_option_agencyimagemaxheight'];
+		if (empty($bb_agency_option_agencyimagemaxheight) || $bb_agency_option_agencyimagemaxheight < 500) { $bb_agency_option_agencyimagemaxheight = 800; }
+	$bb_agency_option_profilenaming 		= (int)$bb_agency_options_arr['bb_agency_option_profilenaming'];
+	$bb_agency_option_locationtimezone 		= (int)$bb_agency_options_arr['bb_agency_option_locationtimezone'];
 // *************************************************************************************************** //
 // Handle Post Actions
 if (isset($_POST['action'])) {
@@ -34,7 +34,7 @@ if (isset($_POST['action'])) {
 					
 				if (isset($ProfileGallery)) {
 					// Remove Folder
-					$dir = rb_agency_UPLOADPATH . $ProfileGallery ."/";
+					$dir = bb_agency_UPLOADPATH . $ProfileGallery ."/";
 					$mydir = opendir($dir);
 					while(false !== ($file = readdir($mydir))) {
 						if($file != "." && $file != "..") {
@@ -55,7 +55,7 @@ if (isset($_POST['action'])) {
 			} // is there record?
 			
 		}
-		rb_display_list();
+		bb_display_list();
 		exit;
 	break;
 	
@@ -64,15 +64,15 @@ if (isset($_POST['action'])) {
 else {
 // *************************************************************************************************** //
 // Show List
-	rb_display_list();
+	bb_display_list();
 }
 
 // *************************************************************************************************** //
 // Manage Record
-function rb_display_list() {
+function bb_display_list() {
   global $wpdb;
-  $rb_agency_options_arr = get_option('rb_agency_options');
-	$rb_agency_option_locationtimezone 		= (int)$rb_agency_options_arr['rb_agency_option_locationtimezone'];
+  $bb_agency_options_arr = get_option('bb_agency_options');
+	$bb_agency_option_locationtimezone 		= (int)$bb_agency_options_arr['bb_agency_option_locationtimezone'];
   echo "<div class=\"wrap\">\n";
   echo "  <div id=\"rb-overview-icon\" class=\"icon32\"></div>\n";
   echo "  <h2>". __("List", bb_agencyinteract_TEXTDOMAIN) ." ". LabelPlural ."</h2>\n";
@@ -153,7 +153,7 @@ function rb_display_list() {
 											
 										if (isset($ProfileGallery)) {
 											// Remove Folder
-											$dir = rb_agency_UPLOADPATH . $ProfileGallery ."/";
+											$dir = bb_agency_UPLOADPATH . $ProfileGallery ."/";
 											$mydir = opendir($dir);
 											while(false !== ($file = readdir($mydir))) {
 												if($file != "." && $file != "..") {
@@ -227,7 +227,7 @@ function rb_display_list() {
 		//Paginate
 		$items = mysql_num_rows(mysql_query("SELECT * FROM ". table_agency_profile ." profile LEFT JOIN ". table_agency_data_type ." profiletype ON profile.ProfileType = profiletype.DataTypeID ". $filter  ."")); // number of total rows in the database
 		if($items > 0) {
-			$p = new rb_agency_pagination;
+			$p = new bb_agency_pagination;
 			$p->items($items);
 			$p->limit(50); // Limit entries per page
 			$p->target("admin.php?page=". $_GET['page'] .$query);
@@ -253,7 +253,7 @@ function rb_display_list() {
  	  $queryGenderResult = mysql_query("SELECT GenderID, GenderTitle FROM ".table_agency_data_gender." ");
 		  $queryGenderCount = mysql_num_rows($queryGenderResult);
 		  while($fetchGender = mysql_fetch_assoc($queryGenderResult)){
-			 echo "	<div style=\"float: left; \"><a class=\"button-primary\" href=\"". admin_url("admin.php?page=rb_agency_menu_profiles") ."&action=add&ProfileGender=".$fetchGender["GenderID"]."\">". __("Create New ".ucfirst($fetchGender["GenderTitle"])."", rb_agency_TEXTDOMAIN) ."</a></div>\n";
+			 echo "	<div style=\"float: left; \"><a class=\"button-primary\" href=\"". admin_url("admin.php?page=bb_agency_menu_profiles") ."&action=add&ProfileGender=".$fetchGender["GenderID"]."\">". __("Create New ".ucfirst($fetchGender["GenderTitle"])."", bb_agency_TEXTDOMAIN) ."</a></div>\n";
 		  }
 	  echo "  <div class=\"tablenav-pages\">\n";
 				if($items > 0) {
@@ -363,7 +363,7 @@ function rb_display_list() {
             $ProfileGallery = stripslashes($data['ProfileGallery']);
             $ProfileContactNameFirst = stripslashes($data['ProfileContactNameFirst']);
             $ProfileContactNameLast = stripslashes($data['ProfileContactNameLast']);
-            $ProfileLocationCity = rb_agency_strtoproper(stripslashes($data['ProfileLocationCity']));
+            $ProfileLocationCity = bb_agency_strtoproper(stripslashes($data['ProfileLocationCity']));
             $ProfileLocationState = stripslashes($data['ProfileLocationState']);
             $ProfileGender = stripslashes($data['ProfileGender']);
             $ProfileDateBirth = stripslashes($data['ProfileDateBirth']);
@@ -415,21 +415,21 @@ function rb_display_list() {
 		echo "          ". $ProfileContactNameFirst ."\n";
 		echo "          <div class=\"row-actions\">\n";
 		echo "            <span class=\"allow\"><a href=\"". admin_url("admin.php?page=". $_GET['page'] ."&amp;action=approveRecord&amp;ProfileID=". $ProfileID) ."\" title=\"". __("Approve this Record", bb_agencyinteract_TEXTDOMAIN) . "\">". __("Approve", bb_agencyinteract_TEXTDOMAIN) . "</a> | </span>\n";
-		echo "            <span class=\"edit\"><a href=\"". admin_url("admin.php?page=rb_agency_menu_profiles&amp;action=editRecord&amp;ProfileID=". $ProfileID) ."\" title=\"". __("Edit this Record", bb_agencyinteract_TEXTDOMAIN) . "\">". __("Edit", bb_agencyinteract_TEXTDOMAIN) . "</a> | </span>\n";
-		echo "            <span class=\"view\"><a href=\"". rb_agency_PROFILEDIR . $rb_agency_UPLOADDIR . $ProfileGallery ."/\" title=\"". __("View", bb_agencyinteract_TEXTDOMAIN) . "\" target=\"_blank\">". __("View", bb_agencyinteract_TEXTDOMAIN) . "</a> | </span>\n";
+		echo "            <span class=\"edit\"><a href=\"". admin_url("admin.php?page=bb_agency_menu_profiles&amp;action=editRecord&amp;ProfileID=". $ProfileID) ."\" title=\"". __("Edit this Record", bb_agencyinteract_TEXTDOMAIN) . "\">". __("Edit", bb_agencyinteract_TEXTDOMAIN) . "</a> | </span>\n";
+		echo "            <span class=\"view\"><a href=\"". bb_agency_PROFILEDIR . $bb_agency_UPLOADDIR . $ProfileGallery ."/\" title=\"". __("View", bb_agencyinteract_TEXTDOMAIN) . "\" target=\"_blank\">". __("View", bb_agencyinteract_TEXTDOMAIN) . "</a> | </span>\n";
 		//echo "            <span class=\"delete\"><a class=\"submitdelete\" href=\"". admin_url("admin.php?page=". $_GET['page']) ."&amp;action=deleteRecord&amp;ProfileID=". $ProfileID ."\"  onclick=\"if ( confirm('". __("You are about to delete the profile for ", bb_agencyinteract_TEXTDOMAIN) ." ". $ProfileContactNameFirst ." ". $ProfileContactNameLast ."'". __("Cancel", bb_agencyinteract_TEXTDOMAIN) . "\' ". __("to stop", bb_agencyinteract_TEXTDOMAIN) . ", \'". __("OK", bb_agencyinteract_TEXTDOMAIN) . "\' ". __("to delete", bb_agencyinteract_TEXTDOMAIN) . ".') ) { return true;}return false;\" title=\"". __("Delete this Record", bb_agencyinteract_TEXTDOMAIN) . "\">". __("Delete", bb_agencyinteract_TEXTDOMAIN) . "</a> </span>\n";
 		echo "          </div>\n";
 		echo "        </td>\n";
 		echo "        <td class=\"ProfileContactNameLast column-ProfileContactNameLast\">". $ProfileContactNameLast ."</td>\n";
 		echo "        <td class=\"ProfileGender column-ProfileGender\">". $ProfileGender ."</td>\n";
-		echo "        <td class=\"ProfilesProfileDate column-ProfilesProfileDate\">". rb_agency_get_age($ProfileDateBirth) ."</td>\n";
+		echo "        <td class=\"ProfilesProfileDate column-ProfilesProfileDate\">". bb_agency_get_age($ProfileDateBirth) ."</td>\n";
 		echo "        <td class=\"ProfileLocationCity column-ProfileLocationCity\">". $ProfileLocationCity ."</td>\n";
 		echo "        <td class=\"ProfileLocationCity column-ProfileLocationState\">". $ProfileLocationState ."</td>\n";
 		echo "        <td class=\"ProfileDetails column-ProfileDetails\">". $DataTypeTitle ."</td>\n";
 		echo "        <td class=\"ProfileDetails column-ProfileDetails\">". $profileImageCount ."</td>\n";
 		echo "        <td class=\"ProfileStatHits column-ProfileStatHits\">". $ProfileStatHits ."</td>\n";
 		echo "        <td class=\"ProfileDateViewLast column-ProfileDateViewLast\">\n";
-		echo "           ". rb_agency_makeago(rb_agency_convertdatetime($ProfileDateCreated), $rb_agency_option_locationtimezone);
+		echo "           ". bb_agency_makeago(bb_agency_convertdatetime($ProfileDateCreated), $bb_agency_option_locationtimezone);
 		echo "        </td>\n";
 		echo "    </tr>\n";
 		

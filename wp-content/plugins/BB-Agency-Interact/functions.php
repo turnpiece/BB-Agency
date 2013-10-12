@@ -136,9 +136,9 @@
 	// Make Directory for new profile
      function bb_agencyinteract_checkdir($ProfileGallery){
 	      	
-			if (!is_dir(rb_agency_UPLOADPATH . $ProfileGallery)) {
-				mkdir(rb_agency_UPLOADPATH . $ProfileGallery, 0755);
-				chmod(rb_agency_UPLOADPATH . $ProfileGallery, 0777);
+			if (!is_dir(bb_agency_UPLOADPATH . $ProfileGallery)) {
+				mkdir(bb_agency_UPLOADPATH . $ProfileGallery, 0755);
+				chmod(bb_agency_UPLOADPATH . $ProfileGallery, 0777);
 			}
 			return $ProfileGallery;
      }
@@ -236,7 +236,7 @@
 		function gender_filter($gender=0) {
 		    global $wpdb;
 			
-			$gender = "SELECT GenderTitle FROM rb_agency_data_gender WHERE GenderID = ". $gender ." LIMIT 1";
+			$gender = "SELECT GenderTitle FROM bb_agency_data_gender WHERE GenderID = ". $gender ." LIMIT 1";
 			$results = $wpdb->get_results($gender);
 			
 			$gender_title = "";

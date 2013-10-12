@@ -1,12 +1,12 @@
 <?php
 global $wpdb;
-$rb_agency_storedversion = get_option('rb_agency_version');
+$bb_agency_storedversion = get_option('bb_agency_version');
 // *************************************************************************************************** //
 // Set Default Values for Options
 /*
 	$bb_agencyinteract_options_arr = array(
-		"rb_agencyineract_option_registerapproval" => 1,
-		"rb_agencyineract_option_registerallow" => 1
+		"bb_agencyineract_option_registerapproval" => 1,
+		"bb_agencyineract_option_registerallow" => 1
 		);
 		$results = $wpdb->query("CREATE TABLE ". table_agencyinteract_subscription ." (
 			SubscriberID BIGINT(20) NOT NULL AUTO_INCREMENT,

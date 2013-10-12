@@ -4,9 +4,9 @@
 	get_currentuserinfo();
 	$ProfileUserLinked = $current_user->id;
 	// Get Settings
-	$rb_agency_options_arr = get_option('rb_agency_options');
-		$rb_agency_option_unittype  			= $rb_agency_options_arr['rb_agency_option_unittype'];
-		$rb_agency_option_locationtimezone 		= (int)$rb_agency_options_arr['rb_agency_option_locationtimezone'];
+	$bb_agency_options_arr = get_option('bb_agency_options');
+		$bb_agency_option_unittype  			= $bb_agency_options_arr['bb_agency_option_unittype'];
+		$bb_agency_option_locationtimezone 		= (int)$bb_agency_options_arr['bb_agency_option_locationtimezone'];
 	// Get Values
 	$query = "SELECT * FROM " . table_agency_profile . " WHERE ProfileUserLinked='$ProfileUserLinked'";
 	$results = mysql_query($query) or die ( __("Error, query failed", bb_agencyinteract_TEXTDOMAIN ));
@@ -14,12 +14,12 @@
         /*
          * Get profile type and Gender
          */
-        $ptype = (int)get_user_meta($current_user->id, "rb_agency_interact_profiletype", true);
+        $ptype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
 	$ptype = retrieve_title($ptype);
-        $ProfileGender = get_user_meta($current_user->id, "rb_agency_interact_pgender", true);
+        $ProfileGender = get_user_meta($current_user->id, "bb_agency_interact_pgender", true);
         $ProfileTypeArray = array();
         $profileType = ""; 
-        $ptype1 = get_user_meta($current_user->id, "rb_agency_interact_profiletype", true);
+        $ptype1 = get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
         $ProfileTypeArray = explode(",", $ptype1);
         $query3 = "SELECT * FROM " . table_agency_data_type . " ORDER BY DataTypeTitle";
         $results3 = mysql_query($query3);
@@ -56,7 +56,7 @@
 	/*
 	 *   added this new custom field display 
 	 */
-	$rb_agency_option_profilenaming 		= (int)$rb_agency_options_arr['rb_agency_option_profilenaming'];
+	$bb_agency_option_profilenaming 		= (int)$bb_agency_options_arr['bb_agency_option_profilenaming'];
 		
 	$query3 = "SELECT * FROM ". table_agency_customfields ." 
 			   WHERE ProfileCustomView = 0 AND ProfileCustomShowRegistration = 1 ORDER BY ProfileCustomOrder";
@@ -98,13 +98,13 @@
 	       
 			 //  SET Label for Measurements
 			 //  Imperial(in/lb), Metrics(ft/kg)
-			 $rb_agency_options_arr = get_option('rb_agency_options');
-			 $rb_agency_option_unittype  = $rb_agency_options_arr['rb_agency_option_unittype'];
+			 $bb_agency_options_arr = get_option('bb_agency_options');
+			 $bb_agency_option_unittype  = $bb_agency_options_arr['bb_agency_option_unittype'];
 			 $measurements_label = "";
 
 			 if ($ProfileCustomType == 7) { //measurements field type
 
-			            if($rb_agency_option_unittype ==0){ // 0 = Metrics(ft/kg)
+			            if($bb_agency_option_unittype ==0){ // 0 = Metrics(ft/kg)
 						
 								if($data3['ProfileCustomOptions'] == 1){
 									 $measurements_label  ="<em> (cm)</em>";
@@ -113,7 +113,7 @@
 								}elseif($data3['ProfileCustomOptions'] == 3){
 								  $measurements_label  ="<em> (In Inches/Feet)</em>";
 								}
-					    }elseif($rb_agency_option_unittype ==1){ //1 = Imperial(in/lb)
+					    }elseif($bb_agency_option_unittype ==1){ //1 = Imperial(in/lb)
 								if($data3['ProfileCustomOptions'] == 1){
 									 $measurements_label  ="<em> (In Inches)</em>";
 								}elseif($data3['ProfileCustomOptions'] == 2){
@@ -154,26 +154,26 @@
 				if (!empty($ProfileCustomOptions_Min_value) && !empty($ProfileCustomOptions_Max_value)) {
 						
 					   echo "<br /><br /> <label style='width:200px; float:left;' for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">"
-						     . __("Min", rb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+						     . __("Min", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
 					   echo "<input type=\"text\" name=\"ProfileCustomID". $data3['ProfileCustomID'] 
 						     ."\" value=\"". 
 							 retrieve_datavalue($ProfileCustomOptions_Min_value,
 				 								$data3['ProfileCustomID'],$ProfileID,"textbox")
 							  ."\" />\n";
 					   echo "<br /><br /><br /><label style='width:200px; float:left;' for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">"
-						    . __("Max", rb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+						    . __("Max", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
 					   echo "<input type=\"text\" name=\"ProfileCustomID". $data3['ProfileCustomID'] ."\" value=\""
 					        .  retrieve_datavalue($ProfileCustomOptions_Max_value,
 				 								  $data3['ProfileCustomID'],$ProfileID,"textbox") ."\" /><br />\n";
 				
 				} else {
 						echo "<br /><br />  <label style='width:200px; float:left;' for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">"
-						     . __("Min", rb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+						     . __("Min", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
 						echo "<input type=\"text\" name=\"ProfileCustomID". $data3['ProfileCustomID'] ."\" value=\""
 						     .retrieve_datavalue($_REQUEST["ProfileCustomID". $data3['ProfileCustomID']],
 				 									$data3['ProfileCustomID'],$ProfileID,"textbox") ."\" />\n";
 						echo "<br /><br /><br /><label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">"
-						     . __("Max", rb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+						     . __("Max", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
 						echo "<input type=\"text\" name=\"ProfileCustomID". $data3['ProfileCustomID'] ."\" value=\""
 						     .retrieve_datavalue($_REQUEST["ProfileCustomID". $data3['ProfileCustomID']],
 				 									$data3['ProfileCustomID'],$ProfileID,"textbox") ."\" /><br />\n";
@@ -265,7 +265,7 @@
 			}elseif ($ProfileCustomType == 7) { //Imperial/Metrics
 			
 
-			    if($data3['ProfileCustomTitle']=="Height" AND $rb_agency_option_unittype==1){
+			    if($data3['ProfileCustomTitle']=="Height" AND $bb_agency_option_unittype==1){
 			        
 			        echo "<select name=\"ProfileCustomID". $data3['ProfileCustomID'] ."\">\n";
 					echo "<option value=\"\">--</option>\n";
@@ -304,10 +304,10 @@
 		echo " <table class=\"form-table\">\n";
 		echo "	<tbody>\n";
 		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\"><span style=\"width:185px;float:left;\">". __("Last updated ", bb_agencyinteract_TEXTDOMAIN) ." ". rb_agency_makeago(rb_agency_convertdatetime($ProfileDateUpdated), $rb_agency_option_locationtimezone) ."</span></th>\n";
+		echo "		<td scope=\"row\"><span style=\"width:185px;float:left;\">". __("Last updated ", bb_agencyinteract_TEXTDOMAIN) ." ". bb_agency_makeago(bb_agency_convertdatetime($ProfileDateUpdated), $bb_agency_option_locationtimezone) ."</span></th>\n";
 		echo "		<td>\n";
 		echo "			<input type=\"hidden\" name=\"action\" value=\"editRecord\" />\n";
-		echo "			<input type=\"submit\" name=\"submit\" value=\"". __("Save and Continue", rb_restaurant_TEXTDOMAIN) ."\" class=\"button-primary\" />\n";
+		echo "			<input type=\"submit\" name=\"submit\" value=\"". __("Save and Continue", bb_restaurant_TEXTDOMAIN) ."\" class=\"button-primary\" />\n";
 		echo "		</td>\n";
 		echo "	  </tr>\n";
 		echo "	</tbody>\n";

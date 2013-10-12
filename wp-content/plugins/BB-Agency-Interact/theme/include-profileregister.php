@@ -1,20 +1,20 @@
 <?php
     // profile type
-    $ptype = (int)get_user_meta($current_user->id, "rb_agency_interact_profiletype", true);
+    $ptype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
     $ptype = retrieve_title($ptype);
-    $ProfileGender = get_user_meta($current_user->id, "rb_agency_interact_pgender", true);
+    $ProfileGender = get_user_meta($current_user->id, "bb_agency_interact_pgender", true);
     echo '<input name="ProfileGender" type="hidden" value="'.$ProfileGender.'">'; 
 
     echo "<form method=\"post\" enctype=\"multipart/form-data\" action=\"". get_bloginfo("wpurl") ."/profile-member/account/\" style=\"width: 400px;\">\n";
 	echo "<input type=\"hidden\" id=\"ProfileContactEmail\" name=\"ProfileContactEmail\" value=\"". $current_user->user_email ."\" />\n";
 	echo "<input type=\"hidden\" id=\"ProfileUserLinked\" name=\"ProfileUserLinked\" value=\"". $current_user->id ."\" />\n";
     echo "<input type=\"hidden\" id=\"ProfileGender\" name=\"ProfileGender\" value=\"".$ProfileGender ."\" />\n";
-	echo "<input type=\"hidden\" id=\"ProfileType\" name=\"ProfileType\" value=\"".get_user_meta($current_user->id, "rb_agency_interact_profiletype", true) ."\" />\n";
+	echo "<input type=\"hidden\" id=\"ProfileType\" name=\"ProfileType\" value=\"".get_user_meta($current_user->id, "bb_agency_interact_profiletype", true) ."\" />\n";
 
 	echo " <table class=\"form-table\">\n";
 	echo "  <tbody>\n";
 	echo "    <tr>\n";
-	echo "		<td scope=\"row\" colspan=\"2\"><h3>". __("Contact Information", rb_agency_TEXTDOMAIN) ."</h3></th>\n";
+	echo "		<td scope=\"row\" colspan=\"2\"><h3>". __("Contact Information", bb_agency_TEXTDOMAIN) ."</h3></th>\n";
 	echo "	  </tr>\n";
 	echo "    <tr valign=\"top\">\n";
 	echo "		<td scope=\"row\">". __("First Name", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
@@ -187,7 +187,7 @@
 	echo "</table>\n";
 	echo "<p class=\"submit\">\n";
 	echo "     <input type=\"hidden\" name=\"action\" value=\"addRecord\" />\n";
-	echo "     <input type=\"submit\" name=\"submit\" value=\"". __("Save and Continue", rb_restaurant_TEXTDOMAIN) ."\" class=\"button-primary\" />\n";
+	echo "     <input type=\"submit\" name=\"submit\" value=\"". __("Save and Continue", bb_restaurant_TEXTDOMAIN) ."\" class=\"button-primary\" />\n";
 	echo "</p>\n";
 	echo "</form>\n";
 ?>

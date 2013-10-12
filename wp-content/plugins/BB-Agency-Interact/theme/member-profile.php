@@ -15,7 +15,7 @@ global $current_user;
 get_currentuserinfo();
 
 // Were they users or agents?
-$profiletype = (int)get_user_meta($current_user->id, "rb_agency_interact_profiletype", true);
+$profiletype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
 
 if ($profiletype == 1) { $profiletypetext = __("Agent/Producer", bb_agencyinteract_TEXTDOMAIN); } else { $profiletypetext = __("Model/Talent", bb_agencyinteract_TEXTDOMAIN); }
 
@@ -115,7 +115,7 @@ if (is_user_logged_in()) {
 			 * Set Media to not show to
 			 * client/s, agents, producers,
 			 */
-			$ptype = (int)get_user_meta($current_user->id, "rb_agency_interact_profiletype", true);
+			$ptype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
 	                $ptype = retrieve_title($ptype);
 			$restrict = array('client','clients','agents','agent','producer','producers');
 			if(in_array(strtolower($ptype),$restrict)){

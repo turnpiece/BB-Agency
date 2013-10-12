@@ -6,11 +6,11 @@
 			$ProfileCustomValue = $fProfileCustomValue["ProfileCustomValue"];
 			 // SET Label for Measurements
 			 // Imperial(in/lb), Metrics(ft/kg)
-			$rb_agency_options_arr = get_option('rb_agency_options');
-			  $rb_agency_option_unittype  = $rb_agency_options_arr['rb_agency_option_unittype'];
+			$bb_agency_options_arr = get_option('bb_agency_options');
+			  $bb_agency_option_unittype  = $bb_agency_options_arr['bb_agency_option_unittype'];
 			  $measurements_label = "";
 			 if ($ProfileCustomType == 7) { //measurements field type
-			           if($rb_agency_option_unittype ==0){ // 0 = Metrics(ft/kg)
+			           if($bb_agency_option_unittype ==0){ // 0 = Metrics(ft/kg)
 						if($data1['ProfileCustomOptions'] == 1){
 						     $measurements_label  ="<em>(cm)</em>";
 						}elseif($data1['ProfileCustomOptions'] == 2){
@@ -18,7 +18,7 @@
 						}elseif($data1['ProfileCustomOptions'] == 3){
 						  $measurements_label  ="<em>(In Inches/Feet)</em>";
 						}
-					}elseif($rb_agency_option_unittype ==1){ //1 = Imperial(in/lb)
+					}elseif($bb_agency_option_unittype ==1){ //1 = Imperial(in/lb)
 						if($data1['ProfileCustomOptions'] == 1){
 						     $measurements_label  ="<em>(In Inches)</em>";
 						}elseif($data1['ProfileCustomOptions'] == 2){
@@ -31,7 +31,7 @@
 			if ($ProfileCustomType == 1) { //TEXT
 			 echo "    <tr valign=\"top\">\n";
 			 echo "		<td scope=\"row\">";
-			 echo "				        <label for=\"ProfileCustomID". $data1['ProfileCustomID'] ."\">".__($data1['ProfileCustomTitle'].$measurements_label, rb_agency_TEXTDOMAIN)."</label>\n";
+			 echo "				        <label for=\"ProfileCustomID". $data1['ProfileCustomID'] ."\">".__($data1['ProfileCustomTitle'].$measurements_label, bb_agency_TEXTDOMAIN)."</label>\n";
 				echo "		</td>\n";
 				echo "	<td>";
 
@@ -41,7 +41,7 @@
 			} elseif ($ProfileCustomType == 2) { // Min Max
 			 echo "    <tr valign=\"top\">\n";
 			 echo "		<td scope=\"row\">";
-			 echo "				        <label for=\"ProfileCustomID". $data1['ProfileCustomID'] ."\">".__($data1['ProfileCustomTitle'].$measurements_label, rb_agency_TEXTDOMAIN)."</label>\n";
+			 echo "				        <label for=\"ProfileCustomID". $data1['ProfileCustomID'] ."\">".__($data1['ProfileCustomTitle'].$measurements_label, bb_agency_TEXTDOMAIN)."</label>\n";
 			 echo "		</td>\n";
 			 echo "	<td>";
 
@@ -49,15 +49,15 @@
 				list($ProfileCustomOptions_Min_label,$ProfileCustomOptions_Min_value,$ProfileCustomOptions_Max_label,$ProfileCustomOptions_Max_value) = explode(":",$ProfileCustomOptions_String);
 
 				if(!empty($ProfileCustomOptions_Min_value) && !empty($ProfileCustomOptions_Max_value)){
-					    echo "<br /><br /> <label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Min", rb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+					    echo "<br /><br /> <label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Min", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
 						echo "<input type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\" value=\"". $ProfileCustomOptions_Min_value ."\" />\n";
-						echo "<br /><br /><br /><label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Max", rb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+						echo "<br /><br /><br /><label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Max", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
 						echo "<input type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\" value=\"". $ProfileCustomOptions_Max_value ."\" /><br />\n";
 					
 				}else{
-					    echo "<br /><br />  <label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Min", rb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+					    echo "<br /><br />  <label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Min", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
 						echo "<input type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\" value=\"".$_SESSION["ProfileCustomID". $data1['ProfileCustomID']]."\" />\n";
-					    echo "<br /><br /><br /><label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Max", rb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+					    echo "<br /><br /><br /><label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Max", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
 						echo "<input type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\" value=\"".$_SESSION["ProfileCustomID". $data1['ProfileCustomID']]."\" /><br />\n";
 
 				}
@@ -66,7 +66,7 @@
 			} elseif ($ProfileCustomType == 3) {
 			 echo "    <tr valign=\"top\">\n";
 			 echo "		<td scope=\"row\">";
-			 echo "				        <label for=\"ProfileCustomID". $data1['ProfileCustomID'] ."\">".__($data1['ProfileCustomTitle'].$measurements_label, rb_agency_TEXTDOMAIN)."</label>\n";
+			 echo "				        <label for=\"ProfileCustomID". $data1['ProfileCustomID'] ."\">".__($data1['ProfileCustomTitle'].$measurements_label, bb_agency_TEXTDOMAIN)."</label>\n";
 			 echo "		</td>\n";
 			 echo "	<td>";
 
@@ -117,7 +117,7 @@
 				if(is_admin()){
 					echo "    <tr valign=\"top\">\n";
 					 echo "		<td scope=\"row\">";
-					 echo "				        <label for=\"ProfileCustomID". $data1['ProfileCustomID'] ."\">".__($data1['ProfileCustomTitle'].$measurements_label, rb_agency_TEXTDOMAIN)."</label>\n";
+					 echo "				        <label for=\"ProfileCustomID". $data1['ProfileCustomID'] ."\">".__($data1['ProfileCustomTitle'].$measurements_label, bb_agency_TEXTDOMAIN)."</label>\n";
 					 echo "		</td>\n";
 					 echo "	<td>";
 
@@ -130,7 +130,7 @@
 			  {
 				  echo "    <tr valign=\"top\">\n";
 				 echo "		<td scope=\"row\">";
-				 echo "				        <label for=\"ProfileCustomID". $data1['ProfileCustomID'] ."\">".__($data1['ProfileCustomTitle'].$measurements_label, rb_agency_TEXTDOMAIN)."</label>\n";
+				 echo "				        <label for=\"ProfileCustomID". $data1['ProfileCustomID'] ."\">".__($data1['ProfileCustomTitle'].$measurements_label, bb_agency_TEXTDOMAIN)."</label>\n";
 				 echo "		</td>\n";
 				 echo "	<td>";
 
@@ -154,7 +154,7 @@
 			elseif ($ProfileCustomType == 6) {
 					 echo "    <tr valign=\"top\">\n";
 					 echo "		<td scope=\"row\">";
-					 echo "				        <label for=\"ProfileCustomID". $data1['ProfileCustomID'] ."\">".__($data1['ProfileCustomTitle'].$measurements_label, rb_agency_TEXTDOMAIN)."</label>\n";
+					 echo "				        <label for=\"ProfileCustomID". $data1['ProfileCustomID'] ."\">".__($data1['ProfileCustomTitle'].$measurements_label, bb_agency_TEXTDOMAIN)."</label>\n";
 					 echo "		</td>\n";
 					 echo "	<td>";
 
@@ -179,7 +179,7 @@
 			
 			elseif ($ProfileCustomType == 7) { // Imperial(in/lb), Metrics(ft/kg)
 				/*   if($data1['ProfileCustomOptions']==1){
-							    if($rb_agency_option_unittype == 1){
+							    if($bb_agency_option_unittype == 1){
 									echo "<select name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\">\n";
 										if (empty($ProfileCustomValue)) {
 									echo " 				<option value=\"\">--</option>\n";
@@ -204,7 +204,7 @@
 */
 					   echo "    <tr valign=\"top\">\n";
 						 echo "		<td scope=\"row\">";
-						 echo "				        <label for=\"ProfileCustomID". $data1['ProfileCustomID'] ."\">".__($data1['ProfileCustomTitle'].$measurements_label, rb_agency_TEXTDOMAIN)."</label>\n";
+						 echo "				        <label for=\"ProfileCustomID". $data1['ProfileCustomID'] ."\">".__($data1['ProfileCustomTitle'].$measurements_label, bb_agency_TEXTDOMAIN)."</label>\n";
 						 echo "		</td>\n";
 						 echo "	<td>";
 
