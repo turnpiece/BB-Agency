@@ -134,19 +134,19 @@
 											}
 	      echo "				        </select>\n";
 		echo "				    </div>\n";
-		
+*/		
 		echo "				    <fieldset class=\"search-field multi\">";
-		echo "				        <legend>". __("Age", bb_agency_TEXTDOMAIN) . "</legend>";
+		echo "				        <legend>". __("Date of birth", bb_agency_TEXTDOMAIN) . "</legend>";
 		
 		echo "				    <div>";
-		echo "				        <label for=\"ProfileDateBirth_min\">". __("Min", bb_agency_TEXTDOMAIN) . "</label>";
-		echo "				        	<input type=\"text\" class=\"stubby\" id=\"ProfileDateBirth_min\" name=\"ProfileDateBirth_min\" value=\"". $_SESSION['ProfileDateBirth_min'] ."\" /></div>";
-		echo "				        <div><label for=\"ProfileDateBirth_max\">". __("Max", bb_agency_TEXTDOMAIN) . "</label>\n";
-		echo "				        	<input type=\"text\" class=\"stubby\" id=\"ProfileDateBirth_max\" name=\"ProfileDateBirth_max\" value=\"". $_SESSION['ProfileDateBirth_max'] ."\" /></div>";
+		echo "				        <label for=\"ProfileDateBirth_min\">". __("From", bb_agency_TEXTDOMAIN) . "</label>";
+		echo "				        	<input type=\"text\" class=\"stubby bbdatepicker\" id=\"ProfileDateBirth_min\" name=\"ProfileDateBirth_min\" value=\"". $_SESSION['ProfileDateBirth_min'] ."\" /></div>";
+		echo "				        <div><label for=\"ProfileDateBirth_max\">". __("To", bb_agency_TEXTDOMAIN) . "</label>\n";
+		echo "				        	<input type=\"text\" class=\"stubby bbdatepicker\" id=\"ProfileDateBirth_max\" name=\"ProfileDateBirth_max\" value=\"". $_SESSION['ProfileDateBirth_max'] ."\" /></div>";
 		echo "				    </fieldset>";
-*/
+
 		echo "				    <fieldset class=\"search-field multi\">";
-		echo "				        <legend>". __("Due date / date of birth", bb_agency_TEXTDOMAIN) . "</legend>";
+		echo "				        <legend>". __("Due date", bb_agency_TEXTDOMAIN) . "</legend>";
 		
 		echo "				    <div>";
 		echo "				        <label for=\"ProfileDateDue_min\">". __("From", bb_agency_TEXTDOMAIN) . "</label>";

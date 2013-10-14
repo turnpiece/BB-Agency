@@ -1035,7 +1035,7 @@ error_reporting(0);
                                             if($filter2==""){
                                                 $filter2  .= " AND (( customfield_mux.ProfileCustomValue >= '".$val."' AND customfield_mux.ProfileCustomID = '".$id."' )";
                                             } else {
-                                                $filter2  .= " OR (customfield_mux.ProfileCustomValue >= '".$val."' AND customfield_mux.ProfileCustomID = '".$id."') ";
+                                                $filter2  .= " AND (customfield_mux.ProfileCustomValue >= '".$val."' AND customfield_mux.ProfileCustomID = '".$id."') ";
 
                                             }
                                     	}
@@ -1045,7 +1045,7 @@ error_reporting(0);
                                             if($filter2==""){
                                                 $filter2  .= " AND (( customfield_mux.ProfileCustomValue <= '".$val."' AND customfield_mux.ProfileCustomID = '".$id."' )";
                                             } else {
-                                                $filter2  .= " OR (customfield_mux.ProfileCustomValue <= '".$val."' AND customfield_mux.ProfileCustomID = '".$id."') ";
+                                                $filter2  .= " AND (customfield_mux.ProfileCustomValue <= '".$val."' AND customfield_mux.ProfileCustomID = '".$id."') ";
 
                                             }
                                     	}
@@ -1139,18 +1139,10 @@ error_reporting(0);
 
 		// Due date
 		if (isset($ProfileDateDue_min) && !empty($ProfileDateDue_min)){
-			// if the date given is in the past assume it's a date of birth
-			if (bb_agency_datepassed($ProfileDateDue_min))
-				$filter .= " AND profile.ProfileDateDue >= '$ProfileDateDue_min'";
-			else
-				$filter .= " AND profile.ProfileDateBirth >= '$ProfileDateDue_min'";
+			$filter .= " AND profile.ProfileDateDue >= '$ProfileDateDue_min'";
 		}
 		if (isset($ProfileDateDue_max) && !empty($ProfileDateDue_max)){
-			// if the date given is in the past assume it's a date of birth
-			if (bb_agency_datepassed($ProfileDateDue_max))
-				$filter .= " AND profile.ProfileDateDue <= '$ProfileDateDue_max'";
-			else
-				$filter .= " AND profile.ProfileDateBirth <= '$ProfileDateDue_max'";
+			$filter .= " AND profile.ProfileDateDue <= '$ProfileDateDue_max'";
 		}
 
 		if (isset($ProfileIsFeatured)){
@@ -1388,7 +1380,7 @@ error_reporting(0);
 			$bb_user_isLogged = is_user_logged_in();
 
 			#DEBUG!
-			//echo $queryList;
+			echo $queryList;
 
 			if($countList > 0){
 				
