@@ -140,6 +140,7 @@ if (is_user_logged_in()) {
 			$count = mysql_num_rows($results);
 			if ($count > 0) {
 			  	$data = mysql_fetch_array($results);
+			  	?><pre><?php print_r($data) ?></pre><?php
 				// Manage Profile
 				include("include-profilemanage.php"); 	
 			} else {

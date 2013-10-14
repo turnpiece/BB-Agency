@@ -47,7 +47,7 @@
 	echo "	  </tr>\n";
 	echo "    <tr valign=\"top\">\n";
 	echo "    <tr valign=\"top\">\n";
-	echo "		<td scope=\"row\">". __("Birthdate", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+	echo "		<td scope=\"row\">". __("Birth date", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 	echo "		<td>\n";
 				  /* Month */ 
 				  $monthName = array(1=> "January", "February", "March","April", "May", "June", "July", "August","September", "October", "November", "December"); 
@@ -72,6 +72,32 @@
 	echo "		  </select>\n";
 	echo "		</td>\n";
 	echo "	  </tr>\n";
+	echo "    <tr valign=\"top\">\n";
+	echo "		<td scope=\"row\">". __("Due date", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+	echo "		<td>\n";
+				  /* Month */ 
+				  $monthName = array(1=> "January", "February", "March","April", "May", "June", "July", "August","September", "October", "November", "December"); 
+	echo "		  <select name=\"ProfileDateDue_Month\" id=\"ProfileDateDue_Month\">\n";
+					for ($currentMonth = 1; $currentMonth <= 12; $currentMonth++ ) { 	
+	echo "			<option value=\"". $currentMonth ."\">". $monthName[$currentMonth] ."</option>\n";
+					}
+	echo "		  </select>\n";
+
+				  /* Day */ 
+	echo "		  <select name=\"ProfileDateDue_Day\" id=\"ProfileDateDue_Day\">\n";
+					for ($currentDay = 1; $currentDay <= 31; $currentDay++ ) { 	
+	echo "			<option value=\"". $currentDay ."\">". $currentDay ."</option>\n";
+					}
+	echo "		  </select>\n";
+
+				  /* Year */ 
+	echo "		  <select name=\"ProfileDateDue_Year\" id=\"ProfileDateDue_Year\">\n";
+					for ($currentYear = 2013; $currentYear <= 2015; $currentYear++ ) { 	
+	echo "			<option value=\"". $currentYear ."\">". $currentYear ."</option>\n";
+					}
+	echo "		  </select>\n";
+	echo "		</td>\n";
+	echo "	  </tr>\n";
 	// Private Information
 	echo "    <tr valign=\"top\">\n";
 	echo "		<td scope=\"row\" colspan=\"2\"><h3>". __("Private Information", bb_agencyinteract_TEXTDOMAIN) ."</h3>". __("The following information will NOT appear in public areas and is for administrative use only.", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
@@ -84,19 +110,19 @@
 	echo "		</td>\n";
 	echo "	  </tr>\n";
 	echo "    <tr valign=\"top\">\n";
-	echo "		<td scope=\"row\">". __("City", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+	echo "		<td scope=\"row\">". __("Town", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 	echo "		<td>\n";
 	echo "			<input type=\"text\" id=\"ProfileLocationCity\" name=\"ProfileLocationCity\" />\n";
 	echo "		</td>\n";
 	echo "	  </tr>\n";
 	echo "    <tr valign=\"top\">\n";
-	echo "		<td scope=\"row\">". __("State", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+	echo "		<td scope=\"row\">". __("County", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 	echo "		<td>\n";
 	echo "			<input type=\"text\" id=\"ProfileLocationState\" name=\"ProfileLocationState\" />\n";
 	echo "		</td>\n";
 	echo "	  </tr>\n";
 	echo "    <tr valign=\"top\">\n";
-	echo "		<td scope=\"row\">". __("Zip", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+	echo "		<td scope=\"row\">". __("Post code", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 	echo "		<td>\n";
 	echo "			<input type=\"text\" id=\"ProfileLocationZip\" name=\"ProfileLocationZip\" />\n";
 	echo "		</td>\n";

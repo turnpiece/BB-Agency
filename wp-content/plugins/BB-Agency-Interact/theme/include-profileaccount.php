@@ -41,6 +41,7 @@
 		$ProfileContactPhoneWork	=stripslashes($data['ProfileContactPhoneWork']);
 
 		$ProfileDateBirth	    	=stripslashes($data['ProfileDateBirth']);
+		$ProfileDateDue	    		=stripslashes($data['ProfileDateDue']);
 		$ProfileLocationStreet		=stripslashes($data['ProfileLocationStreet']);
 		$ProfileLocationCity		=stripslashes($data['ProfileLocationCity']);
 		$ProfileLocationState		=stripslashes($data['ProfileLocationState']);
@@ -107,9 +108,15 @@
 		echo "		</td>\n";
 		echo "	  </tr>\n";
 		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\">". __("Birthdate", bb_agencyinteract_TEXTDOMAIN) ." <em>YYYY-MM-DD</em></th>\n";
+		echo "		<td scope=\"row\">". __("Birth date", bb_agencyinteract_TEXTDOMAIN) ." <em>YYYY-MM-DD</em></th>\n";
 		echo "		<td>\n";
-		echo "			<input class="bbdatepicker" type=\"text\" id=\"ProfileDateBirth\" name=\"ProfileDateBirth\" value=\"". $ProfileDateBirth ."\" />\n";
+		echo "			<input class=\"bbdatepicker\" type=\"text\" id=\"ProfileDateBirth\" name=\"ProfileDateBirth\" value=\"". $ProfileDateBirth ."\" />\n";
+		echo "		</td>\n";
+		echo "	  </tr>\n";
+		echo "    <tr valign=\"top\">\n";
+		echo "		<td scope=\"row\">". __("Due date", bb_agencyinteract_TEXTDOMAIN) ." <em>YYYY-MM-DD</em></th>\n";
+		echo "		<td>\n";
+		echo "			<input class=\"bbdatepicker\" type=\"text\" id=\"ProfileDateDue\" name=\"ProfileDateDue\" value=\"". $ProfileDateDue ."\" />\n";
 		echo "		</td>\n";
 		echo "	  </tr>\n";
 		// Address
@@ -120,19 +127,19 @@
 		echo "		</td>\n";
 		echo "	  </tr>\n";
 		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\">". __("City", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+		echo "		<td scope=\"row\">". __("Town", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 		echo "		<td>\n";
 		echo "			<input type=\"text\" id=\"ProfileLocationCity\" name=\"ProfileLocationCity\" value=\"". $ProfileLocationCity ."\" />\n";
 		echo "		</td>\n";
 		echo "	  </tr>\n";
 		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\">". __("State", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+		echo "		<td scope=\"row\">". __("County", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 		echo "		<td>\n";
 		echo "			<input type=\"text\" id=\"ProfileLocationState\" name=\"ProfileLocationState\" value=\"". $ProfileLocationState ."\" />\n";
 		echo "		</td>\n";
 		echo "	  </tr>\n";
 		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\">". __("Zip", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+		echo "		<td scope=\"row\">". __("Post code", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 		echo "		<td>\n";
 		echo "			<input type=\"text\" id=\"ProfileLocationZip\" name=\"ProfileLocationZip\" value=\"". $ProfileLocationZip ."\" />\n";
 		echo "		</td>\n";
@@ -166,27 +173,27 @@
 				$count1 = mysql_num_rows($results1);
 				$pos = 0;
 			while ($data1 = mysql_fetch_array($results1)) { 
-                               /*
-                                * Get Profile Types to
-                                * filter models from clients
-                                */
-                                $permit_type = false;
+               /*
+                * Get Profile Types to
+                * filter models from clients
+                */
+                $permit_type = false;
 
-                                $PID = $data1['ProfileCustomID'];
+                $PID = $data1['ProfileCustomID'];
 
-                                $get_types = "SELECT ProfileCustomTypes FROM ". table_agency_customfields_types .
-                                            " WHERE ProfileCustomID = " . $PID;
+                $get_types = "SELECT ProfileCustomTypes FROM ". table_agency_customfields_types .
+                            " WHERE ProfileCustomID = " . $PID;
 
-                                $result = mysql_query($get_types);
-                                $types = "";
-                                while ( $p = mysql_fetch_array($result)){
-                                        $types = $p['ProfileCustomTypes'];			    
-                                }
+                $result = mysql_query($get_types);
+                $types = "";
+                while ( $p = mysql_fetch_array($result)){
+                        $types = $p['ProfileCustomTypes'];			    
+                }
 
-                                if($types != "" || $types != NULL){
-                                    $types = explode(",",$types); 
-                                    if(in_array($ptype,$types)){ $permit_type=true; } 
-                                } 
+                if($types != "" || $types != NULL){
+                    $types = explode(",",$types); 
+                    if(in_array($ptype,$types)){ $permit_type=true; } 
+                } 
                                 
 				if ( ($data1["ProfileCustomShowGender"] == $ProfileGender) || ($data1["ProfileCustomShowGender"] == 0) 
                                       && $permit_type == true )  {
@@ -255,7 +262,7 @@
 		echo "		<td scope=\"row\">". __("Last updated ", bb_agencyinteract_TEXTDOMAIN) ." ". bb_agency_makeago(bb_agency_convertdatetime($ProfileDateUpdated), $bb_agency_option_locationtimezone) ."</th>\n";
 		echo "		<td>\n";
 		echo "			<input type=\"hidden\" name=\"action\" value=\"editRecord\" />\n";
-		echo "			<input type=\"submit\" name=\"submit\" value=\"". __("Save and Continue", bb_restaurant_TEXTDOMAIN) ."\" class=\"button-primary\" />\n";
+		echo "			<input type=\"submit\" name=\"submit\" value=\"". __("Save and Continue", bb_agencyinteract_TEXTDOMAIN) ."\" class=\"button-primary\" />\n";
 		echo "		</td>\n";
 		echo "	  </tr>\n";
 		echo "	</tbody>\n";

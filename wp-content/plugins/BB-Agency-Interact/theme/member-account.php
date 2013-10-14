@@ -75,6 +75,7 @@ if (isset($_POST['action'])) {
 	$ProfileGender    		=$_POST['ProfileGender'];
 	$ProfileType    		=$_POST['ProfileType'];
 	$ProfileDateBirth	    		=$_POST['ProfileDateBirth'];
+	$ProfileDateDue	    		=$_POST['ProfileDateDue'];
 	$ProfileLocationStreet		=$_POST['ProfileLocationStreet'];
 	$ProfileLocationCity		=bb_agency_strtoproper($_POST['ProfileLocationCity']);
 	$ProfileLocationState		=strtoupper($_POST['ProfileLocationState']);
@@ -116,17 +117,18 @@ if (isset($_POST['action'])) {
 	// Add Record
 	case 'addRecord':
 		if(!$have_error){
-			$ProfileIsActive		= 3;
+			$ProfileIsActive	= 3;
 			$ProfileIsFeatured	= 0;
 			$ProfileIsPromoted	= 0;
-			$ProfileStatHits		= 0;
-			$ProfileDateBirth	    	= $_POST['ProfileDateBirth_Year'] ."-". $_POST['ProfileDateBirth_Month'] ."-". $_POST['ProfileDateBirth_Day'];
-			$ProfileGallery 		= bb_agencyinteract_checkdir($ProfileGallery); // Check directory existence , create if does not exist.
+			$ProfileStatHits	= 0;
+			$ProfileDateBirth	= $_POST['ProfileDateBirth_Year'] ."-". $_POST['ProfileDateBirth_Month'] ."-". $_POST['ProfileDateBirth_Day'];
+			$ProfileDateDue	    = $_POST['ProfileDateDue_Year'] ."-". $_POST['ProfileDateDue_Month'] ."-". $_POST['ProfileDateDue_Day'];
+			$ProfileGallery 	= bb_agencyinteract_checkdir($ProfileGallery); // Check directory existence , create if does not exist.
 
 			// Create Record
 			$insert = "INSERT INTO " . table_agency_profile .
 			" (ProfileUserLinked,ProfileGallery,ProfileContactDisplay,ProfileContactNameFirst,ProfileContactNameLast,
-			   ProfileContactEmail,ProfileContactWebsite,ProfileGender,ProfileType, ProfileDateBirth,
+			   ProfileContactEmail,ProfileContactWebsite,ProfileGender,ProfileType,ProfileDateBirth,ProfileDateDue,
 			   ProfileContactLinkFacebook,ProfileContactLinkTwitter,ProfileContactLinkYouTube,ProfileContactLinkFlickr,
 			   ProfileLocationStreet,ProfileLocationCity,ProfileLocationState,ProfileLocationZip,ProfileLocationCountry,
 			   ProfileContactPhoneHome, ProfileContactPhoneCell, ProfileContactPhoneWork,
@@ -139,8 +141,9 @@ if (isset($_POST['action'])) {
 					 "','" . $wpdb->escape($ProfileContactEmail) . "','" . 
 					 $wpdb->escape($ProfileContactWebsite) . "','" . 
 					 $wpdb->escape($ProfileGender) .  "','" .
-                                         $wpdb->escape($ProfileType) .  "','" .
-                                         $wpdb->escape($ProfileDateBirth) . "','" . 
+                     $wpdb->escape($ProfileType) .  "','" .
+                     $wpdb->escape($ProfileDateBirth) . "','" . 
+                     $wpdb->escape($ProfileDateDue) . "','" . 
 					 $wpdb->escape($ProfileContactLinkFacebook) . "','" . 
 					 $wpdb->escape($ProfileContactLinkTwitter) . "','" . 
 					 $wpdb->escape($ProfileContactLinkYouTube) . "','" . 
@@ -263,6 +266,7 @@ if (isset($_POST['action'])) {
 			ProfileContactPhoneWork='" . $wpdb->escape($ProfileContactPhoneWork) . "',
 			ProfileGender='" . $wpdb->escape($ProfileGender) . "',
 			ProfileDateBirth ='" . $wpdb->escape($ProfileDateBirth) . "',
+			ProfileDateDue ='" . $wpdb->escape($ProfileDateDue) . "',
 			ProfileLocationStreet='" . $wpdb->escape($ProfileLocationStreet) . "',
 			ProfileLocationCity='" . $wpdb->escape($ProfileLocationCity) . "',
 			ProfileLocationState='" . $wpdb->escape($ProfileLocationState) . "',
@@ -355,7 +359,7 @@ if (is_user_logged_in()) {
 			$bb_agency_new_registeredUser = get_user_meta($current_user->id,'bb_agency_new_registeredUser');
 			
 			// Menu
-			include("include-menu.php"); 	
+			include(dirname(__FILE__)."/include-menu.php"); 	
 			echo " <div class=\"manage-account manage-content\">\n";
 			// Show Errors & Alerts
 			echo $alerts;
@@ -366,11 +370,8 @@ if (is_user_logged_in()) {
 			$count = mysql_num_rows($results);
 			if ($count > 0) {
 			  	while ($data = mysql_fetch_array($results)) {
-			
 					// Manage Profile
-					include("include-profileaccount.php"); 	
-						
-						
+					include(dirname(__FILE__)."/include-profileaccount.php");								
 			  	} // is there record?
 			} else {
 			  if ($bb_agencyinteract_option_registerallow  == 1) {
@@ -380,7 +381,7 @@ if (is_user_logged_in()) {
 				echo "<p>". __("Records show you are not currently linked to a model or agency profile.  Lets setup your profile now!", bb_agencyinteract_TEXTDOMAIN) ."</p>";
 				
 				// Register Profile
-				include("include-profileregister.php"); 	
+				include(dirname(__FILE__)."/include-profileregister.php"); 	
 				
 				
 			  } else {
@@ -396,7 +397,7 @@ if (is_user_logged_in()) {
 					_e('You must be logged in to edit your profile.', 'frontendprofile');
 			echo "</p><!-- .warning -->\n";
 			// Show Login Form
-			include("include-login.php"); 	
+			include(dirname(__FILE__)."/include-login.php"); 	
 		}
 		
 	echo "  </div><!-- #content -->\n";

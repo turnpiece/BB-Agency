@@ -423,6 +423,7 @@ function bb_display_list() {
 		echo "        <td class=\"ProfileContactNameLast column-ProfileContactNameLast\">". $ProfileContactNameLast ."</td>\n";
 		echo "        <td class=\"ProfileGender column-ProfileGender\">". $ProfileGender ."</td>\n";
 		echo "        <td class=\"ProfilesProfileDate column-ProfilesProfileDate\">". bb_agency_get_age($ProfileDateBirth) ."</td>\n";
+		echo "        <td class=\"ProfilesProfileDate column-ProfilesProfileDate\">". $ProfileDateDue ."</td>\n";
 		echo "        <td class=\"ProfileLocationCity column-ProfileLocationCity\">". $ProfileLocationCity ."</td>\n";
 		echo "        <td class=\"ProfileLocationCity column-ProfileLocationState\">". $ProfileLocationState ."</td>\n";
 		echo "        <td class=\"ProfileDetails column-ProfileDetails\">". $DataTypeTitle ."</td>\n";

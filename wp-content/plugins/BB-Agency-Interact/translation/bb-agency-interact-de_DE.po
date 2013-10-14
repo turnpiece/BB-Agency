@@ -420,19 +420,19 @@ msgstr ""
 #: C:\Dropbox\Users\Rob\Scripts\RB
 #: Plugin\bb-agency-interact/theme/include-profileaccount.php:114
 #: Plugin\bb-agency-interact/theme/include-profileregister.php:85
-msgid "City"
+msgid "Town"
 msgstr ""
 
 #: C:\Dropbox\Users\Rob\Scripts\RB
 #: Plugin\bb-agency-interact/theme/include-profileaccount.php:120
 #: Plugin\bb-agency-interact/theme/include-profileregister.php:91
-msgid "State"
+msgid "County"
 msgstr ""
 
 #: C:\Dropbox\Users\Rob\Scripts\RB
 #: Plugin\bb-agency-interact/theme/include-profileaccount.php:126
 #: Plugin\bb-agency-interact/theme/include-profileregister.php:97
-msgid "Zip"
+msgid "Post code"
 msgstr ""
 
 #: C:\Dropbox\Users\Rob\Scripts\RB

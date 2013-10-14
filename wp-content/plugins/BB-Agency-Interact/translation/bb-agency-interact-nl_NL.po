@@ -362,17 +362,17 @@ msgstr "Straat"
 
 #: D:\wamp\www\ClearlyM\agency1.rgbplugin.com\wp-content\plugins\bb-agency-interact/theme/include-profileaccount.php:114
 #: D:\wamp\www\ClearlyM\agency1.rgbplugin.com\wp-content\plugins\bb-agency-interact/theme/include-profileregister.php:85
-msgid "City"
+msgid "Town"
 msgstr "Plaats"
 
 #: D:\wamp\www\ClearlyM\agency1.rgbplugin.com\wp-content\plugins\bb-agency-interact/theme/include-profileaccount.php:120
 #: D:\wamp\www\ClearlyM\agency1.rgbplugin.com\wp-content\plugins\bb-agency-interact/theme/include-profileregister.php:91
-msgid "State"
+msgid "County"
 msgstr "Provincie"
 
 #: D:\wamp\www\ClearlyM\agency1.rgbplugin.com\wp-content\plugins\bb-agency-interact/theme/include-profileaccount.php:126
 #: D:\wamp\www\ClearlyM\agency1.rgbplugin.com\wp-content\plugins\bb-agency-interact/theme/include-profileregister.php:97
-msgid "Zip"
+msgid "Post code"
 msgstr "Postcode"
 
 #: D:\wamp\www\ClearlyM\agency1.rgbplugin.com\wp-content\plugins\bb-agency-interact/theme/include-profileaccount.php:132
@@ -390,7 +390,7 @@ msgid "Home:"
 msgstr "Huis:"
 
 #: D:\wamp\www\ClearlyM\agency1.rgbplugin.com\wp-content\plugins\bb-agency-interact/theme/include-profileaccount.php:195
-msgid "Cell:"
+msgid "Mobile:"
 msgstr "Mobiel:"
 
 #: D:\wamp\www\ClearlyM\agency1.rgbplugin.com\wp-content\plugins\bb-agency-interact/theme/include-profileaccount.php:196
