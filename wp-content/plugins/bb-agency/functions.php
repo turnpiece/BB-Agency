@@ -1380,7 +1380,7 @@ error_reporting(0);
 			$bb_user_isLogged = is_user_logged_in();
 
 			#DEBUG!
-			echo $queryList;
+			//echo $queryList;
 
 			if($countList > 0){
 				
@@ -1513,6 +1513,7 @@ error_reporting(0);
 				 *  There are no profiles returned.  Display empty message
 				 */
 				$displayHTML .= sprintf(__('Sorry, none of our current models matched your search requirements but you can <a href="%s" title="advanced search">click here</a> to search again.', bb_agency_TEXTDOMAIN), get_bloginfo('wpurl').'/search/?srch=1');
+				$displayHTML .= sprintf(__(' Alternatively, please <a href="%s">contact us</a> as we are accepting new models onto our books every day.', bb_agency_TEXTDOMAIN), get_bloginfo('wpurl').'/contact');
 			}
 		
 			// Close Formatting
