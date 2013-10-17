@@ -136,7 +136,7 @@
 		echo "				    </div>\n";
 */		
 		echo "				    <fieldset class=\"search-field multi\">";
-		echo "				        <legend>". __("Date of birth", bb_agency_TEXTDOMAIN) . "</legend>";
+		echo "				        <legend>". __("Date of birth", bb_agency_TEXTDOMAIN) . " (*" . __("applies to baby searches only", bb_agency_TEXTDOMAIN). ")</legend>";
 		
 		echo "				    <div>";
 		echo "				        <label for=\"ProfileDateBirth_min\">". __("From", bb_agency_TEXTDOMAIN) . "</label>";
