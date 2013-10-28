@@ -846,7 +846,7 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 
 		echo "    <div class=\"boxblock-container\" style=\"float: left; width: 49%;\">\n";
 		echo "     <div class=\"boxblock\">\n";
-		echo "      <h3>". __("Advance Search", bb_agency_TEXTDOMAIN) ."</h3>\n";
+		echo "      <h3>". __("Advanced Search", bb_agency_TEXTDOMAIN) ."</h3>\n";
 		echo "        <div class=\"inner\">\n";
 		echo "        	<form method=\"GET\" action=\"". admin_url("admin.php?page=". $_GET['page']) ."\">\n";
 		echo "        		<input type=\"hidden\" name=\"page\" id=\"page\" value=\"bb_agency_search\" />\n";
@@ -902,22 +902,29 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 		echo "				        <td>\n";
 		echo "				        <fieldset>\n";
 		echo "				       <div> <label for=\"ProfileDateBirth_min\">". __("Min", bb_agency_TEXTDOMAIN) . "</label>\n";
-		echo "						<input type=\"text\" class=\"min_max\" id=\"ProfileDateBirth_min\" name=\"ProfileDateBirth_min\" />";
+		echo "						<input type=\"text\" class=\"min_max bbdatepicker\" id=\"ProfileDateBirth_min\" name=\"ProfileDateBirth_min\" />";
 		echo "						</div>";
 		
 		echo "				        <div><label for=\"ProfileDateBirth_max\">". __("Max", bb_agency_TEXTDOMAIN) . "</label>\n";
-		echo "						<input type=\"text\" class=\"min_max\" id=\"ProfileDateBirth_max\" name=\"ProfileDateBirth_max\" />";
+		echo "						<input type=\"text\" class=\"min_max bbdatepicker\" id=\"ProfileDateBirth_max\" name=\"ProfileDateBirth_max\" />";
 		echo "						</div>";
-		           
-	/*	echo "				        	". __("Minimum", bb_agency_TEXTDOMAIN) . ":\n";
-		echo "				        	<input type=\"text\" class=\"stubby\" id=\"ProfileDateBirth_min\" name=\"ProfileDateBirth_min\" value=\"". $_GET['ProfileDateBirth_min'] ."\" /><br />\n";
-		echo "				        	". __("Maximum", bb_agency_TEXTDOMAIN) . ":\n";
-		echo "				        	<input type=\"text\" class=\"stubby\" id=\"ProfileDateBirth_max\" name=\"ProfileDateBirth_max\" value=\"". $_GET['ProfileDateBirth_max'] ."\" />\n";
-	*/
 		echo "				        </fieldset>\n";
 		echo "				        </td>\n";
 		echo "				    </tr>\n";
-	
+		echo "				    <tr>\n";
+		echo "				        <th scope=\"row\">". __("Due date", bb_agency_TEXTDOMAIN) . ":</th>\n";
+		echo "				        <td>\n";
+		echo "				        <fieldset>\n";
+		echo "				       <div> <label for=\"ProfileDateDue_min\">". __("Min", bb_agency_TEXTDOMAIN) . "</label>\n";
+		echo "						<input type=\"text\" class=\"min_max bbdatepicker\" id=\"ProfileDateDue_min\" name=\"ProfileDateDue_min\" />";
+		echo "						</div>";
+		
+		echo "				        <div><label for=\"ProfileDateDue_max\">". __("Max", bb_agency_TEXTDOMAIN) . "</label>\n";
+		echo "						<input type=\"text\" class=\"min_max bbdatepicker\" id=\"ProfileDateDue_max\" name=\"ProfileDateDue_max\" />";
+		echo "						</div>";
+		echo "				        </fieldset>\n";
+		echo "				        </td>\n";
+		echo "				    </tr>\n";	
 
 		echo "				    <tr>\n";
 		echo "				        <th scope=\"row\">". __("Town", bb_agency_TEXTDOMAIN) . ":</th>\n";
