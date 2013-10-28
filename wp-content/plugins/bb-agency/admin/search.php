@@ -699,11 +699,10 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 	if(isset($_POST["SendEmail"])){
 		
 
-		$bb_agency_options_arr = get_option('bb_agency_options');
-            $bb_agency_value_agencyname = $bb_agency_options_arr['bb_agency_option_agencyname'];
-      	$bb_agency_value_agencyemail = $bb_agency_options_arr['bb_agency_option_agencyemail'];
-		
-		  
+			$bb_agency_options_arr = get_option('bb_agency_options');
+			$bb_agency_value_agencyname = $bb_agency_options_arr['bb_agency_option_agencyname'];
+			$bb_agency_value_agencyemail = $bb_agency_options_arr['bb_agency_option_agencyemail'];
+			$correspondenceEmail= $bb_agency_value_agencyemail;
 		     add_filter('wp_mail_content_type','bb_agency_set_content_type');
 						function bb_agency_set_content_type($content_type){
 							return 'text/html';
@@ -714,12 +713,66 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 					$MassEmailSubject = $_POST["MassEmailSubject"];
 					$MassEmailMessage = $_POST["MassEmailMessage"];
 					$MassEmailRecipient = $_POST["MassEmailRecipient"];
-			      
+					$MassEmailBccRecipient = $_POST["MassEmailBccRecipient"];
+
+					$SearchID				= time(U);
+					$SearchMuxHash			= bb_agency_random(8);
+					$SearchMuxToName		=$_POST["MassEmailRecipient"];
+					$SearchMuxToEmail		=$_POST["MassEmailRecipient"];
+					
+					$SearchMuxEmailToBcc	=$_POST['MassEmailBccRecipient'];
+					$SearchMuxSubject		= $_POST['MassEmailSubject'];
+					$SearchMuxMessage		=$_POST['MassEmailMessage'];
+					$SearchMuxCustomValue	='';
+
+
+								
+
+					$cartArray = $_SESSION['cartArray'];
+	            	
+					$cartString = implode(",", array_unique($cartArray));
+					$cartString = bb_agency_cleanString($cartString);
+					
+
+					$wpdb->query("INSERT INTO " . table_agency_searchsaved." (SearchProfileID,SearchTitle) VALUES('".$cartString."','".$SearchMuxSubject."')") or die(mysql_error());
+					
+					$lastid = $wpdb->insert_id;
+					
+					// Create Record
+					$insert = "INSERT INTO " . table_agency_searchsaved_mux ." 
+							(
+							SearchID,
+							SearchMuxHash,
+							SearchMuxToName,
+							SearchMuxToEmail,
+							SearchMuxSubject,
+							SearchMuxMessage,
+							SearchMuxCustomValue
+							)" .
+							"VALUES
+							(
+							'" . $wpdb->escape($lastid) . "',
+							'" . $wpdb->escape($SearchMuxHash) . "',
+							'" . $wpdb->escape($SearchMuxToName) . "',
+							'" . $wpdb->escape($SearchMuxToEmail) . "',
+							'" . $wpdb->escape($SearchMuxSubject) . "',
+							'" . $wpdb->escape($SearchMuxMessage) . "',
+							'" . $wpdb->escape($SearchMuxCustomValue) ."'
+							)";
+					$results = $wpdb->query($insert);                 
+							
+
+					if(!empty($MassEmailBccRecipient)){
+						$bccMails = explode(",",$MassEmailBccRecipient);
+						foreach($bccMails as $bccEmail){
+							$headers[] = 'Bcc: '.$bccEmail;
+						}
+						}
 					
 					// Mail it
 					$headers[]  = 'MIME-Version: 1.0';
 					$headers[] = 'Content-type: text/html; charset=iso-8859-1';
-					$headers[] = 'From: '.$bb_agency_value_agencyname.' <'. $bb_agency_option_agencyemail .'>';
+					$headers[] = 'From: '.$bb_agency_value_agencyname.' <'. $correspondenceEmail .'>';
 					
 					if(!empty($expMail)){
 						$expMail = explode(",",$MassEmailRecipient);
@@ -727,7 +780,10 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 							$headers[] = 'Bcc: '.$bccEmail;
 						}
 					}
-					
+					 //$MassEmailMessage	= str_ireplace("[link-place-holder]",get_bloginfo("url") ."/client-view/".$SearchMuxHash,$MassEmailMessage);
+
+					$MassEmailMessage = str_replace("[link-place-holder]",site_url()."/client-view/".$SearchMuxHash,$MassEmailMessage);
+
 					$isSent = wp_mail($MassEmailRecipient, $MassEmailSubject, $MassEmailMessage, $headers);
 						
 
@@ -757,7 +813,7 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 	  }
 		// Email
 		$bb_agency_options_arr = get_option('bb_agency_options');
-            $bb_agency_value_agencyname = $bb_agency_options_arr['bb_agency_option_agencyname'];
+		$bb_agency_value_agencyname = $bb_agency_options_arr['bb_agency_option_agencyname'];
       	$bb_agency_value_agencyemail = $bb_agency_options_arr['bb_agency_option_agencyemail'];
 		echo "<form method=\"post\">";
 		echo "     <div class=\"boxblock\">\n";
@@ -766,13 +822,22 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 	  if($isSent){
 	  echo "<div id=\"message\" class=\"updated\"><p>Email Messages successfully sent!</p></div>";	
 	  }
-	  echo "          <strong>Recipient:</strong><br/><textarea name=\"MassEmailRecipient\" style=\"width:100%;\">".$recipient."</textarea><br/>";
+	  //Commented to change default recipient to wp-admin
+	 // echo "<strong>Recipient:</strong><br/><textarea name=\"MassEmailRecipient\" style=\"width:100%;\">".$recipient."</textarea><br/>";
+	 echo "<strong>Recipient:</strong><br/><textarea name=\"MassEmailRecipient\" style=\"width:100%;\">".$bb_agency_value_agencyemail."</textarea><br/>";
+	 //Bcc recipients
+	 echo "<strong>Bcc:</strong><br/><textarea name=\"MassEmailBccRecipient\" style=\"width:100%;\" placeholder=\"Enter Comma seperated values\"></textarea><br/>";
+	 
         echo "        <strong>Subject:</strong> <br/><input type=\"text\" name=\"MassEmailSubject\" style=\"width:100%\"/>";
 		echo "<br/>";
-		echo "      <strong>Message:</strong><br/>     <textarea name=\"MassEmailMessage\"  style=\"width:100%;height:300px;\">this message was sent to you by ".$bb_agency_value_agencyname." ".network_site_url( '/' )."</textarea>";
-		echo "				<input type=\"submit\" value=\"". __("Send Email", bb_agency_TEXTDOMAIN) . "\" name=\"SendEmail\"class=\"button-primary\" />\n";
-		echo "        </div>\n";
-		echo "     </div>\n";
+		/*echo "      <strong>Message:</strong><br/>     <textarea name=\"MassEmailMessage\"  style=\"width:100%;height:300px;\">this message was sent to you by ".$bb_agency_value_agencyname." ".network_site_url( '/' )."</textarea>";*/
+		
+		$content = "This message was sent to you by ".$bb_agency_value_agencyname." ".network_site_url( '/' )."<br /> [link-place-holder]";
+		$editor_id = 'MassEmailMessage';
+		wp_editor( $content, $editor_id,array("wpautop"=>false,"tinymce"=>true) );
+		echo "<input type=\"submit\" value=\"". __("Send Email", bb_agency_TEXTDOMAIN) . "\" name=\"SendEmail\"class=\"button-primary\" />\n";
+		echo "</div>\n";
+		echo "</div>\n";
 	    echo "</form>";
 	}
     

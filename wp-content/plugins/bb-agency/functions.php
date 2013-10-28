@@ -2185,9 +2185,8 @@ function bb_custom_fields_template($visibility = 0, $ProfileID, $data3){
 					if($bb_agency_option_unittype == 1){
 						// 
 						echo "<select name=\"ProfileCustomID". $data3['ProfileCustomID'] ."\">\n";
-						if (empty($ProfileCustomValue)) {
-							echo "  <option value=\"\">--</option>\n";
-						}
+						echo "  <option value=\"\">--</option>\n";
+						
 						// 
 						$i=12;
 						$heightraw = 0;
@@ -3543,8 +3542,8 @@ function is_permitted($type){
                 $bb_agency_option_privacy = $bb_agency_options_arr['bb_agency_option_privacy'];
                 $bb_agency_option_profilelist_castingcart  = isset($bb_agency_options_arr['bb_agency_option_profilelist_castingcart']) ? (int)$bb_agency_options_arr['bb_agency_option_profilelist_castingcart'] : 0;
 				$bb_agency_option_profilelist_favorite	 = isset($bb_agency_options_arr['bb_agency_option_profilelist_favorite']) ? (int)$bb_agency_options_arr['bb_agency_option_profilelist_favorite'] : 0;
-            
-                if($type=="casting" && !$bb_agency_option_profilelist_castingcart) return false;
+              	
+			  	if($type=="casting" && !$bb_agency_option_profilelist_castingcart) return false;
                 if($type=="favorite" && !$bb_agency_option_profilelist_favorite) return false;
                 if(!is_user_logged_in()) return false;
 				

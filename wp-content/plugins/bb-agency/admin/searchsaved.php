@@ -95,8 +95,10 @@ if (isset($_POST['action'])) {
 
 			$SearchID				=$_GET['SearchID'];
 
-			$SearchMuxHash			=@$_GET["SearchMuxHash"];
-
+			if(trim($_GET["SearchMuxHash"])=='') {
+				$SearchMuxHash			= bb_agency_random(8);
+			}
+			
 			$SearchMuxToName		=$_POST['SearchMuxToName'];
 
 			$SearchMuxToEmail		=$_POST['SearchMuxToEmail'];
@@ -106,7 +108,10 @@ if (isset($_POST['action'])) {
 			$SearchMuxMessage		=$_POST['SearchMuxMessage'];
 
 			$SearchMuxCustomValue	=$_POST['SearchMuxCustomValue'];
-                  $SearchMuxMessage	= str_ireplace("[link-place-holder]",get_bloginfo("url") ."/client-view/".$SearchMuxHash,$SearchMuxMessage);
+			
+			$link=get_bloginfo("url") ."/client-view/".$SearchMuxHash;
+			
+            $SearchMuxMessage	= str_ireplace("[link-place-holder]","<a href='$link'>$link</a>",$SearchMuxMessage);
 
 			// Create Record
 
@@ -214,12 +219,12 @@ if (isset($_POST['action'])) {
    <div style="width:500px; float:left;">
      <h2><?php echo __("Search Saved", bb_agency_TEXTDOMAIN); ?></h2>
       <form method="post" enctype="multipart/form-data" action="<?php echo admin_url("admin.php?page=". $_GET['page'])."&SearchID=".$_GET['SearchID']."&SearchMuxHash=".$_GET["SearchMuxHash"]; ?>">
-       <input type="hidden" name="action" value="cartEmail" />
+      
        <div><label for="SearchMuxToName"><strong>Send to Name:</strong></label><br/><input style="width:300px;" type="text" id="SearchMuxToName" name="SearchMuxToName" value="<?php echo $dataSearchSavedMux["SearchMuxToName"]; ?>" /></div>
        <div><label for="SearchMuxToEmail"><strong>Send to Email:</strong></label><br/><input  style="width:300px;" type="text" id="SearchMuxToEmail" name="SearchMuxToEmail" value="<?php echo $dataSearchSavedMux["SearchMuxToEmail"]; ?>" /></div>
        <div><label for="SearchMuxSubject"><strong>Subject:</strong></label><br/><input  style="width:300px;" type="text" id="SearchMuxSubject" name="SearchMuxSubject" value="<?php echo $bb_agency_option_agencyname; ?> Casting Cart" /></div>
        <div><label for="SearchMuxMessage"><strong>Message: (copy/paste: [link-place-holder] )</strong></label><br/>
-		<textarea id="SearchMuxMessage" name="SearchMuxMessage" style="width: 500px; height: 300px; "><?php if(!isset($_GET["SearchMuxHash"])){ echo @$dataSearchSavedMux["SearchMuxMessage"];}else{echo @"Click the following link (or copy and paste it into your browser): [link-place-holder]";} ?></textarea>
+		<textarea id="SearchMuxMessage" name="SearchMuxMessage" style="width: 500px; height: 300px; "><?php if(!isset($_GET["SearchMuxHash"])){  if(isset($dataSearchSavedMux["SearchMuxMessage"])) echo $dataSearchSavedMux["SearchMuxMessage"];else{echo "Click the following link (or copy and paste it into your browser): [link-place-holder]";}}else{echo "Click the following link (or copy and paste it into your browser): [link-place-holder]";} ?></textarea>
         </div>
        <p class="submit">
            <input type="hidden" name="SearchID" value="<?php echo $SearchID; ?>" />
