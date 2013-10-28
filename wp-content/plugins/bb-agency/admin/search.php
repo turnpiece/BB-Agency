@@ -187,8 +187,8 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
 			$ProfileGender = "";
 		}
 
-		// Age
-		$timezone_offset = -10; // Hawaii Time
+		// Age & due date
+		$timezone_offset = 0; // GMT
 		$dateInMonth = gmdate('d', time() + $timezone_offset *60 *60);
 		$format = 'Y-m-d';
 		$date = gmdate($format, time() + $timezone_offset *60 *60);
@@ -207,15 +207,13 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
 
 		// Due date
 		if (isset($_GET['ProfileDateDue_min']) && !empty($_GET['ProfileDateDue_min'])){
-			$ProfileDateDue_min = $_GET['ProfileDateBirth_min'];
-			$selectedYearMin = date($format, strtotime('-'. $ProfileDateDue_min .' year'. $date));
-			$filter .= " AND profile.ProfileDateDue <= '$selectedYearMin'";
+			$ProfileDateDue_min = $_GET['ProfileDateDue_min'];
+			$filter .= " AND profile.ProfileDateDue >= '$ProfileDateDue_min'";
 		}
 		
 		if (isset($_GET['ProfileDateDue_max']) && !empty($_GET['ProfileDateDue_max'])){
 			$ProfileDateDue_max = $_GET['ProfileDateDue_max'];
-			$selectedYearMax = date($format, strtotime('-'. $ProfileDateDue_max-1 .' year'. $date));
-			$filter .= " AND profile.ProfileDateDue >= '$selectedYearMax'";
+			$filter .= " AND profile.ProfileDateDue <= '$ProfileDateDue_max'";
 		}
 
        echo "  <div class=\"boxblock-holder\">\n";
@@ -426,6 +424,7 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
 			 profile.ProfileGallery,
 			 profile.ProfileContactDisplay, 
 			 profile.ProfileDateBirth, 
+			 profile.ProfileDateDue, 
 			 profile.ProfileLocationState, 
 			 profile.ProfileID as pID, 
 			 customfield_mux.*,  
@@ -448,7 +447,7 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
 
 		// Search Results	
       //  $query = "SELECT profile.*, (SELECT media.ProfileMediaURL FROM ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1) AS ProfileMediaURL FROM ". table_agency_profile ." profile $filter $cartQuery ORDER BY $sort $dir $limit";
-	  // echo $query;
+	   //echo $query;
 		$results2 = mysql_query($query);
         $count = mysql_num_rows($results2);
         
@@ -538,7 +537,7 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
 				}
 				*/
 				if (!empty($data['ProfileDateBirth'])) {
-					echo "<div><strong>". __("Birthdate", bb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileDateBirth'] ."</div>\n";
+					echo "<div><strong>". __("Birth date", bb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileDateBirth'] ."</div>\n";
 				}
 				if (!empty($data['ProfileDateDue'])) {
 					echo "<div><strong>". __("Due date", bb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileDateDue'] ."</div>\n";
@@ -663,7 +662,10 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
                     if (!empty($data['ProfileDateBirth'])) {
                         echo "<strong>Age:</strong> ". bb_agency_get_age($data['ProfileDateBirth']) ."<br />\n";
                     }
-  
+
+                    if (!empty($data['ProfileDateDue'])) {
+                        echo "<strong>Due date:</strong> ". bb_agency_get_due_date($data['ProfileDateDue']) ."<br />\n";
+                    }
                     
                 echo " </div>";
                 echo " <div style=\"position: absolute; z-index: 20; top: 120px; left: 200px; width: 20px; height: 20px; overflow: hidden; \"><a href=\"?page=". $_GET['page'] ."&action=". $cartAction ."&RemoveID=". $data['ProfileID'] ."\" title=\"". __("Remove from Cart", bb_agency_TEXTDOMAIN) ."\"><img src=\"". bb_agency_BASEDIR ."style/remove.png\" style=\"width: 20px; \" alt=\"". __("Remove from Cart", bb_agency_TEXTDOMAIN) ."\" /></a></div>";
@@ -902,11 +904,11 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 		echo "				        <td>\n";
 		echo "				        <fieldset>\n";
 		echo "				       <div> <label for=\"ProfileDateBirth_min\">". __("Min", bb_agency_TEXTDOMAIN) . "</label>\n";
-		echo "						<input type=\"text\" class=\"min_max bbdatepicker\" id=\"ProfileDateBirth_min\" name=\"ProfileDateBirth_min\" />";
+		echo "						<input type=\"text\" class=\"min_max\" id=\"ProfileDateBirth_min\" name=\"ProfileDateBirth_min\" />";
 		echo "						</div>";
 		
 		echo "				        <div><label for=\"ProfileDateBirth_max\">". __("Max", bb_agency_TEXTDOMAIN) . "</label>\n";
-		echo "						<input type=\"text\" class=\"min_max bbdatepicker\" id=\"ProfileDateBirth_max\" name=\"ProfileDateBirth_max\" />";
+		echo "						<input type=\"text\" class=\"min_max\" id=\"ProfileDateBirth_max\" name=\"ProfileDateBirth_max\" />";
 		echo "						</div>";
 		echo "				        </fieldset>\n";
 		echo "				        </td>\n";
