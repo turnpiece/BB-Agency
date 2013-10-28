@@ -132,9 +132,9 @@
 							echo "				        <td>\n";
 							echo "				        <fieldset>\n";
 							echo "				        	<div><label>". __("Min", bb_agency_TEXTDOMAIN) . "</label>\n";
-							echo "				        	<input type=\"text\" class=\"stubby\" id=\"ProfileDateDue_min\" name=\"ProfileDateDue_min\" value=\"". $_SESSION['ProfileDateDue_min'] ."\" /><br /></div>\n";
+							echo "				        	<input type=\"text\" class=\"stubby bbdatepicker\" id=\"ProfileDateDue_min\" name=\"ProfileDateDue_min\" value=\"". $_SESSION['ProfileDateDue_min'] ."\" /><br /></div>\n";
 							echo "				        	<div><label>". __("Max", bb_agency_TEXTDOMAIN) . "</label>\n";
-							echo "				        	<input type=\"text\" class=\"stubby\" id=\"ProfileDateDue_max\" name=\"ProfileDateDue_max\" value=\"". $_SESSION['ProfileDateDue_max'] ."\" /></div>\n";
+							echo "				        	<input type=\"text\" class=\"stubby bbdatepicker\" id=\"ProfileDateDue_max\" name=\"ProfileDateDue_max\" value=\"". $_SESSION['ProfileDateDue_max'] ."\" /></div>\n";
 							echo "				        </fieldset>\n";
 							echo "				        </td>\n";
 							echo "				    </tr>\n";
