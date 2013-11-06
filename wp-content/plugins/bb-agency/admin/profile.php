@@ -84,6 +84,7 @@ if (isset($_POST['action'])) {
 
     // Notify User and Admin
     $ProfileNotifyUser = $_POST["ProfileNotifyUser"];
+		
 
     // Error checking
     $error = "";
@@ -196,9 +197,9 @@ if (isset($_POST['action'])) {
                     $results = $wpdb->query($insert) or die("Add Record: " . mysql_error());
                     $ProfileID = $wpdb->insert_id;
 
-
+				
                     // Notify admin and user
-                    if ($ProfileNotifyUser <> "yes" && function_exists(bb_agencyinteract_approvemembers)) {
+                    if ( isset($ProfileNotifyUser) && $ProfileNotifyUser <> "yes" && function_exists(bb_agencyinteract_approvemembers)) {
                         wp_new_user_notification($new_user, $ProfilePassword);
                     }
                     // Set Display Name as Record ID (We have to do this after so we know what record ID to use... right ;)

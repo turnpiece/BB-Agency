@@ -796,7 +796,7 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
         if (isset($_SESSION['cartArray'])) {
             $cartArray = $_SESSION['cartArray'];
             $cartString = implode(",", $cartArray);
-			$cartQuery =  " AND profile.ProfileID IN (". $cartString .")";
+			$cartQuery =  " AND profile.ProfileContactEmail !='' AND profile.ProfileID IN (". $cartString .")";
 		}
 		// Search Results	
         $query = "SELECT profile.*  FROM ". table_agency_profile ." profile WHERE profile.ProfileID > 0 ".$cartQuery;
@@ -828,7 +828,7 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 	 // echo "<strong>Recipient:</strong><br/><textarea name=\"MassEmailRecipient\" style=\"width:100%;\">".$recipient."</textarea><br/>";
 	 echo "<strong>Recipient:</strong><br/><textarea name=\"MassEmailRecipient\" style=\"width:100%;\">".$bb_agency_value_agencyemail."</textarea><br/>";
 	 //Bcc recipients
-	 echo "<strong>Bcc:</strong><br/><textarea name=\"MassEmailBccRecipient\" style=\"width:100%;\" placeholder=\"Enter Comma seperated values\"></textarea><br/>";
+	 echo "<strong>Bcc:</strong><br/><textarea name=\"MassEmailBccRecipient\" style=\"width:100%;\" placeholder=\"Enter Comma seperated values\">".$recipient."</textarea><br/>";
 	 
         echo "        <strong>Subject:</strong> <br/><input type=\"text\" name=\"MassEmailSubject\" style=\"width:100%\"/>";
 		echo "<br/>";

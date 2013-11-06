@@ -19,6 +19,4 @@ UPDATE `orh_options` SET `option_name` = 'bb_agency_dummy_options' WHERE `option
 UPDATE `orh_options` SET `option_name` = 'bb_agency_options' WHERE `option_name` = 'rb_agency_options';
 UPDATE `orh_options` SET `option_name` = 'bb_agency_version' WHERE `option_name` = 'rb_agency_version';
 UPDATE `orh_options` SET `option_name` = 'bb_email_content' WHERE `option_name` = 'rb_email_content';
-UPDATE `orh_usermeta` SET `meta_key` = 'bb_agency_interact_profiletype' WHERE `meta_key` = 'rb_agency_interact_profiletype';
-UPDATE `orh_usermeta` SET `meta_key` = 'bb_agency_interact_pgender' WHERE `meta_key` = 'rb_agency_interact_pgender';
 ALTER TABLE `bb_agency_profile` ADD `ProfileDateDue` DATE AFTER `ProfileDateBirth`;

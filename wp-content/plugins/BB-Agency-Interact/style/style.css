@@ -47,9 +47,40 @@ p.submit { margin-top: 15px!important; }
 #profile-manage .manage-profile p select { width: 165px; }
 
 /* Profile Gallery */
-#profile-manage .manage-section.gallery .profileimage { float: left; margin: 0 10px 10px 0; height: 150px; position: relative; overflow: hidden; background: #eee; }
+/*#profile-manage .manage-section.gallery .profileimage { float: left; margin: 0 10px 10px 0; height: 150px; position: relative; overflow: hidden; background: #eee; }*/
+
+#profile-manage .manage-section.gallery .profileimage {
+    background: none repeat scroll 0 0 #EEEEEE;
+    float: left;
+    height: auto;
+    margin: 0 10px 10px 0;
+    overflow: hidden;
+    padding: 0px;
+    position: relative;
+    width: 101px;
+}
+
+
 #profile-manage .manage-section.gallery .profileimage .delete a { display: block; text-align: center; }
-#profile-manage .manage-section.gallery .profileimage .primary { position: absolute; left: 0; right: 0; bottom: 0; padding: 5px 10px; border-radius: 0; font-weight: normal; font-size: 13px; }
+/*#profile-manage .manage-section.gallery .profileimage .primary { position: absolute; left: 0; right: 0; bottom: 0; padding: 5px 10px; border-radius: 0; font-weight: normal; font-size: 13px; }*/
+#profile-manage .manage-section.gallery .profileimage .primary {
+    border-radius: 0;
+    bottom: 0;
+    float: left;
+    font-size: 13px;
+    font-weight: normal;
+    left: 0;
+    padding: 5px 10px;
+    position: relative;
+    right: 0;
+    width: 78%;
+    z-index: 99999;
+}
+
+.profileimage > img {
+    margin-bottom: 35px;
+}
+
 #profile-manage .manage-section.gallery .profileimage .primary input { margin: 0; }
 #profile-manage .manage-section.gallery .profileimage .primary label { cursor: pointer; }
 
