@@ -8,8 +8,8 @@
   Author URI: http://turnpiece.com/
   Version: 0.0.1
 */
-error_reporting(-1);
-ini_set('display_errors', 'On');
+error_reporting(0);
+ini_set('display_errors', 0);
 
 $bb_agency_VERSION = "2.0.0"; // starter
 if(!get_option("bb_agency_version")){  add_option("bb_agency_version", $bb_agency_VERSION , '', 'no');  update_option("bb_agency_version", $bb_agency_VERSION);}
@@ -535,8 +535,8 @@ if ( is_admin() ){
 			add_menu_page( __("Agency", bb_agency_TEXTDOMAIN), __("Agency", bb_agency_TEXTDOMAIN), 1,"bb_agency_menu","bb_agency_dashboard","div");
 			add_submenu_page("bb_agency_menu", __("Overview", bb_agency_TEXTDOMAIN), __("Overview", bb_agency_TEXTDOMAIN), 1,"bb_agency_menu","bb_agency_dashboard");
 			add_submenu_page("bb_agency_menu", __("Manage Profiles", bb_agency_TEXTDOMAIN), __("Manage Profiles", bb_agency_TEXTDOMAIN), 7,"bb_agency_profiles","bb_agency_profiles");
-			if (function_exists(bb_agencyinteract_approvemembers)) {
-			add_submenu_page("bb_agency_menu", __("Approve Pending Profiles", bb_agency_TEXTDOMAIN), __("Approve Profiles", bb_agency_TEXTDOMAIN), 7,"bb_agencyinteract_approvemembers","bb_agencyinteract_approvemembers");
+			if (function_exists('bb_agencyinteract_approvemembers')) {
+				add_submenu_page("bb_agency_menu", __("Approve Pending Profiles", bb_agency_TEXTDOMAIN), __("Approve Profiles", bb_agency_TEXTDOMAIN), 7,"bb_agencyinteract_approvemembers","bb_agencyinteract_approvemembers");
 			}
 			add_submenu_page("bb_agency_menu", __("Search &amp; Send Profiles", bb_agency_TEXTDOMAIN), __("Search Profiles", bb_agency_TEXTDOMAIN), 7,"bb_agency_search","bb_agency_search");
 			add_submenu_page("bb_agency_menu", __("Saved Searches", bb_agency_TEXTDOMAIN), __("Saved Searches", bb_agency_TEXTDOMAIN), 7,"bb_agency_searchsaved","bb_agency_searchsaved");

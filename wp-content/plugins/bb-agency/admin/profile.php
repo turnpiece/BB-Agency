@@ -255,7 +255,6 @@ if (isset($_POST['action'])) {
             ProfileContactPhoneCell='" . $wpdb->escape($ProfileContactPhoneCell) . "',
             ProfileContactPhoneWork='" . $wpdb->escape($ProfileContactPhoneWork) . "',
             ProfileGender='" . $wpdb->escape($ProfileGender) . "',
-			ProfileGender='" . $wpdb->escape($ProfileGender) . "',
             ProfileDateBirth ='" . $wpdb->escape($ProfileDateBirth) . "',
             ProfileDateDue ='" . $wpdb->escape($ProfileDateDue) . "',
             ProfileLocationStreet='" . $wpdb->escape($ProfileLocationStreet) . "',
@@ -270,6 +269,7 @@ if (isset($_POST['action'])) {
             ProfileIsPromoted='" . $wpdb->escape($ProfileIsPromoted) . "',
             ProfileStatHits='" . $wpdb->escape($ProfileStatHits) . "'
             WHERE ProfileID=$ProfileID";
+
                 $results = $wpdb->query($update) or die(mysql_error());
 
 					update_usermeta($_REQUEST['wpuserid'], 'bb_agency_interact_profiletype', esc_attr($ProfileType));
@@ -564,7 +564,6 @@ function bb_display_manage($ProfileID) {
         $count = mysql_num_rows($results);
 
         while ($data = mysql_fetch_array($results)) {
-		
             $ProfileID = $data['ProfileID'];
             $ProfileUserLinked = $data['ProfileUserLinked'];
             $ProfileGallery = stripslashes($data['ProfileGallery']);
@@ -1453,6 +1452,7 @@ function bb_display_list() {
 
         // check if she's given birth
         if (bb_agency_ismumtobe($data['ProfileType']) && bb_agency_datepassed($ProfileDateDue)) {
+            die("due date $ProfileDateDue has passed");
             // switch category
             $ptypes = explode(',', $data['ProfileType']);
             for($i = 0; $i < count($ptypes); $i++){
@@ -1463,6 +1463,7 @@ function bb_display_list() {
             $data['ProfileType'] = implode(',', $ptypes);
             
             // recategorize as family
+            die('recategorize as family');
             $wpdb->update(
                 table_agency_profile, 
                 array('ProfileType' => $data['ProfileType']), 
