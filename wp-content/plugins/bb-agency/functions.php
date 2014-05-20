@@ -1,10 +1,8 @@
 <?php
-error_reporting(0);
 /*
  * Debug Mode
    //$RB_DEBUG_MODE = true;
  */
-
 
 // *************************************************************************************************** //
 /*
@@ -1404,6 +1402,7 @@ error_reporting(0);
 						}
 						
 						// recategorize as family
+						die ('recategorize as family');
 						$wpdb->update(
 							table_agency_profile, 
 							array('ProfileType' => implode(',', $ptypes)), 
@@ -3589,6 +3588,20 @@ function is_client_profiletype(){
 		}	
 	}	
 	return false;
+}
+
+/**
+ *
+ * convert inches to feet and inches
+ *
+ * @param int $inches
+ * @return string
+ *
+ */
+function display_height($inches) {
+	$feet = floor($inches/12);
+	$inches = $inches % 12;
+	return "$feet ft $inches in";
 }
 
 /*
