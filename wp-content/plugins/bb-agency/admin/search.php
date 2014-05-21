@@ -452,11 +452,7 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
 			GROUP BY profile.ProfileID 
 			ORDER BY $sort $dir  $limit";
 
-    echo $query;
-
-		// Search Results	
-      //  $query = "SELECT profile.*, (SELECT media.ProfileMediaURL FROM ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1) AS ProfileMediaURL FROM ". table_agency_profile ." profile $filter $cartQuery ORDER BY $sort $dir $limit";
-	   //echo $query;
+		// Search Results
 		$results2 = mysql_query($query);
         $count = mysql_num_rows($results2);
         
