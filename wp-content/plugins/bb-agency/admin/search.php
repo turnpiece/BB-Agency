@@ -226,11 +226,11 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
 		}
 		$filterDropdown = array();
             
-        $filter2 = "";
-        $filtered = array();
-		foreach($_GET as $key => $val){
+        $filter2 = '';
+        $cmFilters = array();
+		foreach ($_GET as $key => $val) {
                         
-            if (substr($key,0,15) == "ProfileCustomID") {
+            if (substr($key, 0, 15) == "ProfileCustomID") {
             
                 /*
                 *  Check if this is array or not
@@ -270,23 +270,27 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
                      * create its own filter here and change
                      * AND should be OR
                      */
-                    if(in_array($ProfileCustomType['ProfileCustomTitle'], $cusFields)) {
+                    if (in_array($ProfileCustomType['ProfileCustomTitle'], $cusFields)) {
                         $keyID = substr($key, 15);
                         $keyID = preg_replace("/_\w+$/", '', $keyID);
-                        if (in_array($keyID, $filtered))
+                        if (in_array($keyID, $cmFilters))
                             continue;
 
                         // add this key to already filtered array
                         array_push($filtered, $keyID);
+
                         // get max and min values
                         $minVal = $_GET['ProfileCustomID'.$ProfileCustomType['ProfileCustomID'].'_min'];
                         $maxVal = $_GET['ProfileCustomID'.$ProfileCustomType['ProfileCustomID'].'_max'];
+                        /*
                         if ($filter2 == "") {
                             $filter2 .= " AND (";
                         } else {
                             $filter2 .= " OR ";
                         }
                         $filter2 .= "(customfield_mux.ProfileCustomValue BETWEEN '$minVal' AND '$maxVal' AND customfield_mux.ProfileCustomID = '$keyID') ";
+                        */
+                        $cmFilters[$keyID] = array($minVal, $maxVal);
 
                         //echo "-----";
                     } else {
@@ -302,11 +306,10 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
                         *********************/
 
                         if ($ProfileCustomType["ProfileCustomType"] == 1) { //TEXT
-                                if($filter2 == ""){
-								
+                            if($filter2 == ""){	
                                 $filter2 .= " AND ( (customfield_mux.ProfileCustomValue like('%".$val."%'))";
                             } else {
-                                    $filter2 .= " OR customfield_mux.ProfileCustomValue='".$val."' ";
+                                $filter2 .= " OR customfield_mux.ProfileCustomValue='".$val."' ";
                             }                                                           
                             $_SESSION[$key] = $val;
 
@@ -410,8 +413,14 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
                $filter2 .= " AND ( customfield_mux.ProfileCustomValue IN('".implode("','",$filterDropdown)."')";
                } else {
                $filter2 .=" OR customfield_mux.ProfileCustomValue IN('".implode("','",$filterDropdown)."')";
-               }
-               
+               }     
+           }
+
+           if (!empty($cmFilters)) {
+                foreach ($cmFilters as $key => $range) {
+                    list($min, $max) = $range;
+                    $filter .= " LEFT JOIN ". table_agency_customfield_mux ." AS cm{$key} ON profile.ProfileID = cm{$key}.ProfileID AND cm{$key}.ProfileCustomValue BETWEEN '$min' AND '$max' AND cm{$key}.ProfileCustomID = '$key'";
+                }
            }
 
            /*
@@ -425,7 +434,7 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
            }
      
 	// Search Results	
-	 $query = "
+	$query = "
 			 SELECT 
 			 profile.*,
 			 profile.ProfileGallery,
@@ -457,6 +466,8 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
         $count = mysql_num_rows($results2);
         
         echo "<h2 class=\"title\">Search Results: " . $count . "</h2>\n";
+
+        echo "<pre>$query</pre>";
         
 		if (($count > ($bb_agency_option_persearch -1)) && (!isset($_GET['limit']) && empty($_GET['limit']))) {
 			echo "<div id=\"message\" class=\"error\"><p>Search exceeds ". $bb_agency_option_persearch ." records first ". $bb_agency_option_persearch ." displayed below.  <a href=". admin_url("admin.php?page=". $_GET['page']) ."&". $sessionString ."&limit=none><strong>Click here</strong></a> to expand to all records (NOTE: This may take some time)</p></div>\n";
