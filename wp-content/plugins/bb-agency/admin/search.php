@@ -1073,7 +1073,7 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 			echo  "			<td>";
 			
 
-					if(in_array($data1['ProfileCustomTitle'], $cusFields)) { //used alternative inputs for custom fields defined on top of this page
+					if (in_array($data1['ProfileCustomTitle'], $cusFields) && $data1['ProfileCustomTitle'] != 'Height') { //used alternative inputs for custom fields defined on top of this page
 						echo  "			<fieldset class=\"rbtext\">";
 						echo "<div><label for=\"ProfileCustomLabel_min\">". __("Min", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
 						echo "<input class=\"min_max\" type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."_min\" value=\"". $ProfileCustomOptions_Min_value ."\" /></div>\n";
@@ -1252,9 +1252,9 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 										echo "</fieldset>";									       
 									}
 									
-									elseif ($ProfileCustomType == 7){
+									elseif ($ProfileCustomType == 7) {
 										 
-										list($min_val,$max_val) =  @explode(",",$_SESSION["ProfileCustomID".$data1['ProfileCustomID']]);
+										list($min_val,$max_val) =  @explode(",", $_SESSION["ProfileCustomID".$data1['ProfileCustomID']]);
 
 									    if ($data1['ProfileCustomTitle']=="Height" AND $bb_agency_option_unittype==1) : ?>
 										    <fieldset class="rbselect">
@@ -1287,16 +1287,17 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 										<?php else : ?>
 											<fieldset class="rbtext">
 											<?php // for other search ?>
-											     <div>
+											    <div>
                                                     <label for="ProfileCustomID<?php echo $data1['ProfileCustomID'] ?>_min">Min</label>
                                                     <input value="<?php echo (!is_array($min_val) && $min_val != "Array" ? $min_val : "") ?>" class="stubby" type="text" name="ProfileCustomID<?php echo $data1['ProfileCustomID'] ?>[]" />
                                                 </div>
 
-											echo "<div><label for=\"ProfileCustomID".$data1['ProfileCustomID']
-											."_max\">Max</label><input value=\"".$max_val
-											."\" class=\"stubby\" type=\"text\" name=\"ProfileCustomID".$data1['ProfileCustomID']."[]\" /></div>";
-											echo  "			</fieldset>";
-										<?php endif; ?>
+											     <div>
+                                                    <label for="ProfileCustomID<?php echo $data1['ProfileCustomID'] ?>_max">Max</label>
+                                                    <input value="<?php echo $max_val ?>" class="stubby" type="text" name="ProfileCustomID<?php echo $data1['ProfileCustomID'] ?>[]" />
+                                                </div>
+											</fieldset>
+										<?php endif;
 									}		
 			
 					}//end of if(in_array("$data1['ProfileCustomTitle']", $cusFields))
