@@ -304,11 +304,11 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
                         if ($ProfileCustomType["ProfileCustomType"] == 1) { //TEXT
                                 if($filter2 == ""){
 								
-                                    $filter2 .= " AND ( (customfield_mux.ProfileCustomValue like('%".$val."%'))";
-                                } else {
+                                $filter2 .= " AND ( (customfield_mux.ProfileCustomValue like('%".$val."%'))";
+                            } else {
                                     $filter2 .= " OR customfield_mux.ProfileCustomValue='".$val."' ";
-                                }                                                           
-                                $_SESSION[$key] = $val;
+                            }                                                           
+                            $_SESSION[$key] = $val;
 
                         } elseif ($ProfileCustomType["ProfileCustomType"] == 3) { // Dropdown
 							if($filter2==""){
@@ -389,7 +389,7 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
 
                             list($Min_val,$Max_val) = explode(",",$val);
                             if(!empty($Min_val) && !empty($Max_val)){
-                                if($filter2==""){
+                                if ($filter2==""){
                                     $filter2  .= " AND (( customfield_mux.ProfileCustomValue BETWEEN '".$Min_val."' AND '".$Max_val."'and customfield_mux.ProfileCustomID = '".substr($key,15)."' )";
                                 } else {
                                     $filter2  .= " OR (customfield_mux.ProfileCustomValue BETWEEN '".$Min_val."' AND '".$Max_val."'and customfield_mux.ProfileCustomID = '".substr($key,15)."') ";
@@ -407,7 +407,7 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
 	  
            if(count($filterDropdown) > 0){
                if($filter2==""){
-               $filter2 .=" AND ( customfield_mux.ProfileCustomValue IN('".implode("','",$filterDropdown)."')";
+               $filter2 .= " AND ( customfield_mux.ProfileCustomValue IN('".implode("','",$filterDropdown)."')";
                } else {
                $filter2 .=" OR customfield_mux.ProfileCustomValue IN('".implode("','",$filterDropdown)."')";
                }
@@ -1256,59 +1256,47 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 										 
 										list($min_val,$max_val) =  @explode(",",$_SESSION["ProfileCustomID".$data1['ProfileCustomID']]);
 
-										if($data1['ProfileCustomTitle']=="Height" AND $bb_agency_option_unittype==1){
-											echo  "			<fieldset class=\"rbselect\">";
+									    if ($data1['ProfileCustomTitle']=="Height" AND $bb_agency_option_unittype==1) : ?>
+										    <fieldset class="rbselect">
+                                                <div>
+                                                    <label>Min</label>
+                                                    <select name="ProfileCustomID<?php echo $data1['ProfileCustomID'] ?>_min">
+                                                    <?php if (empty($ProfileCustomValue)) : ?>
+											            <option value="">--</option>
+											        <?php endif; ?> 
+											
+        											<?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
+        											    <option value="<?php echo $i ?>" <?php echo selected($ProfileCustomValue, $i) ?>><?php echo display_height($i) ?></option>
+        											<?php endfor; ?>
+										            </select>
+                                                </div>
+										  
+										        <div>
+                                                    <label>Max</label>
+                                                    <select name="ProfileCustomID<?php echo $data1['ProfileCustomID'] ?>_max">
+        										    <?php if (empty($ProfileCustomValue)) : ?>
+        											     <option value="">--</option>
+        										    <?php endif; ?>
+                                                    <?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
+                                                        <option value="<?php echo $i ?>" <?php echo selected($ProfileCustomValue, $i) ?>><?php echo display_height($i) ?></option>
+                                                    <?php endfor; ?>
+                                                    </select>
+                                                </div>
+											</fieldset>
 
-		  echo "<div><label>Min</label><select name=\"ProfileCustomID". $data1['ProfileCustomID'] ."_min\">\n";
-														  if (empty($ProfileCustomValue)) {
-															echo "  <option value=\"\">--</option>\n";
-														  }
-														  // 
-														  $i=12;
-														  $heightraw = 0;
-														  $heightfeet = 0;
-														  $heightinch = 0;
-														  while($i<=90)  { 
-															  $heightraw = $i;
-															  $heightfeet = floor($heightraw/12);
-															  $heightinch = $heightraw - floor($heightfeet*12);
-														  echo " <option value=\"". $i ."\" ". selected($ProfileCustomValue, $i) .">". $heightfeet ." ft ". $heightinch ." in</option>\n";
-																  $i++;
-																}
-														  echo " </select></div>\n";
-														  
-														   echo "<div><label>Max</label><select name=\"ProfileCustomID". $data1['ProfileCustomID'] ."_max\">\n";
-														  if (empty($ProfileCustomValue)) {
-															echo "  <option value=\"\">--</option>\n";
-														  }
-														  // 
-														  $i=12;
-														  $heightraw = 0;
-														  $heightfeet = 0;
-														  $heightinch = 0;
-														  while($i<=90)  { 
-															  $heightraw = $i;
-															  $heightfeet = floor($heightraw/12);
-															  $heightinch = $heightraw - floor($heightfeet*12);
-														  echo " <option value=\"". $i ."\" ". selected($ProfileCustomValue, $i) .">". $heightfeet ." ft ". $heightinch ." in</option>\n";
-																  $i++;
-																}
-														  echo " </select></div>\n";
-														  echo  "			</fieldset>";
-										} else {
-											echo  "			<fieldset class=\"rbtext\">";
-											// for other search
-											echo "<div><label for=\"ProfileCustomID".$data1['ProfileCustomID']
-											."_min\">Min</label><input value=\""
-											.(!is_array($min_val) && $min_val != "Array" ? $min_val : "")
-											."\" class=\"stubby\" type=\"text\" name=\"ProfileCustomID"
-											.$data1['ProfileCustomID']."[]\" /></div>";
+										<?php else : ?>
+											<fieldset class="rbtext">
+											<?php // for other search ?>
+											     <div>
+                                                    <label for="ProfileCustomID<?php echo $data1['ProfileCustomID'] ?>_min">Min</label>
+                                                    <input value="<?php echo (!is_array($min_val) && $min_val != "Array" ? $min_val : "") ?>" class="stubby" type="text" name="ProfileCustomID<?php echo $data1['ProfileCustomID'] ?>[]" />
+                                                </div>
 
 											echo "<div><label for=\"ProfileCustomID".$data1['ProfileCustomID']
 											."_max\">Max</label><input value=\"".$max_val
 											."\" class=\"stubby\" type=\"text\" name=\"ProfileCustomID".$data1['ProfileCustomID']."[]\" /></div>";
 											echo  "			</fieldset>";
-										}
+										<?php endif; ?>
 									}		
 			
 					}//end of if(in_array("$data1['ProfileCustomTitle']", $cusFields))
