@@ -4,7 +4,7 @@
 
 class Geocoder {
     static private $url = "http://maps.google.com/maps/api/geocode/json";
-    static private $key = 'AIzaSyAwGmQOA2UBIBMr1t82cYi_K9cidbRBC48';
+    //static private $key = 'AIzaSyAwGmQOA2UBIBMr1t82cYi_K9cidbRBC48';
 
     static public function getLocation($address)
     {
@@ -22,7 +22,7 @@ class Geocoder {
 
     static public function getMap($lat, $lng, $name) {
         ?>
-        <script type="text/javascript" src="//maps.googleapis.com/maps/api/js?key=<?php echo self::$key ?>&sensor=false"></script>
+        <script type="text/javascript" src="//maps.googleapis.com/maps/api/js?sensor=false"></script>
         <script type="text/javascript">
             function initialize() {
                 var myLatlng = new google.maps.LatLng(<?php echo $lat ?>, <?php echo $lng ?>);
@@ -47,7 +47,8 @@ class Geocoder {
 
     static private function getUrl($address)
     {
-        return self::$url . '?key=' . self::$key .'&sensor=false&address=' . urlencode($address);
+        //return self::$url . '?key=' . self::$key .'&sensor=false&address=' . urlencode($address);
+        return self::$url . '?sensor=false&address=' . urlencode($address);
     }
 
     static private function curl_file_get_contents($URL)

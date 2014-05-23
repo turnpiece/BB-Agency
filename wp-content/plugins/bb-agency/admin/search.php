@@ -155,8 +155,17 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
 		// Location Zip
 		if (isset($_GET['ProfileLocationZip']) && !empty($_GET['ProfileLocationZip'])){
 			$ProfileLocationZip = $_GET['ProfileLocationZip'];
-			$filter .= " AND profile.ProfileLocationZip='". $ProfileLocationZip ."'";
-		}
+
+            if ($location = geocode($ProfileLocationZip)) {
+                $lat = $location['lat'];
+                $lng = $location['lng'];
+                $distance = "((ACOS(SIN($lat * PI() / 180) * SIN(`ProfileLocationLatitude` * PI() / 180) + COS($lat * PI() / 180) * COS(`ProfileLocationLatitude` * PI() / 180) * COS(($lng - `ProfileLocationLongitude`) * PI() / 180)) * 180 / PI()) * 60 * 1.1515)";
+                $filter .= " AND $distance <= 25";
+            }
+        }
+        /*
+        SELECT ((ACOS(SIN($lat * PI() / 180) * SIN(`lat` * PI() / 180) + COS($lat * PI() / 180) * COS(`lat` * PI() / 180) * COS(($lon – `lon`) * PI() / 180)) * 180 / PI()) * 60 * 1.1515) AS distance FROM `members` HAVING distance<=’10′ ORDER BY distance ASC
+        */
 		
 		// Type
 		if (isset($_GET['ProfileType']) && !empty($_GET['ProfileType'])){
@@ -409,7 +418,8 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
 			 profile.ProfileDateDue, 
 			 profile.ProfileLocationState, 
 			 profile.ProfileID as pID, 
-			 customfield_mux.*,  
+			 customfield_mux.*, ".
+             (!empty($select) ? implode(', ', $select).', ' : '')."
 			 		(
 					  SELECT media.ProfileMediaURL 
 					 	      FROM ". table_agency_profile_media ." media 
@@ -424,7 +434,7 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
 			LEFT JOIN ". table_agency_customfield_mux ." 
 			            AS customfield_mux 
 					ON profile.ProfileID = customfield_mux.ProfileID  
-					".$filter." ".$cartQuery."  
+					".$filter." ".$cartQuery."   
 			GROUP BY profile.ProfileID 
 			ORDER BY $sort $dir  $limit";
 

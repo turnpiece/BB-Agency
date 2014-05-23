@@ -15,7 +15,7 @@ $bb_agency_option_profilenaming = (int) $bb_agency_options_arr['bb_agency_option
 $bb_agency_option_locationtimezone = (int) $bb_agency_options_arr['bb_agency_option_locationtimezone'];
 
 
-if (function_exists(bb_agencyinteract_approvemembers)) {
+if (function_exists('bb_agencyinteract_approvemembers')) {
     // Load Interact Settings
     $bb_agencyinteract_options_arr = get_option('bb_agencyinteract_options');
     $bb_agency_option_useraccountcreation = (int) $bb_agency_options_arr['bb_agency_option_useraccountcreation'];
@@ -93,7 +93,7 @@ if (isset($_POST['action'])) {
         $error .= "<b><i>The " . LabelSingular . " must have a name.</i></b><br>";
         $have_error = true;
     }
-    if ((isset($_GET["action"]) == "add") && function_exists(bb_agencyinteract_approvemembers)) {
+    if ((isset($_GET["action"]) == "add") && function_exists('bb_agencyinteract_approvemembers')) {
         $userdata = array(
             'user_pass' => esc_attr($ProfilePassword),
             'user_login' => esc_attr($ProfileUsername),
@@ -131,103 +131,100 @@ if (isset($_POST['action'])) {
         // *************************************************************************************************** //
         // Add Record
         case 'addRecord':
-            if (!$have_error) {
-
-                // Bug Free!
-                if ($have_error == false) {
-                    if (function_exists(bb_agencyinteract_approvemembers)) {
-                        $new_user = wp_insert_user($userdata);
-                    }
-
-                    $ProfileGallery = bb_agency_checkdir($ProfileGallery);  // Check Directory - create directory if does not exist
-                    // Create Record
-                     $insert = "INSERT INTO " . table_agency_profile .
-                        " (ProfileGallery,
-                           ProfileContactDisplay,
-                           ProfileUserLinked,
-                           ProfileContactNameFirst,
-                           ProfileContactNameLast,
-                           ProfileContactEmail,
-                           ProfileContactWebsite,
-                           ProfileGender,
-                           ProfileDateBirth,
-                           ProfileDateDue,
-                           ProfileLocationStreet,
-                           ProfileLocationCity,
-                           ProfileLocationState,
-                           ProfileLocationZip,
-                           ProfileLocationCountry,
-                           ProfileContactPhoneHome, 
-                           ProfileContactPhoneCell, 
-                           ProfileContactPhoneWork,
-                           ProfileDateUpdated,
-                           ProfileType,
-                           ProfileIsActive,
-                           ProfileIsFeatured,
-                           ProfileIsPromoted,
-                           ProfileStatHits,
-                           ProfileDateViewLast)" .
-                        "VALUES (
-                            '" . $wpdb->escape($ProfileGallery) . "',
-                            '" . $wpdb->escape($ProfileContactDisplay) . "',
-                            '" . $wpdb->escape($new_user) . "',
-                            '" . $wpdb->escape($ProfileContactNameFirst) . "',
-                            '" . $wpdb->escape($ProfileContactNameLast) . "',
-                            '" . $wpdb->escape($ProfileContactEmail) . "',
-                            '" . $wpdb->escape($ProfileContactWebsite) . "',
-                            '" . $wpdb->escape($ProfileGender) . "',
-                            '" . $wpdb->escape($ProfileDateBirth) . "',
-                            '" . $wpdb->escape($ProfileDateDue) . "',
-                            '" . $wpdb->escape($ProfileLocationStreet) . "',
-                            '" . $wpdb->escape($ProfileLocationCity) . "',
-                            '" . $wpdb->escape($ProfileLocationState) . "',
-                            '" . $wpdb->escape($ProfileLocationZip) . "',
-                            '" . $wpdb->escape($ProfileLocationCountry) . "',
-                            '" . $wpdb->escape($ProfileContactPhoneHome) . "',
-                            '" . $wpdb->escape($ProfileContactPhoneCell) . "',
-                            '" . $wpdb->escape($ProfileContactPhoneWork) . "',
-                            now(),
-                            '" . $wpdb->escape($ProfileType) . "',
-                            '" . $wpdb->escape($ProfileIsActive) . "',
-                            '" . $wpdb->escape($ProfileIsFeatured) . "',
-                            '" . $wpdb->escape($ProfileIsPromoted) . "',
-                            '" . $wpdb->escape($ProfileStatHits) . "',
-                            '" . $wpdb->escape($ProfileDateViewLast) . "'
-                        )";
-                    $results = $wpdb->query($insert) or die("Add Record: " . mysql_error());
-                    $ProfileID = $wpdb->insert_id;
-
-				
-                    // Notify admin and user
-                    if ( isset($ProfileNotifyUser) && $ProfileNotifyUser <> "yes" && function_exists(bb_agencyinteract_approvemembers)) {
-                        wp_new_user_notification($new_user, $ProfilePassword);
-                    }
-                    // Set Display Name as Record ID (We have to do this after so we know what record ID to use... right ;)
-                    if ($bb_agency_option_profilenaming == 3) {
-                        $ProfileContactDisplay = "ID-" . $ProfileID;
-                        $ProfileGallery = "ID" . $ProfileID;
-
-                        $update = $wpdb->query("UPDATE " . table_agency_profile . " SET ProfileContactDisplay='" . $ProfileContactDisplay . "', ProfileGallery='" . $ProfileGallery . "' WHERE ProfileID='" . $ProfileID . "'");
-                        $updated = $wpdb->query($update);
-                    }
-
-                    // Add Custom Field Values stored in Mux
-                    foreach ($_POST as $key => $value) {
-                        if ((substr($key, 0, 15) == "ProfileCustomID") && (isset($value) && !empty($value))) {
-                            $ProfileCustomID = substr($key, 15);
-                            if (is_array($value)) {
-                                $value = implode(",", $value);
-                            }
-                            $insert1 = "INSERT INTO " . table_agency_customfield_mux . " (ProfileID,ProfileCustomID,ProfileCustomValue)" . "VALUES ('" . $ProfileID . "','" . $ProfileCustomID . "','" . $value . "')";
-                            $results1 = $wpdb->query($insert1);
-                        }
-                    }
-
-                    echo ('<div id="message" class="updated"><p>' . __("New Profile added successfully!", bb_agency_TEXTDOMAIN) . ' <a href="' . admin_url("admin.php?page=" . $_GET['page']) . '&action=editRecord&ProfileID=' . $ProfileID . '">' . __("Update and add media", bb_agency_TEXTDOMAIN) . '</a></p></div>');
-                    // We can edit it now
-                    // bb_display_manage($ProfileID);
-                    // exit;
+            if ($have_error == false) {
+                if (function_exists('bb_agencyinteract_approvemembers')) {
+                    $new_user = wp_insert_user($userdata);
                 }
+
+                $ProfileGallery = bb_agency_checkdir($ProfileGallery);  // Check Directory - create directory if does not exist
+
+                $fields = array(
+                    'ProfileGallery',
+                    'ProfileContactDisplay',
+                    'ProfileContactNameFirst',
+                    'ProfileContactNameLast',
+                    'ProfileContactEmail',
+                    'ProfileContactWebsite',
+                    'ProfileGender',
+                    'ProfileDateBirth',
+                    'ProfileDateDue',
+                    'ProfileLocationStreet',
+                    'ProfileLocationCity',
+                    'ProfileLocationState',
+                    'ProfileLocationZip',
+                    'ProfileLocationCountry',
+                    'ProfileContactPhoneHome', 
+                    'ProfileContactPhoneCell', 
+                    'ProfileContactPhoneWork',
+                    'ProfileType',
+                    'ProfileIsActive',
+                    'ProfileIsFeatured',
+                    'ProfileIsPromoted',
+                    'ProfileStatHits',
+                    'ProfileDateViewLast'
+                );
+
+                // Create insert query
+                
+                foreach ($fields as $field) {
+                    $sqlData[] = $field .' = "'. $wpdb->escape($_POST[$field]) . '"';
+
+                    if (preg_match("/^ProfileLocation/", $field) && $_POST[$field]) {
+                        $arrAddress[] = $_POST[$field];
+                    }
+                }
+
+                if (isset($new_user))
+                    $sqlData[] = 'ProfileUserLinked = '.$new_user;
+
+                $sqlData[] = 'ProfileDateUpdated = NOW()';
+
+                // get latitude and longitude
+                if (!empty($arrAddress)) {
+                    $address = implode(', ', $arrAddress);
+
+                    if ($location = geocode($address)) {
+                        // geocode address
+                        $sqlData[] = 'ProfileLocationLatitude = "'.$location['lat'].'"';
+                        $sqlData[] = 'ProfileLocationLongitude = "'.$location['lng'].'"';
+                    } else {
+                        echo '<div id="message" class="error"><p>' . sprintf(__("Failed to get location of address '%s'", bb_agencyinteract_TEXTDOMAIN), $address) . '</p></div>';
+                    }
+                }
+
+                $insert = 'INSERT INTO ' . table_agency_profile . ' SET ' . implode(', ', $sqlData);
+
+                $results = $wpdb->query($insert) or die("Add Record: " . mysql_error());
+                $ProfileID = $wpdb->insert_id;
+			
+                // Notify admin and user
+                if (isset($ProfileNotifyUser) && $ProfileNotifyUser <> "yes" && isset($new_user) && function_exists('bb_agencyinteract_approvemembers')) {
+                    wp_new_user_notification($new_user, $ProfilePassword);
+                }
+                // Set Display Name as Record ID (We have to do this after so we know what record ID to use... right ;)
+                if ($bb_agency_option_profilenaming == 3) {
+                    $ProfileContactDisplay = "ID-" . $ProfileID;
+                    $ProfileGallery = "ID" . $ProfileID;
+
+                    $update = $wpdb->query("UPDATE " . table_agency_profile . " SET ProfileContactDisplay='" . $ProfileContactDisplay . "', ProfileGallery='" . $ProfileGallery . "' WHERE ProfileID='" . $ProfileID . "'");
+                    $updated = $wpdb->query($update);
+                }
+
+                // Add Custom Field Values stored in Mux
+                foreach ($_POST as $key => $value) {
+                    if ((substr($key, 0, 15) == "ProfileCustomID") && (isset($value) && !empty($value))) {
+                        $ProfileCustomID = substr($key, 15);
+                        if (is_array($value)) {
+                            $value = implode(",", $value);
+                        }
+                        $insert1 = "INSERT INTO " . table_agency_customfield_mux . " (ProfileID,ProfileCustomID,ProfileCustomValue)" . "VALUES ('" . $ProfileID . "','" . $ProfileCustomID . "','" . $value . "')";
+                        $results1 = $wpdb->query($insert1);
+                    }
+                }
+
+                echo ('<div id="message" class="updated"><p>' . __("New Profile added successfully!", bb_agency_TEXTDOMAIN) . ' <a href="' . admin_url("admin.php?page=" . $_GET['page']) . '&action=editRecord&ProfileID=' . $ProfileID . '">' . __("Update and add media", bb_agency_TEXTDOMAIN) . '</a></p></div>');
+
+                
             } else {
                 echo ('<div id="message" class="error"><p>' . __("Error creating record, please ensure you have filled out all required fields.", bb_agency_TEXTDOMAIN) . '</p></div>');
                 echo ('<div id="message" class="error"><p>' . $error);
@@ -243,48 +240,64 @@ if (isset($_POST['action'])) {
         case 'editRecord':
             if (!empty($ProfileContactNameFirst) && !empty($ProfileID)) {
 
-                // Update Record
-                $update = "UPDATE " . table_agency_profile . " SET 
-                ProfileGallery='" . $wpdb->escape($ProfileGallery) . "',
-                ProfileContactDisplay='" . $wpdb->escape($ProfileContactDisplay) . "',
-                ProfileContactNameFirst='" . $wpdb->escape($ProfileContactNameFirst) . "',
-                ProfileContactNameLast='" . $wpdb->escape($ProfileContactNameLast) . "',
-                ProfileContactEmail='" . $wpdb->escape($ProfileContactEmail) . "',
-                ProfileContactWebsite='" . $wpdb->escape($ProfileContactWebsite) . "',
-                ProfileContactPhoneHome='" . $wpdb->escape($ProfileContactPhoneHome) . "',
-                ProfileContactPhoneCell='" . $wpdb->escape($ProfileContactPhoneCell) . "',
-                ProfileContactPhoneWork='" . $wpdb->escape($ProfileContactPhoneWork) . "',
-                ProfileGender='" . $wpdb->escape($ProfileGender) . "',
-                ProfileDateBirth ='" . $wpdb->escape($ProfileDateBirth) . "',
-                ProfileDateDue ='" . $wpdb->escape($ProfileDateDue) . "',
-                ProfileLocationStreet='" . $wpdb->escape($ProfileLocationStreet) . "',
-                ProfileLocationCity='" . $wpdb->escape($ProfileLocationCity) . "',
-                ProfileLocationState='" . $wpdb->escape($ProfileLocationState) . "',
-                ProfileLocationZip ='" . $wpdb->escape($ProfileLocationZip) . "',
-                ProfileLocationCountry='" . $wpdb->escape($ProfileLocationCountry) . "',
-                ProfileDateUpdated=now(),
-                ProfileType='" . $wpdb->escape($ProfileType) . "',
-                ProfileIsActive='" . $wpdb->escape($ProfileIsActive) . "',
-                ProfileIsFeatured='" . $wpdb->escape($ProfileIsFeatured) . "',
-                ProfileIsPromoted='" . $wpdb->escape($ProfileIsPromoted) . "',
-                ProfileStatHits='" . $wpdb->escape($ProfileStatHits) . "'";
+                $fields = array(
+                    'ProfileGallery',
+                    'ProfileContactDisplay',
+                    'ProfileContactNameFirst',
+                    'ProfileContactNameLast',
+                    'ProfileContactEmail',
+                    'ProfileContactWebsite',
+                    'ProfileGender',
+                    'ProfileDateBirth',
+                    'ProfileDateDue',
+                    'ProfileLocationStreet',
+                    'ProfileLocationCity',
+                    'ProfileLocationState',
+                    'ProfileLocationZip',
+                    'ProfileLocationCountry',
+                    'ProfileContactPhoneHome', 
+                    'ProfileContactPhoneCell', 
+                    'ProfileContactPhoneWork',
+                    'ProfileType',
+                    'ProfileIsActive',
+                    'ProfileIsFeatured',
+                    'ProfileIsPromoted',
+                    'ProfileStatHits',
+                    'ProfileDateViewLast'
+                );
 
-                // get latitude and longitude
-                $address = implode(', ', array($ProfileLocationStreet, $ProfileLocationCity, $ProfileLocationState, $ProfileLocationZip, $ProfileLocationCountry));
+                // Create insert query
+                
+                foreach ($fields as $field) {
+                    $sqlData[] = $field .' = "'. $wpdb->escape($_POST[$field]) . '"';
 
-                if ($location = geocode($address)) {
-                    // geocode address
-                    $update .= ",
-                    ProfileLocationLatitude='{$location['lat']}',
-                    ProfileLocationLongitude='{$location['lng']}'";
+                    if (preg_match("/^ProfileLocation/", $field) && $_POST[$field]) {
+                        $arrAddress[] = $_POST[$field];
+                    }
                 }
 
-                $update .= " WHERE ProfileID=$ProfileID";
+                $sqlData[] = 'ProfileDateUpdated = NOW()';
+
+                // get latitude and longitude
+                if (!empty($arrAddress)) {
+                    $address = implode(', ', $arrAddress);
+
+                    if ($location = geocode($address)) {
+                        // geocode address
+                        $sqlData[] = 'ProfileLocationLatitude = "'.$location['lat'].'"';
+                        $sqlData[] = 'ProfileLocationLongitude = "'.$location['lng'].'"';
+                    } else {
+                        echo '<div id="message" class="error"><p>' . sprintf(__("Failed to get location of address '%s'", bb_agencyinteract_TEXTDOMAIN), $address) . '</p></div>';
+                    }
+                }
+
+                // create update sql
+                $update = 'UPDATE ' . table_agency_profile . ' SET ' . implode(', ', $sqlData) .' WHERE ProfileID = '.(int)$ProfileID;
 
                 $results = $wpdb->query($update) or die(mysql_error());
 
-					update_usermeta($_REQUEST['wpuserid'], 'bb_agency_interact_profiletype', esc_attr($ProfileType));
-                    update_usermeta($_REQUEST['wpuserid'], 'bb_agency_interact_pgender', esc_attr($ProfileGender));
+				update_usermeta($_REQUEST['wpuserid'], 'bb_agency_interact_profiletype', esc_attr($ProfileType));
+                update_usermeta($_REQUEST['wpuserid'], 'bb_agency_interact_pgender', esc_attr($ProfileGender));
                 
                 if ($ProfileUserLinked > 0) {
                     /* Update WordPress user information. */
@@ -310,8 +323,8 @@ if (isset($_POST['action'])) {
                         $results1 = $wpdb->query($insert1);
                     }
                 }
-               // 5/27/2013 @Satya Fixed 559 Profile Media Folder
-			   //  bb_agency_checkdir($ProfileGallery);  // Check Directory - create directory if does not exist
+
+			     //  bb_agency_checkdir($ProfileGallery);  // Check Directory - create directory if does not exist
                 // Upload Image & Add to Database
                 $i = 1;
 
@@ -675,7 +688,7 @@ function bb_display_manage($ProfileID) {
     echo "    </tr>\n";
 
     // password
-    if ((isset($_GET["action"]) && $_GET["action"] == "add") && function_exists(bb_agencyinteract_approvemembers)) {
+    if ((isset($_GET["action"]) && $_GET["action"] == "add") && function_exists('bb_agencyinteract_approvemembers')) {
         echo "    <tr valign=\"top\">\n";
         echo "      <th scope=\"row\">" . __("Username", bb_agency_TEXTDOMAIN) . "</th>\n";
         echo "      <td>\n";
@@ -756,7 +769,7 @@ function bb_display_manage($ProfileID) {
     echo "    </tr>\n";
 
     // display location map
-    if (!is_null($ProfileLocationLatitude) && !is_null($ProfileLocationLongitude)) : ?>
+    if ($ProfileLocationLatitude != '' && $ProfileLocationLongitude != '') : ?>
         <tr valign="top">
             <td scope="row"><?php _e('Location', bb_agency_TEXTDOMAIN) ?></td>
             <td><?php map($ProfileLocationLatitude, $ProfileLocationLongitude, $ProfileContactDisplay) ?></td>
@@ -1082,7 +1095,7 @@ function bb_display_manage($ProfileID) {
     echo "        </td>\n";
     echo "    </tr>\n";
     /*
-    if (function_exists(bb_agencyinteract_approvemembers)) {
+    if (function_exists('bb_agencyinteract_approvemembers')) {
         echo "    <tr valign=\"top\">\n";
         echo "      <th scope=\"row\">" . __("Membership", bb_agency_TEXTDOMAIN) . "</th>\n";
         echo "      <td>\n";
