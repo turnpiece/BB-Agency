@@ -227,6 +227,7 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
 		$filterDropdown = array();
             
         $filter2 = '';
+        $filters = array();
         $cmFilters = array();
 		foreach ($_GET as $key => $val) {
                         
@@ -265,32 +266,26 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
                     $q = mysql_query("SELECT * FROM ". table_agency_customfields ." WHERE ProfileCustomID = '".substr($key,15)."' ");
 	                $ProfileCustomType = mysql_fetch_assoc($q);
 					
+                    // get key id
+                    $keyID = substr($key, 15);
+                    $keyID = preg_replace("/_\w+$/", '', $keyID);
+
                     /*
                      * Have created a holder $filter2 and
                      * create its own filter here and change
                      * AND should be OR
                      */
                     if (in_array($ProfileCustomType['ProfileCustomTitle'], $cusFields)) {
-                        $keyID = substr($key, 15);
-                        $keyID = preg_replace("/_\w+$/", '', $keyID);
+    
                         if (in_array($keyID, $cmFilters))
                             continue;
-
-                        // add this key to already filtered array
-                        array_push($filtered, $keyID);
 
                         // get max and min values
                         $minVal = $_GET['ProfileCustomID'.$ProfileCustomType['ProfileCustomID'].'_min'];
                         $maxVal = $_GET['ProfileCustomID'.$ProfileCustomType['ProfileCustomID'].'_max'];
-                        /*
-                        if ($filter2 == "") {
-                            $filter2 .= " AND (";
-                        } else {
-                            $filter2 .= " OR ";
-                        }
-                        $filter2 .= "(customfield_mux.ProfileCustomValue BETWEEN '$minVal' AND '$maxVal' AND customfield_mux.ProfileCustomID = '$keyID') ";
-                        */
-                        $cmFilters[$keyID] = array($minVal, $maxVal);
+                        
+                        //$joins[] = "LEFT JOIN ". table_agency_customfield_mux ." AS cm{$keyID} ON profile.ProfileID = cm{$keyID}.ProfileID AND cm{$keyID}.ProfileCustomID = '$keyID'";
+                        $filters[$keyID] = "cm{$keyID}.ProfileCustomValue BETWEEN '$minVal' AND '$maxVal'";
 
                         //echo "-----";
                     } else {
@@ -306,99 +301,118 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
                         *********************/
 
                         if ($ProfileCustomType["ProfileCustomType"] == 1) { //TEXT
-                            if($filter2 == ""){	
+                            /*
+                            if ($filter2 == ""){	
                                 $filter2 .= " AND ( (customfield_mux.ProfileCustomValue like('%".$val."%'))";
                             } else {
                                 $filter2 .= " OR customfield_mux.ProfileCustomValue='".$val."' ";
-                            }                                                           
+                            } 
+                            */                                                          
                             $_SESSION[$key] = $val;
 
+                            //$joins[] = "LEFT JOIN ". table_agency_customfield_mux ." AS cm{$keyID} ON profile.ProfileID = cm{$keyID}.ProfileID AND cm{$keyID}.ProfileCustomID = '$keyID'";
+                            $filters[$keyID] = "cm{$keyID}.ProfileCustomValue LIKE('%".$val."%')";
+
+
+
                         } elseif ($ProfileCustomType["ProfileCustomType"] == 3) { // Dropdown
+                            /*
 							if($filter2==""){
                                 $filter2 .=" AND (( customfield_mux.ProfileCustomValue IN('".$val."') and customfield_mux.ProfileCustomID = '".substr($key,15)."')";
                             } else {
                                 $filter2 .=" OR (customfield_mux.ProfileCustomValue IN('".$val."') and customfield_mux.ProfileCustomID = '".substr($key,15)."')";
                             }
-
+                            */
                             //$filter.= " AND LOWER(customfield_mux.ProfileCustomValue) = LOWER(\"".$val."\") ";
                             // array_push($filterDropdown,$val);
 
+                            $filters[$keyID] = "cm{$keyID}.ProfileCustomValue IN('$val')";
+
 
                         } elseif ($ProfileCustomType["ProfileCustomType"] == 4) { //Textarea
-                                if($filter2==""){
-                                    $filter2 .= " AND ( (customfield_mux.ProfileCustomValue like('%".$val."%'))";
-                                } else {
-                                    $filter2 .= " OR customfield_mux.ProfileCustomValue='".$val."' ";
-                                } 
-                                        $_SESSION[$key] = $val;
+                            /*
+                            if($filter2==""){
+                                $filter2 .= " AND ( (customfield_mux.ProfileCustomValue like('%".$val."%'))";
+                            } else {
+                                $filter2 .= " OR customfield_mux.ProfileCustomValue='".$val."' ";
+                            } 
+                            */
+                            $_SESSION[$key] = $val;
+
+                            $filters[$keyID] = "cm{$keyID}.ProfileCustomValue='$val'";
 
 
                         } elseif ($ProfileCustomType["ProfileCustomType"] == 5) { //Checkbox
-                                if(!empty($val)){
-                                    if(strpos($val,",") === false){
-                                       // $val = implode("','",explode(",",$val));
-									  
-                                        if($filter2==""){
-										
-                                                $filter2 .= " AND  ((customfield_mux.ProfileCustomValue like('%".$val."%') and customfield_mux.ProfileCustomID = '".substr($key,15)."') ";
-                                        } else {
-                                                $filter2 .= " OR  (customfield_mux.ProfileCustomValue like('%".$val."%')   and customfield_mux.ProfileCustomID = '".substr($key,15)."') ";
-                                        }
+                            if (!empty($val)) {
+                                if (strpos($val, ",") === false){
+                                    // $val = implode("','",explode(",",$val));
+								    /*
+                                    if ($filter2==""){
+									   $filter2 .= " AND  ((customfield_mux.ProfileCustomValue like('%".$val."%') and customfield_mux.ProfileCustomID = '".substr($key,15)."') ";
                                     } else {
-										
-										$likequery = explode(",", $val);
-										$likecounter = count($likequery);
-										$i=1; 
-										$likedata = "" ;
-										foreach($likequery as $like){
-											if($i < ($likecounter-1)){
-												if($like!=""){
-													$likedata.= " customfield_mux.ProfileCustomValue like('%".$like."%')  OR "  ;
-												}
-												}else{
-												if($like!=""){
-														$likedata.= " customfield_mux.ProfileCustomValue like('%".$like."%')  "  ;
-												} 
-											}
-											$i++;
-										}
-										 
-										
-										$val = substr($val, 0, -1);
-									    if($filter2==""){
-                                            $filter2 .= " AND  ((( ".$likedata.") and customfield_mux.ProfileCustomID = '".substr($key,15)."' )";
-                                        } else {
-                                            $filter2 .= " OR  ((".$likedata.") and customfield_mux.ProfileCustomID = '".substr($key,15)."')";
-                                        }
+                                        $filter2 .= " OR  (customfield_mux.ProfileCustomValue like('%".$val."%')   and customfield_mux.ProfileCustomID = '".substr($key,15)."') ";
                                     }
+                                    */
+                                    $filters[$keyID] = "cm{$keyID}.ProfileCustomValue like('%{$val}%')";
+                                } else {
+									
+									$likequery = explode(",", $val);
+									$likecounter = count($likequery);
+									$i = 1; 
+									$likedata = '';
+									foreach ($likequery as $like) {
+                                        if ($like == '')
+                                            continue;
+
+										$likedata .= " cm{$keyID}.ProfileCustomValue like('%{$like}%') ". ($i < ($likecounter - 1) ? " OR " : '');
+										$i++;
+									}									 
+									
+									$val = substr($val, 0, -1);
+                                    /*
+								    if($filter2==""){
+                                        $filter2 .= " AND  ((( ".$likedata.") and customfield_mux.ProfileCustomID = '".substr($key,15)."' )";
+                                    } else {
+                                        $filter2 .= " OR  ((".$likedata.") and customfield_mux.ProfileCustomID = '".substr($key,15)."')";
+                                    }
+                                    */
+                                    $filters[$keyID] = "($likedata)";
+                                }
 
                                 $_SESSION[$key] = $val;
-                                }else{
-                                        $_SESSION[$key] = "";
-                                }
-                        } elseif ($ProfileCustomType["ProfileCustomType"] == 6) { //Radiobutton 
-                                //var_dump($ProfileCustomType["ProfileCustomType"]);
-                                   $val = implode("','",explode(",",$val));
-                                    if($filter2==""){
-                                        $filter2 .= " AND ( (customfield_mux.ProfileCustomValue like('%".$val."%'))";
-                                    } else {
-                                        $filter2 .= " or (customfield_mux.ProfileCustomValue like('%".$val."%'))";
-                                    } 
-                                    $_SESSION[$key] = $val;
-                               
+                            } else{
+                                $_SESSION[$key] = '';
+                            }
 
-                        }
-                        elseif ($ProfileCustomType["ProfileCustomType"] == 7) { //Measurements 
+                        } elseif ($ProfileCustomType["ProfileCustomType"] == 6) { //Radiobutton 
+                            //var_dump($ProfileCustomType["ProfileCustomType"]);
+                            $val = implode("','",explode(",",$val));
+                            /*
+                            if($filter2==""){
+                                $filter2 .= " AND ( (customfield_mux.ProfileCustomValue like('%".$val."%'))";
+                            } else {
+                                $filter2 .= " or (customfield_mux.ProfileCustomValue like('%".$val."%'))";
+                            } 
+                            */
+                            $_SESSION[$key] = $val;
+                            
+                            $filters[$keyID] = "cm{$keyID}.ProfileCustomValue LIKE('%{$val}%')";   
+
+                        } elseif ($ProfileCustomType["ProfileCustomType"] == 7) { //Measurements 
 
                             list($Min_val,$Max_val) = explode(",",$val);
                             if(!empty($Min_val) && !empty($Max_val)){
+                                /*
                                 if ($filter2==""){
                                     $filter2  .= " AND (( customfield_mux.ProfileCustomValue BETWEEN '".$Min_val."' AND '".$Max_val."'and customfield_mux.ProfileCustomID = '".substr($key,15)."' )";
                                 } else {
                                     $filter2  .= " OR (customfield_mux.ProfileCustomValue BETWEEN '".$Min_val."' AND '".$Max_val."'and customfield_mux.ProfileCustomID = '".substr($key,15)."') ";
 
                                 }
+                                */
                                 $_SESSION[$key] = $val;
+
+                                $filters[$keyID] = "cm{$keyID}.ProfileCustomValue BETWEEN '{$Min_val}' AND '{$Max_val}'";
                             }
                         }
                     }
@@ -408,30 +422,43 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
 			 }  // end if
 	       } // end for each
 	  
-           if(count($filterDropdown) > 0){
+            if (count($filterDropdown) > 0){
                if($filter2==""){
                $filter2 .= " AND ( customfield_mux.ProfileCustomValue IN('".implode("','",$filterDropdown)."')";
                } else {
                $filter2 .=" OR customfield_mux.ProfileCustomValue IN('".implode("','",$filterDropdown)."')";
                }     
-           }
+            }
 
+            $joins = array();
+            $where = array();
+
+            foreach ($filters as $key => $value) {
+                $joins[] = "\nLEFT JOIN ". table_agency_customfield_mux ." AS cm{$key} ON profile.ProfileID = cm{$key}.ProfileID AND cm{$key}.ProfileCustomID = '$key'";
+                $where[] = $value;
+            }
+            /*
            if (!empty($cmFilters)) {
                 foreach ($cmFilters as $key => $range) {
                     list($min, $max) = $range;
-                    $filter .= " LEFT JOIN ". table_agency_customfield_mux ." AS cm{$key} ON profile.ProfileID = cm{$key}.ProfileID AND cm{$key}.ProfileCustomValue BETWEEN '$min' AND '$max' AND cm{$key}.ProfileCustomID = '$key'";
+                    $joins[] = "\nLEFT JOIN ". table_agency_customfield_mux ." AS cm{$key} ON profile.ProfileID = cm{$key}.ProfileID AND cm{$key}.ProfileCustomID = '$key'";
+                    $where[] = "cm{$key}.ProfileCustomValue BETWEEN '$min' AND '$max'";
                 }
            }
-
-           /*
-            * Refine filter and add the created 
-            * holder $filter to $filter if not
-            * equals to blanks
             */
-           if($filter2!=""){
-            $filter2.= " ) ";
-            $filter .= $filter2;
-           }
+            /*
+             * Refine filter and add the created 
+             * holder $filter to $filter if not
+             * equals to blanks
+             */
+            if ($filter2 !=""){
+                $filter2 .= " ) ";
+                $filter .= $filter2;
+            }
+
+            if (!empty($where)) {
+                $filter .= ' AND '.implode(" \nAND ", $where);
+            }
      
 	// Search Results	
 	$query = "
@@ -453,7 +480,8 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
 							AND 
 							media.ProfileMediaPrimary = 1
 					) 
-					AS ProfileMediaURL FROM ". table_agency_profile ." profile 
+					AS ProfileMediaURL FROM ". table_agency_profile ." profile ".
+            (empty($joins) ? '' : implode(' ', $joins))." 
 			LEFT JOIN ". table_agency_customfield_mux ." 
 			            AS customfield_mux 
 					ON profile.ProfileID = customfield_mux.ProfileID  
