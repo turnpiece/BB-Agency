@@ -3730,13 +3730,13 @@ function self_delete() {
  * @return array (lat,lng)
  *
  */
-function geocode($address) {
+function bbagency_geocode($address) {
 	require_once(dirname(__FILE__).'/Classes/class.geocoder.php');
 
 	return Geocoder::getLocation(urlencode($address));	
 }
 
-function map($lat, $lng, $name) {
+function bbagency_map($lat, $lng, $name) {
 	require_once(dirname(__FILE__).'/Classes/class.geocoder.php');
 
 	Geocoder::getMap($lat, $lng, $name);

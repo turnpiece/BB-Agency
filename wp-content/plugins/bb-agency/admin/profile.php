@@ -183,7 +183,7 @@ if (isset($_POST['action'])) {
                 if (!empty($arrAddress)) {
                     $address = implode(', ', $arrAddress);
 
-                    if ($location = geocode($address)) {
+                    if ($location = bbagency_geocode($address)) {
                         // geocode address
                         $sqlData[] = 'ProfileLocationLatitude = "'.$location['lat'].'"';
                         $sqlData[] = 'ProfileLocationLongitude = "'.$location['lng'].'"';
@@ -282,7 +282,7 @@ if (isset($_POST['action'])) {
                 if (!empty($arrAddress)) {
                     $address = implode(', ', $arrAddress);
 
-                    if ($location = geocode($address)) {
+                    if ($location = bbagency_geocode($address)) {
                         // geocode address
                         $sqlData[] = 'ProfileLocationLatitude = "'.$location['lat'].'"';
                         $sqlData[] = 'ProfileLocationLongitude = "'.$location['lng'].'"';
@@ -772,7 +772,7 @@ function bb_display_manage($ProfileID) {
     if ($ProfileLocationLatitude != '' && $ProfileLocationLongitude != '') : ?>
         <tr valign="top">
             <td scope="row"><?php _e('Location', bb_agency_TEXTDOMAIN) ?></td>
-            <td><?php map($ProfileLocationLatitude, $ProfileLocationLongitude, $ProfileContactDisplay) ?></td>
+            <td><?php bbagency_map($ProfileLocationLatitude, $ProfileLocationLongitude, $ProfileContactDisplay) ?></td>
         </tr>
     <?php endif;
 

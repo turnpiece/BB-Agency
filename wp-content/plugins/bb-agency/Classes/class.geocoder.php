@@ -33,7 +33,7 @@ class Geocoder {
                 }
                 var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
                            
-                var marker = new google.maps.Marker({
+                new google.maps.Marker({
                     position: myLatlng,
                     map: map,
                     title: "<?php echo $name ?>"
