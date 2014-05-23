@@ -277,17 +277,16 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
                      */
                     if (in_array($ProfileCustomType['ProfileCustomTitle'], $cusFields)) {
     
-                        if (in_array($keyID, $cmFilters))
+                        if (in_array($keyID, $filters))
                             continue;
 
                         // get max and min values
                         $minVal = $_GET['ProfileCustomID'.$ProfileCustomType['ProfileCustomID'].'_min'];
                         $maxVal = $_GET['ProfileCustomID'.$ProfileCustomType['ProfileCustomID'].'_max'];
                         
-                        //$joins[] = "LEFT JOIN ". table_agency_customfield_mux ." AS cm{$keyID} ON profile.ProfileID = cm{$keyID}.ProfileID AND cm{$keyID}.ProfileCustomID = '$keyID'";
                         $filters[$keyID] = "cm{$keyID}.ProfileCustomValue BETWEEN '$minVal' AND '$maxVal'";
 
-                        //echo "-----";
+                        $_SESSION[$key] = $val;
                     } else {
 
                         /******************
@@ -301,61 +300,28 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
                         *********************/
 
                         if ($ProfileCustomType["ProfileCustomType"] == 1) { //TEXT
-                            /*
-                            if ($filter2 == ""){	
-                                $filter2 .= " AND ( (customfield_mux.ProfileCustomValue like('%".$val."%'))";
-                            } else {
-                                $filter2 .= " OR customfield_mux.ProfileCustomValue='".$val."' ";
-                            } 
-                            */                                                          
+                                                         
                             $_SESSION[$key] = $val;
 
-                            //$joins[] = "LEFT JOIN ". table_agency_customfield_mux ." AS cm{$keyID} ON profile.ProfileID = cm{$keyID}.ProfileID AND cm{$keyID}.ProfileCustomID = '$keyID'";
+                            // add filter
                             $filters[$keyID] = "cm{$keyID}.ProfileCustomValue LIKE('%".$val."%')";
 
-
-
                         } elseif ($ProfileCustomType["ProfileCustomType"] == 3) { // Dropdown
-                            /*
-							if($filter2==""){
-                                $filter2 .=" AND (( customfield_mux.ProfileCustomValue IN('".$val."') and customfield_mux.ProfileCustomID = '".substr($key,15)."')";
-                            } else {
-                                $filter2 .=" OR (customfield_mux.ProfileCustomValue IN('".$val."') and customfield_mux.ProfileCustomID = '".substr($key,15)."')";
-                            }
-                            */
-                            //$filter.= " AND LOWER(customfield_mux.ProfileCustomValue) = LOWER(\"".$val."\") ";
-                            // array_push($filterDropdown,$val);
 
-                            $filters[$keyID] = "cm{$keyID}.ProfileCustomValue IN('$val')";
+                            $filters[$keyID] = "cm{$keyID}.ProfileCustomValue IN('$val') AND LOWER(cm{$keyID}.ProfileCustomValue) = LOWER('{$val}')";
 
 
                         } elseif ($ProfileCustomType["ProfileCustomType"] == 4) { //Textarea
-                            /*
-                            if($filter2==""){
-                                $filter2 .= " AND ( (customfield_mux.ProfileCustomValue like('%".$val."%'))";
-                            } else {
-                                $filter2 .= " OR customfield_mux.ProfileCustomValue='".$val."' ";
-                            } 
-                            */
+
                             $_SESSION[$key] = $val;
 
                             $filters[$keyID] = "cm{$keyID}.ProfileCustomValue='$val'";
 
-
                         } elseif ($ProfileCustomType["ProfileCustomType"] == 5) { //Checkbox
                             if (!empty($val)) {
                                 if (strpos($val, ",") === false){
-                                    // $val = implode("','",explode(",",$val));
-								    /*
-                                    if ($filter2==""){
-									   $filter2 .= " AND  ((customfield_mux.ProfileCustomValue like('%".$val."%') and customfield_mux.ProfileCustomID = '".substr($key,15)."') ";
-                                    } else {
-                                        $filter2 .= " OR  (customfield_mux.ProfileCustomValue like('%".$val."%')   and customfield_mux.ProfileCustomID = '".substr($key,15)."') ";
-                                    }
-                                    */
                                     $filters[$keyID] = "cm{$keyID}.ProfileCustomValue like('%{$val}%')";
-                                } else {
-									
+                                } else {			
 									$likequery = explode(",", $val);
 									$likecounter = count($likequery);
 									$i = 1; 
@@ -369,13 +335,7 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
 									}									 
 									
 									$val = substr($val, 0, -1);
-                                    /*
-								    if($filter2==""){
-                                        $filter2 .= " AND  ((( ".$likedata.") and customfield_mux.ProfileCustomID = '".substr($key,15)."' )";
-                                    } else {
-                                        $filter2 .= " OR  ((".$likedata.") and customfield_mux.ProfileCustomID = '".substr($key,15)."')";
-                                    }
-                                    */
+
                                     $filters[$keyID] = "($likedata)";
                                 }
 
@@ -387,13 +347,7 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
                         } elseif ($ProfileCustomType["ProfileCustomType"] == 6) { //Radiobutton 
                             //var_dump($ProfileCustomType["ProfileCustomType"]);
                             $val = implode("','",explode(",",$val));
-                            /*
-                            if($filter2==""){
-                                $filter2 .= " AND ( (customfield_mux.ProfileCustomValue like('%".$val."%'))";
-                            } else {
-                                $filter2 .= " or (customfield_mux.ProfileCustomValue like('%".$val."%'))";
-                            } 
-                            */
+
                             $_SESSION[$key] = $val;
                             
                             $filters[$keyID] = "cm{$keyID}.ProfileCustomValue LIKE('%{$val}%')";   
@@ -401,15 +355,8 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
                         } elseif ($ProfileCustomType["ProfileCustomType"] == 7) { //Measurements 
 
                             list($Min_val,$Max_val) = explode(",",$val);
-                            if(!empty($Min_val) && !empty($Max_val)){
-                                /*
-                                if ($filter2==""){
-                                    $filter2  .= " AND (( customfield_mux.ProfileCustomValue BETWEEN '".$Min_val."' AND '".$Max_val."'and customfield_mux.ProfileCustomID = '".substr($key,15)."' )";
-                                } else {
-                                    $filter2  .= " OR (customfield_mux.ProfileCustomValue BETWEEN '".$Min_val."' AND '".$Max_val."'and customfield_mux.ProfileCustomID = '".substr($key,15)."') ";
+                            if (!empty($Min_val) && !empty($Max_val)) {
 
-                                }
-                                */
                                 $_SESSION[$key] = $val;
 
                                 $filters[$keyID] = "cm{$keyID}.ProfileCustomValue BETWEEN '{$Min_val}' AND '{$Max_val}'";
@@ -437,15 +384,7 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
                 $joins[] = "\nLEFT JOIN ". table_agency_customfield_mux ." AS cm{$key} ON profile.ProfileID = cm{$key}.ProfileID AND cm{$key}.ProfileCustomID = '$key'";
                 $where[] = $value;
             }
-            /*
-           if (!empty($cmFilters)) {
-                foreach ($cmFilters as $key => $range) {
-                    list($min, $max) = $range;
-                    $joins[] = "\nLEFT JOIN ". table_agency_customfield_mux ." AS cm{$key} ON profile.ProfileID = cm{$key}.ProfileID AND cm{$key}.ProfileCustomID = '$key'";
-                    $where[] = "cm{$key}.ProfileCustomValue BETWEEN '$min' AND '$max'";
-                }
-           }
-            */
+
             /*
              * Refine filter and add the created 
              * holder $filter to $filter if not
@@ -497,9 +436,9 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
 
         echo "<pre>$query</pre>";
         
-		if (($count > ($bb_agency_option_persearch -1)) && (!isset($_GET['limit']) && empty($_GET['limit']))) {
-			echo "<div id=\"message\" class=\"error\"><p>Search exceeds ". $bb_agency_option_persearch ." records first ". $bb_agency_option_persearch ." displayed below.  <a href=". admin_url("admin.php?page=". $_GET['page']) ."&". $sessionString ."&limit=none><strong>Click here</strong></a> to expand to all records (NOTE: This may take some time)</p></div>\n";
-		}
+		if (($count > ($bb_agency_option_persearch -1)) && (!isset($_GET['limit']) && empty($_GET['limit']))) : ?>
+			<div id="message" class="error"><p>Search exceeds <?php echo $bb_agency_option_persearch ?> records first <?php echo $bb_agency_option_persearch ?> displayed below.  <a href="<?php echo admin_url('admin.php?page='. $_GET['page']) . '&' . $sessionString . '&limit=none' ?>"><strong>Click here</strong></a> to expand to all records (NOTE: This may take some time)</p></div>
+		<?php endif;
         echo "       <form method=\"get\" action=\"". admin_url("admin.php?page=". $_GET['page']) ."\">\n";
         echo "        <input type=\"hidden\" name=\"page\" id=\"page\" value=\"". $_GET['page'] ."\" />\n";
         echo "        <input type=\"hidden\" name=\"action\" value=\"cartAdd\" />\n";
@@ -599,10 +538,12 @@ echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=
 					echo "<div><strong>". __("Phone Work", bb_agency_TEXTDOMAIN) .":</strong> ". $data['ProfileContactPhoneWork'] ."</div>\n";
 				}
 
-						$resultsCustomPrivate =  $wpdb->get_results("SELECT c.ProfileCustomID,c.ProfileCustomTitle, c.ProfileCustomOrder, c.ProfileCustomView, cx.ProfileCustomValue FROM ". table_agency_customfield_mux ." cx LEFT JOIN ". table_agency_customfields ." c ON c.ProfileCustomID = cx.ProfileCustomID WHERE c.ProfileCustomView > 0 AND cx.ProfileID = ". $ProfileID ." GROUP BY cx.ProfileCustomID ORDER BY c.ProfileCustomOrder DESC");
-						foreach  ($resultsCustomPrivate as $resultCustomPrivate) {
-		echo "				<div><strong>". $resultCustomPrivate->ProfileCustomTitle ."<span class=\"divider\">:</span></strong> ". $resultCustomPrivate->ProfileCustomValue ."</div>\n";
-						}
+				$resultsCustomPrivate =  $wpdb->get_results("SELECT c.ProfileCustomID,c.ProfileCustomTitle, c.ProfileCustomOrder, c.ProfileCustomView, cx.ProfileCustomValue FROM ". table_agency_customfield_mux ." cx LEFT JOIN ". table_agency_customfields ." c ON c.ProfileCustomID = cx.ProfileCustomID WHERE c.ProfileCustomView > 0 AND cx.ProfileID = ". $ProfileID ." GROUP BY cx.ProfileCustomID ORDER BY c.ProfileCustomOrder DESC");
+				foreach  ($resultsCustomPrivate as $resultCustomPrivate) : ?>
+		          <div>
+                    <strong><?php echo $resultCustomPrivate->ProfileCustomTitle ?><span class="divider">:</span></strong> <?php echo $resultCustomPrivate->ProfileCustomValue ?>
+                  </div>
+				<?php endforeach;
        echo "            </td>\n";
 	  
 	  // public info
@@ -1108,13 +1049,52 @@ if (($_GET["action"] == "search") || ($_GET["action"] == "cartAdd") || (isset($_
 			echo  "			<td>";
 			
 
-					if (in_array($data1['ProfileCustomTitle'], $cusFields) && $data1['ProfileCustomTitle'] != 'Height') { //used alternative inputs for custom fields defined on top of this page
-						echo  "			<fieldset class=\"rbtext\">";
-						echo "<div><label for=\"ProfileCustomLabel_min\">". __("Min", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
-						echo "<input class=\"min_max\" type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."_min\" value=\"". $ProfileCustomOptions_Min_value ."\" /></div>\n";
-						echo "<div><label for=\"ProfileCustomLabel_min\">". __("Max", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
-						echo "<input class=\"min_max\"  type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."_max\" value=\"". $ProfileCustomOptions_Max_value ."\" /></div>\n";
-						echo  "			</fieldset>";
+					if (in_array($data1['ProfileCustomTitle'], $cusFields)) { //used alternative inputs for custom fields defined on top of this page
+                        $id = $data1['ProfileCustomID'];
+                        $title = $data1['ProfileCustomTitle'];
+                        if ($title == 'Height') {
+                            //list($min_val, $max_val) =  @explode(",", $_SESSION["ProfileCustomID".$id]);
+
+                            ?>
+                            <fieldset class="rbselect">
+                                <div>
+                                    <label>Min</label>
+                                    <select name="ProfileCustomID<?php echo $id ?>_min">
+                                    <?php if (empty($ProfileCustomValue)) : ?>
+                                        <option value="">--</option>
+                                    <?php endif; ?> 
+                            
+                                    <?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
+                                        <option value="<?php echo $i ?>" <?php echo selected($_GET['ProfileCustomID'.$id.'_min'], $i) ?>><?php echo display_height($i) ?></option>
+                                    <?php endfor; ?>
+                                    </select>
+                                </div>
+                          
+                                <div>
+                                    <label>Max</label>
+                                    <select name="ProfileCustomID<?php echo $id ?>_max">
+                                    <?php if (empty($ProfileCustomValue)) : ?>
+                                         <option value="">--</option>
+                                    <?php endif; ?>
+                                    <?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
+                                        <option value="<?php echo $i ?>" <?php echo selected($_GET['ProfileCustomID'.$id.'_max'], $i) ?>><?php echo display_height($i) ?></option>
+                                    <?php endfor; ?>
+                                    </select>
+                                </div>
+                            </fieldset>
+                            <?php
+
+                        } else {
+                            echo  "         <fieldset class=\"rbtext\">";
+                            echo "<div><label for=\"ProfileCustomLabel_min\">". __("Min", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+                            echo "<input class=\"min_max\" type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."_min\" value=\"". $ProfileCustomOptions_Min_value ."\" /></div>\n";
+                            echo "<div><label for=\"ProfileCustomLabel_min\">". __("Max", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+                            echo "<input class=\"min_max\"  type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."_max\" value=\"". $ProfileCustomOptions_Max_value ."\" /></div>\n";
+                            echo  "         </fieldset>";
+
+
+                        }
+
 					}else{
 			
 									if ($ProfileCustomType == 1) { //TEXT
