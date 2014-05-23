@@ -3721,4 +3721,24 @@ function self_delete() {
     ));
 
 }
+
+/**
+ *
+ * geocode an address
+ *
+ * @param string $address
+ * @return array (lat,lng)
+ *
+ */
+function geocode($address) {
+	require_once(dirname(__FILE__).'/Classes/class.geocoder.php');
+
+	return Geocoder::getLocation(urlencode($address));	
+}
+
+function map($lat, $lng, $name) {
+	require_once(dirname(__FILE__).'/Classes/class.geocoder.php');
+
+	Geocoder::getMap($lat, $lng, $name);
+}
 ?>

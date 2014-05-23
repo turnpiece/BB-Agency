@@ -244,31 +244,42 @@ if (isset($_POST['action'])) {
             if (!empty($ProfileContactNameFirst) && !empty($ProfileID)) {
 
                 // Update Record
-                 $update = "UPDATE " . table_agency_profile . " SET 
-            ProfileGallery='" . $wpdb->escape($ProfileGallery) . "',
-            ProfileContactDisplay='" . $wpdb->escape($ProfileContactDisplay) . "',
-            ProfileContactNameFirst='" . $wpdb->escape($ProfileContactNameFirst) . "',
-            ProfileContactNameLast='" . $wpdb->escape($ProfileContactNameLast) . "',
-            ProfileContactEmail='" . $wpdb->escape($ProfileContactEmail) . "',
-            ProfileContactWebsite='" . $wpdb->escape($ProfileContactWebsite) . "',
-            ProfileContactPhoneHome='" . $wpdb->escape($ProfileContactPhoneHome) . "',
-            ProfileContactPhoneCell='" . $wpdb->escape($ProfileContactPhoneCell) . "',
-            ProfileContactPhoneWork='" . $wpdb->escape($ProfileContactPhoneWork) . "',
-            ProfileGender='" . $wpdb->escape($ProfileGender) . "',
-            ProfileDateBirth ='" . $wpdb->escape($ProfileDateBirth) . "',
-            ProfileDateDue ='" . $wpdb->escape($ProfileDateDue) . "',
-            ProfileLocationStreet='" . $wpdb->escape($ProfileLocationStreet) . "',
-            ProfileLocationCity='" . $wpdb->escape($ProfileLocationCity) . "',
-            ProfileLocationState='" . $wpdb->escape($ProfileLocationState) . "',
-            ProfileLocationZip ='" . $wpdb->escape($ProfileLocationZip) . "',
-            ProfileLocationCountry='" . $wpdb->escape($ProfileLocationCountry) . "',
-            ProfileDateUpdated=now(),
-            ProfileType='" . $wpdb->escape($ProfileType) . "',
-            ProfileIsActive='" . $wpdb->escape($ProfileIsActive) . "',
-            ProfileIsFeatured='" . $wpdb->escape($ProfileIsFeatured) . "',
-            ProfileIsPromoted='" . $wpdb->escape($ProfileIsPromoted) . "',
-            ProfileStatHits='" . $wpdb->escape($ProfileStatHits) . "'
-            WHERE ProfileID=$ProfileID";
+                $update = "UPDATE " . table_agency_profile . " SET 
+                ProfileGallery='" . $wpdb->escape($ProfileGallery) . "',
+                ProfileContactDisplay='" . $wpdb->escape($ProfileContactDisplay) . "',
+                ProfileContactNameFirst='" . $wpdb->escape($ProfileContactNameFirst) . "',
+                ProfileContactNameLast='" . $wpdb->escape($ProfileContactNameLast) . "',
+                ProfileContactEmail='" . $wpdb->escape($ProfileContactEmail) . "',
+                ProfileContactWebsite='" . $wpdb->escape($ProfileContactWebsite) . "',
+                ProfileContactPhoneHome='" . $wpdb->escape($ProfileContactPhoneHome) . "',
+                ProfileContactPhoneCell='" . $wpdb->escape($ProfileContactPhoneCell) . "',
+                ProfileContactPhoneWork='" . $wpdb->escape($ProfileContactPhoneWork) . "',
+                ProfileGender='" . $wpdb->escape($ProfileGender) . "',
+                ProfileDateBirth ='" . $wpdb->escape($ProfileDateBirth) . "',
+                ProfileDateDue ='" . $wpdb->escape($ProfileDateDue) . "',
+                ProfileLocationStreet='" . $wpdb->escape($ProfileLocationStreet) . "',
+                ProfileLocationCity='" . $wpdb->escape($ProfileLocationCity) . "',
+                ProfileLocationState='" . $wpdb->escape($ProfileLocationState) . "',
+                ProfileLocationZip ='" . $wpdb->escape($ProfileLocationZip) . "',
+                ProfileLocationCountry='" . $wpdb->escape($ProfileLocationCountry) . "',
+                ProfileDateUpdated=now(),
+                ProfileType='" . $wpdb->escape($ProfileType) . "',
+                ProfileIsActive='" . $wpdb->escape($ProfileIsActive) . "',
+                ProfileIsFeatured='" . $wpdb->escape($ProfileIsFeatured) . "',
+                ProfileIsPromoted='" . $wpdb->escape($ProfileIsPromoted) . "',
+                ProfileStatHits='" . $wpdb->escape($ProfileStatHits) . "'";
+
+                // get latitude and longitude
+                $address = implode(', ', array($ProfileLocationStreet, $ProfileLocationCity, $ProfileLocationState, $ProfileLocationZip, $ProfileLocationCountry));
+
+                if ($location = geocode($address)) {
+                    // geocode address
+                    $update .= ",
+                    ProfileLocationLatitude='{$location['lat']}',
+                    ProfileLocationLongitude='{$location['lng']}'";
+                }
+
+                $update .= " WHERE ProfileID=$ProfileID";
 
                 $results = $wpdb->query($update) or die(mysql_error());
 
@@ -589,6 +600,9 @@ function bb_display_manage($ProfileID) {
             $ProfileLocationState = stripslashes($data['ProfileLocationState']);
             $ProfileLocationZip = stripslashes($data['ProfileLocationZip']);
             $ProfileLocationCountry = stripslashes($data['ProfileLocationCountry']);
+            $ProfileLocationLatitude = stripslashes($data['ProfileLocationLatitude']);
+            $ProfileLocationLongitude = stripslashes($data['ProfileLocationLongitude']);
+
             $ProfileDateUpdated = stripslashes($data['ProfileDateUpdated']);
             $ProfileType = stripslashes($data['ProfileType']);
             $ProfileIsActive = stripslashes($data['ProfileIsActive']);
@@ -740,6 +754,15 @@ function bb_display_manage($ProfileID) {
     echo "          <input type=\"text\" id=\"ProfileLocationCountry\" name=\"ProfileLocationCountry\" value=\"" . $ProfileLocationCountry . "\" />\n";
     echo "      </td>\n";
     echo "    </tr>\n";
+
+    // display location map
+    if (!is_null($ProfileLocationLatitude) && !is_null($ProfileLocationLongitude)) : ?>
+        <tr valign="top">
+            <td scope="row"><?php _e('Location', bb_agency_TEXTDOMAIN) ?></td>
+            <td><?php map($ProfileLocationLatitude, $ProfileLocationLongitude, $ProfileContactDisplay) ?></td>
+        </tr>
+    <?php endif;
+
     // Custom Admin Fields
     // ProfileCustomView = 1 , Private
     if (isset($_GET["ProfileGender"])) {
