@@ -37,7 +37,7 @@
 // *************************************************************************************************** //
 // Get Actions 
 
-//if ($action) {
+if ($action) {
 
     // Protect and defend the cart string!
     $cartString = "";
@@ -85,7 +85,8 @@
     } elseif (($action == "searchSave") && isset($_SESSION['cartArray'])) {
     
         extract($_SESSION);
-        foreach($_SESSION as $key=>$value) {
+        foreach($_SESSION as $key => $value) {
+            $cartArray[$key] = $value;
         }
         $_SESSION['cartArray'] = $cartArray;
     
@@ -129,16 +130,34 @@
         }
     
         //// Filter
-        $filter = " WHERE profile.ProfileID > 0";
+        $filter = " WHERE profile.`ProfileID` > 0";
         // Name
-        if ((isset($_GET['ProfileContactNameFirst']) && !empty($_GET['ProfileContactNameFirst'])) || isset($_GET['ProfileContactNameLast']) && !empty($_GET['ProfileContactNameLast'])){
+        if (isset($_GET['ProfileContactName']) && !empty($_GET['ProfileContactName']) ||
+            isset($_GET['ProfileContactNameFirst']) && !empty($_GET['ProfileContactNameFirst']) || 
+            isset($_GET['ProfileContactNameLast']) && !empty($_GET['ProfileContactNameLast'])) {
+            if (isset($_GET['ProfileContactName']) && !empty($_GET['ProfileContactName'])){
+                $ProfileContactName = $_GET['ProfileContactName'];
+                // split into words
+                $names = explode(' ', $ProfileContactName);
+
+                if (!empty($names)) {
+                    $nameFilter = array();
+
+                    foreach ($names AS $name) {
+                        if ($name)
+                            $nameFilter[] = "profile.`ProfileContactNameFirst` LIKE '%{$name}%' OR profile.`ProfileContactNameLast` LIKE '%{$name}%'";
+                    }
+
+                    $filter .= ' AND ('.implode(' OR ', $nameFilter).')';
+                }
+            }
             if (isset($_GET['ProfileContactNameFirst']) && !empty($_GET['ProfileContactNameFirst'])){
                 $ProfileContactNameFirst = $_GET['ProfileContactNameFirst'];
-                $filter .= " AND profile.ProfileContactNameFirst LIKE '". $ProfileContactNameFirst ."%'";
+                $filter .= " AND profile.`ProfileContactNameFirst` LIKE '". $ProfileContactNameFirst ."%'";
             }
             if (isset($_GET['ProfileContactNameLast']) && !empty($_GET['ProfileContactNameLast'])){
                 $ProfileContactNameLast = $_GET['ProfileContactNameLast'];
-                $filter .= " AND profile.ProfileContactNameLast='". $ProfileContactNameLast ."'";
+                $filter .= " AND profile.`ProfileContactNameLast` LIKE '". $ProfileContactNameLast ."%'";
             }
         }
         // Location
@@ -434,7 +453,7 @@
         
         echo "<h2 class=\"title\">Search Results: " . $count . "</h2>\n";
 
-        //echo "<pre>$query</pre>";
+        echo "<pre>$query</pre>";
         
         if ($count > $bb_agency_option_persearch - 1 && !isset($_GET['limit']) && empty($_GET['limit'])) : ?>
             <div id="message" class="error">
@@ -607,13 +626,15 @@
            
             <p>
                 <input type="submit" name="CastingCart" value="<?php _e('Add to Casting Cart','bb_agency_search') ?>" class="button-primary" />
-                <a href="#" onClick="window.open('<?php echo get_bloginfo("url") ?>/profile-print/?action=quickPrint&cD=1','mywindow','width=930,height=600,left=0,top=50,screenX=0,screenY=50,scrollbars=yes')" title="Quick Print" class="button-primary"><?php _e("Quick Print", bb_agency_TEXTDOMAIN) ?></a>
-                <a href="#" onClick="window.open('<?php echo get_bloginfo("url") ?>/profile-print/?action=quickPrint&cD=0','mywindow','width=930,height=600,left=0,top=50,screenX=0,screenY=50,scrollbars=yes')" title="Quick Print - Without Details" class="button-primary"><?php _e("Quick Print", bb_agency_TEXTDOMAIN) ?> - <?php _e("Without Details", bb_agency_TEXTDOMAIN) ?></a>
+                <a href="#" onClick="window.open('<?php bloginfo('url') ?>/profile-print/?action=quickPrint&cD=1','mywindow','width=930,height=600,left=0,top=50,screenX=0,screenY=50,scrollbars=yes')" title="Quick Print" class="button-primary"><?php _e("Quick Print", bb_agency_TEXTDOMAIN) ?></a>
+                <a href="#" onClick="window.open('<?php bloginfo('url') ?>/profile-print/?action=quickPrint&cD=0','mywindow','width=930,height=600,left=0,top=50,screenX=0,screenY=50,scrollbars=yes')" title="Quick Print - Without Details" class="button-primary"><?php _e("Quick Print", bb_agency_TEXTDOMAIN) ?> - <?php _e("Without Details", bb_agency_TEXTDOMAIN) ?></a>
             </p>
         </form>
 <?php      
     
     } // end of if action = search
+
+    // display casting cart
     if (($action == "search") || ($action == "cartAdd") || (isset($_SESSION['cartArray']))) {
 
         echo "<div class=\"boxblock-container\" style=\"float: left; width: 49%; min-width: 500px;\">\n";
@@ -677,115 +698,118 @@
     echo " </div>\n";
     echo "</div>\n";
   
-     if (($cartAction == "cartEmpty") || ($cartAction == "cartRemove")) {
-        echo "<a name=\"compose\">&nbsp;</a>"; 
-        echo "     <div class=\"boxblock\">\n";
-        echo "        <h3>". __("Cart Actions", bb_agency_TEXTDOMAIN) ."</h3>\n";
-        echo "        <div class=\"inner\">\n";
-        echo "          <a href=\"?page=bb_agency_searchsaved&action=searchSave\" title=\"". __("Save Search & Email", bb_agency_TEXTDOMAIN) ."\" class=\"button-primary\">". __("Save Search & Email", bb_agency_TEXTDOMAIN) ."</a>\n";
-        echo "          <a href=\"?page=bb_agency_search&action=massEmail#compose\" title=\"". __("Mass Email", bb_agency_TEXTDOMAIN) ."\" class=\"button-primary\">". __("Mass Email", bb_agency_TEXTDOMAIN) ."</a>\n";
-        echo "          <a href=\"#\" onClick=\"window.open('". get_bloginfo("url") ."/profile-print/?action=castingCart&cD=1','mywindow','width=930,height=600,left=0,top=50,screenX=0,screenY=50,scrollbars=yes')\" title=\"Quick Print\" class=\"button-primary\">". __("Quick Print", bb_agency_TEXTDOMAIN) ."</a>\n";
-        echo "          <a href=\"#\" onClick=\"window.open('". get_bloginfo("url") ."/profile-print/?action=castingCart&cD=0','mywindow','width=930,height=600,left=0,top=50,screenX=0,screenY=50,scrollbars=yes')\" title=\"Quick Print - Without Details\" class=\"button-primary\">". __("Quick Print", bb_agency_TEXTDOMAIN) ." - ". __("Without Details", bb_agency_TEXTDOMAIN) ."</a>\n";
-
-        echo "        </div>\n";
-        echo "     </div>\n";
-    } // Is Cart Empty 
-     $isSent = false;
-    if(isset($_POST["SendEmail"])){
+    // empty or remove casting cart
+    if ($cartAction == "cartEmpty" || $cartAction == "cartRemove") : ?>
+        <a name="compose">&nbsp;</a> 
+        <div class="boxblock">
+            <h3><?php _e("Cart Actions", bb_agency_TEXTDOMAIN) ?></h3>
+            <div class="inner">
+                <a href="<?php echo admin_url('admin.php?page=bb_agency_searchsaved&action=searchSave') ?>" title="<?php _e("Save Search & Email", bb_agency_TEXTDOMAIN) ?>" class="button-primary"><?php _e('Save Search & Email', bb_agency_TEXTDOMAIN) ?></a>
+                <a href="<?php echo admin_url('admin.php?page=bb_agency_search&action=massEmail#compose') ?>" title="<?php _e('Mass Email', bb_agency_TEXTDOMAIN) ?>" class="button-primary"><?php _e('Mass Email', bb_agency_TEXTDOMAIN) ?></a>
+                <a href="#" onClick="window.open('<?php bloginfo('url') ?>/profile-print/?action=castingCart&cD=1','mywindow','width=930,height=600,left=0,top=50,screenX=0,screenY=50,scrollbars=yes')" title="Quick Print" class="button-primary"><?php _e('Quick Print', bb_agency_TEXTDOMAIN) ?></a>
+                <a href="#" onClick="window.open('<?php bloginfo('url') ?>/profile-print/?action=castingCart&cD=0','mywindow','width=930,height=600,left=0,top=50,screenX=0,screenY=50,scrollbars=yes')" title="Quick Print - Without Details" class="button-primary"><?php _e('Quick Print', bb_agency_TEXTDOMAIN) ?> - <?php _e('Without Details', bb_agency_TEXTDOMAIN) ?></a>
+            </div>
+        </div>
+    <?php endif; // Is Cart Empty 
+    
+    $isSent = false;
+    
+    // send a bulk email
+    if (isset($_POST["SendEmail"])){
         
+        $bb_agency_options_arr = get_option('bb_agency_options');
+        $bb_agency_value_agencyname = $bb_agency_options_arr['bb_agency_option_agencyname'];
+        $bb_agency_value_agencyemail = $bb_agency_options_arr['bb_agency_option_agencyemail'];
+        $correspondenceEmail= $bb_agency_value_agencyemail;
+        add_filter('wp_mail_content_type','bb_agency_set_content_type');
 
-            $bb_agency_options_arr = get_option('bb_agency_options');
-            $bb_agency_value_agencyname = $bb_agency_options_arr['bb_agency_option_agencyname'];
-            $bb_agency_value_agencyemail = $bb_agency_options_arr['bb_agency_option_agencyemail'];
-            $correspondenceEmail= $bb_agency_value_agencyemail;
-             add_filter('wp_mail_content_type','bb_agency_set_content_type');
-                        function bb_agency_set_content_type($content_type){
-                            return 'text/html';
+        function bb_agency_set_content_type($content_type) {
+            return 'text/html';
         }
   
         
-                    
-                    $MassEmailSubject = $_POST["MassEmailSubject"];
-                    $MassEmailMessage = $_POST["MassEmailMessage"];
-                    $MassEmailRecipient = $_POST["MassEmailRecipient"];
-                    $MassEmailBccRecipient = $_POST["MassEmailBccRecipient"];
-
-                    $SearchID               = time(U);
-                    $SearchMuxHash          = bb_agency_random(8);
-                    $SearchMuxToName        =$_POST["MassEmailRecipient"];
-                    $SearchMuxToEmail       =$_POST["MassEmailRecipient"];
-                    
-                    $SearchMuxEmailToBcc    =$_POST['MassEmailBccRecipient'];
-                    $SearchMuxSubject       = $_POST['MassEmailSubject'];
-                    $SearchMuxMessage       =$_POST['MassEmailMessage'];
-                    $SearchMuxCustomValue   ='';
-
-
-                                
-
-                    $cartArray = $_SESSION['cartArray'];
-                    
-                    $cartString = implode(",", array_unique($cartArray));
-                    $cartString = bb_agency_cleanString($cartString);
-                    
-
-                    $wpdb->query("INSERT INTO " . table_agency_searchsaved." (SearchProfileID,SearchTitle) VALUES('".$cartString."','".$SearchMuxSubject."')") or die(mysql_error());
-                    
-                    $lastid = $wpdb->insert_id;
-                    
-                    // Create Record
-                    $insert = "INSERT INTO " . table_agency_searchsaved_mux ." 
-                            (
-                            SearchID,
-                            SearchMuxHash,
-                            SearchMuxToName,
-                            SearchMuxToEmail,
-                            SearchMuxSubject,
-                            SearchMuxMessage,
-                            SearchMuxCustomValue
-                            )" .
-                            "VALUES
-                            (
-                            '" . $wpdb->escape($lastid) . "',
-                            '" . $wpdb->escape($SearchMuxHash) . "',
-                            '" . $wpdb->escape($SearchMuxToName) . "',
-                            '" . $wpdb->escape($SearchMuxToEmail) . "',
-                            '" . $wpdb->escape($SearchMuxSubject) . "',
-                            '" . $wpdb->escape($SearchMuxMessage) . "',
-                            '" . $wpdb->escape($SearchMuxCustomValue) ."'
-                            )";
-                    $results = $wpdb->query($insert);                 
-                            
-
-                    if(!empty($MassEmailBccRecipient)){
-                        $bccMails = explode(",",$MassEmailBccRecipient);
-                        foreach($bccMails as $bccEmail){
-                            $headers[] = 'Bcc: '.$bccEmail;
-                        }
-                        }
-                    
-                    // Mail it
-                    $headers[]  = 'MIME-Version: 1.0';
-                    $headers[] = 'Content-type: text/html; charset=iso-8859-1';
-                    $headers[] = 'From: '.$bb_agency_value_agencyname.' <'. $correspondenceEmail .'>';
-                    
-                    if(!empty($expMail)){
-                        $expMail = explode(",",$MassEmailRecipient);
-                        foreach($expMail as $bccEmail){
-                            $headers[] = 'Bcc: '.$bccEmail;
-                        }
-                    }
-                     //$MassEmailMessage    = str_ireplace("[link-place-holder]",get_bloginfo("url") ."/client-view/".$SearchMuxHash,$MassEmailMessage);
-
-                    $MassEmailMessage = str_replace("[link-place-holder]",site_url()."/client-view/".$SearchMuxHash,$MassEmailMessage);
-
-                    $isSent = wp_mail($MassEmailRecipient, $MassEmailSubject, $MassEmailMessage, $headers);
-                        
-
-    }
-    if ($action== "massEmail") {
         
-                // Filter Models Already in Cart
+        $MassEmailSubject = $_POST["MassEmailSubject"];
+        $MassEmailMessage = $_POST["MassEmailMessage"];
+        $MassEmailRecipient = $_POST["MassEmailRecipient"];
+        $MassEmailBccRecipient = $_POST["MassEmailBccRecipient"];
+
+        $SearchID               = time(U);
+        $SearchMuxHash          = bb_agency_random(8);
+        $SearchMuxToName        =$_POST["MassEmailRecipient"];
+        $SearchMuxToEmail       =$_POST["MassEmailRecipient"];
+        
+        $SearchMuxEmailToBcc    =$_POST['MassEmailBccRecipient'];
+        $SearchMuxSubject       = $_POST['MassEmailSubject'];
+        $SearchMuxMessage       =$_POST['MassEmailMessage'];
+        $SearchMuxCustomValue   ='';
+
+
+                    
+
+        $cartArray = $_SESSION['cartArray'];
+        
+        $cartString = implode(",", array_unique($cartArray));
+        $cartString = bb_agency_cleanString($cartString);
+        
+
+        $wpdb->query("INSERT INTO " . table_agency_searchsaved." (SearchProfileID,SearchTitle) VALUES('".$cartString."','".$SearchMuxSubject."')") or die(mysql_error());
+        
+        $lastid = $wpdb->insert_id;
+        
+        // Create Record
+        $insert = "INSERT INTO " . table_agency_searchsaved_mux ." 
+                (
+                SearchID,
+                SearchMuxHash,
+                SearchMuxToName,
+                SearchMuxToEmail,
+                SearchMuxSubject,
+                SearchMuxMessage,
+                SearchMuxCustomValue
+                )" .
+                "VALUES
+                (
+                '" . $wpdb->escape($lastid) . "',
+                '" . $wpdb->escape($SearchMuxHash) . "',
+                '" . $wpdb->escape($SearchMuxToName) . "',
+                '" . $wpdb->escape($SearchMuxToEmail) . "',
+                '" . $wpdb->escape($SearchMuxSubject) . "',
+                '" . $wpdb->escape($SearchMuxMessage) . "',
+                '" . $wpdb->escape($SearchMuxCustomValue) ."'
+                )";
+        $results = $wpdb->query($insert);                 
+                
+
+        if(!empty($MassEmailBccRecipient)){
+            $bccMails = explode(",",$MassEmailBccRecipient);
+            foreach($bccMails as $bccEmail){
+                $headers[] = 'Bcc: '.$bccEmail;
+            }
+            }
+        
+        // Mail it
+        $headers[]  = 'MIME-Version: 1.0';
+        $headers[] = 'Content-type: text/html; charset=iso-8859-1';
+        $headers[] = 'From: '.$bb_agency_value_agencyname.' <'. $correspondenceEmail .'>';
+        
+        if(!empty($expMail)){
+            $expMail = explode(",",$MassEmailRecipient);
+            foreach($expMail as $bccEmail){
+                $headers[] = 'Bcc: '.$bccEmail;
+            }
+        }
+         //$MassEmailMessage    = str_ireplace("[link-place-holder]",get_bloginfo("url") ."/client-view/".$SearchMuxHash,$MassEmailMessage);
+
+        $MassEmailMessage = str_replace("[link-place-holder]",site_url()."/client-view/".$SearchMuxHash,$MassEmailMessage);
+
+        $isSent = wp_mail($MassEmailRecipient, $MassEmailSubject, $MassEmailMessage, $headers);
+    }
+
+    // send bulk email
+    if ($action == "massEmail") {
+        
+        // Filter Models Already in Cart
         if (isset($_SESSION['cartArray'])) {
             $cartArray = $_SESSION['cartArray'];
             $cartString = implode(",", $cartArray);
@@ -795,17 +819,16 @@
         $query = "SELECT profile.*  FROM ". table_agency_profile ." profile WHERE profile.ProfileID > 0 ".$cartQuery;
         $results2 = mysql_query($query);
         $count = mysql_num_rows($results2);
-      $pos = 0; 
-    $recipient = "";            
+        $pos = 0; 
+        $recipient = "";            
         while ($data = mysql_fetch_array($results2)) {
         $pos ++;
             $ProfileID = $data['ProfileID'];
-           $recipient .=$data['ProfileContactEmail'];
-         if($count != $pos){
-          $recipient .=", ";     
-         }
-            
-      }
+            $recipient .=$data['ProfileContactEmail'];
+            if ($count != $pos) {
+                $recipient .=", ";     
+            }    
+        }
         // Email
         $bb_agency_options_arr = get_option('bb_agency_options');
         $bb_agency_value_agencyname = $bb_agency_options_arr['bb_agency_option_agencyname'];
@@ -814,14 +837,14 @@
         echo "     <div class=\"boxblock\">\n";
         echo "        <h3>". __("Compose Email", bb_agency_TEXTDOMAIN) ."</h3>\n";
         echo "        <div class=\"inner\">\n";
-      if($isSent){
-      echo "<div id=\"message\" class=\"updated\"><p>Email Messages successfully sent!</p></div>";  
-      }
-      //Commented to change default recipient to wp-admin
-     // echo "<strong>Recipient:</strong><br/><textarea name=\"MassEmailRecipient\" style=\"width:100%;\">".$recipient."</textarea><br/>";
-     echo "<strong>Recipient:</strong><br/><textarea name=\"MassEmailRecipient\" style=\"width:100%;\">".$bb_agency_value_agencyemail."</textarea><br/>";
-     //Bcc recipients
-     echo "<strong>Bcc:</strong><br/><textarea name=\"MassEmailBccRecipient\" style=\"width:100%;\" placeholder=\"Enter Comma seperated values\">".$recipient."</textarea><br/>";
+        if ($isSent) {
+            echo "<div id=\"message\" class=\"updated\"><p>Email Messages successfully sent!</p></div>";  
+        }
+        //Commented to change default recipient to wp-admin
+        // echo "<strong>Recipient:</strong><br/><textarea name=\"MassEmailRecipient\" style=\"width:100%;\">".$recipient."</textarea><br/>";
+        echo "<strong>Recipient:</strong><br/><textarea name=\"MassEmailRecipient\" style=\"width:100%;\">".$bb_agency_value_agencyemail."</textarea><br/>";
+        //Bcc recipients
+        echo "<strong>Bcc:</strong><br/><textarea name=\"MassEmailBccRecipient\" style=\"width:100%;\" placeholder=\"Enter Comma seperated values\">".$recipient."</textarea><br/>";
      
         echo "        <strong>Subject:</strong> <br/><input type=\"text\" name=\"MassEmailSubject\" style=\"width:100%\"/>";
         echo "<br/>";
@@ -836,172 +859,174 @@
         echo "</form>";
     }
     
-        echo "    </div><!-- .container -->\n";
+    echo "    </div><!-- .container -->\n";
 } 
 
-//}
+}
+?>
+<div class="boxblock-container" style="float: left; width: 49%;">
+    <div class="boxblock">
+        <h3><?php _e("Advanced Search", bb_agency_TEXTDOMAIN) ?></h3>
+        <div class="inner">
+        <form method="GET" action="<?php echo admin_url('admin.php?page='. $_GET['page']) ?>">
+            <input type="hidden" name="page" id="page" value="bb_agency_search" />
+            <input type="hidden" name="action" value="search" />
+            <table cellspacing="0" class="widefat fixed">
+                <thead>
+                    <tr>
+                        <th scope="row"><?php _e("First Name", bb_agency_TEXTDOMAIN) ?>:</th>
+                        <td>
+                            <input type="text" id="ProfileContactName" name="ProfileContactName" value="<?php echo isset($ProfileContactName) ? $ProfileContactName : '' ?>" />               
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><?php _e("Classification", bb_agency_TEXTDOMAIN) ?>:</th>
+                        <td>
+                            <select name="ProfileType" id="ProfileType">               
+                                <option value=""><?php _e("Any Profile Type", bb_agency_TEXTDOMAIN) ?></option>
+                                <?php
+                                /* 
+                                 * set filter from theis array
+                                 * to block the following profile types 
+                                 * in search
+                                 */
+                                
+                                $filter = array( 'agents', 'agent', 'producer', 'producers' );
+                                 
+                                $profileDataTypes = mysql_query("SELECT * FROM ". table_agency_data_type ."");
+                                while ($dataType = mysql_fetch_array($profileDataTypes)) : if (!in_array(strtolower($dataType["DataTypeTitle"]), $filter)) : ?>
+                                <option value="<?php echo $dataType['DataTypeID'] ?>" <?php selected($_SESSION['ProfileType'], $dataType["DataTypeID"], false) ?>><?php echo $dataType['DataTypeTitle'] ?></option>
+                                <?php endif; endwhile; ?>
+                                
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><?php _e("Gender", bb_agency_TEXTDOMAIN) ?>:</th>
+                        <td>
+                            <select name="ProfileGender" id="ProfileGender">               
+                                <option value=""><?php _e("Any Gender", bb_agency_TEXTDOMAIN) ?></option>
+                                <?php
+                                    $query2 = "SELECT GenderID, GenderTitle FROM ". table_agency_data_gender ." ORDER BY GenderID";
+                                    $results2 = mysql_query($query2);
+                                    while ($dataGender = mysql_fetch_array($results2)) : ?>
+                                <option value="<?php echo $dataGender['GenderID'] ?>" <?php selected($_SESSION['ProfileGender'], $dataGender['GenderID'], false) ?>><?php echo $dataGender['GenderTitle'] ?></option>
+                                    <?php endwhile; ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><?php _e("Age", bb_agency_TEXTDOMAIN) ?>:</th>
+                        <td>
+                            <fieldset>
+                                <div>
+                                    <label for="ProfileDateBirth_min"><?php _e("Min", bb_agency_TEXTDOMAIN) ?></label>
+                                    <input type="text" class="min_max bbdatepicker" id="ProfileDateBirth_min" name="ProfileDateBirth_min" />
+                                </div>
 
-        echo "    <div class=\"boxblock-container\" style=\"float: left; width: 49%;\">\n";
-        echo "     <div class=\"boxblock\">\n";
-        echo "      <h3>". __("Advanced Search", bb_agency_TEXTDOMAIN) ."</h3>\n";
-        echo "        <div class=\"inner\">\n";
-        echo "          <form method=\"GET\" action=\"". admin_url("admin.php?page=". $_GET['page']) ."\">\n";
-        echo "              <input type=\"hidden\" name=\"page\" id=\"page\" value=\"bb_agency_search\" />\n";
-        echo "              <input type=\"hidden\" name=\"action\" value=\"search\" />\n";
-        echo "              <table cellspacing=\"0\" class=\"widefat fixed\">\n";
-        echo "                <thead>\n";
-        echo "                  <tr>\n";
-        echo "                      <th scope=\"row\">". __("First Name", bb_agency_TEXTDOMAIN) . ":</th>\n";
-        echo "                      <td><input type=\"text\" id=\"ProfileContactNameFirst\" name=\"ProfileContactNameFirst\" value=\"". $_SESSION['ProfileContactNameFirst'] ."\" />\n";               
-        echo "                      </td>\n";
-        echo "                  </tr>\n";
-        echo "                  <tr>\n";
-        echo "                      <th scope=\"row\">". __("Last Name", bb_agency_TEXTDOMAIN) . ":</th>\n";
-        echo "                      <td><input type=\"text\" id=\"ProfileContactNameLast\" name=\"ProfileContactNameLast\" value=\"". $_SESSION['ProfileContactNameLast'] ."\" />\n";               
-        echo "                      </td>\n";
-        echo "                  </tr>\n";
-        
-        echo "                  <tr>\n";
-        echo "                      <th scope=\"row\">". __("Classification", bb_agency_TEXTDOMAIN) . ":</th>\n";
-        echo "                      <td><select name=\"ProfileType\" id=\"ProfileType\">\n";               
-        echo "                          <option value=\"\">". __("Any Profile Type", bb_agency_TEXTDOMAIN) . "</option>";
-                                        /* 
-                                         * set filter from theis array
-                                         * to block the following profile types 
-                                         * in search
-                                         */
-                                        
-                                        $filter = array( 'agents', 'agent', 'clients', 'client', 'producer', 'producers' );
-                                         
-                                        $profileDataTypes = mysql_query("SELECT * FROM ". table_agency_data_type ."");
-                                        while ($dataType = mysql_fetch_array($profileDataTypes)) {
-                                            if(!in_array(strtolower($dataType["DataTypeTitle"]),$filter)){
-                                                echo "<option value=\"". $dataType["DataTypeID"] ."\" ".selected($_SESSION['ProfileType'],$dataType["DataTypeID"],false).">". $dataType["DataTypeTitle"] ."</option>";
-                                            }
-                                        }
-        echo "                          </select>\n";
-        echo "                      </td>\n";
-        echo "                  </tr>\n";
-        echo "                  <tr>\n";
-        echo "                      <th scope=\"row\">". __("Gender", bb_agency_TEXTDOMAIN) . ":</th>\n";
-        echo "                      <td><select name=\"ProfileGender\" id=\"ProfileGender\">\n";               
-        echo "                      <option value=\"\">". __("Any Gender", bb_agency_TEXTDOMAIN) . "</option>\n";
-                                            $query2 = "SELECT GenderID, GenderTitle FROM ". table_agency_data_gender ." ORDER BY GenderID";
-                                            $results2 = mysql_query($query2);
-                                            while ($dataGender = mysql_fetch_array($results2)) {
-                                                echo "<option value=\"". $dataGender["GenderID"] ."\"".selected($_SESSION["ProfileGender"],$dataGender["GenderID"],false).">". $dataGender["GenderTitle"] ."</option>";
-                                            }
-        echo "                      </select>\n";
-        echo "                      </td>\n";
-        echo "                  </tr>\n";
-        echo "                  <tr>\n";
-        echo "                      <th scope=\"row\">". __("Age", bb_agency_TEXTDOMAIN) . ":</th>\n";
-        echo "                      <td>\n";
-        echo "                      <fieldset>\n";
-        echo "                     <div> <label for=\"ProfileDateBirth_min\">". __("Min", bb_agency_TEXTDOMAIN) . "</label>\n";
-        echo "                      <input type=\"text\" class=\"min_max\" id=\"ProfileDateBirth_min\" name=\"ProfileDateBirth_min\" />";
-        echo "                      </div>";
-        
-        echo "                      <div><label for=\"ProfileDateBirth_max\">". __("Max", bb_agency_TEXTDOMAIN) . "</label>\n";
-        echo "                      <input type=\"text\" class=\"min_max\" id=\"ProfileDateBirth_max\" name=\"ProfileDateBirth_max\" />";
-        echo "                      </div>";
-        echo "                      </fieldset>\n";
-        echo "                      </td>\n";
-        echo "                  </tr>\n";
-        echo "                  <tr>\n";
-        echo "                      <th scope=\"row\">". __("Due date", bb_agency_TEXTDOMAIN) . ":</th>\n";
-        echo "                      <td>\n";
-        echo "                      <fieldset>\n";
-        echo "                     <div> <label for=\"ProfileDateDue_min\">". __("Min", bb_agency_TEXTDOMAIN) . "</label>\n";
-        echo "                      <input type=\"text\" class=\"min_max bbdatepicker\" id=\"ProfileDateDue_min\" name=\"ProfileDateDue_min\" />";
-        echo "                      </div>";
-        
-        echo "                      <div><label for=\"ProfileDateDue_max\">". __("Max", bb_agency_TEXTDOMAIN) . "</label>\n";
-        echo "                      <input type=\"text\" class=\"min_max bbdatepicker\" id=\"ProfileDateDue_max\" name=\"ProfileDateDue_max\" />";
-        echo "                      </div>";
-        echo "                      </fieldset>\n";
-        echo "                      </td>\n";
-        echo "                  </tr>\n";   
+                                <div>
+                                    <label for="ProfileDateBirth_max"><?php _e("Max", bb_agency_TEXTDOMAIN) ?></label>
+                                    <input type="text" class="min_max bbdatepicker" id="ProfileDateBirth_max" name="ProfileDateBirth_max" />
+                                </div>
+                            </fieldset>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><?php _e("Due date", bb_agency_TEXTDOMAIN) ?>:</th>\n";
+                        <td>
+                            <fieldset>
+                                <div>
+                                    <label for="ProfileDateDue_min"><?php _e("Min", bb_agency_TEXTDOMAIN) ?></label>
+                                    <input type="text" class="min_max bbdatepicker" id="ProfileDateDue_min" name="ProfileDateDue_min" />";
+                                </div>
 
-        echo "                  <tr>\n";
-        echo "                      <th scope=\"row\">". __("Town", bb_agency_TEXTDOMAIN) . ":</th>\n";
-        echo "                      <td><select name=\"ProfileLocationCity\" id=\"ProfileLocationCity\">\n";               
-        echo "                          <option value=\"\">". __("Any town", bb_agency_TEXTDOMAIN) . "</option>";
-                                          /*
-                                           * let's get the variables first for use
-                                           * in city 
-                                           */
-                                        $profilecity = mysql_query("SELECT DISTINCT ProfileLocationCity FROM ". table_agency_profile ."");
-                                        
-                                        while ($dataLocation = mysql_fetch_array($profilecity)) {
-                                              if (isset($_GET['ProfileLocationCity']) && !empty($_GET['ProfileLocationCity']) && $_SESSION['ProfileLocationCity'] == $dataLocation["ProfileLocationCity"]) {
-                                                 echo "<option value=\"". $dataLocation["ProfileLocationCity"] ."\" selected>". bb_agency_strtoproper($dataLocation["ProfileLocationCity"]) .", ". strtoupper($dataLocation["ProfileLocationState"]) ."</option>";
-                                              } else {
-                                                 echo "<option value=\"". $dataLocation["ProfileLocationCity"] ."\">". bb_agency_strtoproper($dataLocation["ProfileLocationCity"]) ."</option>";
-                                              }
-                                        }
-                                        
-        echo "                          </select>\n";
-        echo "                      </td>\n";
-        echo "                  </tr>\n";
+                                <div>
+                                    <label for="ProfileDateDue_max"><?php _e("Max", bb_agency_TEXTDOMAIN) ?></label>
+                                    <input type="text" class="min_max bbdatepicker" id="ProfileDateDue_max" name="ProfileDateDue_max" />
+                                </div>
+                            </fieldset>
+                        </td>
+                    </tr> 
+<?php
+echo "                  <tr>\n";
+echo "                      <th scope=\"row\">". __("Town", bb_agency_TEXTDOMAIN) . ":</th>\n";
+echo "                      <td><select name=\"ProfileLocationCity\" id=\"ProfileLocationCity\">\n";               
+echo "                          <option value=\"\">". __("Any town", bb_agency_TEXTDOMAIN) . "</option>";
+                                  /*
+                                   * let's get the variables first for use
+                                   * in city 
+                                   */
+                                $profilecity = mysql_query("SELECT DISTINCT ProfileLocationCity FROM ". table_agency_profile ."");
+                                
+                                while ($dataLocation = mysql_fetch_array($profilecity)) {
+                                      if (isset($_GET['ProfileLocationCity']) && !empty($_GET['ProfileLocationCity']) && $_SESSION['ProfileLocationCity'] == $dataLocation["ProfileLocationCity"]) {
+                                         echo "<option value=\"". $dataLocation["ProfileLocationCity"] ."\" selected>". bb_agency_strtoproper($dataLocation["ProfileLocationCity"]) .", ". strtoupper($dataLocation["ProfileLocationState"]) ."</option>";
+                                      } else {
+                                         echo "<option value=\"". $dataLocation["ProfileLocationCity"] ."\">". bb_agency_strtoproper($dataLocation["ProfileLocationCity"]) ."</option>";
+                                      }
+                                }
+                                
+echo "                          </select>\n";
+echo "                      </td>\n";
+echo "                  </tr>\n";
 
-        echo "                  <tr>\n";
-        echo "                      <th scope=\"row\">". __("County", bb_agency_TEXTDOMAIN) . ":</th>\n";
-        echo "                      <td><select name=\"ProfileLocationState\" id=\"ProfileLocationState\">\n";               
-        echo "                          <option value=\"\">". __("Any county", bb_agency_TEXTDOMAIN) . "</option>";
-                                          /*
-                                           * let's get the variables first for use
-                                           * in state
-                                           */
-                                        $profilestate = mysql_query("SELECT DISTINCT ProfileLocationState FROM ". table_agency_profile ."");
-                                        
-                                        while ($dataLocation = mysql_fetch_array($profilestate)) {
-                                              if (isset($_GET['ProfileLocationState']) && !empty($_GET['ProfileLocationState']) && $_SESSION['ProfileLocationState'] == $dataLocation["ProfileLocationState"]) {
-                                                 echo "<option value=\"". $dataLocation["ProfileLocationState"] ."\" selected>". bb_agency_strtoproper($dataLocation["ProfileLocationState"]) .", ". strtoupper($dataLocation["ProfileLocationState"]) ."</option>";
-                                              } else {
-                                                 echo "<option value=\"". $dataLocation["ProfileLocationState"] ."\">". bb_agency_strtoproper($dataLocation["ProfileLocationState"]) ."</option>";
-                                              }
-                                        }
-                                        
-        echo "                          </select>\n";
-        echo "                      </td>\n";
-        echo "                  </tr>\n";
+echo "                  <tr>\n";
+echo "                      <th scope=\"row\">". __("County", bb_agency_TEXTDOMAIN) . ":</th>\n";
+echo "                      <td><select name=\"ProfileLocationState\" id=\"ProfileLocationState\">\n";               
+echo "                          <option value=\"\">". __("Any county", bb_agency_TEXTDOMAIN) . "</option>";
+                                  /*
+                                   * let's get the variables first for use
+                                   * in state
+                                   */
+                                $profilestate = mysql_query("SELECT DISTINCT ProfileLocationState FROM ". table_agency_profile ."");
+                                
+                                while ($dataLocation = mysql_fetch_array($profilestate)) {
+                                      if (isset($_GET['ProfileLocationState']) && !empty($_GET['ProfileLocationState']) && $_SESSION['ProfileLocationState'] == $dataLocation["ProfileLocationState"]) {
+                                         echo "<option value=\"". $dataLocation["ProfileLocationState"] ."\" selected>". bb_agency_strtoproper($dataLocation["ProfileLocationState"]) .", ". strtoupper($dataLocation["ProfileLocationState"]) ."</option>";
+                                      } else {
+                                         echo "<option value=\"". $dataLocation["ProfileLocationState"] ."\">". bb_agency_strtoproper($dataLocation["ProfileLocationState"]) ."</option>";
+                                      }
+                                }
+                                
+echo "                          </select>\n";
+echo "                      </td>\n";
+echo "                  </tr>\n";
 
-        echo "                  <tr>\n";
-        echo "                      <th scope=\"row\">". __("Location", bb_agency_TEXTDOMAIN) . ":</th>\n";
-        /*
-        echo "                      <td><select name=\"ProfileLocationZip\" id=\"ProfileLocationZip\">\n";               
-        echo "                          <option value=\"\">". __("Any post code", bb_agency_TEXTDOMAIN) . "</option>";
+echo "                  <tr>\n";
+echo "                      <th scope=\"row\">". __("Location", bb_agency_TEXTDOMAIN) . ":</th>\n";
+/*
+echo "                      <td><select name=\"ProfileLocationZip\" id=\"ProfileLocationZip\">\n";               
+echo "                          <option value=\"\">". __("Any post code", bb_agency_TEXTDOMAIN) . "</option>";
 
-                                        $profilestate = mysql_query("SELECT DISTINCT ProfileLocationZip FROM ". table_agency_profile ."");
-                                        
-                                        while ($dataLocation = mysql_fetch_array($profilestate)) {
-                                              if (isset($_GET['ProfileLocationZip']) && !empty($_GET['ProfileLocationZip']) && $_SESSION['ProfileLocationZip'] == $dataLocation["ProfileLocationZip"]) {
-                                                 echo "<option value=\"". $dataLocation["ProfileLocationZip"] ."\" selected>". bb_agency_strtoproper($dataLocation["ProfileLocationZip"]) .", ". strtoupper($dataLocation["ProfileLocationZip"]) ."</option>";
-                                              } else {
-                                                 echo "<option value=\"". $dataLocation["ProfileLocationZip"] ."\">". strtoupper($dataLocation["ProfileLocationZip"]) ."</option>";
-                                              }
-                                        }
-        echo "                          </select>\n";
+                                $profilestate = mysql_query("SELECT DISTINCT ProfileLocationZip FROM ". table_agency_profile ."");
+                                
+                                while ($dataLocation = mysql_fetch_array($profilestate)) {
+                                      if (isset($_GET['ProfileLocationZip']) && !empty($_GET['ProfileLocationZip']) && $_SESSION['ProfileLocationZip'] == $dataLocation["ProfileLocationZip"]) {
+                                         echo "<option value=\"". $dataLocation["ProfileLocationZip"] ."\" selected>". bb_agency_strtoproper($dataLocation["ProfileLocationZip"]) .", ". strtoupper($dataLocation["ProfileLocationZip"]) ."</option>";
+                                      } else {
+                                         echo "<option value=\"". $dataLocation["ProfileLocationZip"] ."\">". strtoupper($dataLocation["ProfileLocationZip"]) ."</option>";
+                                      }
+                                }
+echo "                          </select>\n";
 
-        echo "                      </td>\n";
-        */
-        ?>
-            <td><input type="text" name="ProfileLocation" value="<?php echo isset($_GET['ProfileLocation']) ? $_GET['ProfileLocation'] : '' ?>" /></td>
-        <?php
-        echo "                  </tr>\n";
+echo "                      </td>\n";
+*/
+?>
+    <td><input type="text" name="ProfileLocation" value="<?php echo isset($_GET['ProfileLocation']) ? $_GET['ProfileLocation'] : '' ?>" /></td>
+<?php
+echo "                  </tr>\n";
 
-            //bb_custom_fields(0, $ProfileID, $ProfileGender,false);
-            $query1 = "SELECT ProfileCustomID, ProfileCustomTitle, ProfileCustomType, ProfileCustomOptions, ProfileCustomOrder, ProfileCustomView, ProfileCustomShowGender, ProfileCustomShowProfile, ProfileCustomShowSearch, ProfileCustomShowLogged, ProfileCustomShowAdmin FROM ". table_agency_customfields ." WHERE ProfileCustomView IN('0','1')  AND ProfileCustomID != 39 AND ProfileCustomID != 48 ORDER BY ProfileCustomOrder ASC";
-                                $results1 = mysql_query($query1);
-                                $count1 = mysql_num_rows($results1);
-                                $pos = 0;
-        while ($data1 = mysql_fetch_array($results1)) { 
-            
-                                    $ProfileCustomID = $data1['ProfileCustomID'];
-                                    $ProfileCustomTitle = $data1['ProfileCustomTitle'];
-                                    $ProfileCustomType = $data1['ProfileCustomType'];
-                                    $ProfileCustomValue = $data1['ProfileCustomValue'];
+    //bb_custom_fields(0, $ProfileID, $ProfileGender,false);
+    $query1 = "SELECT ProfileCustomID, ProfileCustomTitle, ProfileCustomType, ProfileCustomOptions, ProfileCustomOrder, ProfileCustomView, ProfileCustomShowGender, ProfileCustomShowProfile, ProfileCustomShowSearch, ProfileCustomShowLogged, ProfileCustomShowAdmin FROM ". table_agency_customfields ." WHERE ProfileCustomView IN('0','1')  AND ProfileCustomID != 39 AND ProfileCustomID != 48 ORDER BY ProfileCustomOrder ASC";
+                        $results1 = mysql_query($query1);
+                        $count1 = mysql_num_rows($results1);
+                        $pos = 0;
+while ($data1 = mysql_fetch_array($results1)) { 
+    
+                            $ProfileCustomID = $data1['ProfileCustomID'];
+                            $ProfileCustomTitle = $data1['ProfileCustomTitle'];
+                            $ProfileCustomType = $data1['ProfileCustomType'];
+                            $ProfileCustomValue = $data1['ProfileCustomValue'];
             
   echo "                    <tr>\n";
   echo "                    \n";
@@ -1009,357 +1034,357 @@
         
     
 
-             // SET Label for Measurements
-             // Imperial(in/lb), Metrics(ft/kg)
-             $bb_agency_options_arr = get_option('bb_agency_options');
-              $bb_agency_option_unittype  = $bb_agency_options_arr['bb_agency_option_unittype'];
-              $measurements_label = "";
-              /*
-                0- metric
-                  1 - cm
-                2- kg
-                3 - inches/feet
-                1-imperials 
-                1- inches
-                2- pounds
-                3-inches/feet
-                */
-             if ($ProfileCustomType == 7) { //measurements field type
-                       if($bb_agency_option_unittype ==1){ // 1 = Metrics(ft/kg)
-                        if($data1['ProfileCustomOptions'] == 1){
-                            $measurements_label  ="<em>(Inches)</em>";
-                        }elseif($data1['ProfileCustomOptions'] == 2){
-                            $measurements_label  ="<em>(Pounds)</em>";
-                        }elseif($data1['ProfileCustomOptions'] == 3){
-                          $measurements_label  ="<em>(Feet/Inches)</em>";
-                        }
-                    }elseif($bb_agency_option_unittype ==0){ //0 = Imperial(in/lb)
-                        if($data1['ProfileCustomOptions'] == 1){
-                            $measurements_label  ="<em>(cm)</em>";
-                        }elseif($data1['ProfileCustomOptions'] == 2){
-                            $measurements_label  ="<em>(kg)</em>";
-                        }elseif($data1['ProfileCustomOptions'] == 3){
-                            $measurements_label  ="<em>(Inches/Feet)</em>";
-                        }
-                    }
-                    
-             }
-     echo "                     <th scope=\"row\">\n";
-                                                 if($ProfileCustomType==7){
+ // SET Label for Measurements
+ // Imperial(in/lb), Metrics(ft/kg)
+ $bb_agency_options_arr = get_option('bb_agency_options');
+  $bb_agency_option_unittype  = $bb_agency_options_arr['bb_agency_option_unittype'];
+  $measurements_label = "";
+  /*
+    0- metric
+      1 - cm
+    2- kg
+    3 - inches/feet
+    1-imperials 
+    1- inches
+    2- pounds
+    3-inches/feet
+    */
+ if ($ProfileCustomType == 7) { //measurements field type
+           if($bb_agency_option_unittype ==1){ // 1 = Metrics(ft/kg)
+            if($data1['ProfileCustomOptions'] == 1){
+                $measurements_label  ="<em>(Inches)</em>";
+            }elseif($data1['ProfileCustomOptions'] == 2){
+                $measurements_label  ="<em>(Pounds)</em>";
+            }elseif($data1['ProfileCustomOptions'] == 3){
+              $measurements_label  ="<em>(Feet/Inches)</em>";
+            }
+        }elseif($bb_agency_option_unittype ==0){ //0 = Imperial(in/lb)
+            if($data1['ProfileCustomOptions'] == 1){
+                $measurements_label  ="<em>(cm)</em>";
+            }elseif($data1['ProfileCustomOptions'] == 2){
+                $measurements_label  ="<em>(kg)</em>";
+            }elseif($data1['ProfileCustomOptions'] == 3){
+                $measurements_label  ="<em>(Inches/Feet)</em>";
+            }
+        }
+        
+ }
+echo "                     <th scope=\"row\">\n";
+                                         if($ProfileCustomType==7){
 
-             echo "                    <div class=\"label\">". $data1['ProfileCustomTitle'].$measurements_label."</div> \n";
-                                     }else{
-             echo "                    <div><label for=\"ProfileCustomID". $data1['ProfileCustomID'] ."\">". $data1['ProfileCustomTitle']."</label></div> \n";                           
-     
-                                     }
+     echo "                    <div class=\"label\">". $data1['ProfileCustomTitle'].$measurements_label."</div> \n";
+                             }else{
+     echo "                    <div><label for=\"ProfileCustomID". $data1['ProfileCustomID'] ."\">". $data1['ProfileCustomTitle']."</label></div> \n";                           
+
+                             }
+
+        echo  "         </th>       ";
+    echo  "         <td>";
     
-                echo  "         </th>       ";
-            echo  "         <td>";
-            
 
-                    if (in_array($data1['ProfileCustomTitle'], $cusFields)) { //used alternative inputs for custom fields defined on top of this page
-                        $id = $data1['ProfileCustomID'];
-                        $title = $data1['ProfileCustomTitle'];
-                        if ($title == 'Height') {
-                            //list($min_val, $max_val) =  @explode(",", $_SESSION["ProfileCustomID".$id]);
+            if (in_array($data1['ProfileCustomTitle'], $cusFields)) { //used alternative inputs for custom fields defined on top of this page
+                $id = $data1['ProfileCustomID'];
+                $title = $data1['ProfileCustomTitle'];
+                if ($title == 'Height') {
+                    //list($min_val, $max_val) =  @explode(",", $_SESSION["ProfileCustomID".$id]);
 
-                            ?>
-                            <fieldset class="rbselect">
-                                <div>
-                                    <label>Min</label>
-                                    <select name="ProfileCustomID<?php echo $id ?>_min">
-                                    <?php if (empty($ProfileCustomValue)) : ?>
-                                        <option value="">--</option>
-                                    <?php endif; ?> 
-                            
-                                    <?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
-                                        <option value="<?php echo $i ?>" <?php echo selected($_GET['ProfileCustomID'.$id.'_min'], $i) ?>><?php echo display_height($i) ?></option>
-                                    <?php endfor; ?>
-                                    </select>
-                                </div>
-                          
-                                <div>
-                                    <label>Max</label>
-                                    <select name="ProfileCustomID<?php echo $id ?>_max">
-                                    <?php if (empty($ProfileCustomValue)) : ?>
-                                         <option value="">--</option>
-                                    <?php endif; ?>
-                                    <?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
-                                        <option value="<?php echo $i ?>" <?php echo selected($_GET['ProfileCustomID'.$id.'_max'], $i) ?>><?php echo display_height($i) ?></option>
-                                    <?php endfor; ?>
-                                    </select>
-                                </div>
-                            </fieldset>
-                            <?php
+                    ?>
+                    <fieldset class="rbselect">
+                        <div>
+                            <label>Min</label>
+                            <select name="ProfileCustomID<?php echo $id ?>_min">
+                            <?php if (empty($ProfileCustomValue)) : ?>
+                                <option value="">--</option>
+                            <?php endif; ?> 
+                    
+                            <?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
+                                <option value="<?php echo $i ?>" <?php echo selected($_GET['ProfileCustomID'.$id.'_min'], $i) ?>><?php echo display_height($i) ?></option>
+                            <?php endfor; ?>
+                            </select>
+                        </div>
+                  
+                        <div>
+                            <label>Max</label>
+                            <select name="ProfileCustomID<?php echo $id ?>_max">
+                            <?php if (empty($ProfileCustomValue)) : ?>
+                                 <option value="">--</option>
+                            <?php endif; ?>
+                            <?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
+                                <option value="<?php echo $i ?>" <?php echo selected($_GET['ProfileCustomID'.$id.'_max'], $i) ?>><?php echo display_height($i) ?></option>
+                            <?php endfor; ?>
+                            </select>
+                        </div>
+                    </fieldset>
+                    <?php
 
-                        } else {
+                } else {
+                    echo  "         <fieldset class=\"rbtext\">";
+                    echo "<div><label for=\"ProfileCustomLabel_min\">". __("Min", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+                    echo "<input class=\"min_max\" type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."_min\" value=\"". $ProfileCustomOptions_Min_value ."\" /></div>\n";
+                    echo "<div><label for=\"ProfileCustomLabel_min\">". __("Max", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+                    echo "<input class=\"min_max\"  type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."_max\" value=\"". $ProfileCustomOptions_Max_value ."\" /></div>\n";
+                    echo  "         </fieldset>";
+
+
+                }
+
+            }else{
+    
+                            if ($ProfileCustomType == 1) { //TEXT
+                                        echo "<div><input type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\" value=\"".$_SESSION["ProfileCustomID". $data1['ProfileCustomID']]."\" /></div>\n";
+                    
+                             
+                                   
+                                
+                                
+                            } elseif ($ProfileCustomType == 2) { // Min Max
                             echo  "         <fieldset class=\"rbtext\">";
-                            echo "<div><label for=\"ProfileCustomLabel_min\">". __("Min", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
-                            echo "<input class=\"min_max\" type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."_min\" value=\"". $ProfileCustomOptions_Min_value ."\" /></div>\n";
-                            echo "<div><label for=\"ProfileCustomLabel_min\">". __("Max", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
-                            echo "<input class=\"min_max\"  type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."_max\" value=\"". $ProfileCustomOptions_Max_value ."\" /></div>\n";
-                            echo  "         </fieldset>";
-
-
-                        }
-
-                    }else{
-            
-                                    if ($ProfileCustomType == 1) { //TEXT
-                                                echo "<div><input type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\" value=\"".$_SESSION["ProfileCustomID". $data1['ProfileCustomID']]."\" /></div>\n";
+                               
+                                $ProfileCustomOptions_String = str_replace(",",":",strtok(strtok($data1['ProfileCustomOptions'],"}"),"{"));
+                                list($ProfileCustomOptions_Min_label,$ProfileCustomOptions_Min_value,$ProfileCustomOptions_Max_label,$ProfileCustomOptions_Max_value) = explode(":",$ProfileCustomOptions_String);
+                               
+                             
+                                if(!empty($ProfileCustomOptions_Min_value) && !empty($ProfileCustomOptions_Max_value)){
+                                          echo "<div><label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Min", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+                                        echo "<input class=\"min_max\" type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\" value=\"". $ProfileCustomOptions_Min_value ."\" /></div>\n";
+                                        echo "<div><label for=\"ProfileCustomLabel_max\" style=\"text-align:right;\">". __("Max", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+                                        echo "<input class=\"min_max\" type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\" value=\"". $ProfileCustomOptions_Max_value ."\" /></div>\n";
                             
-                                     
-                                           
-                                        
-                                        
-                                    } elseif ($ProfileCustomType == 2) { // Min Max
-                                    echo  "         <fieldset class=\"rbtext\">";
-                                       
-                                        $ProfileCustomOptions_String = str_replace(",",":",strtok(strtok($data1['ProfileCustomOptions'],"}"),"{"));
-                                        list($ProfileCustomOptions_Min_label,$ProfileCustomOptions_Min_value,$ProfileCustomOptions_Max_label,$ProfileCustomOptions_Max_value) = explode(":",$ProfileCustomOptions_String);
-                                       
-                                     
-                                        if(!empty($ProfileCustomOptions_Min_value) && !empty($ProfileCustomOptions_Max_value)){
-                                                  echo "<div><label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Min", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
-                                                echo "<input class=\"min_max\" type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\" value=\"". $ProfileCustomOptions_Min_value ."\" /></div>\n";
-                                                echo "<div><label for=\"ProfileCustomLabel_max\" style=\"text-align:right;\">". __("Max", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
-                                                echo "<input class=\"min_max\" type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\" value=\"". $ProfileCustomOptions_Max_value ."\" /></div>\n";
                                     
+                                }else{
+                                          echo "<div><label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Min", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+                                        echo "<input class=\"min_max\" type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\" value=\"".$_SESSION["ProfileCustomID". $data1['ProfileCustomID']]."\" /></div>\n";
+                                          echo "<div><label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Max", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+                                        echo "<input class=\"min_max\" type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\" value=\"".$_SESSION["ProfileCustomID". $data1['ProfileCustomID']]."\" /></div>\n";
+                            
+                                   
+                                }
+                                echo  "         </fieldset>";
+                             
+                            } elseif ($ProfileCustomType == 3) {
+                                
+                            echo  "         <div class=\"rbselect\">";
+                                
+                              list($option1,$option2) = explode(":",$data1['ProfileCustomOptions']);    
+                                    
+                                    $data = explode("|",$option1);
+                                    $data2 = explode("|",$option2);
+                                    
+                                    
+                                 
+                                    echo "<div><label>".$data[0]."</label></div>";
+                                    
+                                    echo "<div><select name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\">\n";
+                                    echo "<option value=\"\">Any ".$data1['ProfileCustomTitle']."</option>";
+                                      
+                                        foreach($data as $val1){
                                             
-                                        }else{
-                                                  echo "<div><label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Min", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
-                                                echo "<input class=\"min_max\" type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\" value=\"".$_SESSION["ProfileCustomID". $data1['ProfileCustomID']]."\" /></div>\n";
-                                                  echo "<div><label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Max", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
-                                                echo "<input class=\"min_max\" type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\" value=\"".$_SESSION["ProfileCustomID". $data1['ProfileCustomID']]."\" /></div>\n";
-                                    
-                                           
+                                            if($val1 != end($data) && $val1 != $data[0]){
+                                            
+                                                 $isSelected = "";
+                                                if($_SESSION["ProfileCustomID". $data1['ProfileCustomID']]==$val1){
+                                                    $isSelected = "selected=\"selected\"";
+                                                    echo "<option value=\"".$val1."\" ".$isSelected .">".$val1."</option>";
+                                                } else {
+                                                    echo "<option value=\"".$val1."\" >".$val1."</option>"; 
+                                                }
+                                        
+                                            }
                                         }
-                                        echo  "         </fieldset>";
-                                     
-                                    } elseif ($ProfileCustomType == 3) {
+                                        echo "</select></div>\n";
                                         
-                                    echo  "         <div class=\"rbselect\">";
-                                        
-                                      list($option1,$option2) = explode(":",$data1['ProfileCustomOptions']);    
-                                            
-                                            $data = explode("|",$option1);
-                                            $data2 = explode("|",$option2);
-                                            
-                                            
-                                         
-                                            echo "<div><label>".$data[0]."</label></div>";
-                                            
-                                            echo "<div><select name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\">\n";
-                                            echo "<option value=\"\">Any ".$data1['ProfileCustomTitle']."</option>";
-                                              
-                                                foreach($data as $val1){
-                                                    
-                                                    if($val1 != end($data) && $val1 != $data[0]){
-                                                    
-                                                         $isSelected = "";
-                                                        if($_SESSION["ProfileCustomID". $data1['ProfileCustomID']]==$val1){
-                                                            $isSelected = "selected=\"selected\"";
-                                                            echo "<option value=\"".$val1."\" ".$isSelected .">".$val1."</option>";
-                                                        } else {
-                                                            echo "<option value=\"".$val1."\" >".$val1."</option>"; 
+                                    /*  
+                                    if(!empty($data2) && !empty($option2)){
+                                               echo "<div><label>".$data2[0]."</label></div>";
+                                    
+                                            $pos2 = 0;
+                                            echo "<div><select name=\"ProfileCustomID". $data1['ProfileCustomID'] ."[]\">\n";
+                                            echo "<option value=\"\">--</option>";
+                                            foreach($data2 as $val2){
+                                                  
+                                                    if($val2 != end($data2) && $val2 !=  $data2[0]){
+                                                        if($_SESSION["ProfileCustomID". $data1['ProfileCustomID']]==$val2){
+                                                                $isSelected = "selected=\"selected\"";
+                                                                echo "<option value=\"".$val2."\" ".$isSelected .">".$val2."</option>";
+                                                        }else{
+                                                                echo "<option value=\"".$val2."\" >".$val2."</option>"; 
                                                         }
-                                                
                                                     }
                                                 }
-                                                echo "</select></div>\n";
-                                                
-                                            /*  
-                                            if(!empty($data2) && !empty($option2)){
-                                                       echo "<div><label>".$data2[0]."</label></div>";
-                                            
-                                                    $pos2 = 0;
-                                                    echo "<div><select name=\"ProfileCustomID". $data1['ProfileCustomID'] ."[]\">\n";
-                                                    echo "<option value=\"\">--</option>";
-                                                    foreach($data2 as $val2){
-                                                          
-                                                            if($val2 != end($data2) && $val2 !=  $data2[0]){
-                                                                if($_SESSION["ProfileCustomID". $data1['ProfileCustomID']]==$val2){
-                                                                        $isSelected = "selected=\"selected\"";
-                                                                        echo "<option value=\"".$val2."\" ".$isSelected .">".$val2."</option>";
-                                                                }else{
-                                                                        echo "<option value=\"".$val2."\" >".$val2."</option>"; 
-                                                                }
-                                                            }
-                                                        }
-                                                    echo "</select></div>\n";
-                                            
-                                            }
-                                       */
-                                        
-                                        echo  "         </div>";
-
-                                    } elseif ($ProfileCustomType == 4) {
-                                        echo  "         <div class=\"rbtextarea\">";
-                                        echo "<div><textarea name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\">". $_SESSION["ProfileCustomID". $data1['ProfileCustomID']] ."</textarea></div>";
-                                        echo  "         </div>";
+                                            echo "</select></div>\n";
+                                    
                                     }
-                                     
-                                    elseif ($ProfileCustomType == 5) {
-                                        echo  "         <fieldset class=\"rbcheckbox\">";
+                               */
+                                
+                                echo  "         </div>";
 
-                                        $array_customOptions_values = explode("|",$data1['ProfileCustomOptions']);
+                            } elseif ($ProfileCustomType == 4) {
+                                echo  "         <div class=\"rbtextarea\">";
+                                echo "<div><textarea name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\">". $_SESSION["ProfileCustomID". $data1['ProfileCustomID']] ."</textarea></div>";
+                                echo  "         </div>";
+                            }
+                             
+                            elseif ($ProfileCustomType == 5) {
+                                echo  "         <fieldset class=\"rbcheckbox\">";
 
-                                        foreach($array_customOptions_values as $val){
+                                $array_customOptions_values = explode("|",$data1['ProfileCustomOptions']);
 
-                                            /*
-                                             * double check this if this is array and its index 0 is empty
-                                             * then force set it to empty so it will not push through
-                                             */
-                                            if(isset($_SESSION["ProfileCustomID". $data1['ProfileCustomID']]) && is_array($_SESSION["ProfileCustomID". $data1['ProfileCustomID']])){ 
-                                                if($_SESSION["ProfileCustomID". $data1['ProfileCustomID']][0] == ""){
-                                                    $_SESSION["ProfileCustomID". $data1['ProfileCustomID']] = "";
-                                                }
-                                            }
-                                            
-                                            if(isset($_SESSION["ProfileCustomID". $data1['ProfileCustomID']]) && $_SESSION["ProfileCustomID". $data1['ProfileCustomID']] != ""){ 
+                                foreach($array_customOptions_values as $val){
 
-                                                $dataArr = explode(",",implode(",",explode("','",$_SESSION["ProfileCustomID". $data1['ProfileCustomID']])));
-
-                                                if(in_array($val,$dataArr,true) && $val != ""){
-                                                    echo "<label><input type=\"checkbox\" checked=\"checked\" value=\"". $val."\"  name=\"ProfileCustomID". $data1['ProfileCustomID'] ."[]\" />&nbsp;";
-                                                    echo "<span>". $val."</span></label><br />";
-                                                } elseif($val !="") {
-                                                    echo "<label><input type=\"checkbox\" value=\"". $val."\"  name=\"ProfileCustomID". $data1['ProfileCustomID'] ."[]\" />&nbsp;";
-                                                    echo "<span>". $val."</span></label><br />";
-                                                }
-                                            } else {
-                                                if($val !=""){  
-                                                        echo "<label><input type=\"checkbox\" value=\"". $val."\"  name=\"ProfileCustomID". $data1['ProfileCustomID'] ."[]\" />&nbsp;";
-                                                        echo "<span>". $val."</span></label><br />";
-                                                }
-                                            }
+                                    /*
+                                     * double check this if this is array and its index 0 is empty
+                                     * then force set it to empty so it will not push through
+                                     */
+                                    if(isset($_SESSION["ProfileCustomID". $data1['ProfileCustomID']]) && is_array($_SESSION["ProfileCustomID". $data1['ProfileCustomID']])){ 
+                                        if($_SESSION["ProfileCustomID". $data1['ProfileCustomID']][0] == ""){
+                                            $_SESSION["ProfileCustomID". $data1['ProfileCustomID']] = "";
                                         }
-                                                  echo "<div><input type=\"hidden\" value=\"\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."[]\"/></div>";
-                                                  echo "</fieldset>";
                                     }
                                     
-                                    elseif ($ProfileCustomType == 6) {
-                                        echo  "         <fieldset class=\"rbradio\">";
+                                    if(isset($_SESSION["ProfileCustomID". $data1['ProfileCustomID']]) && $_SESSION["ProfileCustomID". $data1['ProfileCustomID']] != ""){ 
 
-                                        $array_customOptions_values = explode("|",$data1['ProfileCustomOptions']);
-                                           
-                                        foreach($array_customOptions_values as $val){
-                                            
-                                            /*
-                                             * double check this if this is array and its index 0 is empty
-                                             * then force set it to empty so it will not push through
-                                             */
-                                            if(isset($_SESSION["ProfileCustomID". $data1['ProfileCustomID']]) && is_array($_SESSION["ProfileCustomID". $data1['ProfileCustomID']])){ 
-                                                if($_SESSION["ProfileCustomID". $data1['ProfileCustomID']][0] == ""){
-                                                    $_SESSION["ProfileCustomID". $data1['ProfileCustomID']] = "";
-                                                }
-                                            }
-                                            
-                                            if(isset($_SESSION["ProfileCustomID". $data1['ProfileCustomID']]) && $_SESSION["ProfileCustomID". $data1['ProfileCustomID']] != ""){ 
+                                        $dataArr = explode(",",implode(",",explode("','",$_SESSION["ProfileCustomID". $data1['ProfileCustomID']])));
 
-                                                $dataArr = explode(",",implode(",",explode("','",$_SESSION["ProfileCustomID". $data1['ProfileCustomID']])));
-
-                                                if(in_array($val,$dataArr) && $val !=""){
-                                                    echo "<label><input type=\"radio\" checked=\"checked\" value=\"". $val."\"  name=\"ProfileCustomID". $data1['ProfileCustomID'] ."[]\" />";
-                                                    echo "". $val."</label><br />";
-                                                } else {
-                                                    echo "<label><input type=\"radio\" value=\"". $val."\"  name=\"ProfileCustomID". $data1['ProfileCustomID'] ."[]\" />";
-                                                    echo "". $val."</label><br />"; 
-                                                }
-                                            } else {
-                                                echo "<label><input type=\"radio\" value=\"". $val."\"  name=\"ProfileCustomID". $data1['ProfileCustomID'] ."[]\" />";
-                                                echo "". $val."</label><br />"; 
-                                            }
+                                        if(in_array($val,$dataArr,true) && $val != ""){
+                                            echo "<label><input type=\"checkbox\" checked=\"checked\" value=\"". $val."\"  name=\"ProfileCustomID". $data1['ProfileCustomID'] ."[]\" />&nbsp;";
+                                            echo "<span>". $val."</span></label><br />";
+                                        } elseif($val !="") {
+                                            echo "<label><input type=\"checkbox\" value=\"". $val."\"  name=\"ProfileCustomID". $data1['ProfileCustomID'] ."[]\" />&nbsp;";
+                                            echo "<span>". $val."</span></label><br />";
                                         }
-                                        echo "<div><input type=\"hidden\" value=\"\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."[]\"/></div>";                                           
-                                        echo "</fieldset>";                                        
+                                    } else {
+                                        if($val !=""){  
+                                                echo "<label><input type=\"checkbox\" value=\"". $val."\"  name=\"ProfileCustomID". $data1['ProfileCustomID'] ."[]\" />&nbsp;";
+                                                echo "<span>". $val."</span></label><br />";
+                                        }
+                                    }
+                                }
+                                          echo "<div><input type=\"hidden\" value=\"\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."[]\"/></div>";
+                                          echo "</fieldset>";
+                            }
+                            
+                            elseif ($ProfileCustomType == 6) {
+                                echo  "         <fieldset class=\"rbradio\">";
+
+                                $array_customOptions_values = explode("|",$data1['ProfileCustomOptions']);
+                                   
+                                foreach($array_customOptions_values as $val){
+                                    
+                                    /*
+                                     * double check this if this is array and its index 0 is empty
+                                     * then force set it to empty so it will not push through
+                                     */
+                                    if(isset($_SESSION["ProfileCustomID". $data1['ProfileCustomID']]) && is_array($_SESSION["ProfileCustomID". $data1['ProfileCustomID']])){ 
+                                        if($_SESSION["ProfileCustomID". $data1['ProfileCustomID']][0] == ""){
+                                            $_SESSION["ProfileCustomID". $data1['ProfileCustomID']] = "";
+                                        }
                                     }
                                     
-                                    elseif ($ProfileCustomType == 7) {
-                                         
-                                        list($min_val,$max_val) =  @explode(",", $_SESSION["ProfileCustomID".$data1['ProfileCustomID']]);
+                                    if(isset($_SESSION["ProfileCustomID". $data1['ProfileCustomID']]) && $_SESSION["ProfileCustomID". $data1['ProfileCustomID']] != ""){ 
 
-                                        if ($data1['ProfileCustomTitle']=="Height" AND $bb_agency_option_unittype==1) : ?>
-                                            <fieldset class="rbselect">
-                                                <div>
-                                                    <label>Min</label>
-                                                    <select name="ProfileCustomID<?php echo $data1['ProfileCustomID'] ?>_min">
-                                                    <?php if (empty($ProfileCustomValue)) : ?>
-                                                        <option value="">--</option>
-                                                    <?php endif; ?> 
-                                            
-                                                    <?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
-                                                        <option value="<?php echo $i ?>" <?php echo selected($ProfileCustomValue, $i) ?>><?php echo display_height($i) ?></option>
-                                                    <?php endfor; ?>
-                                                    </select>
-                                                </div>
-                                          
-                                                <div>
-                                                    <label>Max</label>
-                                                    <select name="ProfileCustomID<?php echo $data1['ProfileCustomID'] ?>_max">
-                                                    <?php if (empty($ProfileCustomValue)) : ?>
-                                                         <option value="">--</option>
-                                                    <?php endif; ?>
-                                                    <?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
-                                                        <option value="<?php echo $i ?>" <?php echo selected($ProfileCustomValue, $i) ?>><?php echo display_height($i) ?></option>
-                                                    <?php endfor; ?>
-                                                    </select>
-                                                </div>
-                                            </fieldset>
+                                        $dataArr = explode(",",implode(",",explode("','",$_SESSION["ProfileCustomID". $data1['ProfileCustomID']])));
 
-                                        <?php else : ?>
-                                            <fieldset class="rbtext">
-                                            <?php // for other search ?>
-                                                <div>
-                                                    <label for="ProfileCustomID<?php echo $data1['ProfileCustomID'] ?>_min">Min</label>
-                                                    <input value="<?php echo (!is_array($min_val) && $min_val != "Array" ? $min_val : "") ?>" class="stubby" type="text" name="ProfileCustomID<?php echo $data1['ProfileCustomID'] ?>[]" />
-                                                </div>
+                                        if(in_array($val,$dataArr) && $val !=""){
+                                            echo "<label><input type=\"radio\" checked=\"checked\" value=\"". $val."\"  name=\"ProfileCustomID". $data1['ProfileCustomID'] ."[]\" />";
+                                            echo "". $val."</label><br />";
+                                        } else {
+                                            echo "<label><input type=\"radio\" value=\"". $val."\"  name=\"ProfileCustomID". $data1['ProfileCustomID'] ."[]\" />";
+                                            echo "". $val."</label><br />"; 
+                                        }
+                                    } else {
+                                        echo "<label><input type=\"radio\" value=\"". $val."\"  name=\"ProfileCustomID". $data1['ProfileCustomID'] ."[]\" />";
+                                        echo "". $val."</label><br />"; 
+                                    }
+                                }
+                                echo "<div><input type=\"hidden\" value=\"\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."[]\"/></div>";                                           
+                                echo "</fieldset>";                                        
+                            }
+                            
+                            elseif ($ProfileCustomType == 7) {
+                                 
+                                list($min_val,$max_val) =  @explode(",", $_SESSION["ProfileCustomID".$data1['ProfileCustomID']]);
 
-                                                 <div>
-                                                    <label for="ProfileCustomID<?php echo $data1['ProfileCustomID'] ?>_max">Max</label>
-                                                    <input value="<?php echo $max_val ?>" class="stubby" type="text" name="ProfileCustomID<?php echo $data1['ProfileCustomID'] ?>[]" />
-                                                </div>
-                                            </fieldset>
-                                        <?php endif;
-                                    }       
-            
-                    }//end of if(in_array("$data1['ProfileCustomTitle']", $cusFields))
-            
-              
-            
-            
-            echo  "         </td>";
-            echo  "         </tr>";
-                
-        } //end of while ($data1
-   
-        // status filter
+                                if ($data1['ProfileCustomTitle']=="Height" AND $bb_agency_option_unittype==1) : ?>
+                                    <fieldset class="rbselect">
+                                        <div>
+                                            <label>Min</label>
+                                            <select name="ProfileCustomID<?php echo $data1['ProfileCustomID'] ?>_min">
+                                            <?php if (empty($ProfileCustomValue)) : ?>
+                                                <option value="">--</option>
+                                            <?php endif; ?> 
+                                    
+                                            <?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
+                                                <option value="<?php echo $i ?>" <?php echo selected($ProfileCustomValue, $i) ?>><?php echo display_height($i) ?></option>
+                                            <?php endfor; ?>
+                                            </select>
+                                        </div>
+                                  
+                                        <div>
+                                            <label>Max</label>
+                                            <select name="ProfileCustomID<?php echo $data1['ProfileCustomID'] ?>_max">
+                                            <?php if (empty($ProfileCustomValue)) : ?>
+                                                 <option value="">--</option>
+                                            <?php endif; ?>
+                                            <?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
+                                                <option value="<?php echo $i ?>" <?php echo selected($ProfileCustomValue, $i) ?>><?php echo display_height($i) ?></option>
+                                            <?php endfor; ?>
+                                            </select>
+                                        </div>
+                                    </fieldset>
 
-        echo "                  <tr>\n";
-        echo "                      <th scope=\"row\">". __("Status", bb_agency_TEXTDOMAIN) . ":</th>\n";
-        echo "                      <td><select name=\"ProfileIsActive\" id=\"ProfileIsActive\">\n";               
-        echo "                          <option value=\"\">". __("Any Status", bb_agency_TEXTDOMAIN) . "</option>\n";
-        echo "                          <option value=\"1\"". selected($_SESSION['ProfileIsActive'], 1) .">". __("Active", bb_agency_TEXTDOMAIN) . "</option>\n";
-        echo "                          <option value=\"4\"". selected($_SESSION['ProfileIsActive'], 4) .">". __("Not Visible", bb_agency_TEXTDOMAIN) . "</option>\n";
-        echo "                          <option value=\"0\"". selected($_SESSION['ProfileIsActive'], 0) .">". __("Inactive", bb_agency_TEXTDOMAIN) . "</option>\n";
-        echo "                          <option value=\"2\"". selected($_SESSION['ProfileIsActive'], 2) .">". __("Archived", bb_agency_TEXTDOMAIN) . "</option>\n";
-        echo "                          </select>\n";
-        echo "                      </td>\n";
-        echo "                  </tr>\n";
+                                <?php else : ?>
+                                    <fieldset class="rbtext">
+                                    <?php // for other search ?>
+                                        <div>
+                                            <label for="ProfileCustomID<?php echo $data1['ProfileCustomID'] ?>_min">Min</label>
+                                            <input value="<?php echo (!is_array($min_val) && $min_val != "Array" ? $min_val : "") ?>" class="stubby" type="text" name="ProfileCustomID<?php echo $data1['ProfileCustomID'] ?>[]" />
+                                        </div>
 
-        echo "                </thead>\n";
-        echo "              </table>\n";
-        echo "              <p class=\"submit\">\n";
-        echo "              <input type=\"submit\" value=\"". __("Search Profiles", bb_agency_TEXTDOMAIN) . "\" class=\"button-primary\" />\n";
-        echo "              <input type=\"reset\" onclick=\"redirectSearch();\" name=\"reset\" value=\"". __("Reset Form", bb_agency_TEXTDOMAIN) . "\" class=\"button-secondary\" />\n";
-        echo "              </p>\n";
-        echo "          <form>\n";
+                                         <div>
+                                            <label for="ProfileCustomID<?php echo $data1['ProfileCustomID'] ?>_max">Max</label>
+                                            <input value="<?php echo $max_val ?>" class="stubby" type="text" name="ProfileCustomID<?php echo $data1['ProfileCustomID'] ?>[]" />
+                                        </div>
+                                    </fieldset>
+                                <?php endif;
+                            }       
+    
+            }//end of if(in_array("$data1['ProfileCustomTitle']", $cusFields))
+    
+      
+    
+    
+    echo  "         </td>";
+    echo  "         </tr>";
+        
+} //end of while ($data1
 
-        echo "          <div>\n";
-     
-        echo "    </div><!-- .container -->\n";
-        echo "  </div>\n";
-        echo "</div>\n";
+// status filter
+
+echo "                  <tr>\n";
+echo "                      <th scope=\"row\">". __("Status", bb_agency_TEXTDOMAIN) . ":</th>\n";
+echo "                      <td><select name=\"ProfileIsActive\" id=\"ProfileIsActive\">\n";               
+echo "                          <option value=\"\">". __("Any Status", bb_agency_TEXTDOMAIN) . "</option>\n";
+echo "                          <option value=\"1\"". selected($_SESSION['ProfileIsActive'], 1) .">". __("Active", bb_agency_TEXTDOMAIN) . "</option>\n";
+echo "                          <option value=\"4\"". selected($_SESSION['ProfileIsActive'], 4) .">". __("Not Visible", bb_agency_TEXTDOMAIN) . "</option>\n";
+echo "                          <option value=\"0\"". selected($_SESSION['ProfileIsActive'], 0) .">". __("Inactive", bb_agency_TEXTDOMAIN) . "</option>\n";
+echo "                          <option value=\"2\"". selected($_SESSION['ProfileIsActive'], 2) .">". __("Archived", bb_agency_TEXTDOMAIN) . "</option>\n";
+echo "                          </select>\n";
+echo "                      </td>\n";
+echo "                  </tr>\n";
+
+echo "                </thead>\n";
+echo "              </table>\n";
+echo "              <p class=\"submit\">\n";
+echo "              <input type=\"submit\" value=\"". __("Search Profiles", bb_agency_TEXTDOMAIN) . "\" class=\"button-primary\" />\n";
+echo "              <input type=\"reset\" onclick=\"redirectSearch();\" name=\"reset\" value=\"". __("Reset Form", bb_agency_TEXTDOMAIN) . "\" class=\"button-secondary\" />\n";
+echo "              </p>\n";
+echo "          <form>\n";
+
+echo "          <div>\n";
+
+echo "    </div><!-- .container -->\n";
+echo "  </div>\n";
+echo "</div>\n";
 
 ?>
 </div>
