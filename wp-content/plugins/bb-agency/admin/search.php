@@ -176,7 +176,7 @@ if ($action) {
         if (isset($_GET['ProfileLocation']) && !empty($_GET['ProfileLocation'])) {
             $ProfileLocation = $_GET['ProfileLocation'];
 
-            if ($location = geocode($ProfileLocation)) {
+            if ($location = bbagency_geocode($ProfileLocation)) {
                 $lat = $location['lat'];
                 $lng = $location['lng'];
                 $distance = "((ACOS(SIN($lat * PI() / 180) * SIN(`ProfileLocationLatitude` * PI() / 180) + COS($lat * PI() / 180) * COS(`ProfileLocationLatitude` * PI() / 180) * COS(($lng - `ProfileLocationLongitude`) * PI() / 180)) * 180 / PI()) * 60 * 1.1515)";
