@@ -157,3 +157,9 @@ input.stubby { width: 80px; }
 tr.inactive {
     background: #FFEBE8;
 }
+th.column-ProfileID {
+    width: 50px;
+}
+th.column-ProfileImage {
+    width: 150px;
+}

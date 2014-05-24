@@ -469,13 +469,13 @@ if ($action) {
                         <th class="manage-column column-cb check-column" id="cb" scope="col">
                             <input type="checkbox" />
                         </th>
-                        <th class="column-ProfileID" id="ProfileID" scope="col" style="width:50px;">
+                        <th class="column-ProfileID" id="ProfileID" scope="col">
                             <a href="<?php echo admin_url('admin.php?page=bb_agency_profiles&sort=ProfileID&dir='. $sortDirection) ?>"><?php _e("ID", bb_agency_TEXTDOMAIN) ?></a>
                         </th>
                         <th class="column-ProfileContact" id="ProfileContact" scope="col"><?php _e("Contact Information", bb_agency_TEXTDOMAIN) ?></th>
                         <th class="column-ProfileStats" id="ProfileStats" scope="col"><?php _e("Private Details", bb_agency_TEXTDOMAIN) ?></th>
                         <th class="column-ProfileDetails" id="ProfileDetails" scope="col"><?php _e("Public Details", bb_agency_TEXTDOMAIN) ?></th>
-                        <th class="column-ProfileImage" id="ProfileImage" scope="col" style="width:150px;"><?php _e("Headshot", bb_agency_TEXTDOMAIN) ?></th>
+                        <th class="column-ProfileImage" id="ProfileImage" scope="col"><?php _e("Headshot", bb_agency_TEXTDOMAIN) ?></th>
                     </tr>
                 </thead>
                 <tfoot>
@@ -483,20 +483,20 @@ if ($action) {
                         <th class="manage-column column-cb check-column" id="cb" scope="col">
                             <input type="checkbox"/>
                         </th>
-                        <th class="column-ProfileID" id="ProfileID" scope="col" style="width:50px;">
+                        <th class="column-ProfileID" id="ProfileID" scope="col">
                             <a href="<?php echo admin_url('admin.php?page=bb_agency_profiles&sort=ProfileID&dir='. $sortDirection) ?>"><?php _e("ID", bb_agency_TEXTDOMAIN) ?></a>
                         </th>
                         <th class="column-ProfileContact" id="ProfileContact" scope="col"><?php _e("Contact Information", bb_agency_TEXTDOMAIN) ?></th>
                         <th class="column-ProfileStats" id="ProfileStats" scope="col"><?php _e("Private Details", bb_agency_TEXTDOMAIN) ?></th>
                         <th class="column-ProfileDetails" id="ProfileDetails" scope="col"><?php _e("Public Details", bb_agency_TEXTDOMAIN) ?></th>
-                        <th class="column-ProfileImage" id="ProfileImage" scope="col" style="width:150px;"><?php _e("Headshot", bb_agency_TEXTDOMAIN) ?></th>
+                        <th class="column-ProfileImage" id="ProfileImage" scope="col"><?php _e("Headshot", bb_agency_TEXTDOMAIN) ?></th>
                     </tr>
                 </tfoot>
                 <tbody>
                 <?php 
                 while ($data = mysql_fetch_array($results2)) :
                     $ProfileID = $data['pID'];
-                    $isInactive = $data['ProfileIsActive'] ? '' : 'style="background: #FFEBE8"';
+                    $isInactive = $data['ProfileIsActive'] == 0;
                     $isInactiveDisable = $data['ProfileIsActive'] ? '' : 'disabled="disabled"';  
                 ?>
                     <tr class="<?php echo $isInactive ? 'inactive' : 'active' ?>">

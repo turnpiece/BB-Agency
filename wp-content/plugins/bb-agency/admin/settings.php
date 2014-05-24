@@ -372,24 +372,115 @@ elseif ($ConfigID == 1) {
 		 echo "</form>\n";
 }	 // End	
 elseif ($ConfigID == 2) {
-    // get ungeocoded profiles
     $table = table_agency_profile;
+    $addressFields = array(                    
+        'ProfileLocationStreet',
+        'ProfileLocationCity',
+        'ProfileLocationState',
+        'ProfileLocationZip',
+        'ProfileLocationCountry'
+    );
+    if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'geocode') {
+        // get profile ids
+        if (!empty($_REQUEST['ProfileID'])) : ?>
+            <ul>
+            <?php foreach ($_REQUEST['ProfileID'] as $id) : if ($id) : ?> 
+                <li><?php 
+                $result = mysql_query("SELECT * FROM $table WHERE `ProfileID` = $id");
+                if ($result && mysql_num_rows($result)) {
+                    $record = mysql_fetch_array($result);
+                    echo '<strong>'.$record['ProfileContactDisplay'].'</strong>: ';
+                    // get address to geocode
+                    $address = array();
+                    foreach ($addressFields as $field) {
+                        if ($record[$field] != '')
+                            $address[] = $record[$field];
+                    }
+                    if (empty($address)) {
+                        echo 'No address!';
+                    } else {
+                        $strAddress = implode(', ', $address);
+                        echo $strAddress .' => ';
+                        if ($location = bbagency_geocode($strAddress)) {
+                            $set = '`ProfileLocationLatitude` = "'.$location['lat'].'", `ProfileLocationLongitude` = "'.$location['lng'].'", `ProfileDateUpdated` = NOW()';
+                            $sql = "UPDATE $table SET $set WHERE `ProfileID` = $id";
+                            echo '('.$location['lat'].', '.$location['lng'].')';
+                            $wpdb->query($sql);
+                            if (mysql_error())
+                                wp_die("Database Error: $sql - ".mysql_error());
+                        } else {
+                            echo 'Failed to geocode'; 
+                        }
+                    }
+                } else {
+                    echo "failed to get profile $id";
+                }
+                ?></li>
+            <?php endif; endforeach; ?> 
+            </ul>
+        <?php endif;        
+    }
+
+    // get ungeocoded profiles
     $query = <<<EOF
 SELECT *, CONCAT(`ProfileContactNameFirst`,' ',`ProfileContactNameLast`) AS `ProfileContactName` 
 FROM $table
-WHERE (ProfileLocationLatitude IS NULL OR ProfileLocationLongitude IS NULL)
+WHERE (`ProfileLocationLatitude` IS NULL OR `ProfileLocationLongitude` IS NULL)
+AND ProfileIsActive > 0
+AND (`ProfileLocationZip` <> '' OR `ProfileLocationCity` <> '' OR `ProfileLocationStreet` <> '')
+ORDER BY `ProfileDateCreated` ASC
+LIMIT 100
 EOF;
 
     $results = mysql_query($query);
     $count = mysql_num_rows($results);
 
-    while ($record = mysql_fetch_array($results)) {
-        ?><pre><?php print_r($record) ?></pre><?php
-    }
-    // geocode locations
     ?>
     <form method="POST" action="">
-        <input type="submit" class="button-primary" value="<?php _e('Save Changes', bb_agency_TEXTDOMAIN) ?>" />
+        <p>The following <?php echo $count ?> profiles have not been geocoded.</p>
+        <input type="submit" class="button-primary" value="<?php _e('Geocode Locations', bb_agency_TEXTDOMAIN) ?>" />
+        <br />
+        <table cellspacing="0" class="widefat fixed">
+            <thead>
+                <tr class="thead">
+                    <th class="manage-column column-cb check-column" id="cb" scope="col">
+                        <input type="checkbox"/>
+                    </th>
+                    <th class="column-ProfileID" id="ProfileID" scope="col"><?php _e("ID", bb_agency_TEXTDOMAIN) ?></th>
+                    <th class="column-ProfileName" id="ProfileName" scope="col"><?php _e("Name", bb_agency_TEXTDOMAIN) ?></th>
+                    <th class="column-ProfileContact" id="ProfileContact" scope="col"><?php _e("Location", bb_agency_TEXTDOMAIN) ?></th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr class="thead">
+                    <th class="manage-column column-cb check-column" id="cb" scope="col">
+                        <input type="checkbox"/>
+                    </th>
+                    <th class="column-ProfileID" id="ProfileID" scope="col"><?php _e("ID", bb_agency_TEXTDOMAIN) ?></th>
+                    <th class="column-ProfileName" id="ProfileName" scope="col"><?php _e("Name", bb_agency_TEXTDOMAIN) ?></th>
+                    <th class="column-ProfileContact" id="ProfileContact" scope="col"><?php _e("Location", bb_agency_TEXTDOMAIN) ?></th>
+                </tr>
+            </tfoot>
+            <tbody>
+            <?php 
+                while ($record = mysql_fetch_array($results)) : 
+                    $isInactive = $record['ProfileIsActive'] == 0; 
+                    $isInactiveDisable = $record['ProfileIsActive'] ? '' : 'disabled="disabled"'; 
+                    $pid = $record['ProfileID']; ?>
+                <tr class="<?php echo $isInactive ? 'inactive' : 'active' ?>">
+                    <th class="check-column" scope="row" >
+                       <input type="checkbox" <?php echo $isInactiveDisable ?> value="<?php echo $pid ?>" class="administrator" id="ProfileID<?php echo $pid ?>" name="ProfileID[]" />
+                    </th>
+                    <td class="ProfileID column-ProfileID"><?php echo $pid ?></td>
+                    <td><?php echo $record['ProfileContactDisplay'] ?></td>
+                    <td><?php echo $record['ProfileLocationStreet'].', '.$record['ProfileLocationCity'].', '.$record['ProfileLocationState'],', '.$record['ProfileLocationZip'].', '.$record['ProfileLocationCountry'] ?></td>
+                </tr>
+            <?php endwhile; ?>
+            </tbody>
+        </table>
+        <input type="hidden" name="ConfigID" value="2" />
+        <input type="hidden" name="action" value="geocode" />
+        <input type="submit" class="button-primary" value="<?php _e('Geocode Locations', bb_agency_TEXTDOMAIN) ?>" />
     </form>
     <?php
 }
