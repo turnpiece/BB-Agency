@@ -76,7 +76,7 @@ input.stubby { width: 80px; }
 .boxblock table fieldset select { width: 100%; min-width: 50px; }
 .boxblock table fieldset input[type="radio"],
 .boxblock table fieldset input[type="checkbox"] { width: auto; min-width: auto; }
-.boxblock table .rbtextarea textarea { width: 218px; height: 100px; }
+.boxblock table .bbtextarea textarea { width: 218px; height: 100px; }
 .boxblock #submitbox { overflow: hidden; margin-top: 15px; }
 
 /* Profile Page */

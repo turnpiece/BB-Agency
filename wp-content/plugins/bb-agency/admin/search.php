@@ -947,416 +947,367 @@ if ($action) {
                             </fieldset>
                         </td>
                     </tr> 
-<?php
-echo "                  <tr>\n";
-echo "                      <th scope=\"row\">". __("Town", bb_agency_TEXTDOMAIN) . ":</th>\n";
-echo "                      <td><select name=\"ProfileLocationCity\" id=\"ProfileLocationCity\">\n";               
-echo "                          <option value=\"\">". __("Any town", bb_agency_TEXTDOMAIN) . "</option>";
-                                  /*
-                                   * let's get the variables first for use
-                                   * in city 
-                                   */
-                                $profilecity = mysql_query("SELECT DISTINCT ProfileLocationCity FROM ". table_agency_profile ."");
-                                
-                                while ($dataLocation = mysql_fetch_array($profilecity)) {
-                                      if (isset($_GET['ProfileLocationCity']) && !empty($_GET['ProfileLocationCity']) && $_SESSION['ProfileLocationCity'] == $dataLocation["ProfileLocationCity"]) {
-                                         echo "<option value=\"". $dataLocation["ProfileLocationCity"] ."\" selected>". bb_agency_strtoproper($dataLocation["ProfileLocationCity"]) .", ". strtoupper($dataLocation["ProfileLocationState"]) ."</option>";
-                                      } else {
-                                         echo "<option value=\"". $dataLocation["ProfileLocationCity"] ."\">". bb_agency_strtoproper($dataLocation["ProfileLocationCity"]) ."</option>";
-                                      }
-                                }
-                                
-echo "                          </select>\n";
-echo "                      </td>\n";
-echo "                  </tr>\n";
 
-echo "                  <tr>\n";
-echo "                      <th scope=\"row\">". __("County", bb_agency_TEXTDOMAIN) . ":</th>\n";
-echo "                      <td><select name=\"ProfileLocationState\" id=\"ProfileLocationState\">\n";               
-echo "                          <option value=\"\">". __("Any county", bb_agency_TEXTDOMAIN) . "</option>";
-                                  /*
-                                   * let's get the variables first for use
-                                   * in state
-                                   */
-                                $profilestate = mysql_query("SELECT DISTINCT ProfileLocationState FROM ". table_agency_profile ."");
+                    <tr>
+                        <th scope="row"><?php _e("Town", bb_agency_TEXTDOMAIN) ?>:</th>
+                        <td>
+                            <select name="ProfileLocationCity" id="ProfileLocationCity">               
+                                <option value=""><?php _e("Any town", bb_agency_TEXTDOMAIN) ?></option>
+                                <?php  // get a list of cities 
+                                $profilecity = mysql_query('SELECT DISTINCT `ProfileLocationCity` FROM '.table_agency_profile);
                                 
-                                while ($dataLocation = mysql_fetch_array($profilestate)) {
-                                      if (isset($_GET['ProfileLocationState']) && !empty($_GET['ProfileLocationState']) && $_SESSION['ProfileLocationState'] == $dataLocation["ProfileLocationState"]) {
-                                         echo "<option value=\"". $dataLocation["ProfileLocationState"] ."\" selected>". bb_agency_strtoproper($dataLocation["ProfileLocationState"]) .", ". strtoupper($dataLocation["ProfileLocationState"]) ."</option>";
-                                      } else {
-                                         echo "<option value=\"". $dataLocation["ProfileLocationState"] ."\">". bb_agency_strtoproper($dataLocation["ProfileLocationState"]) ."</option>";
-                                      }
-                                }
+                                while ($dataLocation = mysql_fetch_array($profilecity)) : $city = $dataLocation['ProfileLocationCity']; ?>
+                                <option value="<?php echo $city ?>" <?php selected(isset($_GET['ProfileLocationCity']) ? $_GET['ProfileLocationCity'] : false, $city) ?>><?php echo bb_agency_strtoproper($city) ?></option>
+                                <?php endwhile; ?>
+                            </select>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row"><?php _e("County", bb_agency_TEXTDOMAIN) ?>:</th>
+                        <td>
+                            <select name="ProfileLocationState" id="ProfileLocationState">               
+                                <option value=""><?php _e("Any county", bb_agency_TEXTDOMAIN) ?></option>
+                                <?php  // get a list of states
+                                $profilestate = mysql_query('SELECT DISTINCT `ProfileLocationState` FROM '.table_agency_profile);
                                 
-echo "                          </select>\n";
-echo "                      </td>\n";
-echo "                  </tr>\n";
+                                while ($dataLocation = mysql_fetch_array($profilestate)) : $state = $dataLocation['ProfileLocationState']; ?>
+                                <option value="<?php echo $state ?>" <?php selected(isset($_GET['ProfileLocationState']) ? $_GET['ProfileLocationState'] : false, $state) ?>><?php echo bb_agency_strtoproper($state) ?></option>
+                                <?php endwhile; ?>
+                            </select>
+                        </td>
+                    </tr>
 
-echo "                  <tr>\n";
-echo "                      <th scope=\"row\">". __("Location", bb_agency_TEXTDOMAIN) . ":</th>\n";
-/*
-echo "                      <td><select name=\"ProfileLocationZip\" id=\"ProfileLocationZip\">\n";               
-echo "                          <option value=\"\">". __("Any post code", bb_agency_TEXTDOMAIN) . "</option>";
-
-                                $profilestate = mysql_query("SELECT DISTINCT ProfileLocationZip FROM ". table_agency_profile ."");
-                                
-                                while ($dataLocation = mysql_fetch_array($profilestate)) {
-                                      if (isset($_GET['ProfileLocationZip']) && !empty($_GET['ProfileLocationZip']) && $_SESSION['ProfileLocationZip'] == $dataLocation["ProfileLocationZip"]) {
-                                         echo "<option value=\"". $dataLocation["ProfileLocationZip"] ."\" selected>". bb_agency_strtoproper($dataLocation["ProfileLocationZip"]) .", ". strtoupper($dataLocation["ProfileLocationZip"]) ."</option>";
-                                      } else {
-                                         echo "<option value=\"". $dataLocation["ProfileLocationZip"] ."\">". strtoupper($dataLocation["ProfileLocationZip"]) ."</option>";
-                                      }
-                                }
-echo "                          </select>\n";
-
-echo "                      </td>\n";
-*/
-?>
-    <td><input type="text" name="ProfileLocation" value="<?php echo isset($_GET['ProfileLocation']) ? $_GET['ProfileLocation'] : '' ?>" /></td>
-<?php
-echo "                  </tr>\n";
-
-    //bb_custom_fields(0, $ProfileID, $ProfileGender,false);
-    $query1 = "SELECT ProfileCustomID, ProfileCustomTitle, ProfileCustomType, ProfileCustomOptions, ProfileCustomOrder, ProfileCustomView, ProfileCustomShowGender, ProfileCustomShowProfile, ProfileCustomShowSearch, ProfileCustomShowLogged, ProfileCustomShowAdmin FROM ". table_agency_customfields ." WHERE ProfileCustomView IN('0','1')  AND ProfileCustomID != 39 AND ProfileCustomID != 48 ORDER BY ProfileCustomOrder ASC";
+                    <tr>
+                        <th scope="row"><?php _e("Location", bb_agency_TEXTDOMAIN) ?>:</th>
+                        <td>
+                            <input type="text" name="ProfileLocation" value="<?php echo isset($_GET['ProfileLocation']) ? $_GET['ProfileLocation'] : '' ?>" />
+                        </td>
+                    </tr>
+                    <?php
+                        //bb_custom_fields(0, $ProfileID, $ProfileGender,false);
+                        $query1 = "SELECT ProfileCustomID, ProfileCustomTitle, ProfileCustomType, ProfileCustomOptions, ProfileCustomOrder, ProfileCustomView, ProfileCustomShowGender, ProfileCustomShowProfile, ProfileCustomShowSearch, ProfileCustomShowLogged, ProfileCustomShowAdmin FROM ". table_agency_customfields ." WHERE ProfileCustomView IN('0','1')  AND ProfileCustomID != 39 AND ProfileCustomID != 48 ORDER BY ProfileCustomOrder ASC";
                         $results1 = mysql_query($query1);
                         $count1 = mysql_num_rows($results1);
                         $pos = 0;
-while ($data1 = mysql_fetch_array($results1)) { 
-    
-                            $ProfileCustomID = $data1['ProfileCustomID'];
-                            $ProfileCustomTitle = $data1['ProfileCustomTitle'];
-                            $ProfileCustomType = $data1['ProfileCustomType'];
-                            $ProfileCustomValue = $data1['ProfileCustomValue'];
-            
-  echo "                    <tr>\n";
-  echo "                    \n";
-  
-        
-    
-
- // SET Label for Measurements
- // Imperial(in/lb), Metrics(ft/kg)
- $bb_agency_options_arr = get_option('bb_agency_options');
-  $bb_agency_option_unittype  = $bb_agency_options_arr['bb_agency_option_unittype'];
-  $measurements_label = "";
-  /*
-    0- metric
-      1 - cm
-    2- kg
-    3 - inches/feet
-    1-imperials 
-    1- inches
-    2- pounds
-    3-inches/feet
-    */
- if ($ProfileCustomType == 7) { //measurements field type
-           if($bb_agency_option_unittype ==1){ // 1 = Metrics(ft/kg)
-            if($data1['ProfileCustomOptions'] == 1){
-                $measurements_label  ="<em>(Inches)</em>";
-            }elseif($data1['ProfileCustomOptions'] == 2){
-                $measurements_label  ="<em>(Pounds)</em>";
-            }elseif($data1['ProfileCustomOptions'] == 3){
-              $measurements_label  ="<em>(Feet/Inches)</em>";
-            }
-        }elseif($bb_agency_option_unittype ==0){ //0 = Imperial(in/lb)
-            if($data1['ProfileCustomOptions'] == 1){
-                $measurements_label  ="<em>(cm)</em>";
-            }elseif($data1['ProfileCustomOptions'] == 2){
-                $measurements_label  ="<em>(kg)</em>";
-            }elseif($data1['ProfileCustomOptions'] == 3){
-                $measurements_label  ="<em>(Inches/Feet)</em>";
-            }
-        }
-        
- }
-echo "                     <th scope=\"row\">\n";
-                                         if($ProfileCustomType==7){
-
-     echo "                    <div class=\"label\">". $data1['ProfileCustomTitle'].$measurements_label."</div> \n";
-                             }else{
-     echo "                    <div><label for=\"ProfileCustomID". $data1['ProfileCustomID'] ."\">". $data1['ProfileCustomTitle']."</label></div> \n";                           
-
-                             }
-
-        echo  "         </th>       ";
-    echo  "         <td>";
-    
-
-            if (in_array($data1['ProfileCustomTitle'], $cusFields)) { //used alternative inputs for custom fields defined on top of this page
-                $id = $data1['ProfileCustomID'];
-                $title = $data1['ProfileCustomTitle'];
-                if ($title == 'Height') {
-                    //list($min_val, $max_val) =  @explode(",", $_SESSION["ProfileCustomID".$id]);
-
-                    ?>
-                    <fieldset class="rbselect">
-                        <div>
-                            <label>Min</label>
-                            <select name="ProfileCustomID<?php echo $id ?>_min">
-                            <?php if (empty($ProfileCustomValue)) : ?>
-                                <option value="">--</option>
-                            <?php endif; ?> 
-                    
-                            <?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
-                                <option value="<?php echo $i ?>" <?php echo selected($_GET['ProfileCustomID'.$id.'_min'], $i) ?>><?php echo display_height($i) ?></option>
-                            <?php endfor; ?>
-                            </select>
-                        </div>
-                  
-                        <div>
-                            <label>Max</label>
-                            <select name="ProfileCustomID<?php echo $id ?>_max">
-                            <?php if (empty($ProfileCustomValue)) : ?>
-                                 <option value="">--</option>
-                            <?php endif; ?>
-                            <?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
-                                <option value="<?php echo $i ?>" <?php echo selected($_GET['ProfileCustomID'.$id.'_max'], $i) ?>><?php echo display_height($i) ?></option>
-                            <?php endfor; ?>
-                            </select>
-                        </div>
-                    </fieldset>
+                        while ($data1 = mysql_fetch_array($results1)) :
+                            $id = $data1['ProfileCustomID'];
+                            $title = $data1['ProfileCustomTitle'];
+                            $type = $data1['ProfileCustomType'];
+                            $value = $data1['ProfileCustomValue'];
+                            $field = 'ProfileCustomID'.$id;
+                    ?>    
+                    <tr>
                     <?php
+                        // SET Label for Measurements
+                        // Imperial(in/lb), Metrics(ft/kg)
+                        $bb_agency_options_arr = get_option('bb_agency_options');
+                        $bb_agency_option_unittype  = $bb_agency_options_arr['bb_agency_option_unittype'];
+                        $measurements_label = "";
+                        /*
+                        0- metric
+                        1 - cm
+                        2 - kg
+                        3 - inches/feet
+                        1 - imperials 
+                        1 - inches
+                        2 - pounds
+                        3 - inches/feet
+                        */
 
-                } else {
-                    echo  "         <fieldset class=\"rbtext\">";
-                    echo "<div><label for=\"ProfileCustomLabel_min\">". __("Min", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
-                    echo "<input class=\"min_max\" type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."_min\" value=\"". $ProfileCustomOptions_Min_value ."\" /></div>\n";
-                    echo "<div><label for=\"ProfileCustomLabel_min\">". __("Max", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
-                    echo "<input class=\"min_max\"  type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."_max\" value=\"". $ProfileCustomOptions_Max_value ."\" /></div>\n";
-                    echo  "         </fieldset>";
+                        if ($type == 7) { //measurements field type
+                            switch ($bb_agency_option_unittype) {
+                                case 0:
+                                switch ($data1['ProfileCustomOptions']) {
+                                    case 1:
+                                    $measurements_label  ="<em>(cm)</em>";
+                                    break;
 
+                                    case 2:
+                                    $measurements_label  ="<em>(kg)</em>";
+                                    break;
 
-                }
-
-            }else{
-    
-                            if ($ProfileCustomType == 1) { //TEXT
-                                        echo "<div><input type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\" value=\"".$_SESSION["ProfileCustomID". $data1['ProfileCustomID']]."\" /></div>\n";
-                    
-                             
-                                   
-                                
-                                
-                            } elseif ($ProfileCustomType == 2) { // Min Max
-                            echo  "         <fieldset class=\"rbtext\">";
-                               
-                                $ProfileCustomOptions_String = str_replace(",",":",strtok(strtok($data1['ProfileCustomOptions'],"}"),"{"));
-                                list($ProfileCustomOptions_Min_label,$ProfileCustomOptions_Min_value,$ProfileCustomOptions_Max_label,$ProfileCustomOptions_Max_value) = explode(":",$ProfileCustomOptions_String);
-                               
-                             
-                                if(!empty($ProfileCustomOptions_Min_value) && !empty($ProfileCustomOptions_Max_value)){
-                                          echo "<div><label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Min", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
-                                        echo "<input class=\"min_max\" type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\" value=\"". $ProfileCustomOptions_Min_value ."\" /></div>\n";
-                                        echo "<div><label for=\"ProfileCustomLabel_max\" style=\"text-align:right;\">". __("Max", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
-                                        echo "<input class=\"min_max\" type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\" value=\"". $ProfileCustomOptions_Max_value ."\" /></div>\n";
-                            
-                                    
-                                }else{
-                                          echo "<div><label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Min", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
-                                        echo "<input class=\"min_max\" type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\" value=\"".$_SESSION["ProfileCustomID". $data1['ProfileCustomID']]."\" /></div>\n";
-                                          echo "<div><label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Max", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
-                                        echo "<input class=\"min_max\" type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\" value=\"".$_SESSION["ProfileCustomID". $data1['ProfileCustomID']]."\" /></div>\n";
-                            
-                                   
+                                    case 3:
+                                    $measurements_label  ="<em>(m)</em>";
+                                    break;
                                 }
-                                echo  "         </fieldset>";
-                             
-                            } elseif ($ProfileCustomType == 3) {
-                                
-                            echo  "         <div class=\"rbselect\">";
-                                
-                              list($option1,$option2) = explode(":",$data1['ProfileCustomOptions']);    
-                                    
-                                    $data = explode("|",$option1);
-                                    $data2 = explode("|",$option2);
-                                    
-                                    
-                                 
-                                    echo "<div><label>".$data[0]."</label></div>";
-                                    
-                                    echo "<div><select name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\">\n";
-                                    echo "<option value=\"\">Any ".$data1['ProfileCustomTitle']."</option>";
-                                      
-                                        foreach($data as $val1){
-                                            
-                                            if($val1 != end($data) && $val1 != $data[0]){
-                                            
-                                                 $isSelected = "";
-                                                if($_SESSION["ProfileCustomID". $data1['ProfileCustomID']]==$val1){
-                                                    $isSelected = "selected=\"selected\"";
-                                                    echo "<option value=\"".$val1."\" ".$isSelected .">".$val1."</option>";
-                                                } else {
-                                                    echo "<option value=\"".$val1."\" >".$val1."</option>"; 
-                                                }
-                                        
-                                            }
-                                        }
-                                        echo "</select></div>\n";
-                                        
-                                    /*  
-                                    if(!empty($data2) && !empty($option2)){
-                                               echo "<div><label>".$data2[0]."</label></div>";
-                                    
-                                            $pos2 = 0;
-                                            echo "<div><select name=\"ProfileCustomID". $data1['ProfileCustomID'] ."[]\">\n";
-                                            echo "<option value=\"\">--</option>";
-                                            foreach($data2 as $val2){
-                                                  
-                                                    if($val2 != end($data2) && $val2 !=  $data2[0]){
-                                                        if($_SESSION["ProfileCustomID". $data1['ProfileCustomID']]==$val2){
-                                                                $isSelected = "selected=\"selected\"";
-                                                                echo "<option value=\"".$val2."\" ".$isSelected .">".$val2."</option>";
-                                                        }else{
-                                                                echo "<option value=\"".$val2."\" >".$val2."</option>"; 
-                                                        }
-                                                    }
-                                                }
-                                            echo "</select></div>\n";
-                                    
-                                    }
-                               */
-                                
-                                echo  "         </div>";
+                                break;
 
-                            } elseif ($ProfileCustomType == 4) {
-                                echo  "         <div class=\"rbtextarea\">";
-                                echo "<div><textarea name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\">". $_SESSION["ProfileCustomID". $data1['ProfileCustomID']] ."</textarea></div>";
-                                echo  "         </div>";
+                                case 1:
+                                switch ($data1['ProfileCustomOptions']) {
+                                    case 1:
+                                    $measurements_label  ="<em>(Inches)</em>";
+                                    break;
+
+                                    case 2:
+                                    $measurements_label  ="<em>(Pounds)</em>";
+                                    break;
+
+                                    case 3:
+                                    $measurements_label  ="<em>(Feet/Inches)</em>";
+                                    break;
+                                }
+                                break;
                             }
+                        }
+                        ?>    
+                        <th scope="row">
+                            <?php if ($type == 7) : ?>
+                            <div class="label">
+                                <?php echo $title.$measurements_label ?>
+                            </div>
+                            <?php else : ?>
+                            <div>
+                                <label for="<?php echo $field ?>"><?php echo $title ?></label>
+                            </div>
+                            <?php endif; ?>
+                        </th>
+                        <td>
+                        <?php    
+                        if (in_array($title, $cusFields)) : // use alternative inputs for custom fields defined at top of this page
+
+                            if ($title == 'Height') : ?>
+                                <fieldset class="bbselect">
+                                    <div>
+                                        <label>Min</label>
+                                        <select name="<?php echo $field ?>_min">
+                                        <?php if (empty($value)) : ?>
+                                            <option value="">--</option>
+                                        <?php endif; ?> 
+                                
+                                        <?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
+                                            <option value="<?php echo $i ?>" <?php echo selected($_GET[$field.'_min'], $i) ?>><?php echo display_height($i) ?></option>
+                                        <?php endfor; ?>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label>Max</label>
+                                        <select name="<?php echo $field ?>_max">
+                                        <?php if (empty($value)) : ?>
+                                             <option value="">--</option>
+                                        <?php endif; ?>
+                                        <?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
+                                            <option value="<?php echo $i ?>" <?php echo selected($_GET[$field.'_max'], $i) ?>><?php echo display_height($i) ?></option>
+                                        <?php endfor; ?>
+                                        </select>
+                                    </div>
+                                </fieldset>
+                            <?php else : ?>
+                                <fieldset class="bbtext">
+                                    <div>
+                                        <label for="ProfileCustomLabel_min"><?php _e("Min", bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
+                                        <input class="min_max" type="text" name="<?php echo $field ?>_min" value="<?php echo $ProfileCustomOptions_Min_value ?>" />
+                                    </div>
+                                    <div>
+                                        <label for="ProfileCustomLabel_max"><?php _e("Max", bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
+                                        <input class="min_max" type="text" name="<?php echo $field ?>_max" value="<?php echo $ProfileCustomOptions_Max_value ?>" />
+                                    </div>
+                                </fieldset>
+                            <?php endif;
+
+                        else : // standard fields
+                            switch ($type) : ?>
+                            
+                            <?php case 1 : ?>
+                            <div>
+                                <input type="text" name="<?php echo $field ?>" value="<?php echo $_SESSION[$field] ?>" />
+                            </div>
+                            <?php break; ?>
+
+                            <?php case 2 : // Min Max ?>
+
+                            <fieldset class="bbtext">
+                            <?php   
+                                $ProfileCustomOptions_String = str_replace(",", ":", strtok(strtok($data1['ProfileCustomOptions'], "}"), "{"));
+                                list($ProfileCustomOptions_Min_label, $ProfileCustomOptions_Min_value, $ProfileCustomOptions_Max_label, $ProfileCustomOptions_Max_value) = explode(":", $ProfileCustomOptions_String);
+                                                     
+                                if (!empty($ProfileCustomOptions_Min_value) && !empty($ProfileCustomOptions_Max_value)) : ?>
+                                <div>
+                                    <label for="ProfileCustomLabel_min" style="text-align:right;"><?php _e("Min", bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
+                                    <input class="min_max" type="text" name="<?php echo $field ?>_min" value="<?php echo $ProfileCustomOptions_Min_value ?>" />
+                                </div>
+                                <div>
+                                    <label for="ProfileCustomLabel_max" style="text-align:right;"><?php _e("Max", bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
+                                    <input class="min_max" type="text" name="<?php echo $field ?>_max" value="<?php echo $ProfileCustomOptions_Max_value ?>" />
+                                </div>
+                                <?php else : ?>
+                                <div>
+                                    <label for="ProfileCustomLabel_min" style="text-align:right;"><?php _e("Min", bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
+                                    <input class="min_max" type="text" name="<?php echo $field ?>_min" value="<?php echo $_SESSION[$field.'_min'] ?>" />
+                                </div>
+                                <div>
+                                    <label for="ProfileCustomLabel_max" style="text-align:right;"><?php _e("Max", bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
+                                    <input class="min_max" type="text" name="<?php echo $field ?>_max" value="<?php echo $_SESSION[$field.'_max'] ?>" />
+                                </div>
+                                <?php endif; ?>
+                            </fieldset>
+
+                            <?php break; ?>
                              
-                            elseif ($ProfileCustomType == 5) {
-                                echo  "         <fieldset class=\"rbcheckbox\">";
+                            <?php case 3 : ?>
+                                
+                            <div class="bbselect">
+                            <?php    
+                                list($option1, $option2) = explode(":", $data1['ProfileCustomOptions']);    
+                                $data = explode("|",$option1);
+                                $data2 = explode("|",$option2);
+                            ?>    
+                                <div>
+                                    <label><?php echo $data[0] ?></label>
+                                </div>
+                                <div>
+                                    <select name="<?php echo $field ?>">
+                                        <option value="">Any <?php echo $title ?></option>
+                                        <?php foreach ($data as $val1) : ?>
+                                            
+                                        <?php if ($val1 != end($data) && $val1 != $data[0]) : $isSelected = ''; ?>
+                                        <?php if ($_SESSION['ProfileCustomID' . $id] == $val1) : $isSelected = 'selected="selected"'; ?>
+                                        <option value="<?php echo $val1 ?>" <?php echo $isSelected ?>><?php echo $val1 ?></option>
+                                        <?php else : ?>
+                                        <option value="<?php echo $val1 ?>"><?php echo $val1 ?></option> 
+                                        <?php endif; endif; ?>
+                                    </select>
+                                </div>
+                            </div>
 
-                                $array_customOptions_values = explode("|",$data1['ProfileCustomOptions']);
+                            <?php break; ?>
 
-                                foreach($array_customOptions_values as $val){
+                            <?php case 4 : ?>
+                            <div class="bbtextarea">
+                                <div>
+                                    <textarea name="<?php echo $field ?>"><?php echo $_SESSION[$field] ?></textarea>
+                                </div>
+                            </div>
+                            <?php break; ?>
+                             
+                            <?php case 5 : ?>
+                            <fieldset class="bbcheckbox">
+                            <?php
+                                $array_customOptions_values = explode("|", $data1['ProfileCustomOptions']);
 
+                                foreach ($array_customOptions_values as $val) : 
                                     /*
                                      * double check this if this is array and its index 0 is empty
                                      * then force set it to empty so it will not push through
                                      */
-                                    if(isset($_SESSION["ProfileCustomID". $data1['ProfileCustomID']]) && is_array($_SESSION["ProfileCustomID". $data1['ProfileCustomID']])){ 
-                                        if($_SESSION["ProfileCustomID". $data1['ProfileCustomID']][0] == ""){
-                                            $_SESSION["ProfileCustomID". $data1['ProfileCustomID']] = "";
+                                    if (isset($_SESSION[$field]) && is_array($_SESSION[$field])) { 
+                                        if($_SESSION[$field][0] == ''){
+                                            $_SESSION[$field] = '';
                                         }
                                     }
                                     
-                                    if(isset($_SESSION["ProfileCustomID". $data1['ProfileCustomID']]) && $_SESSION["ProfileCustomID". $data1['ProfileCustomID']] != ""){ 
+                                    if (isset($_SESSION[$field]) && $_SESSION[$field] != '') : $dataArr = explode(",", implode(",", explode("','", $_SESSION[$field])));
 
-                                        $dataArr = explode(",",implode(",",explode("','",$_SESSION["ProfileCustomID". $data1['ProfileCustomID']])));
-
-                                        if(in_array($val,$dataArr,true) && $val != ""){
-                                            echo "<label><input type=\"checkbox\" checked=\"checked\" value=\"". $val."\"  name=\"ProfileCustomID". $data1['ProfileCustomID'] ."[]\" />&nbsp;";
-                                            echo "<span>". $val."</span></label><br />";
-                                        } elseif($val !="") {
-                                            echo "<label><input type=\"checkbox\" value=\"". $val."\"  name=\"ProfileCustomID". $data1['ProfileCustomID'] ."[]\" />&nbsp;";
-                                            echo "<span>". $val."</span></label><br />";
-                                        }
-                                    } else {
-                                        if($val !=""){  
-                                                echo "<label><input type=\"checkbox\" value=\"". $val."\"  name=\"ProfileCustomID". $data1['ProfileCustomID'] ."[]\" />&nbsp;";
-                                                echo "<span>". $val."</span></label><br />";
-                                        }
-                                    }
-                                }
-                                          echo "<div><input type=\"hidden\" value=\"\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."[]\"/></div>";
-                                          echo "</fieldset>";
-                            }
+                                    if (in_array($val, $dataArr, true) && $val != '') : ?>
+                                <label>
+                                    <input type="checkbox" checked="checked" value="<?php echo $val ?>" name="<?php echo $field ?>[]" />&nbsp;
+                                    <span><?php echo $val ?></span>
+                                </label>
+                                <br />
+                                    <?php elseif ($val != '') : ?>
+                                <label>
+                                    <input type="checkbox" value="<?php echo $val ?>" name="<?php echo $field ?>[]" />&nbsp;
+                                    <span><?php echo $val ?></span>
+                                </label>
+                                <br />
+                                    <?php endif; ?>
+                                    <?php else : ?>
+                                    <?php if ($val != '') : ?>  
+                                <label>
+                                    <input type="checkbox" value="<?php echo $val ?>" name="<?php echo $field ?>[]" />&nbsp;
+                                    <span><?php echo $val ?></span>
+                                </label>
+                                <br />
+                                    <?php endif; ?>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                                <input type="hidden" value="" name="<?php echo $field ?>[]" />
+                            </fieldset>
+                            <?php break; ?>
                             
-                            elseif ($ProfileCustomType == 6) {
-                                echo  "         <fieldset class=\"rbradio\">";
-
-                                $array_customOptions_values = explode("|",$data1['ProfileCustomOptions']);
+                            <?php case 6 : ?>
+                            <fieldset class="bbradio">
+                            <?php    
+                                $array_customOptions_values = explode("|", $data1['ProfileCustomOptions']);
                                    
-                                foreach($array_customOptions_values as $val){
-                                    
+                                foreach ($array_customOptions_values as $val) : 
                                     /*
                                      * double check this if this is array and its index 0 is empty
                                      * then force set it to empty so it will not push through
                                      */
-                                    if(isset($_SESSION["ProfileCustomID". $data1['ProfileCustomID']]) && is_array($_SESSION["ProfileCustomID". $data1['ProfileCustomID']])){ 
-                                        if($_SESSION["ProfileCustomID". $data1['ProfileCustomID']][0] == ""){
-                                            $_SESSION["ProfileCustomID". $data1['ProfileCustomID']] = "";
+                                    if (isset($_SESSION[$field]) && is_array($_SESSION[$field])) { 
+                                        if ($_SESSION[$field][0] == ''){
+                                            $_SESSION[$field] = '';
                                         }
                                     }
                                     
-                                    if(isset($_SESSION["ProfileCustomID". $data1['ProfileCustomID']]) && $_SESSION["ProfileCustomID". $data1['ProfileCustomID']] != ""){ 
+                                    if (isset($_SESSION[$field]) && $_SESSION[$field] != '') : 
 
-                                        $dataArr = explode(",",implode(",",explode("','",$_SESSION["ProfileCustomID". $data1['ProfileCustomID']])));
-
-                                        if(in_array($val,$dataArr) && $val !=""){
-                                            echo "<label><input type=\"radio\" checked=\"checked\" value=\"". $val."\"  name=\"ProfileCustomID". $data1['ProfileCustomID'] ."[]\" />";
-                                            echo "". $val."</label><br />";
-                                        } else {
-                                            echo "<label><input type=\"radio\" value=\"". $val."\"  name=\"ProfileCustomID". $data1['ProfileCustomID'] ."[]\" />";
-                                            echo "". $val."</label><br />"; 
-                                        }
-                                    } else {
-                                        echo "<label><input type=\"radio\" value=\"". $val."\"  name=\"ProfileCustomID". $data1['ProfileCustomID'] ."[]\" />";
-                                        echo "". $val."</label><br />"; 
-                                    }
-                                }
-                                echo "<div><input type=\"hidden\" value=\"\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."[]\"/></div>";                                           
-                                echo "</fieldset>";                                        
-                            }
+                                    $dataArr = explode(",", implode(",", explode("','", $_SESSION[$field])));
+                                ?>      
+                                <label>
+                                    <input type="radio" <?php checked(isset($dataArr) && in_array($val, $dataArr) && $val != '') ?> value="<?php echo $val ?>" name="<?php echo $field ?>[]" />
+                                    <?php echo $val ?>
+                                </label>
+                                <br />
+                                <input type="hidden" value="" name="<?php echo $field ?>[]" /></div>                                          
+                            </fieldset>                                       
+                            <?php break; ?>
                             
-                            elseif ($ProfileCustomType == 7) {
+                            <?php case 7 : 
                                  
-                                list($min_val,$max_val) =  @explode(",", $_SESSION["ProfileCustomID".$data1['ProfileCustomID']]);
+                                list($min_val,$max_val) =  @explode(",", $_SESSION[$field]);
 
-                                if ($data1['ProfileCustomTitle']=="Height" AND $bb_agency_option_unittype==1) : ?>
-                                    <fieldset class="rbselect">
+                                if ($title == 'Height' && $bb_agency_option_unittype == 1) : ?>
+                                    <fieldset class="bbselect">
                                         <div>
                                             <label>Min</label>
-                                            <select name="ProfileCustomID<?php echo $data1['ProfileCustomID'] ?>_min">
-                                            <?php if (empty($ProfileCustomValue)) : ?>
+                                            <select name="<?php echo $field ?>_min">
+                                            <?php if (empty($value)) : ?>
                                                 <option value="">--</option>
                                             <?php endif; ?> 
                                     
                                             <?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
-                                                <option value="<?php echo $i ?>" <?php echo selected($ProfileCustomValue, $i) ?>><?php echo display_height($i) ?></option>
+                                                <option value="<?php echo $i ?>" <?php echo selected($value, $i) ?>><?php echo display_height($i) ?></option>
                                             <?php endfor; ?>
                                             </select>
                                         </div>
                                   
                                         <div>
                                             <label>Max</label>
-                                            <select name="ProfileCustomID<?php echo $data1['ProfileCustomID'] ?>_max">
-                                            <?php if (empty($ProfileCustomValue)) : ?>
+                                            <select name="<?php echo $field ?>_max">
+                                            <?php if (empty($value)) : ?>
                                                  <option value="">--</option>
                                             <?php endif; ?>
                                             <?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
-                                                <option value="<?php echo $i ?>" <?php echo selected($ProfileCustomValue, $i) ?>><?php echo display_height($i) ?></option>
+                                                <option value="<?php echo $i ?>" <?php echo selected($value, $i) ?>><?php echo display_height($i) ?></option>
                                             <?php endfor; ?>
                                             </select>
                                         </div>
                                     </fieldset>
 
                                 <?php else : ?>
-                                    <fieldset class="rbtext">
+                                    <fieldset class="bbtext">
                                     <?php // for other search ?>
                                         <div>
-                                            <label for="ProfileCustomID<?php echo $data1['ProfileCustomID'] ?>_min">Min</label>
-                                            <input value="<?php echo (!is_array($min_val) && $min_val != "Array" ? $min_val : "") ?>" class="stubby" type="text" name="ProfileCustomID<?php echo $data1['ProfileCustomID'] ?>[]" />
+                                            <label for="<?php echo $field ?>_min">Min</label>
+                                            <input value="<?php echo (!is_array($min_val) && $min_val != "Array" ? $min_val : "") ?>" class="stubby" type="text" name="<?php echo $field ?>[]" />
                                         </div>
 
                                          <div>
-                                            <label for="ProfileCustomID<?php echo $data1['ProfileCustomID'] ?>_max">Max</label>
-                                            <input value="<?php echo $max_val ?>" class="stubby" type="text" name="ProfileCustomID<?php echo $data1['ProfileCustomID'] ?>[]" />
+                                            <label for="<?php echo $field ?>_max">Max</label>
+                                            <input value="<?php echo $max_val ?>" class="stubby" type="text" name="<?php echo $field ?>[]" />
                                         </div>
                                     </fieldset>
-                                <?php endif;
-                            }       
+                                <?php endif; ?>
+                            <?php break; 
+                            endswitch;    
     
-            }//end of if(in_array("$data1['ProfileCustomTitle']", $cusFields))
-    
-      
-    
-    
-    echo  "         </td>";
-    echo  "         </tr>";
+                        endif; // end of if(in_array("$title", $cusFields)) ?>
+                        </td>
+                    </tr>
         
-} //end of while ($data1
+                        <?php endwhile; //end of while ($data1
 
 // status filter
 
