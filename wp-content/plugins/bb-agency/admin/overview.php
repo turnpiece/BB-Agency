@@ -1,67 +1,51 @@
 <div class="wrap">        
     <?php 
     // Include Admin Menu
-    include ("admin-menu.php"); ?>
-
-
-<?php
+    include ("admin-menu.php");
 	global $wpdb;
 	$bb_agency_options_arr = get_option('bb_agency_options');
-		$bb_agency_option_unittype = $bb_agency_options_arr['bb_agency_option_unittype'];
+	$bb_agency_option_unittype = $bb_agency_options_arr['bb_agency_option_unittype'];
 	get_currentuserinfo(); global $user_level;
 ?>
+	<div id="welcome-panel" class="welcome-panel">
+		<div class="welcome-panel-content">
+			<div class="welcome-panel-column-container">
+				<div class="welcome-panel-column">
+					<h3><?php echo __("Welcome to BB Agency", bb_agency_TEXTDOMAIN ) ?>!</h3>
+					<p class="about-description"><?php echo __("We have added some resources below to help you get started.", bb_agency_TEXTDOMAIN ) ?></p>
+					<h4><?php echo __("Quick Links", bb_agency_TEXTDOMAIN ) ?></h4>
+					<ul>
+						<?php
+						if ($user_level >= 7) {
+							echo "<li><a href='?page=bb_agency_profiles' class=\"button-secondary\">". __("Manage Profiles", bb_agency_TEXTDOMAIN) . "</a> - ". __("Manage existing profiles", bb_agency_TEXTDOMAIN) . ".</li>";
 
+							$queryGenderResult = mysql_query("SELECT GenderID, GenderTitle FROM ".table_agency_data_gender." ");
+							$queryGenderCount = mysql_num_rows($queryGenderResult);
 
-<div id="welcome-panel" class="welcome-panel">
-	<div class="welcome-panel-content">
+							while($fetchGender = mysql_fetch_assoc($queryGenderResult)){
+							 echo "<li><a class=\"button-secondary\" href=\"". admin_url("admin.php?page=bb_agency_profiles&action=add&ProfileGender=".$fetchGender["GenderID"])."\">". __("Create New ".ucfirst($fetchGender["GenderTitle"])."", bb_agency_TEXTDOMAIN) ."</a></li>\n";
+							}
+							if($queryGenderCount < 1){
+							echo "<li>". __("No Gender Found. <a href=\"". admin_url("admin.php?page=bb_agency_settings&ampConfigID=5")."\">Create New Gender</a>", bb_agency_TEXTDOMAIN) ."</li>\n";
+							} 
 
-
-		<div class="welcome-panel-column-container">
-			<div class="welcome-panel-column">
-				<h3><?php echo __("Welcome to RB Agency", bb_agency_TEXTDOMAIN ) ?>!</h3>
-				<p class="about-description"><?php echo __("We have added some resources below to help you get started.", bb_agency_TEXTDOMAIN ) ?></p>
-				<h4><?php echo __("Quick Links", bb_agency_TEXTDOMAIN ) ?></h4>
-				<ul>
-					<?php
-					if ($user_level >= 7) {
-						echo "<li><a href='?page=bb_agency_profiles' class=\"button-secondary\">". __("Manage Profiles", bb_agency_TEXTDOMAIN) . "</a> - ". __("Manage existing profiles", bb_agency_TEXTDOMAIN) . ".</li>";
-
-						$queryGenderResult = mysql_query("SELECT GenderID, GenderTitle FROM ".table_agency_data_gender." ");
-						$queryGenderCount = mysql_num_rows($queryGenderResult);
-
-						while($fetchGender = mysql_fetch_assoc($queryGenderResult)){
-						 echo "<li><a class=\"button-secondary\" href=\"". admin_url("admin.php?page=bb_agency_profiles&action=add&ProfileGender=".$fetchGender["GenderID"])."\">". __("Create New ".ucfirst($fetchGender["GenderTitle"])."", bb_agency_TEXTDOMAIN) ."</a></li>\n";
+							echo "<li><a href='?page=bb_agency_search' class=\"button-secondary\">". __("Search Profiles", bb_agency_TEXTDOMAIN) . "</a> - ". __("Find profiles", bb_agency_TEXTDOMAIN) . ".</li>";
 						}
-						if($queryGenderCount < 1){
-						echo "<li>". __("No Gender Found. <a href=\"". admin_url("admin.php?page=bb_agency_settings&ampConfigID=5")."\">Create New Gender</a>", bb_agency_TEXTDOMAIN) ."</li>\n";
-						} 
-
-						echo "<li><a href='?page=bb_agency_search' class=\"button-secondary\">". __("Search Profiles", bb_agency_TEXTDOMAIN) . "</a> - ". __("Find profiles", bb_agency_TEXTDOMAIN) . ".</li>";
-					}
-					?>
-				</ul>
+						?>
+					</ul>
+				</div>
 			</div>
-
-
-			<div class="welcome-panel-column" style="margin-left: 50px;">
-				<iframe src="http://player.vimeo.com/video/27752740" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
-			</div>
-
 		</div>
 	</div>
-</div>
 
-
-<div id="dashboard-widgets-wrap">
-	<div id="dashboard-widgets" class="metabox-holder columns-2">
-
-		<div id="postbox-container-1" class="postbox-container">
-			<div id="normal-sortables" class="meta-box-sortables ui-sortable">
-
-				<div id="dashboard_right_now" class="postbox">
-					<div class="handlediv" title="Click to toggle"><br></div>
-					<h3 class="hndle"><span><?php echo __("Quick Search", bb_agency_TEXTDOMAIN ) ?></span></h3>
-					<div class="inside">
+	<div id="dashboard-widgets-wrap">
+		<div id="dashboard-widgets" class="metabox-holder columns-2">
+			<div id="postbox-container-1" class="postbox-container">
+				<div id="normal-sortables" class="meta-box-sortables ui-sortable">
+					<div id="dashboard_right_now" class="postbox">
+						<div class="handlediv" title="Click to toggle"><br></div>
+						<h3 class="hndle"><span><?php echo __("Quick Search", bb_agency_TEXTDOMAIN ) ?></span></h3>
+						<div class="inside">
 						<?php
 						   if ($user_level >= 7) {
 						   	?>

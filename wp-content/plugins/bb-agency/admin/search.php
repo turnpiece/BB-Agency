@@ -243,9 +243,9 @@ if ($action) {
             $ProfileDateDue_max = $_GET['ProfileDateDue_max'];
             $filter .= " AND profile.`ProfileDateDue` <= '$ProfileDateDue_max'";
         }
-
-       echo "  <div class=\"boxblock-holder\">\n";
-
+        ?>
+        <div class="boxblock-holder">
+        <?php    
         // Filter Models Already in Cart
         if (isset($_SESSION['cartArray'])) {
             $cartArray = $_SESSION['cartArray'];
@@ -422,11 +422,6 @@ if ($action) {
              SELECT 
              profile.*,
              CONCAT(profile.`ProfileContactNameFirst`,' ',profile.`ProfileContactNameLast`) AS `ProfileContactName`,
-             profile.ProfileGallery,
-             profile.ProfileContactDisplay, 
-             profile.ProfileDateBirth, 
-             profile.ProfileDateDue, 
-             profile.ProfileLocationState, 
              profile.ProfileID as pID, 
              customfield_mux.*, ".
              (!empty($select) ? implode(', ', $select).', ' : '')."
@@ -515,18 +510,18 @@ if ($action) {
                             </div>
                             <div class="row-actions">
                                 <span class="edit">
-                                    <a href="<?php echo admin_url('admin.php?page=bb_agency_profiles&amp;action=editRecord&amp;ProfileID='. $ProfileID) ?>" title="Edit this profile">Edit</a> | 
+                                    <a href="<?php echo admin_url('admin.php?page=bb_agency_profiles&amp;action=editRecord&amp;ProfileID='. $ProfileID) ?>" title="Edit this profile"><?php _e('Edit', bb_agency_TEXTDOMAIN) ?></a> | 
                                 </span>
                                 <span class="review">
-                                    <a href="<?php echo bb_agency_PROFILEDIR . $data['ProfileGallery'] ?>" target="_blank">View</a> | 
+                                    <a href="<?php echo bb_agency_PROFILEDIR . $data['ProfileGallery'] ?>" target="_blank"><?php _e('View', bb_agency_TEXTDOMAIN) ?></a> | 
                                 </span>
                                 <span class="delete">
-                                    <a class="submitdelete" title="Remove this profile" href="<?php echo admin_url('admin.php?page=bb_agency_profiles&amp;deleteRecord&amp;ProfileID='. $ProfileID) ?>" onclick="if ( confirm('You are about to delete the model '<?php echo $data['ProfileContactName'] ?>') ) { return true; } return false;">Delete</a>
+                                    <a class="submitdelete" title="Remove this profile" href="<?php echo admin_url('admin.php?page=bb_agency_profiles&amp;deleteRecord&amp;ProfileID='. $ProfileID) ?>" onclick="if ( confirm('You are about to delete the model '<?php echo $data['ProfileContactName'] ?>') ) { return true; } return false;"><?php _e('Delete', bb_agency_TEXTDOMAIN) ?></a>
                                 </span>
                             </div>
                         <?php if (!empty($isInactiveDisable)) : ?>
                             <div>
-                                <strong>Profile Status:</strong> <span style="color:red;">Inactive</span>
+                                <strong><?php _e('Profile Status', bb_agency_TEXTDOMAIN) ?>:</strong> <span class="inactive"><?php _e('Inactive', bb_agency_TEXTDOMAIN) ?></span>
                             </div>
                         <?php endif; ?>
                         </td>
@@ -641,7 +636,7 @@ if ($action) {
     // display casting cart
     if (($action == "search") || ($action == "cartAdd") || (isset($_SESSION['cartArray']))) {
 
-        echo "<div class=\"boxblock-container\" style=\"float: left; width: 49%; min-width: 500px;\">\n";
+        echo "<div class=\"boxblock-container left-half\">\n";
         echo " <div class=\"boxblock\">\n";
         echo "  <h2>". __("Casting Cart", bb_agency_TEXTDOMAIN) ."</h2>\n";
         echo "    <div class=\"inner\">\n";
@@ -681,7 +676,7 @@ if ($action) {
                         echo "<strong>Age:</strong> ". bb_agency_get_age($data['ProfileDateBirth']) ."<br />\n";
                     }
 
-                    if (!empty($data['ProfileDateDue'])) {
+                    if (defined('bb_agency_MUMSTOBE_ID') && bb_agency_MUMSTOBE_ID && !empty($data['ProfileDateDue'])) {
                         echo "<strong>Due date:</strong> ". bb_agency_get_due_date($data['ProfileDateDue']) ."<br />\n";
                     }
                     
@@ -868,7 +863,7 @@ if ($action) {
 
 }
 ?>
-    <div class="boxblock-container" style="float: left; width: 49%;">
+    <div class="boxblock-container left-half">
     <div class="boxblock">
         <h3><?php _e("Advanced Search", bb_agency_TEXTDOMAIN) ?></h3>
         <div class="inner">
@@ -935,6 +930,7 @@ if ($action) {
                             </fieldset>
                         </td>
                     </tr>
+                    <?php if (defined('bb_agency_MUMSTOBE_ID') && bb_agency_MUMSTOBE_ID) : ?>
                     <tr>
                         <th scope="row"><?php _e("Due date", bb_agency_TEXTDOMAIN) ?>:</th>
                         <td>
@@ -951,7 +947,7 @@ if ($action) {
                             </fieldset>
                         </td>
                     </tr> 
-
+                    <?php endif; ?>
                     <tr>
                         <th scope="row"><?php _e("Town", bb_agency_TEXTDOMAIN) ?>:</th>
                         <td>

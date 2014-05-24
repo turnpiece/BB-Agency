@@ -266,7 +266,7 @@
 
 		    // Are Permalinks Enabled?
 		    if ( get_option('permalink_structure') == '' ) {
-		    	bb_agency_adminmessage_former('<a href="'. admin_url("options-permalink.php") .'">'. __("Permalinks", bb_agency_TEXTDOMAIN) .'</a> '. __("are not configured.  This will cause RB Agency not to function properly.", bb_agency_TEXTDOMAIN), true);
+		    	bb_agency_adminmessage_former('<a href="'. admin_url("options-permalink.php") .'">'. __("Permalinks", bb_agency_TEXTDOMAIN) .'</a> '. __("are not configured.  This will cause BB Agency not to function properly.", bb_agency_TEXTDOMAIN), true);
 		    }
 
 		}
@@ -2778,7 +2778,7 @@ function bb_agency_getProfileCustomFieldsCustom($ProfileID, $ProfileGender,$echo
 	function bb_agency_save_favorite_javascript() {
 	?>
 
-		 <!--RB Agency Favorite -->           
+		 <!--BB Agency Favorite -->           
 		<script type="text/javascript" >jQuery(document).ready(function() { 
 			jQuery(".favorite a:first, .favorite a").click(function(){
 		
@@ -2819,7 +2819,7 @@ function bb_agency_getProfileCustomFieldsCustom($ProfileID, $ProfileGender,$echo
 					}
 				}}})});});
 		</script>
-		<!--END RB Agency Favorite -->   
+		<!--END BB Agency Favorite -->   
 
 <!-- [class=profile-list-layout<?php echo (int)$bb_agency_option_layoutprofilelist; ?>]-->
 		<?php
@@ -2862,7 +2862,7 @@ function bb_agency_getProfileCustomFieldsCustom($ProfileID, $ProfileGender,$echo
 		
 		function bb_agency_save_castingcart_javascript() {
 		?>
-				<!--RB Agency CastingCart -->
+				<!--BB Agency CastingCart -->
 				<script type="text/javascript" >
 					jQuery(document).ready(function($) { 
 						$("div[class=castingcart] a").click(function(){
@@ -2890,7 +2890,7 @@ function bb_agency_getProfileCustomFieldsCustom($ProfileID, $ProfileGender,$echo
 												$bb_agency_option_layoutprofilelist = $bb_agency_options_arr['bb_agency_option_layoutprofilelist']; ?> 
 												if($("input[type=hidden][name=castingcart]").val() == 1){
 													Obj.closest("div[class=profile-list-layout0]").fadeOut();  } <?php } ?> } }}}) });});</script>
-				 <!--END RB Agency CastingCart -->
+				 <!--END BB Agency CastingCart -->
  
            <?php
 		}

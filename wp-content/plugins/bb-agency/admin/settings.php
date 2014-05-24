@@ -1,45 +1,77 @@
 <div class="wrap">        
-    <?php 
+<?php 
     // Include Admin Menu
     include ("admin-menu.php"); 
 
-global $wpdb;
+    global $wpdb;
+
 // *************************************************************************************************** //
 // Top Menu
 
-    echo "  <p>\n";
-    echo "  	<a class=\"button-primary\" href=\"?page=". $_GET["page"] ."&ConfigID=0\">". __("Overview", bb_agency_TEXTDOMAIN) . "</a> | \n";
-    echo "  	<a class=\"button-secondary\" href=\"?page=". $_GET["page"] ."&ConfigID=1\">". __("Features", bb_agency_TEXTDOMAIN) . "</a> | \n";
-    echo "  	<a class=\"button-secondary\" href=\"?page=". $_GET["page"] ."&ConfigID=10\">". __("Style", bb_agency_TEXTDOMAIN) . "</a> | \n";
-    echo "  	<a class=\"button-secondary\" href=\"?page=". $_GET["page"] ."&ConfigID=5\">". __("Gender", bb_agency_TEXTDOMAIN) . "</a> | \n";
-//    echo "  	<a class=\"button-secondary\" href=\"?page=". $_GET["page"] ."&ConfigID=6\">". __("Profile Types", bb_agency_TEXTDOMAIN) . "</a> | \n";
-    echo "  	<a class=\"button-secondary\" href=\"?page=". $_GET["page"] ."&ConfigID=7\">". __("Custom Fields", bb_agency_TEXTDOMAIN) . "</a> | \n";
-    echo "  	<a class=\"button-secondary\" href=\"?page=". $_GET["page"] ."&ConfigID=8\">". __("Media Categories", bb_agency_TEXTDOMAIN) . "</a> | \n";
-    echo "  </p>\n";
+    $menu = array(
+        0 => __("Overview", bb_agency_TEXTDOMAIN),
+        1 => __("Features", bb_agency_TEXTDOMAIN),
+        2 => __("Locations", bb_agency_TEXTDOMAIN),
+//        10 => __("Style", bb_agency_TEXTDOMAIN),
+//        5 => __("Gender", bb_agency_TEXTDOMAIN),
+        6 => __("Profile Types", bb_agency_TEXTDOMAIN),
+        7 => __("Custom Fields", bb_agency_TEXTDOMAIN),
+//        8 => __("Media Categories", bb_agency_TEXTDOMAIN),
+        11 => __("Interactive Settings", bb_agency_TEXTDOMAIN),
+    );
 
-if( isset($_REQUEST['action']) && !empty($_REQUEST['action']) ) {
-	if($_REQUEST['action'] == 'douninstall') {
+    $ConfigID = isset($_REQUEST['ConfigID']) ? $_REQUEST['ConfigID'] : 0;
+    $page = $_GET['page'];
+?>
+<p>
+<?php foreach ($menu as $id => $label) : ?>
+    <a class="button-<?php echo $ConfigID == $id ? 'primary' : 'secondary' ?>" href="<?php echo admin_url("admin.php?page={$page}&ConfigID={$id}") ?>"><?php echo $label ?></a>
+<?php endforeach; ?>
+</p>
+<?php
+
+if (isset($_REQUEST['action']) && !empty($_REQUEST['action']) ) {
+	if ($_REQUEST['action'] == 'douninstall') {
 		bb_agency_uninstall();
 	}
 }
 
-	echo "<h2>";
-	  if($_GET["ConfigID"]==1){
-		    echo " &raquo; Features";
-	  } elseif($_GET["ConfigID"]==10){
-		    echo " &raquo; Style";
-	  } elseif($_GET["ConfigID"]==5){
-		    echo " &raquo; Gender";
-	  } elseif($_GET["ConfigID"]==6){
-		    echo " &raquo; Profile Categories";
-	  } elseif($_GET["ConfigID"]==7){
-		     echo " &raquo; Custom Fields";
-	  } elseif($_GET["ConfigID"]==8){
-		     echo " &raquo; Media Categories";
-	  }
-	echo "</h2>\n";
+echo "<h2> &raquo; ";
+switch ($ConfigID) {
+    case 1 :
+    echo "Features";
+    break;
 
-if(!isset($_REQUEST['ConfigID']) && empty($_REQUEST['ConfigID'])){ $ConfigID=0;} else { $ConfigID=$_REQUEST['ConfigID']; }
+    case 2 :
+    echo "Locations";
+    break;
+
+    case 10 :
+    echo "Style";
+    break;
+
+    case 5 :
+    echo "Gender";
+    break;
+
+    case 6 :
+    echo "Profile Categories";
+    break;
+
+    case 7 :
+    echo "Custom Fields";
+    break;
+
+    case 8 :
+    echo "Media Categories";
+    break;
+
+    case 11 :
+    echo "Interactive Settings";
+    break;
+}        
+echo "</h2>\n";
+
 if ($ConfigID == 0) {
 	
 // *************************************************************************************************** //
@@ -61,7 +93,7 @@ if ($ConfigID == 0) {
     echo "</div>\n";
     echo "<hr />\n";
 
-	if (function_exists(bb_agencyinteract_settings)) {
+	if (function_exists('bb_agencyinteract_settings')) {
 	// RB Agency Interact Settings
     echo "<div class=\"boxlinkgroup\">\n";
     echo "  <h2>". __("Interactive Settings", bb_agency_TEXTDOMAIN) . "</h2>\n";
@@ -285,32 +317,6 @@ elseif ($ConfigID == 1) {
 		 echo "     </select>\n";
 		 echo "   </td>\n";
 		 echo " </tr>\n";
-		 /*
-		 echo " <tr valign=\"top\">\n";
-		 echo "   <th scope=\"row\">". __('Profile Layout Style', bb_agency_TEXTDOMAIN) ."</th>\n";
-		 echo "   <td>\n";
-		 echo "     <select name=\"bb_agency_options[bb_agency_option_layoutprofile]\">\n";
-		 echo "       <option value=\"0\" ". selected($bb_agency_options_arr['bb_agency_option_layoutprofile'], 0,false) ."> ". __("Layout 00 - Profile View with Thumbnails", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "       <option value=\"1\" ". selected($bb_agency_options_arr['bb_agency_option_layoutprofile'], 1,false) ."> ". __("Layout 01 - Profile View with Thumbnails and Primary Image", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "       <option value=\"2\" ". selected($bb_agency_options_arr['bb_agency_option_layoutprofile'], 2,false) ."> ". __("Layout 02 - Profile View with Scrolling Thumbnails and Primary Image", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "       <option value=\"3\" ". selected($bb_agency_options_arr['bb_agency_option_layoutprofile'], 3,false) ."> ". __("Layout 03 - Extended Profile View", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "       <option value=\"4\" ". selected($bb_agency_options_arr['bb_agency_option_layoutprofile'], 4,false) ."> ". __("Layout 04 - Direct Contact Layout (NOTE: Includes Phone Number of Model)", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "       <option value=\"5\" ". selected($bb_agency_options_arr['bb_agency_option_layoutprofile'], 5,false) ."> ". __("Layout 05 - Fun Animated Gallery", bb_agency_TEXTDOMAIN) ."</option>\n";
-				if (file_exists("../". bb_agency_BASEREL ."theme/include-profile-layout6.php")) {
-		 echo "       <option value=\"6\" ". selected($bb_agency_options_arr['bb_agency_option_layoutprofile'], 6,false) ."> ". __("Layout 06 - Large featured image and scrolling thumbnails", bb_agency_TEXTDOMAIN) ."</option>\n";
-				}
-				if (file_exists("../". bb_agency_BASEREL ."theme/include-profile-layout7.php")) {
-		 echo "       <option value=\"7\" ". selected($bb_agency_options_arr['bb_agency_option_layoutprofile'], 7,false) ."> ". __("Layout 07 - Custom Layout 7", bb_agency_TEXTDOMAIN) ."</option>\n";
-				}
-				if (file_exists("../". bb_agency_BASEREL ."theme/include-profile-layout8.php")) {
-		 echo "       <option value=\"8\" ". selected($bb_agency_options_arr['bb_agency_option_layoutprofile'], 8,false) ."> ". __("Layout 08 - Photo Book", bb_agency_TEXTDOMAIN) ."</option>\n";
-				}
-				if (file_exists("../". bb_agency_BASEREL ."theme/include-profile-layout9.php")) {
-		 echo "       <option value=\"9\" ". selected($bb_agency_options_arr['bb_agency_option_layoutprofile'], 9,false) ."> ". __("Layout 08 - Large Scroller", bb_agency_TEXTDOMAIN) ."</option>\n";
-				}
-		 echo "     </select>\n";
-		 echo "   </td>\n";
-		 */
 		 echo " <tr valign=\"top\">\n";
 		 echo "   <th scope=\"row\">". __('Profile List Style', bb_agency_TEXTDOMAIN) ."</th>\n";
 		 echo "   <td>\n";
@@ -358,51 +364,35 @@ elseif ($ConfigID == 1) {
 		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_advertise]\" value=\"1\" ".checked($bb_agency_options_arr['bb_agency_option_advertise'], 1,false)."/> Remove Updates on Dashboard<br />\n";
 		 echo "   </td>\n";
 		 echo " </tr>\n";
-		 
-		 //Commented by @Gaurav as We will be creating this as a separate plugin
-		 // Member Contact form link
-		 /*echo " <tr valign=\"top\">\n";
-		 echo "   <th scope=\"row\" colspan=\"2\"><h3>". __('Profile Contact Options', bb_agency_TEXTDOMAIN) ."</h3></th>\n";
-		 echo " </tr>\n";
-		 echo " <tr valign=\"top\">\n";
-		 echo "   <th scope=\"row\">". __('Contact Page Settings', bb_agency_TEXTDOMAIN) ."</th>\n";
-		 echo "   <td>\n";
-		 echo "     <input type=\"radio\" name=\"bb_agency_options[bb_agency_option_showcontactpage]\" value=\"2\" ".checked($bb_agency_option_showcontactpage, 2,false)."/>Disable Contact<br />\n";
-		 echo "     <input type=\"radio\" name=\"bb_agency_options[bb_agency_option_showcontactpage]\" value=\"1\" ".checked($bb_agency_option_showcontactpage, 1,false)."/>Email to both the model and the site owner<br />\n";
-		 echo "     <input type=\"radio\" name=\"bb_agency_options[bb_agency_option_showcontactpage]\" value=\"0\" ".checked($bb_agency_option_showcontactpage, "0",false)."/>Only email to the site owner, not to the model<br/>\n";
-		 echo "   </td>\n";
-		 echo " </tr>\n";*/
-		 // comment by @Gaurav ends
-		 
-		/*####### HIDE THIS OPTION FOR THE MEAN TIME #### 
-		 echo " <tr valign=\"top\">\n";
-		 echo "   <th scope=\"row\">". __('Override Contact Page Path', bb_agency_TEXTDOMAIN) ."</th>\n";
-		 echo "   <td><input name=\"bb_agency_options[bb_agency_option_agency_urlcontact]\" value=\"". $bb_agency_options_arr['bb_agency_option_agency_urlcontact'] ."\" /></td>\n";
-		 echo " </tr>\n";
-		 ################/*
-		 
-    /*############# hide Profile Custom Fields Options - FOR THE MEAN TIME######################
-          // Profile Custom Fields Options
-		 echo " <tr valign=\"top\">\n";
-		 echo "   <th scope=\"row\" colspan=\"2\"><h3>". __('Profile Custom Fields Options', bb_agency_TEXTDOMAIN); echo "</h3></th>\n";
-		 echo " </tr>\n";
-		 echo " <tr valign=\"top\">\n";
-		 echo "   <th scope=\"row\">". __('Show Custom Fields on', bb_agency_TEXTDOMAIN) ."</th>\n";
-		 echo "   <td>\n";
-		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_customfield_profilepage]\" value=\"1\" ".checked($bb_agency_options_arr['bb_agency_option_customfield_profilepage'], 1,false)."/> ". __("Profile Page", bb_agency_TEXTDOMAIN) ."<br />\n";
-		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_customfield_searchpage]\" value=\"1\" ".checked($bb_agency_options_arr['bb_agency_option_customfield_searchpage'], 1,false)."/> ". __("Search Results Page", bb_agency_TEXTDOMAIN) ."<br />\n";
-		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_customfield_loggedin_all]\" value=\"1\" ".checked($bb_agency_options_arr['bb_agency_option_customfield_loggedin_all'], 1,false)."/> ". __("User must be Logged In to see It", bb_agency_TEXTDOMAIN) ."<br />\n";
-		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_customfield_loggedin_admin]\" value=\"1\" ".checked($bb_agency_options_arr['bb_agency_option_customfield_loggedin_admin'], 1,false)."/> ". __("User must be an Admin to see It", bb_agency_TEXTDOMAIN) ."<br />\n";
-		 echo "   </td>\n";
-		 echo " </tr>\n";
-	      
-	##### HIDE */
+
 	
 		 echo "</table>\n";
 		 echo "<input type=\"submit\" class=\"button-primary\" value=\"". __('Save Changes') ."\" />\n";
 		  echo "<input type=\"hidden\" name=\"bb_agency_options[bb_agency_options_showtooltip]\" value=\"1\"/>";
 		 echo "</form>\n";
 }	 // End	
+elseif ($ConfigID == 2) {
+    // get ungeocoded profiles
+    $table = table_agency_profile;
+    $query = <<<EOF
+SELECT *, CONCAT(`ProfileContactNameFirst`,' ',`ProfileContactNameLast`) AS `ProfileContactName` 
+FROM $table
+WHERE (ProfileLocationLatitude IS NULL OR ProfileLocationLongitude IS NULL)
+EOF;
+
+    $results = mysql_query($query);
+    $count = mysql_num_rows($results);
+
+    while ($record = mysql_fetch_array($results)) {
+        ?><pre><?php print_r($record) ?></pre><?php
+    }
+    // geocode locations
+    ?>
+    <form method="POST" action="">
+        <input type="submit" class="button-primary" value="<?php _e('Save Changes', bb_agency_TEXTDOMAIN) ?>" />
+    </form>
+    <?php
+}
 elseif ($ConfigID == 11) {
 // *************************************************************************************************** //
 // Manage Settings
