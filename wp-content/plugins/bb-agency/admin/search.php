@@ -209,7 +209,7 @@ if ($action) {
         if (isset($_GET['ProfileGender']) && !empty($_GET['ProfileGender'])){
             $ProfileGender = $_GET['ProfileGender'];
          
-            $filter .= " AND profile.`ProfileGender` = '".$ProfileGender."'";
+            $filter .= " AND profile.`ProfileGender` = '{$ProfileGender}'";
          
         } else {
             $ProfileGender = "";
@@ -217,9 +217,9 @@ if ($action) {
 
         // Age & due date
         $timezone_offset = 0; // GMT
-        $dateInMonth = gmdate('d', time() + $timezone_offset *60 *60);
+        $dateInMonth = gmdate('d', time() + $timezone_offset * 60 * 60);
         $format = 'Y-m-d';
-        $date = gmdate($format, time() + $timezone_offset *60 *60);
+        $date = gmdate($format, time() + $timezone_offset * 60 * 60);
         
         if (isset($_GET['ProfileDateBirth_min']) && !empty($_GET['ProfileDateBirth_min'])){
             $ProfileDateBirth_min = $_GET['ProfileDateBirth_min'];
@@ -887,7 +887,7 @@ if ($action) {
                         <th scope="row"><?php _e("Classification", bb_agency_TEXTDOMAIN) ?>:</th>
                         <td>
                             <select name="ProfileType" id="ProfileType">               
-                                <option value=""><?php _e("Any Profile Type", bb_agency_TEXTDOMAIN) ?></option>
+                                <option value="">--</option>
                                 <?php
                                 /* 
                                  * set filter from theis array
@@ -909,7 +909,7 @@ if ($action) {
                         <th scope="row"><?php _e("Gender", bb_agency_TEXTDOMAIN) ?>:</th>
                         <td>
                             <select name="ProfileGender" id="ProfileGender">               
-                                <option value=""><?php _e("Any Gender", bb_agency_TEXTDOMAIN) ?></option>
+                                <option value="">--</option>
                                 <?php
                                     $query2 = "SELECT GenderID, GenderTitle FROM ". table_agency_data_gender ." ORDER BY GenderID";
                                     $results2 = mysql_query($query2);
@@ -925,12 +925,12 @@ if ($action) {
                             <fieldset>
                                 <div>
                                     <label for="ProfileDateBirth_min"><?php _e("Min", bb_agency_TEXTDOMAIN) ?></label>
-                                    <input type="text" class="min_max bbdatepicker" id="ProfileDateBirth_min" name="ProfileDateBirth_min" />
+                                    <input type="text" class="min_max" id="ProfileDateBirth_min" name="ProfileDateBirth_min" />
                                 </div>
 
                                 <div>
                                     <label for="ProfileDateBirth_max"><?php _e("Max", bb_agency_TEXTDOMAIN) ?></label>
-                                    <input type="text" class="min_max bbdatepicker" id="ProfileDateBirth_max" name="ProfileDateBirth_max" />
+                                    <input type="text" class="min_max" id="ProfileDateBirth_max" name="ProfileDateBirth_max" />
                                 </div>
                             </fieldset>
                         </td>
@@ -956,7 +956,7 @@ if ($action) {
                         <th scope="row"><?php _e("Town", bb_agency_TEXTDOMAIN) ?>:</th>
                         <td>
                             <select name="ProfileLocationCity" id="ProfileLocationCity">               
-                                <option value=""><?php _e("Any town", bb_agency_TEXTDOMAIN) ?></option>
+                                <option value="">--</option>
                                 <?php  // get a list of cities 
                                 $profilecity = mysql_query('SELECT DISTINCT `ProfileLocationCity` FROM '.table_agency_profile);
                                 
@@ -971,7 +971,7 @@ if ($action) {
                         <th scope="row"><?php _e("County", bb_agency_TEXTDOMAIN) ?>:</th>
                         <td>
                             <select name="ProfileLocationState" id="ProfileLocationState">               
-                                <option value=""><?php _e("Any county", bb_agency_TEXTDOMAIN) ?></option>
+                                <option value="">--</option>
                                 <?php  // get a list of states
                                 $profilestate = mysql_query('SELECT DISTINCT `ProfileLocationState` FROM '.table_agency_profile);
                                 
@@ -1001,14 +1001,14 @@ if ($action) {
                             $type = $data1['ProfileCustomType'];
                             $options = $data1['ProfileCustomOptions'];
                             $field = 'ProfileCustomID'.$id;
-                    ?>    
+                    ?>
                     <tr>
                     <?php
                         // SET Label for Measurements
                         // Imperial(in/lb), Metrics(ft/kg)
                         $bb_agency_options_arr = get_option('bb_agency_options');
                         $bb_agency_option_unittype  = $bb_agency_options_arr['bb_agency_option_unittype'];
-                        $measurements_label = "";
+                        //$measurements_label = "";
                         /*
                         0- metric
                         1 - cm
@@ -1019,21 +1019,21 @@ if ($action) {
                         2 - pounds
                         3 - inches/feet
                         */
-
+                        /*
                         if ($type == 7) { //measurements field type
                             switch ($bb_agency_option_unittype) {
                                 case 0:
                                 switch ($options) {
                                     case 1:
-                                    $measurements_label  ="<em>(cm)</em>";
+                                    $measurements_label = "<em>(cm)</em>";
                                     break;
 
                                     case 2:
-                                    $measurements_label  ="<em>(kg)</em>";
+                                    $measurements_label = "<em>(kg)</em>";
                                     break;
 
                                     case 3:
-                                    $measurements_label  ="<em>(m)</em>";
+                                    $measurements_label = "<em>(m)</em>";
                                     break;
                                 }
                                 break;
@@ -1041,25 +1041,26 @@ if ($action) {
                                 case 1:
                                 switch ($options) {
                                     case 1:
-                                    $measurements_label  ="<em>(Inches)</em>";
+                                    $measurements_label = "<em>(Inches)</em>";
                                     break;
 
                                     case 2:
-                                    $measurements_label  ="<em>(Pounds)</em>";
+                                    $measurements_label = "<em>(Pounds)</em>";
                                     break;
 
                                     case 3:
-                                    $measurements_label  ="<em>(Feet/Inches)</em>";
+                                    $measurements_label = "<em>(Feet/Inches)</em>";
                                     break;
                                 }
                                 break;
                             }
                         }
+                        */
                         ?>    
                         <th scope="row">
                             <?php if ($type == 7) : ?>
                             <div class="label">
-                                <?php echo $title.$measurements_label ?>
+                                <?php echo $title ?>
                             </div>
                             <?php else : ?>
                             <div>
@@ -1143,26 +1144,21 @@ if ($action) {
                             </fieldset>
                             <?php break; ?>
                              
-                            <?php case 3 : if (strpos($options, ':') !== false) :
-                                list($option1, $option2) = explode(":", $options);    
-                                $data = explode("|", $option1);
-                                $data2 = explode("|", $option2);                                  
-                            ?>       
+                            <?php case 3 : $data = explode('|', $options); ?>       
                             <div class="bbselect">
-
                                 <div>
                                     <label><?php echo $data[0] ?></label>
                                 </div>
                                 <div>
                                     <select name="<?php echo $field ?>">
-                                        <option value="">Any <?php echo $title ?></option>
+                                        <option value="">--</option>
                                         <?php foreach ($data as $val1) : if ($val1 != end($data) && $val1 != $data[0]) : ?>
                                         <option value="<?php echo $val1 ?>" <?php selected(isset($_SESSION[$field]) ? $_SESSION[$field] : false, $val1) ?>><?php echo $val1 ?></option>
                                         <?php endif; endforeach; ?>
                                     </select>
                                 </div>
                             </div>
-                            <?php endif; break; ?>
+                            <?php break; ?>
 
                             <?php case 4 : ?>
                             <div class="bbtextarea">
@@ -1304,7 +1300,7 @@ if ($action) {
                         <th scope="row"><?php _e("Status", bb_agency_TEXTDOMAIN) ?>:</th>
                         <td>
                             <select name="ProfileIsActive" id="ProfileIsActive">               
-                                <option value=""><?php _e("Any Status", bb_agency_TEXTDOMAIN) ?></option>
+                                <option value="">--</option>
                                 <?php
                                 $value = isset($_SESSION['ProfileIsActive']) ? $_SESSION['ProfileIsActive'] : false;
                                 $options = array(
