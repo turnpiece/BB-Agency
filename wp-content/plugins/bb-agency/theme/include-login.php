@@ -5,7 +5,7 @@
 	<div id="bbsign-in" class="inline-block">
 	  	<h1><?php _e("Members sign in", bb_agencyinteract_TEXTDOMAIN) ?></h1>
 	  	<form name="loginform" id="login" action="<?php echo network_site_url('/') ?>profile-login/" method="post">
-	  		<input type="hidden" name="redirect_to" value="<?php echo the_permalink() ?>">
+	  		<input type="hidden" name="redirect_to" value="<?php echo isset($redirect_to) ? $redirect_to : the_permalink() ?>" />
 	    	<div class="field-row">
 	      		<label for="user-name"><?php _e("Username", bb_agencyinteract_TEXTDOMAIN) ?></label>
 	      		<input type="text" name="user-name" value="<?php echo wp_specialchars( $_POST['user-name'], 1 ) ?>" id="user-name" />
