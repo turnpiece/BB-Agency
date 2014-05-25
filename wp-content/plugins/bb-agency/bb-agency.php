@@ -545,6 +545,8 @@ if ( is_admin() ){
 			}
 			add_submenu_page("bb_agency_menu", __("Search &amp; Send Profiles", bb_agency_TEXTDOMAIN), __("Search Profiles", bb_agency_TEXTDOMAIN), 7,"bb_agency_search","bb_agency_search");
 			add_submenu_page("bb_agency_menu", __("Saved Searches", bb_agency_TEXTDOMAIN), __("Saved Searches", bb_agency_TEXTDOMAIN), 7,"bb_agency_searchsaved","bb_agency_searchsaved");
+			add_submenu_page("bb_agency_menu", __("Manage Jobs", bb_agency_TEXTDOMAIN), __("Manage Jobs", bb_agency_TEXTDOMAIN), 7,"bb_agency_jobs","bb_agency_jobs");
+			add_submenu_page("bb_agency_menu", __("Search Jobs", bb_agency_TEXTDOMAIN), __("Search Jobs", bb_agency_TEXTDOMAIN), 7,"bb_agency_jobsearch","bb_agency_jobsearch");
 			add_submenu_page("bb_agency_menu", __("Tools &amp; Reports", bb_agency_TEXTDOMAIN), __("Tools &amp; Reports", bb_agency_TEXTDOMAIN), 7,"bb_agency_reports","bb_agency_reports");
 			add_submenu_page("bb_agency_menu", __("Edit Settings", bb_agency_TEXTDOMAIN), __("Settings", bb_agency_TEXTDOMAIN), 7,"bb_agency_settings","bb_agency_settings");
 		}
