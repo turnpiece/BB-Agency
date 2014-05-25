@@ -75,6 +75,8 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 		define("table_agency_casting", "bb_agency_casting");
 	if (!defined("table_agency_profile"))
 		define("table_agency_profile", "bb_agency_profile");
+	if (!defined("table_agency_job"))
+		define("table_agency_job", "bb_agency_job");
 	if (!defined("table_agency_profile_media"))
 		define("table_agency_profile_media", "bb_agency_profile_media");
 	if (!defined("table_agency_data_ethnicity"))
@@ -556,6 +558,12 @@ if ( is_admin() ){
 		}
 		function bb_agency_search(){
 			include_once('admin/search.php');
+		}
+		function bb_agency_jobs(){
+			include_once('admin/jobs.php');
+		}
+		function bb_agency_jobsearch(){
+			include_once('admin/jobsearch.php');
 		}
 		function bb_agency_searchsaved(){
 			include_once('admin/searchsaved.php');
