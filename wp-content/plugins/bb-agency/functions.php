@@ -1196,16 +1196,32 @@
 		 	if(get_query_var('target')!="print" AND get_query_var('target')!="pdf"){ //if its printing or PDF no need for pagination belo
 		  
 				/*********** Paginate **************/
-					$qItem = mysql_query("SELECT
-					profile.ProfileGallery, profile.ProfileContactDisplay, profile.ProfileDateBirth, profile.ProfileDateDue, profile.ProfileLocationState, profile.ProfileID as pID , 
-					customfield_mux.*,  
-					(SELECT media.ProfileMediaURL FROM ". table_agency_profile_media ." media  WHERE  profile.ProfileID = media.ProfileID  AND media.ProfileMediaType = \"Image\"  AND media.ProfileMediaPrimary = 1) 
-					AS ProfileMediaURL 
-					FROM ". table_agency_profile ." profile 
-				 	LEFT JOIN ". table_agency_customfield_mux ."  AS customfield_mux 
-					ON profile.ProfileID = customfield_mux.ProfileID  
-					$filter  GROUP BY profile.ProfileID ORDER BY $sort $dir  ".(isset($limit) ? $limit : "")."");
-					$items = mysql_num_rows($qItem); // number of total rows in the database
+				$ProfileTable = table_agency_profile;
+				$MediaTable = table_agency_profile_media;
+				$CustomTable = table_agency_customfield_mux;
+				$limit = isset($limit) ? $limit : '';
+				$sql = <<<EOF
+SELECT
+profile.ProfileGallery, 
+profile.ProfileContactDisplay, 
+profile.ProfileDateBirth, 
+profile.ProfileDateDue, 
+profile.ProfileLocationState, 
+profile.ProfileID as pID, 
+media.ProfileMediaURL,
+customfield_mux.*  
+FROM $ProfileTable AS profile
+LEFT JOIN $MediaTable AS media 
+ON profile.ProfileID = media.ProfileID AND media.ProfileMediaType = "Image" AND media.ProfileMediaPrimary = 1
+LEFT JOIN $CustomTable AS customfield_mux 
+ON profile.ProfileID = customfield_mux.ProfileID  
+$filter  
+GROUP BY profile.ProfileID 
+ORDER BY $sort $dir $limit
+EOF;
+
+				$qItem = mysql_query($sql) or wp_die(mysql_error());
+				$items = mysql_num_rows($qItem); // number of total rows in the database
 				  
 				if($items > 0) {
 					$p = new bb_agency_pagination;

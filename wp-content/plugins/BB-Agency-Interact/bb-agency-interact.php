@@ -22,8 +22,8 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 		header('HTTP/1.1 403 Forbidden');
 		exit();
 	}
-	
-	
+
+
 // Plugin Definitions
 	define("bb_agencyinteract_VERSION", $bb_agencyinteract_VERSION); // e.g. 1.0
 	define("bb_agencyinteract_BASENAME", plugin_basename(__FILE__) );  // bb-agency/bb-agency.php
