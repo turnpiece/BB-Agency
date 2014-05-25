@@ -20,7 +20,7 @@
 	// File Path: interact/theme/include-login.php
 	// Site Url : /profile-login/
 
-echo "     <div id=\"rbsignin-register\" class=\"rbinteract\">\n";
+echo "     <div id=\"bbsignin-register\" class=\"bbinteract\">\n";
 
 			if ( $error ) {
 			echo "<p class=\"error\">". $error ."</p>\n";

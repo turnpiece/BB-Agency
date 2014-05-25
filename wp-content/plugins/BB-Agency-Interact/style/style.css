@@ -85,22 +85,22 @@ p.submit { margin-top: 15px!important; }
 #profile-manage .manage-section.gallery .profileimage .primary label { cursor: pointer; }
 
 /** Sign In - Register **/
-#rbsignin-register { text-align: center; vertical-align: top; }
-#rbsignin-register .inline-block { padding: 30px; text-align: left; vertical-align: top; margin: 15px; }
-#rbsignin-register .inline-block h1 { margin-bottom: 10px; }
+#bbsignin-register { text-align: center; vertical-align: top; }
+#bbsignin-register .inline-block { padding: 30px; text-align: left; vertical-align: top; margin: 15px; }
+#bbsignin-register .inline-block h1 { margin-bottom: 10px; }
 
 /* Sign In */
-#rbsignin-register .inline-block .field-row { padding: 10px 0; }
-#rbsignin-register .inline-block .field-row label { display: block; margin-bottom: 5px; }
-#rbsignin-register .inline-block .field-row input[type="text"],
-#rbsignin-register .inline-block .field-row input[type="password"] { width: 100%; }
-#rbsignin-register .inline-block .field-row input[type="password"] { margin-bottom: 5px; }
+#bbsignin-register .inline-block .field-row { padding: 10px 0; }
+#bbsignin-register .inline-block .field-row label { display: block; margin-bottom: 5px; }
+#bbsignin-register .inline-block .field-row input[type="text"],
+#bbsignin-register .inline-block .field-row input[type="password"] { width: 100%; }
+#bbsignin-register .inline-block .field-row input[type="password"] { margin-bottom: 5px; }
 
 /* Register */
-#rbsignin-register .inline-block h3 { margin: 20px 0 10px 0; }
-#rbsignin-register .inline-block ul { padding: 0 0 0 15px; }
-#rbsignin-register .inline-block ul li { display: block; padding: 5px 0; }
-#rbsignin-register .inline-block .register { margin-bottom: 15px; }
+#bbsignin-register .inline-block h3 { margin: 20px 0 10px 0; }
+#bbsignin-register .inline-block ul { padding: 0 0 0 15px; }
+#bbsignin-register .inline-block ul li { display: block; padding: 5px 0; }
+#bbsignin-register .inline-block .register { margin-bottom: 15px; }
 
 /* Register */
 .bb-agency-interact {  }

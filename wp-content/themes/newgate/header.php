@@ -97,7 +97,7 @@ if ($cmsms_option[CMSMS_SHORTNAME . '_seo']) {
 } 
 ?>" />
 <title><?php
-if ($cmsms_option[CMSMS_SHORTNAME . '_seo']) {
+if (isset($cmsms_option[CMSMS_SHORTNAME . '_seo']) && $cmsms_option[CMSMS_SHORTNAME . '_seo']) {
 	if ( 
 		!is_home() && 
 		!is_404() && 
@@ -123,7 +123,7 @@ if ($cmsms_option[CMSMS_SHORTNAME . '_seo']) {
 ?></title>
 
 <?php 
-if ($cmsms_option[CMSMS_SHORTNAME . '_favicon']) {
+if (isset($cmsms_option[CMSMS_SHORTNAME . '_favicon']) && $cmsms_option[CMSMS_SHORTNAME . '_favicon']) {
 	if ($cmsms_option[CMSMS_SHORTNAME . '_favicon_url'] !== '') { 
 		echo '<link rel="shortcut icon" href="' . ((is_numeric($cmsms_option[CMSMS_SHORTNAME . '_favicon_url'])) ? array_shift(wp_get_attachment_image_src($cmsms_option[CMSMS_SHORTNAME . '_favicon_url'], 'full')) : $cmsms_option[CMSMS_SHORTNAME . '_favicon_url']) . '" type="image/x-icon" />';
 	} else {

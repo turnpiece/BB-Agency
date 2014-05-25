@@ -116,7 +116,8 @@ if (
 <!-- _________________________ Start Footer _________________________ -->
 	<footer id="footer" role="contentinfo">
 	<?php 
-		echo '<span class="copyright">' . stripslashes($cmsms_option[CMSMS_SHORTNAME . '_footer_copyright']) . '</span>' . "\n";
+		if (isset($cmsms_option[CMSMS_SHORTNAME . '_footer_copyright']) && $cmsms_option[CMSMS_SHORTNAME . '_footer_copyright'])
+			echo '<span class="copyright">' . stripslashes($cmsms_option[CMSMS_SHORTNAME . '_footer_copyright']) . '</span>' . "\n";
 		
 		if (isset($cmsms_option[CMSMS_SHORTNAME . '_footer_additional_content'])) {
 

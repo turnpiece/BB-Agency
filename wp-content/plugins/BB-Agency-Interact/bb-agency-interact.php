@@ -3,12 +3,12 @@
   Plugin Name: BB Agency Interact
   Text Domain: bb-agencyinteract-interact
   Plugin URI: http://rbplugin.com/
-  Description: Enhancement to the BB Agency software allowing models ot manage their own information. Forked from RB Agency Interact plugin.
+  Description: Enhancement to the BB Agency software allowing models to manage their own information. Forked from RB Agency Interact plugin.
   Author: Paul Jenkins
   Author URI: http://turnpiece.com/
-  Version: 0.1
+  Version: 0.0.2
 */
-$bb_agencyinteract_VERSION = "2.0.0"; 
+$bb_agencyinteract_VERSION = "0.0.2"; 
 if (!session_id())
 session_start();
 if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], '2.8', '<') ) { // if less than 2.8 
@@ -172,7 +172,7 @@ if ( is_admin() ){
 					   
 					     
 					if ( !empty( $title ) ) { echo $before_title . $title . $after_title; };		
-							echo " <form></form>";    
+							echo " test<form></form>";    
 							echo "          <form name=\"loginform\" id=\"login\" action=\"". network_site_url("/") ."profile-login/\" method=\"post\">\n";
 							echo "            <div class=\"box\">\n";
 							echo "              <label for=\"user-name\">". __("Username", bb_agencyinteract_TEXTDOMAIN). "</label><input type=\"text\" name=\"user-name\" value=\"". wp_specialchars( $_POST['user-name'], 1 ) ."\" id=\"user-name\" />\n";
