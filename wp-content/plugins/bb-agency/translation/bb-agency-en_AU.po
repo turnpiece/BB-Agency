@@ -363,7 +363,7 @@ msgstr ""
 
 #: D:\RobDropbox\Dropbox\ScriptRepository\bb-agency/admin/overview.php:700
 #: D:\RobDropbox\Dropbox\ScriptRepository\bb-agency/admin/overview.php:740
-msgid "There are currently no profiles added"
+msgid "There are currently no profiles"
 msgstr ""
 
 #: D:\RobDropbox\Dropbox\ScriptRepository\bb-agency/admin/overview.php:710

@@ -508,7 +508,7 @@ msgstr "Recent gecreëerde/gewijzigde profielen"
 
 #: D:\wamp\www\ClearlyM\agency1.rgbplugin.com\wp-content\plugins\bb-agency/admin/overview.php:164
 #: D:\wamp\www\ClearlyM\agency1.rgbplugin.com\wp-content\plugins\bb-agency/admin/overview.php:184
-msgid "There are currently no profiles added"
+msgid "There are currently no profiles"
 msgstr "Er zijn op dit moment geen profielen bijgevoegd"
 
 #: D:\wamp\www\ClearlyM\agency1.rgbplugin.com\wp-content\plugins\bb-agency/admin/overview.php:169

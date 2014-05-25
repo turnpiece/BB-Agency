@@ -537,7 +537,7 @@ msgstr "Zuletzt hinzugefügte / veränderte  Profile"
 #: C:/Dropbox/Users/Rob/Scripts/RB
 #: Plugin/bb-agency/admin/overview.php:164
 #: Plugin/bb-agency/admin/overview.php:184
-msgid "There are currently no profiles added"
+msgid "There are currently no profiles"
 msgstr "Zur Zeit keine Profile hinzugefügt"
 
 # @ bb-agency

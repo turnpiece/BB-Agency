@@ -547,11 +547,16 @@ if ($action) {
                             <div>
                                 <strong><?php _e("Distance", bb_agency_TEXTDOMAIN) ?>:</strong> <?php echo number_format((float)$data['distance'], 1, '.', '') ?> miles
                             </div>
+                        <?php endif; ?>
+
+                        <?php if (defined('bb_agency_MUMSTOBE_ID') && bb_agency_MUMSTOBE_ID && bb_agency_ismumtobe($data['ProfileType']) && !empty($data['ProfileDateDue'])) : ?>                             
+                        <div>
+                            <strong><?php _e("Due date", bb_agency_TEXTDOMAIN) ?>:</strong> <?php echo $data['ProfileDateDue'] ?></div>
+                        </div>
                         <?php endif;
 
                         foreach (array(
                             __("Birth date", bb_agency_TEXTDOMAIN) => $data['ProfileDateBirth'],
-                            __("Due date", bb_agency_TEXTDOMAIN) => $data['ProfileDateDue'],
                             __("Website", bb_agency_TEXTDOMAIN) => $data['ProfileContactWebsite'],
                             __("Phone Home", bb_agency_TEXTDOMAIN) => $data['ProfileContactPhoneHome'],
                             __("Phone Cell", bb_agency_TEXTDOMAIN) => $data['ProfileContactPhoneCell'],
@@ -676,7 +681,7 @@ if ($action) {
                         echo "<strong>Age:</strong> ". bb_agency_get_age($data['ProfileDateBirth']) ."<br />\n";
                     }
 
-                    if (defined('bb_agency_MUMSTOBE_ID') && bb_agency_MUMSTOBE_ID && !empty($data['ProfileDateDue'])) {
+                    if (defined('bb_agency_MUMSTOBE_ID') && bb_agency_MUMSTOBE_ID && bb_agency_ismumtobe($data['ProfileType']) && !empty($data['ProfileDateDue'])) {
                         echo "<strong>Due date:</strong> ". bb_agency_get_due_date($data['ProfileDateDue']) ."<br />\n";
                     }
                     

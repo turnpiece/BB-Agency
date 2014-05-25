@@ -64,62 +64,14 @@
 		function bb_agency_add_dashboard() {
 
 			global $wp_meta_boxes;
-
-			// Create Dashboard Widgets
-			wp_add_dashboard_widget('bb_agency_dashboard_quicklinks', __("BB Agency Updates", bb_agency_TEXTDOMAIN), 'bb_agency_dashboard_quicklinks');
 		
 			// reorder the boxes - first save the left and right columns into variables
 			$left_dashboard = $wp_meta_boxes['dashboard']['normal']['core'];
-			$right_dashboard = $wp_meta_boxes['dashboard']['side']['core'];
-			
-			// take a copy of the new widget from the left column
-			$bb_agency_dashboard_merge_array = array("bb_agency_dashboard_quicklinks" => $left_dashboard["bb_agency_dashboard_quicklinks"]);
-			
-			unset($left_dashboard['bb_agency_dashboard_quicklinks']); // remove the new widget from the left column
-			$right_dashboard = array_merge($bb_agency_dashboard_merge_array, $right_dashboard); // use array_merge so that the new widget is pushed on to the beginning of the right column's array  
+			$right_dashboard = $wp_meta_boxes['dashboard']['side']['core']; 
 			
 			// finally replace the left and right columns with the new reordered versions
 			$wp_meta_boxes['dashboard']['normal']['core'] = $left_dashboard; 
 			$wp_meta_boxes['dashboard']['side']['core'] = $right_dashboard;
-		}
-
-		 // Create the function to output the contents of our Dashboard Widget
-		function bb_agency_dashboard_quicklinks() {
-
-			// Display Quicklinks
-			$bb_agency_options_arr = get_option('bb_agency_options');
-			if (isset($bb_agency_options_arr['dashboardQuickLinks'])) {
-			  	echo $bb_agency_options_arr['dashboardQuickLinks'];
-			}
-			$rss = fetch_feed("http://rbplugin.com/category/wordpress/bbagency/feed/");
-
-			// Checks that the object is created correctly 
-			if (!is_wp_error($rss)) { 
-
-				// Figure out how many total items there are, but limit it to 5. 
-				$maxitems = $rss->get_item_quantity($num_items); 
-
-				// Build an array of all the items, starting with element 0 (first element).
-				$rss_items = $rss->get_items(0, $maxitems); 
-			}
-
-			echo "<div class=\"feed-searchsocial\">\n";
-			if ($maxitems == 0) {
-				echo "No Connection\n";
-			} else {
-
-				// Loop through each feed item and display each item as a hyperlink.
-				foreach ( $rss_items as $item ) {
-					echo "  <div class=\"blogpost\">\n";
-					echo "    <h4><a href='". $item->get_permalink() ."' title='Posted ". $item->get_date('j F Y | g:i a') ."' target=\"_blank\">". $item->get_title() ."</a></h4>\n";
-					echo "    <div class=\"description\">". $item->get_description() ."</div>\n";
-					echo "    <div class=\"clear\"></div>\n";
-					echo "  </div>\n";
-				}
-			}
-			echo "</div>\n";
-			echo "<hr />\n";
-			echo "Need help? Check out RB Agency <a href=\"http://rbplugin.com\" target=\"_blank\" title=\"RB Agency Documentation\">Documentation</a>. (This plugin is a based on the RB Agency plugin but it's not identical.)<br />";
 		}
 	}
 
@@ -382,12 +334,17 @@
      * @param string $timestamp (unix timestamp)
      * @param string $offset  (offset from server)
      */
-	function bb_agency_makeago($timestamp, $offset){
+	function bb_agency_makeago($timestamp, $offset = null) {
+		// get timezone offset
+		if (is_null($offset)) {
+			$offset = bbagency_get_option('bb_agency_option_locationtimezone');
+		}
+
 		// Ensure the Timestamp is not null
 		if (isset($timestamp) && !empty($timestamp) && ($timestamp <> "0000-00-00 00:00:00") && ($timestamp <> "943920000")) {
 			// Offset 
 			// TODO: Remove hard coded server time
-			$offset = $offset-5;
+			//$offset = $offset-5;
 
 			// Offset Math
 			$timezone_offset = (int)$offset;
@@ -1685,7 +1642,15 @@
 		return strtotime($date) < time();	
 	}
 
-	// Is this model a mum to be?
+	/*
+	 * is mum to be?
+	 *
+	 * Is this model a mum to be?
+	 *
+	 * @param int $type ProfileType
+	 * @return boolean
+	 *
+	 */
 	function bb_agency_ismumtobe($type) {
 		$types = explode(',',$type);
 		return in_array(bb_agency_MUMSTOBE_ID, $types);
@@ -3741,4 +3706,19 @@ function bbagency_map($lat, $lng, $name) {
 
 	Geocoder::getMap($lat, $lng, $name);
 }
+
+/**
+ * bbagency get option
+ *
+ * @param string $name
+ * @return mixed
+ *
+ */
+function bbagency_get_option($name) {
+	$options = get_option('bb_agency_options');
+
+	if (isset($options[$name]))
+		return $options[$name];
+}
+
 ?>
