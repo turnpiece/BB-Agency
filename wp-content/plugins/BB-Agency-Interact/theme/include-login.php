@@ -17,6 +17,9 @@
 		$widthClass = "full";
 	}
 
+	if (isset($_REQUEST['redirect_to']) && $_REQUEST['redirect_to'])
+		$redirect_to = $_REQUEST['redirect_to'];
+
 	// File Path: interact/theme/include-login.php
 	// Site Url : /profile-login/
 ?>
@@ -25,8 +28,11 @@
 	<p class="error"><?php echo $error ?></p>
 <?php endif; ?>
 	<div id="bbsign-in" class="inline-block">
-     	<h1><?php _e("Members Sign in", bb_agencyinteract_TEXTDOMAIN) ?></h1>
+     	<h1><?php _e("Members sign in", bb_agencyinteract_TEXTDOMAIN) ?></h1>
      	<form name="loginform" id="login" action="<?php echo network_site_url('/') ?>profile-login/" method="post">
+     		<?php if (isset($redirect_to)) : ?>
+     		<input type="hidden" name="redirect_to" value="<?php echo $redirect_to ?>" />
+     		<?php endif; ?>
 	       	<div class="field-row">
 	         	<label for="user-name"><?php _e("Username", bb_agencyinteract_TEXTDOMAIN) ?></label>
 	         	<input type="text" name="user-name" value="<?php echo wp_specialchars( $_POST['user-name'], 1 ) ?>" id="user-name" />

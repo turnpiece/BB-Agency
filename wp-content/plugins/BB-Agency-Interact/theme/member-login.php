@@ -24,8 +24,13 @@ function get_user_login_info(){
 				
 	if($user_ID){
 		
-		// If user_registered date/time is less than 48hrs from now
+		// if there's a redirect to set let's use it
+		if (isset($_POST['redirect_to']) && $_POST['redirect_to']) {
+			wp_redirect($_POST['redirect_to']);
+			exit;
+		}
 			
+		// If user_registered date/time is less than 48hrs from now
 		if(!empty($redirect)){
 			header("Location: ". get_bloginfo("wpurl"). "/profile/".$redirect);
 		} else {
@@ -73,13 +78,13 @@ function get_user_login_info(){
 		// Prepare Page
 		get_header();
 
-		echo "<div id=\"rbcontent\" class=\"rb-interact rb-interact-login\">\n";
+		echo "<div id=\"bbcontent\" class=\"bb-interact bb-interact-login\">\n";
 		
 			// Show Login Form
 			$hideregister = true;
 			include("include-login.php");
 
-		echo "</div><!-- #rbcontent -->\n";
+		echo "</div><!-- #bbcontent -->\n";
 
 	// Get Footer
 	get_footer();

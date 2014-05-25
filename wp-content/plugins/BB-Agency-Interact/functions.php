@@ -169,6 +169,10 @@
 	// Redirect after Login
 	add_filter('login_redirect', 'bb_agencyinteract_login_redirect', 10, 3);	
 		function bb_agencyinteract_login_redirect() {
+			if (isset($_REQUEST['redirect_to']) && $_REQUEST['redirect_to']) {
+				wp_redirect($_REQUEST['redirect_to']);
+				exit;
+			}
 			global $user_ID, $current_user, $wp_roles;
 			if( $user_ID ) {
 				$user_info = get_userdata( $user_ID ); 

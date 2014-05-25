@@ -364,6 +364,9 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 	}
 //Activate Install Hook
 register_activation_hook(__FILE__,'bb_agency_install');
+
+
+
 		
 
 // *************************************************************************************************** //
@@ -566,7 +569,9 @@ if ( is_admin() ){
 		function bb_agencyinteract_menu_approvemembers(){
 			include_once('admin/profile-approve.php');
 		}
-}
+	}
+
+
 
 // *************************************************************************************************** //
 // Scripts
@@ -723,7 +728,7 @@ if ( is_admin() ){
 // *************************************************************************************************** //
 // Add Short Codes
 
-	add_shortcode("category_list","bb_agency_shortcode_categorylist");
+	add_shortcode("category_list", "bb_agency_shortcode_categorylist");
 		function bb_agency_shortcode_categorylist($atts, $content = null){
 			ob_start();
 			bb_agency_categorylist($atts);
@@ -732,16 +737,23 @@ if ( is_admin() ){
 			return $output_string;
 		}
 
-	add_shortcode("profile_list","bb_agency_shortcode_profilelist");
+	add_shortcode("profile_list", "bb_agency_shortcode_profilelist");
 		function bb_agency_shortcode_profilelist($atts, $content = null){
+			$privacy = bbagency_datatype_privacy($atts['type']);
 			ob_start();
-			bb_agency_profilelist($atts);
-			$output_string=ob_get_contents();;
+			if ($privacy && !is_user_logged_in()) {
+				// display login form
+				include(dirname(__FILE__).'/theme/include-login.php');
+			} else {
+				// display the list of profiles
+				bb_agency_profilelist($atts);				
+			}
+			$output_string = ob_get_contents();;
 			ob_end_clean();
 			return $output_string;
 		}
 	
-	add_shortcode("profile_search","bb_agency_shortcode_profilesearch");
+	add_shortcode("profile_search", "bb_agency_shortcode_profilesearch");
 		function bb_agency_shortcode_profilesearch($atts, $content = null){
 			ob_start();
 			bb_agency_profilesearch($atts);

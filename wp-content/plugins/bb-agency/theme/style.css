@@ -2,7 +2,7 @@
 
 /* Global Style */
 
-.rbclear {
+.bbclear {
 	clear: both;
 }
 .rblayout {
@@ -525,16 +525,16 @@ img.fillheight {
 #rbquick-search .rbsearch-form .search-field.multi input { width: 100px; }
 
 /** Sign In - Register **/
-#rbsignin-register { text-align: center; vertical-align: top; }
-#rbsignin-register .inline-block { padding: 15px; text-align: left; vertical-align: top; margin: 15px; max-width: 350px; display: inline-block; }
-#rbsignin-register .inline-block h1 { margin-bottom: 10px; }
+#bbsignin-register { text-align: center; vertical-align: top; }
+#bbsignin-register .inline-block { padding: 15px; text-align: left; vertical-align: top; margin: 15px; max-width: 350px; display: inline-block; }
+#bbsignin-register .inline-block h1 { margin-bottom: 10px; }
 
 /* Sign In */
-#rbsignin-register .inline-block .field-row { padding: 10px 0; }
-#rbsignin-register .inline-block .field-row label { display: block; margin-bottom: 5px; }
-#rbsignin-register .inline-block .field-row input[type="text"],
-#rbsignin-register .inline-block .field-row input[type="password"] { width: 100%; }
-#rbsignin-register .inline-block .field-row input[type="password"] { margin-bottom: 5px; }
+#bbsignin-register .inline-block .field-row { padding: 10px 0; }
+#bbsignin-register .inline-block .field-row label { display: block; margin-bottom: 5px; }
+#bbsignin-register .inline-block .field-row input[type="text"],
+#bbsignin-register .inline-block .field-row input[type="password"] { width: 100%; }
+#bbsignin-register .inline-block .field-row input[type="password"] { margin-bottom: 5px; }
 
 /* basic scrollbar styling */
 /* vertical scrollbar */

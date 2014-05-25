@@ -2,7 +2,7 @@
 /*
   Plugin Name: BB Agency Interact
   Text Domain: bb-agencyinteract-interact
-  Plugin URI: http://rbplugin.com/
+  Plugin URI: http://beautifulbumpsagency.co.uk/
   Description: Enhancement to the BB Agency software allowing models to manage their own information. Forked from RB Agency Interact plugin.
   Author: Paul Jenkins
   Author URI: http://turnpiece.com/
@@ -22,8 +22,13 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 		header('HTTP/1.1 403 Forbidden');
 		exit();
 	}
-
-
+/*
+function bbagency_interact_the_post_action( $post ) {
+	// modify post object here
+	?><pre><?php print_r($post) ?></pre><?php
+}
+add_action( 'the_post', 'bbagency_interact_the_post_action' );
+*/
 // Plugin Definitions
 	define("bb_agencyinteract_VERSION", $bb_agencyinteract_VERSION); // e.g. 1.0
 	define("bb_agencyinteract_BASENAME", plugin_basename(__FILE__) );  // bb-agency/bb-agency.php
@@ -234,8 +239,54 @@ if ( is_admin() ){
 			}
 		
 		} // class
-                 
-		     
+     
+
+// *************************************************************************************************** //
+// Custom password protected pages
+/*		
+	function bb_agencyinteract_password_form() {
+		global $post;
+		$redirect_to = get_permalink($post->ID);
+		ob_start();
+		include('theme/include-login.php');
+		return ob_get_clean();
+	}
+	add_filter( 'the_password_form', 'bb_agencyinteract_password_form' );
+
+	function bb_agencyinteract_after_login($user_login, $user) {
+    	if (isset($_POST['redirect_to'])) {
+    		wp_redirect($_POST['redirect_to']);
+    		exit;
+    	}
+	}
+	add_action('wp_login', 'bb_agencyinteract_after_login', 10, 2);        
+*/		     
+
+/*
+function bb_agencyinteract_intercept_private_page( $posts, &$wp_query )
+{
+    // remove filter now, so that on subsequent post querying we don't get involved!
+    remove_filter( 'the_posts', '__intercept_private_page', 5, 2 );
+
+    if ( !( $wp_query->is_page && empty($posts) ) )
+        return $posts; // bail, not page with no results
+
+    // if you want to explicitly check it *is* private, use the code block below:   
+    
+    if ( !empty( $wp_query->query['page_id'] ) )
+        $page = get_page( $wp_query->query['page_id'] );
+    else
+        $page = get_page_by_path( $wp_query->query['pagename'] );
+
+    if ( $page && $page->post_status == 'private' ) {
+        // redirect
+        $url = urlencode(get_permalink($page->ID));
+        wp_safe_redirect(get_bloginfo('wpurl')."/profile-login/?redirect_to=$url");
+        exit;
+    }
+}
+is_admin() || add_filter( 'the_posts', 'bb_agencyinteract_intercept_private_page', 5, 2 );
+*/
 		                
 // *************************************************************************************************** //
 // Add Short Codes

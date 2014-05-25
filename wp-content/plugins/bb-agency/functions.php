@@ -141,8 +141,21 @@
 	        if ($bb_agency_option_profilelist_castingcart) {
 				$newrules['profile-casting-cart'] = 'index.php?type=castingcart';
 		   	}
+
+			// Set up pages
+		   	// get data types
+			global $wpdb;
+			$table = table_agency_data_type;
+			$result = $wpdb->get_results("SELECT * FROM $table");
+			foreach ($result as $row) {
+				$newrules[$row->DataTypeTag] = 'index.php?type=models&value='.$row->DataTypeID;
+			}
+
 			return $newrules + $rules;
 		}
+
+		// *************************************************************************************************** //
+
 		
 	// Get Veriables & Identify View Type
 	add_action( 'query_vars', 'bb_agency_query_vars' );
@@ -157,28 +170,31 @@
 	// Set Custom Template
 	add_filter('template_include', 'bb_agency_template_include', 1, 1); 
 		function bb_agency_template_include( $template ) {
-			if ( get_query_var( 'type' ) ) {				
-				//echo get_query_var( 'type' );
-				if (get_query_var( 'type' ) == "search") {
-					return dirname(__FILE__) . '/theme/view-search.php'; 
-				} elseif (get_query_var( 'type' ) == "category") {
-					return dirname(__FILE__) . '/theme/view-category.php'; 
-				} elseif (get_query_var( 'type' ) == "profile") {
-					return dirname(__FILE__) . '/theme/view-profile.php'; 
-				} elseif (get_query_var( 'type' ) == "profilecontact") {
-					return dirname(__FILE__) . '/theme/view-profile-contact.php'; 
-				} elseif (get_query_var( 'type' ) == "profilesecure") {
-					return dirname(__FILE__) . '/theme/view-profilesecure.php'; 
-				} elseif (get_query_var( 'type' ) == "dashboard") {
-					return dirname(__FILE__) . '/theme/view-dashboard.php'; 
-				} elseif (get_query_var( 'type' ) == "print") {
-					return dirname(__FILE__) . '/theme/view-print.php'; 
-				} elseif (get_query_var( 'type' ) == "favorite") {
-					return dirname(__FILE__) . '/theme/view-favorite.php'; 
-				}elseif (get_query_var( 'type' ) == "casting") {
-					return dirname(__FILE__) . '/theme/view-castingcart.php'; 
-				}elseif (get_query_var( 'type' ) == "version-bb-agency") {
-					return dirname(__FILE__) . '/rbv.php'; 
+			if ($type = get_query_var( 'type' )) {
+				$dir = dirname(__FILE__) . '/theme/';
+				switch ($type) {
+					case 'search' :
+						return $dir.'view-search.php'; 
+					case  "category" :
+						return $dir.'view-category.php'; 
+					case "profile" :
+						return $dir.'view-profile.php'; 
+					case "profilecontact" :
+						return $dir.'view-profile-contact.php'; 
+					case "profilesecure" :
+						return $dir.'view-profilesecure.php'; 
+					case "dashboard" :
+						return $dir.'view-dashboard.php'; 
+					case "print" :
+						return $dir.'view-print.php'; 
+					case "favorite" :
+						return $dir.'view-favorite.php'; 
+					case "casting" :
+						return $dir.'view-castingcart.php';
+					case 'models' :
+						return $dir.'view-models.php';
+					case "version-bb-agency" :
+						return dirname(__FILE__) . '/rbv.php'; 
 				}			  
 			}
 			return $template;
@@ -1190,7 +1206,7 @@
 
 			if(get_query_var('type')=="favorite"){ $links="";} // we dont need print and download pdf in favorites page
 			
-			echo "<div class=\"rbclear\"></div>\n";
+			echo "<div class=\"bbclear\"></div>\n";
 			echo "$links<div id=\"profile-results\">\n";
 			
 		 	if(get_query_var('target')!="print" AND get_query_var('target')!="pdf"){ //if its printing or PDF no need for pagination belo
@@ -1205,7 +1221,7 @@ SELECT
 profile.ProfileGallery, 
 profile.ProfileContactDisplay, 
 profile.ProfileDateBirth, 
-profile.ProfileDateDue, 
+profile.ProfileDateDue,
 profile.ProfileLocationState, 
 profile.ProfileID as pID, 
 media.ProfileMediaURL,
@@ -1223,7 +1239,7 @@ EOF;
 				$qItem = mysql_query($sql) or wp_die(mysql_error());
 				$items = mysql_num_rows($qItem); // number of total rows in the database
 				  
-				if($items > 0) {
+				if ($items > 0) {
 					$p = new bb_agency_pagination;
 					$p->items($items);
 					$p->limit($pagingperpage); // Limit entries per page
@@ -1233,7 +1249,7 @@ EOF;
 					$p->parameterName('paging');
 					$p->adjacents(1); //No. of page away from the current page
 					
-					if(!isset($paging)) {
+					if (!isset($paging)) {
 						$p->page = 1;
 					} else {
 						$p->page = $paging;
@@ -1418,7 +1434,7 @@ EOF;
 							}
 
 						$displayHTML.="  </div><!-- #profile-results-info -->\n";
-						$displayHTML.="  <div class=\"rbclear\"></div>\n";
+						$displayHTML.="  <div class=\"bbclear\"></div>\n";
 					}	           
 					
 					if($profileDisplay == 1){
@@ -1477,7 +1493,7 @@ EOF;
 					$displayHTML .=" </div><!-- .rbprofile-list -->\n";
 				}	// endwhile datalist
 
-				$displayHTML .= "  <div class=\"rbclear\"></div>\n";
+				$displayHTML .= "  <div class=\"bbclear\"></div>\n";
 				$displayHTML .= "  </div><!-- #profile-list -->\n";		
 			}	// endif countlist
 			else {
@@ -1489,7 +1505,7 @@ EOF;
 			}
 		
 			// Close Formatting
-			$displayHTML .= "  <div class=\"rbclear\"></div>\n";
+			$displayHTML .= "  <div class=\"bbclear\"></div>\n";
 			$displayHTML .= "</div><!-- #profile-results -->\n";
 				
 		} else {
@@ -3735,6 +3751,13 @@ function bbagency_get_option($name) {
 
 	if (isset($options[$name]))
 		return $options[$name];
+}
+
+function bbagency_datatype_privacy($id) {
+	global $wpdb;
+	$table = table_agency_data_type;
+	if ($id)
+		return $wpdb->get_var("SELECT `DataTypePrivacy` FROM $table WHERE `DataTypeID` = $id");
 }
 
 ?>
