@@ -10,13 +10,13 @@
   </thead>
   <tbody>
 
-  <?php foreach ($results as $data) : ?>
-    <tr <?php echo $rowColor ?>>
-      <th class="check-column" scope="row"><input type="checkbox" value="<?php echo $JobID ?>" id="<?php echo $JobID ?>" data-firstname="<?php echo $JobContactNameFirst ?>" data-lastname="<?php echo $JobContactNameLast ?>" data-email="<?php echo $JobContactEmail ?>" class="administrator"  name="<?php echo $JobID ?>"/></th>
-      <td><?php echo $data['JobID'] ?></td>
-      <td><?php echo $data['JobTitle'] ?></td>
-      <td><?php echo $data['JobClient'] ?></td>
-      <td><?php echo $data['JobLocation'] ?></td>
+  <?php foreach ($results as $data) : $id = $data->JobID; ?>
+    <tr>
+      <th class="check-column" scope="row"><input type="checkbox" value="<?php echo $id ?>" id="<?php echo $id ?>" class="administrator" /></th>
+      <td><?php echo $data->JobID ?></td>
+      <td><a href="<?php echo admin_url('admin.php?page='.$_GET['page'].'&action=edit&id='.$id) ?>"><?php echo $data->JobTitle ?></a></td>
+      <td><?php echo $data->JobClient ?></td>
+      <td><?php echo $data->JobLocation ?></td>
     </tr>
   <?php endforeach; ?>
      

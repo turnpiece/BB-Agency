@@ -3760,4 +3760,16 @@ function bbagency_datatype_privacy($id) {
 		return $wpdb->get_var("SELECT `DataTypePrivacy` FROM $table WHERE `DataTypeID` = $id");
 }
 
+function bbagency_posted_value($field, $db = null) {
+	echo bbagency_get_posted_value($field, $db);
+}
+
+function bbagency_get_posted_value($field, $db = null) {
+	if (isset($_POST[$field]))
+		return $_POST[$field];
+
+	elseif (!is_null($db) && isset($db[$field]))
+		return $db[$field];
+}
+
 ?>
