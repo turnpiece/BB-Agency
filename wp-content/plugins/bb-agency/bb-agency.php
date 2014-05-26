@@ -562,7 +562,7 @@ if ( is_admin() ){
 			include_once('admin/search.php');
 		}
 		function bb_agency_jobs(){
-			include_once('admin/jobs.php');
+			include_once('admin/job.php');
 		}
 		function bb_agency_jobsearch(){
 			include_once('admin/jobsearch.php');

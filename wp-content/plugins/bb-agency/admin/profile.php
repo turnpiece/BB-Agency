@@ -948,39 +948,34 @@ function bb_display_manage($ProfileID) {
         if ($countImg < 1) {
             echo "<div>" . __("There are no images loaded for this profile yet.", bb_agency_TEXTDOMAIN) . "</div>\n";
         }
+        ?>
+        <div style="clear: both;"></div>
+        <a href="javascript:confirm_mass_gallery_delete();">Delete Selected Images</a>
+        <script language="javascript">
+        function confirm_mass_gallery_delete(){
+            jQuery(document).ready(function() {
+                var mas_del_ids = '&';
+                jQuery("input:checkbox[name=massgaldel]:checked").each(function() {
+                    if(mas_del_ids != '&'){
+                        mas_del_ids += '&';
+                    }
+                    mas_del_ids += 'targetids[]='+jQuery(this).val();
+                });
 
-        echo "      <div style=\"clear: both;\"></div>\n";
-        echo '<a href="javascript:confirm_mass_gallery_delete();">Delete Selected Images</a>';
-        echo '<script language="javascript">';
-        echo 'function confirm_mass_gallery_delete(){';
-        echo 'jQuery(document).ready(function() {';
-        echo "var mas_del_ids = '&';";
-        echo 'jQuery("input:checkbox[name=massgaldel]:checked").each(function() {';
-        echo "if(mas_del_ids != '&'){";
-        echo "mas_del_ids += '&';";
-        echo '}';
+                if( mas_del_ids != '&'){
+                    if(confirm("Do you want to delete all the selected images?")){
+                        urlmassdelete = "<?php echo admin_url('admin.php?page='.$_GET['page']) ?>&action=editRecord&ProfileID=<?php echo $ProfileID ?>&actionsub=massphotodelete" + mas_del_ids;
+                        document.location = urlmassdelete;
+                    }
+                }
+                else{
+                    alert("You have to select images to delete");
+                }
+            });
 
-        echo "mas_del_ids += 'targetids[]='+jQuery(this).val();";
-        echo "});";
-
-        echo "if( mas_del_ids != '&'){ ";
-        echo 'if(confirm("Do you want to delete all the selected images?")){';
-
-
-
-        echo "urlmassdelete = '" . admin_url("admin.php?page=" . $_GET['page']) . "&action=editRecord&ProfileID=" . $ProfileID . "&actionsub=massphotodelete' + mas_del_ids;";
-        echo 'document.location = urlmassdelete;';
-        echo '}
-    }
-    else{
-        alert("You have to select images to delete");
-    }
-});
-
-}
-</script>';
-
-
+        }
+        </script>
+        <?php
 
         echo "      <br><br><h3>" . __("Media", bb_agencyinteract_TEXTDOMAIN) . "</h3>\n";
         echo "      <p>" . __("The following files (pdf, audio file, etc.) are associated with this record", bb_agencyinteract_TEXTDOMAIN) . ".</p>\n";
