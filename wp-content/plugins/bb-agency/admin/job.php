@@ -16,18 +16,25 @@ $bb_agency_option_locationtimezone = (int) $bb_agency_options_arr['bb_agency_opt
 
 $t_job = table_agency_job;
 
+//start page display
+?>
+<div class="wrap">
+    <?php include ("admin-menu.php"); ?>
+
+<?php
+
 // *************************************************************************************************** //
 // Handle Post Actions
 
 // get action
 $action = isset($_REQUEST['action']) && $_REQUEST['action'] ? $_REQUEST['action'] : 'list';
 
-// set error array
-$error = array();
-
 // Get Post State
 if ($_POST) {
-   switch ($action) {
+    // set error array
+    $error = array();
+   
+    switch ($action) {
 
         // *************************************************************************************************** //
         // Add/Edit Record
@@ -114,11 +121,7 @@ if ($_POST) {
 }
 
 // display page
-?>
-<div class="wrap">
-    <?php include ("admin-menu.php"); ?>
 
-<?php
 switch ($action) {
     case 'list' :
         // list all jobs

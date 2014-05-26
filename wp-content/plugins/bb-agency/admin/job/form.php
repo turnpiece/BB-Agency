@@ -1,4 +1,4 @@
-<h2 class="title"><?php _e("Edit", bb_agency_TEXTDOMAIN) ?> job 
+<h2 class="title"><?php $action == 'edit' ? _e("Edit", bb_agency_TEXTDOMAIN) : _e("Add", bb_agency_TEXTDOMAIN) ?> job 
     <a class="button-secondary" href="<?php echo admin_url('admin.php?page=' . $_GET['page']) ?>"><?php _e("Back to job list", bb_agency_TEXTDOMAIN) ?></a> 
 </h2>
 <p><?php _e("Make changes in the form below to edit a job", bb_agency_TEXTDOMAIN) ?> <strong><?php _e("Required fields are marked", bb_agency_TEXTDOMAIN) ?>*</strong></p>
@@ -71,10 +71,10 @@
                             <?php
                                 // list models
                                 $t_profiles = table_agency_profile;
-                                $models = $wpdb->get_results("SELECT `ProfileID`, `ProfileContactDisplay` FROM $t_profiles ORDER BY `ProfileContactDisplay` ASC");
+                                $models = $wpdb->get_results("SELECT `ProfileID` AS ID, `ProfileContactDisplay` AS name FROM $t_profiles ORDER BY `ProfileContactDisplay` ASC");
                                 $booked = bbagency_get_posted_value('JobModelBooked', isset($Job) ? $Job : null);
                                 foreach ($models as $model) : ?>
-                            <option value="<?php echo $model->ProfileID ?>" <?php selected($model->ProfileID, $booked) ?>><?php echo $model->ProfileContactDisplay ?></option>
+                            <option value="<?php echo $model->ID ?>" <?php selected($model->ID, $booked) ?>><?php echo $model->name ?></option>
                             <?php endforeach; ?>
                         </select>
                     </td>
@@ -86,7 +86,7 @@
         <?php _e("Last updated on", bb_agency_TEXTDOMAIN) ?> <?php echo $Job['JobDateUpdated'] ?>
 
         <p class="submit">
-             <input type="hidden" name="ProfileID" value="<?php echo $Job['JobID'] ?>" />
+             <input type="hidden" name="JobID" value="<?php echo $Job['JobID'] ?>" />
              <input type="hidden" name="action" value="edit" />
              <input type="submit" name="submit" value="<?php _e("Update Job", bb_agency_TEXTDOMAIN) ?>" class="button-primary" />
         </p>
