@@ -3,7 +3,7 @@
 </h2>
 <p><?php _e("Make changes in the form below to edit a job", bb_agency_TEXTDOMAIN) ?> <strong><?php _e("Required fields are marked", bb_agency_TEXTDOMAIN) ?>*</strong></p>
 <form method="post" action="<?php echo admin_url('admin.php?page=' . $_GET['page']) ?>&action=<?php echo $action ?>">
-    <div>
+    <div class="boxblock-container left-half">
         <table class="form-table">
             <tbody>
                 <tr valign="top">
@@ -64,37 +64,55 @@
                         <textarea class="large-text" id="JobNotes" name="JobNotes"><?php bbagency_posted_value('JobNotes', isset($Job) ? $Job : null) ?></textarea>
                     </td>
                 </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="boxblock-container right-half">
+        <?php
+        // get models
+        $models = bbagency_get_models();
+        ?>
+        <table class="form-table">
+            <tbody>
                 <tr valign="top">
-                    <th scope="row"><?php _e("Model Booked", bb_agency_TEXTDOMAIN) ?></th>
+                    <th scope="row"><?php _e("Model booked", bb_agency_TEXTDOMAIN) ?></th>
                     <td>
-                        <select id="ProfileIsActive" name="JobStatus">
+                        <select id="JobModelBooked" name="JobModelBooked">
                             <?php
-                                // list models
-                                $t_profiles = table_agency_profile;
-                                $models = $wpdb->get_results("SELECT `ProfileID` AS ID, `ProfileContactDisplay` AS name FROM $t_profiles ORDER BY `ProfileContactDisplay` ASC");
                                 $booked = bbagency_get_posted_value('JobModelBooked', isset($Job) ? $Job : null);
                                 foreach ($models as $model) : ?>
                             <option value="<?php echo $model->ID ?>" <?php selected($model->ID, $booked) ?>><?php echo $model->name ?></option>
                             <?php endforeach; ?>
                         </select>
                     </td>
+                    <tr valign="top">
+                        <th scope="row"><?php _e("Models called for casting", bb_agency_TEXTDOMAIN) ?></th>
+                        <td>
+                            <select multiple id="JobModelCasted" name="JobModelCasted[]">
+                                <?php 
+                                    $casted = bbagency_get_posted_value('JobModelCasted', isset($Job) ? $Job : null);
+                                    foreach ($models as $model) : ?>
+                                <option value="<?php echo $model->ID ?>" <?php selected(!empty($casted) && in_array($model->ID, $casted)) ?>><?php echo $model->name ?></option>    
+                                <?php endforeach; ?>
+                            </select>
+                        </td>
+                    </tr>
                 </tr>
             </tbody>
         </table>
+    </div>
+    <?php if ($action == 'edit') : ?>
+    <?php _e("Last updated on", bb_agency_TEXTDOMAIN) ?> <?php echo $Job['JobDateUpdated'] ?>
 
-        <?php if ($action == 'edit') : ?>
-        <?php _e("Last updated on", bb_agency_TEXTDOMAIN) ?> <?php echo $Job['JobDateUpdated'] ?>
-
-        <p class="submit">
-             <input type="hidden" name="JobID" value="<?php echo $Job['JobID'] ?>" />
-             <input type="hidden" name="action" value="edit" />
-             <input type="submit" name="submit" value="<?php _e("Update Job", bb_agency_TEXTDOMAIN) ?>" class="button-primary" />
-        </p>
-        <?php else : ?>
-        <p class="submit">
-             <input type="hidden" name="action" value="addRecord" />
-             <input type="submit" name="submit" value="<?php _e("Create Job", bb_agency_TEXTDOMAIN) ?>" class="button-primary" />
-        </p>
-        <?php endif; ?>
-    </div>    
+    <p class="submit">
+         <input type="hidden" name="JobID" value="<?php echo $Job['JobID'] ?>" />
+         <input type="hidden" name="action" value="edit" />
+         <input type="submit" name="submit" value="<?php _e("Update Job", bb_agency_TEXTDOMAIN) ?>" class="button-primary" />
+    </p>
+    <?php else : ?>
+    <p class="submit">
+         <input type="hidden" name="action" value="addRecord" />
+         <input type="submit" name="submit" value="<?php _e("Create Job", bb_agency_TEXTDOMAIN) ?>" class="button-primary" />
+    </p>
+    <?php endif; ?> 
 </form>

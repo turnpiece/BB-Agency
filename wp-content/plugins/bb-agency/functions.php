@@ -3772,4 +3772,29 @@ function bbagency_get_posted_value($field, $db = null) {
 		return $db[$field];
 }
 
+/**
+ *
+ * get models
+ *
+ * @param int $type
+ * @param int $output OBJECT | ARRAY_A
+ * @return array (of objects)
+ *
+ */
+function bbagency_get_models($type = null, $output = OBJECT) {
+	global $wpdb;
+
+	// get models
+    $t_profiles = table_agency_profile;
+    
+    $sql = "SELECT p.`ProfileID` AS ID, p.`ProfileContactDisplay` AS name, p.* FROM $t_profiles p";
+    
+    if (!is_null($type))
+    	$sql .= " WHERE p.`ProfileType` = '$type'";
+
+    $sql .= " ORDER BY p.`ProfileContactDisplay` ASC";
+
+    return $wpdb->get_results($sql, $output);
+}
+
 ?>
