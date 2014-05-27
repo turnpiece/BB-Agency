@@ -12,13 +12,13 @@
   <?php foreach ($results as $data) : $id = $data->JobID; ?>
     <tr>
       <th class="check-column" scope="row"><input type="checkbox" value="<?php echo $id ?>" id="<?php echo $id ?>" class="administrator" /></th>
-      <td><a href="<?php echo admin_url('admin.php?page='.$_GET['page'].'&amp;action=edit&amp;id='.$id) ?>"><?php echo $data->JobTitle ?></a>
+      <td><a href="<?php echo admin_url('admin.php?page=bb_agency_jobs&amp;action=edit&amp;id='.$id) ?>"><?php echo $data->JobTitle ?></a>
         <div class="row-actions">
             <span class="edit">
-                <a href="<?php echo admin_url('admin.php?page='. $_GET['page'] .'&amp;action=edit&amp;id='. $id) ?>" title="Edit this job"><?php _e('Edit', bb_agency_TEXTDOMAIN) ?></a> | 
+                <a href="<?php echo admin_url('admin.php?page=bb_agency_jobs&amp;action=edit&amp;id='. $id) ?>" title="Edit this job"><?php _e('Edit', bb_agency_TEXTDOMAIN) ?></a> | 
             </span>
             <span class="delete">
-                <a class="submitdelete" title="Remove this job" href="<?php echo admin_url('admin.php?page='. $_GET['page'] .'&amp;delete&amp;id='. $id) ?>" onclick="if ( confirm('You are about to delete the job '<?php echo $data->JobTitle ?>') ) { return true; } return false;"><?php _e('Delete', bb_agency_TEXTDOMAIN) ?></a>
+                <a class="submitdelete" title="Remove this job" href="<?php echo admin_url('admin.php?page=bb_agency_jobs&amp;action=delete&amp;id='. $id) ?>" onclick="if ( confirm('You are about to delete the job '<?php echo $data->JobTitle ?>') ) { return true; } return false;"><?php _e('Delete', bb_agency_TEXTDOMAIN) ?></a>
             </span>
         </div>
       </td>

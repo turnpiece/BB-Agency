@@ -139,6 +139,10 @@ switch ($action) {
         $sql = "SELECT * FROM $t_job ORDER BY `JobDate` DESC LIMIT 100";
         $results = $wpdb->get_results($sql);
         if (count($results)) {
+            if (count($results) > 20) {
+                // display filter form
+                include('job/filter.php');
+            }
             include('job/list.php');
             break;
         } else {
