@@ -1391,7 +1391,7 @@ EOF;
 						}
 						
 						// recategorize as family
-						bbagency_recategorize_as_family($dataList['ProfileID'], $ptypes);
+						bbagency_recategorize_profile($dataList['ProfileID'], $ptypes);
 						
 						if (bb_agency_ismumtobe($type)) {
 							continue; // don't display this one as she's nolonger pregnant
@@ -3758,8 +3758,8 @@ function bbagency_posted_value($field, $db = null) {
 }
 
 function bbagency_get_posted_value($field, $db = null, $array = false) {
-	if (isset($_POST[$field]))
-		return $_POST[$field];
+	if (isset($_REQUEST[$field]))
+		return $_REQUEST[$field];
 
 	elseif (!is_null($db) && isset($db[$field]))
 		return $array ? explode(',', $db[$field]) : $db[$field];
@@ -3792,14 +3792,14 @@ function bbagency_get_models($type = null, $output = OBJECT) {
 
 /**
  *
- * recategorize as family
+ * recategorize profile
  * when a mum has given birth
  *
  * @param int $id
  * @param mixed string|array $type
  *
  */
-function bbagency_recategorize_as_family($id, $type) {
+function bbagency_recategorize_profile($id, $type) {
 	global $wpdb;
 
 	if (is_array($type))
@@ -3807,11 +3807,19 @@ function bbagency_recategorize_as_family($id, $type) {
 
 	$wpdb->update(
 		table_agency_profile, 
-		array('ProfileType' => implode(',', $ptypes)), 
-		array('ProfileID' => $dataList['ProfileID']),
+		array('ProfileType' => $type), 
+		array('ProfileID' => $id),
 		array('%s'),
 		array('%d')
 	);
+}
+
+function bbagency_admin_message($message, $class = 'updated') {
+	?>
+	<div id="message" class="<?php echo $class ?>">
+		<?php echo $message ?>
+	</div>
+	<?php
 }
 
 

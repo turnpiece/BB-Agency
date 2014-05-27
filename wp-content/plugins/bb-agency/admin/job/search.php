@@ -55,47 +55,71 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'search') :
         'JobRate',
         'JobPONumber'
     );
-    foreach ($fields AS $field) {
-        if (isset($_REQUEST[$field]) && !empty($_REQUEST[$field])) {
-            $value = $_REQUEST[$field];
+
+    if (isset($_REQUEST[['s']])) {
+        // quick filter search
+        $value = $_REQUEST['s'];
+        foreach ($fields as $field) {
             $where[] = "`$field` LIKE '%$value%'"; 
-        }        
-    }
-
-    // Location range search
-    if (isset($_REQUEST['JobLocation']) && !empty($_REQUEST['JobLocation'])) {
-        $JobLocation = $_REQUEST['JobLocation'];
-
-        if ($location = bbagency_geocode($JobLocation)) {
-            $lat = $location['lat'];
-            $lng = $location['lng'];
-            $distance = "((ACOS(SIN($lat * PI() / 180) * SIN(`JobLocationLatitude` * PI() / 180) + COS($lat * PI() / 180) * COS(`JobLocationLatitude` * PI() / 180) * COS(($lng - `JobLocationLongitude`) * PI() / 180)) * 180 / PI()) * 60 * 1.1515)";
-            $select[] = "$distance AS `distance`";
-            $where[] = "`distance` <= 25";
-            $sort = '`distance`';
-            $sortDirection = "desc";
-            $dir = "asc";
         }
+
+        // generate SQL 
+        $sql = 'SELECT * FROM '. table_agency_job;
+
+        if (!empty($where)) {
+            $sql .= ' WHERE '.implode(' OR ', $where);
+        }
+        
+        $sql .= "ORDER BY $sort $dir $limit";
+        
+    } else {
+        // advanced search
+        foreach ($fields AS $field) {
+            if (isset($_REQUEST[$field]) && !empty($_REQUEST[$field])) {
+                $value = $_REQUEST[$field];
+                $where[] = "`$field` LIKE '%$value%'"; 
+            }        
+        }
+
+        if (isset($_REQUEST['s']) && !empty($_REQUEST['s'])) {
+            
+
+        // Location range search
+        if (isset($_REQUEST['JobLocation']) && !empty($_REQUEST['JobLocation'])) {
+            $JobLocation = $_REQUEST['JobLocation'];
+
+            if ($location = bbagency_geocode($JobLocation)) {
+                $lat = $location['lat'];
+                $lng = $location['lng'];
+                $distance = "((ACOS(SIN($lat * PI() / 180) * SIN(`JobLocationLatitude` * PI() / 180) + COS($lat * PI() / 180) * COS(`JobLocationLatitude` * PI() / 180) * COS(($lng - `JobLocationLongitude`) * PI() / 180)) * 180 / PI()) * 60 * 1.1515)";
+                $select[] = "$distance AS `distance`";
+                $where[] = "`distance` <= 25";
+                $sort = '`distance`';
+                $sortDirection = "desc";
+                $dir = "asc";
+            }
+        }
+
+        // generate SQL 
+        $sql = 'SELECT *';
+
+        if (!empty($select)) {
+            $sql .= ', '. implode(', ', $select);
+        }
+
+        $sql .= ' FROM '. table_agency_job;
+
+        if (!empty($where)) {
+            $sql .= ' WHERE '.implode(' AND ', $where);
+        }
+        
+        $sql .= "ORDER BY $sort $dir $limit";
     }
+
 
     ?>
     <div class="boxblock-holder">
     <?php
-
-    // Search Results   
-    $sql = 'SELECT *';
-
-    if (!empty($select)) {
-        $sql .= ', '. implode(', ', $select);
-    }
-
-    $sql .= ' FROM '. table_agency_job;
-
-    if (!empty($where)) {
-        $sql .= ' WHERE '.implode(' AND ', $where);
-    }
-    
-    $sql .= "ORDER BY $sort $dir $limit";
 
     // Search Results
     $results = $wpdb->get_results($sql);

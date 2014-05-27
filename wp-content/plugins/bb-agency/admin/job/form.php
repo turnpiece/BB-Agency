@@ -2,7 +2,7 @@
     <a class="button-secondary" href="<?php echo admin_url('admin.php?page=' . $_GET['page']) ?>"><?php _e("Back to job list", bb_agency_TEXTDOMAIN) ?></a> 
 </h2>
 <p><?php _e("Make changes in the form below to edit a job", bb_agency_TEXTDOMAIN) ?> <strong><?php _e("Required fields are marked", bb_agency_TEXTDOMAIN) ?>*</strong></p>
-<form method="post" action="<?php echo admin_url('admin.php?page=' . $_GET['page'] . '&action=' . $action . (isset($_GET['id']) ? '&id='.$_GET['id'] : '')) ?>">
+<form method="post" action="<?php echo admin_url('admin.php?page=' . $_GET['page']) ?>">
     <div class="boxblock-container left-half">
         <table class="form-table">
             <tbody>
@@ -106,13 +106,13 @@
     <?php _e("Last updated on", bb_agency_TEXTDOMAIN) ?> <?php echo $Job['JobDateUpdated'] ?>
 
     <p class="submit">
-         <input type="hidden" name="JobID" value="<?php echo $_REQUEST['id'] ?>" />
+         <input type="hidden" name="id" value="<?php echo $_REQUEST['id'] ?>" />
          <input type="hidden" name="action" value="edit" />
          <input type="submit" name="submit" value="<?php _e("Update Job", bb_agency_TEXTDOMAIN) ?>" class="button-primary" />
     </p>
     <?php else : ?>
     <p class="submit">
-         <input type="hidden" name="action" value="addRecord" />
+         <input type="hidden" name="action" value="add" />
          <input type="submit" name="submit" value="<?php _e("Create Job", bb_agency_TEXTDOMAIN) ?>" class="button-primary" />
     </p>
     <?php endif; ?> 

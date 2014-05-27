@@ -493,15 +493,11 @@ if (isset($_POST['action'])) {
 
                     echo ('<div id="message" class="updated"><p>' . __("Profile deleted successfully!", bb_agency_TEXTDOMAIN) . '</p></div>');
                 } // is there record?
-                //---------- Delete users but re-assign to Admin User -------------//
+                //---------- Delete users but re-assign to current user -------------//
                 // Gimme an admin:
-                $AdminID = $wpdb->prepare("SELECT $wpdb->users.ID FROM $wpdb->users WHERE user_login = 'admin'");
-                if ($AdminID > 0) {
-                    
-                } else {
-                    $AdminID = 1;
-                }
-                /// Now delete
+                $AdminID = get_current_user_id();
+ 
+                // Now delete
                 wp_delete_user($dataDelete["ProfileUserLinked"], $AdminID);
             }
             bb_display_list();
@@ -1494,7 +1490,7 @@ function bb_display_list() {
             $data['ProfileType'] = implode(',', $ptypes);
             
             // recategorize as family
-            bbagency_recategorize_as_family($data['ProfileID'], $data['ProfileType']);              
+            bbagency_recategorize_profile($data['ProfileID'], $data['ProfileType']);              
         }
         
         /*

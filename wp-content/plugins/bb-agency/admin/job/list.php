@@ -1,17 +1,19 @@
-<table cellspacing="0" class="widefat fixed">
+<table cellspacing="0" class="wp-list-table widefat fixed">
   <thead>
     <tr class="thead">
       <th class="manage-column column-cb check-column" id="cb" scope="col"><input type="checkbox"/></th>
-      <th><a href="<?php echo admin_url("admin.php?page=". $_GET['page'] ."&sort=JobTitle&dir=". $sortDirection) ?>">Job Title</a></th>
+      <th><a href="<?php echo admin_url("admin.php?page=". $_GET['page'] ."&sort=JobTitle&dir=". $sortDirection) ?>">Job</a></th>
       <th><a href="<?php echo admin_url("admin.php?page=". $_GET['page'] ."&sort=JobClient&dir=". $sortDirection) ?>">Client</a></th>
       <th><a href="<?php echo admin_url("admin.php?page=". $_GET['page'] ."&sort=JobLocation&dir=". $sortDirection) ?>">Location</a></th>
+      <th><a href="<?php echo admin_url("admin.php?page=". $_GET['page'] ."&sort=JobPONumber&dir=". $sortDirection) ?>">PO Number</a></th>
+      <th><a href="<?php echo admin_url("admin.php?page=". $_GET['page'] ."&sort=JobDate&dir=". $sortDirection) ?>">Date</a></th>
     </tr>
   </thead>
   <tbody>
 
   <?php foreach ($results as $data) : $id = $data->JobID; ?>
     <tr>
-      <th class="check-column" scope="row"><input type="checkbox" value="<?php echo $id ?>" id="<?php echo $id ?>" class="administrator" /></th>
+      <th class="check-column" scope="row"><input type="checkbox" name="JobID[]" value="<?php echo $id ?>" id="<?php echo $id ?>" class="administrator" /></th>
       <td><a href="<?php echo admin_url('admin.php?page=bb_agency_jobs&amp;action=edit&amp;id='.$id) ?>"><?php echo $data->JobTitle ?></a>
         <div class="row-actions">
             <span class="edit">
@@ -24,6 +26,8 @@
       </td>
       <td><?php echo $data->JobClient ?></td>
       <td><?php echo $data->JobLocation ?></td>
+      <td><?php echo $data->JobPONumber ?></td>
+      <td><?php echo $data->JobDate ?></td>
     </tr>
   <?php endforeach; ?>
      
@@ -31,11 +35,15 @@
   <tfoot>
     <tr class="thead">
       <th class="manage-column column-cb check-column" id="cb" scope="col"><input type="checkbox" /></th>
-      <th class="column" scope="col">Job Title</th>
+      <th class="column" scope="col">Job</th>
       <th class="column" scope="col">Client</th>
       <th class="column" scope="col">Location</th>
+      <th class="column" scope="col">PO Number</th>
+      <th class="column" scope="col">Date</th>
     </tr>
   </tfoot>
 </table>
-
-<a href="<?php echo admin_url('admin.php?page='.$_GET['page'].'&action=add') ?>">Add a new job</a>
+<p class="submit">
+  <input type="hidden" value="delete" name="action" />
+  <input type="submit" value="<?php _e('Delete Jobs') ?>" class="button-primary" name="submit" />
+</p>

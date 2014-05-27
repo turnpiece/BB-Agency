@@ -14,7 +14,9 @@ if (empty($bb_agency_option_agencyimagemaxheight) || $bb_agency_option_agencyima
 $bb_agency_option_profilenaming = (int) $bb_agency_options_arr['bb_agency_option_profilenaming'];
 $bb_agency_option_locationtimezone = (int) $bb_agency_options_arr['bb_agency_option_locationtimezone'];
 
+// settings
 $t_job = table_agency_job;
+$job = LabelSingular;
 
 //start page display
 ?>
@@ -31,6 +33,9 @@ $action = isset($_REQUEST['action']) && $_REQUEST['action'] ? $_REQUEST['action'
 
 // Get Post State
 if ($_POST) {
+    // deal with posted forms
+    // add & edit
+
     // set error array
     $error = array();
    
@@ -39,10 +44,10 @@ if ($_POST) {
         // *************************************************************************************************** //
         // Add/Edit Record
         case 'edit' :
-            if (!isset($_POST['JobID']) || !$_POST['JobID']) {
+            if (!isset($_POST['id']) || !$_POST['id']) {
                 $error[] = 'No job id was passed.';
             } else {
-                $JobID = $_POST['JobID'];
+                $id = $_POST['id'];
             }
 
         case 'add' :
@@ -54,7 +59,6 @@ if ($_POST) {
                 'JobLocation' => 'location',
             );
             foreach ($required as $field => $label) {
-                $job = LabelSingular;
                 if ($_POST[$field] == '') {
                     $error[] = "The $job must have a $label.";
                 }
@@ -102,53 +106,140 @@ if ($_POST) {
                     $sqlData[] = '`JobModelCasted` = "'.$wpdb->escape($casted).'"';
                 }
 
-                if ($action == 'addJob') {
+                if ($action == 'add') {
                     $sql = "INSERT INTO $t_job SET ". implode(', ', $sqlData);
                 } else {
-                    $sql = "UPDATE $t_job SET ". implode(', ', $sqlData) ." WHERE `JobID` = $JobID";
+                    $sql = "UPDATE $t_job SET ". implode(', ', $sqlData) ." WHERE `JobID` = $id";
                 }
                 
-                //echo $sql;
+                echo $sql;
                 $results = $wpdb->query($sql) or die(mysql_error());
 
                 // display success messsage
-                echo '<div id="message" class="updated"><p>';
-                if ($action == 'addJob') {
-                    $JobID = $wpdb->insert_id;
-                    _e("New job added successfully.", bb_agency_TEXTDOMAIN);
+                if ($action == 'add') {
+                    $id = $wpdb->insert_id;
+                    $message = __("New job added successfully.", bb_agency_TEXTDOMAIN);
                 } else {
-                    _e("Job successfully updated.", bb_agency_TEXTDOMAIN);
+                    $message = __("Job successfully updated.", bb_agency_TEXTDOMAIN);
                 }
-                echo '</p></div>';
+                bbagency_admin_message("<p>$message</p>");
+
+                // display list page
+                $action = 'list';
                 
             } else {
                 // display error message
-                echo ('<div id="message" class="error"><p>' . __("Error. Please ensure you have filled out all required fields.", bb_agency_TEXTDOMAIN) . '</p><ul><li>'.implode('</li><li>', $error).'</li></ul></div>');
+                bbagency_admin_message('<p>' . __("Error. Please ensure you have filled out all required fields.", bb_agency_TEXTDOMAIN) . '</p><ul><li>'.implode('</li><li>', $error).'</li></ul>', 'error');
             }            
             
             break;
-
     } 
 }
 
 // display page
 
 switch ($action) {
+    case 'delete' :
+        if ($_GET['id']) {
+            $wpdb->query("DELETE FROM $t_job WHERE `JobID` = ".$_GET['id']);
+            bbagency_admin_message('<p>'. __("That job has been deleted.", bb_agency_TEXTDOMAIN) . '</p>');
+        }
+        elseif (!empty($_GET['JobID'])) {
+            $i = 0;
+            foreach ($_GET['JobID'] as $id) {
+                $wpdb->query("DELETE FROM $t_job WHERE `JobID` = $id");
+                $i++;
+            }
+            // display success messsage
+            bbagency_admin_message('<p>'. sprintf(__("Those %d jobs have been deleted.", bb_agency_TEXTDOMAIN), $i) . '</p>');
+        }
+        else {
+            bbagency_admin_message('<p>Unable to delete as no job id was received.</p>');
+        }
+        $action = 'list';
+
     case 'list' :
-        // list all jobs
-        $sql = "SELECT * FROM $t_job ORDER BY `JobDate` DESC LIMIT 100";
+    case 'search' :
+
+        // Sort By
+        $sort = "";
+        if (isset($_REQUEST['sort']) && !empty($_REQUEST['sort'])) {
+            $sort = $_REQUEST['sort'];
+        } else {
+            $sort = "`JobDate`";
+        }
+
+        // Limit
+        if (isset($_REQUEST['limit']) && !empty($_REQUEST['limit'])){
+            $limit = "";
+        } else {
+            if ($bb_agency_option_persearch > 1) {
+                $limit = " LIMIT 0,". $bb_agency_option_persearch;
+            }
+        }
+
+        // Sort Order
+        $dir = "";
+        if (isset($_REQUEST['dir']) && !empty($_REQUEST['dir'])){
+            $dir = $_REQUEST['dir'];
+            if ($dir == "desc" || !isset($dir) || empty($dir)){
+                $sortDirection = "asc";
+            } else {
+                $sortDirection = "desc";
+            } 
+        } else {
+            $sortDirection = "desc";
+            $dir = "asc";
+        }
+
+        // generate SQL 
+        $sql = "SELECT * FROM $t_job";
+
+        if (isset($_REQUEST['s'])) {
+            // quick filter search
+            $value = $_REQUEST['s'];
+
+            // Standard fields
+            $fields = array(
+                'JobTitle',
+                'JobClient',
+                'JobRate',
+                'JobPONumber'
+            );
+
+            foreach ($fields as $field) {
+                $where[] = "`$field` LIKE '%$value%'"; 
+            }
+
+            if (!empty($where)) {
+                $sql .= ' WHERE '.implode(' OR ', $where);
+            }
+            
+        }
+        $sql .= " ORDER BY $sort $dir $limit";
+
         $results = $wpdb->get_results($sql);
-        if (count($results)) {
-            if (count($results) > 20) {
+
+        if (count($results)) : ?>
+        <form action="<?php echo admin_url('admin.php?page=' . $_REQUEST['page']) ?>" method="GET">
+        <?php
+            if (count($results) > 0) {
                 // display filter form
                 include('job/filter.php');
             }
-            include('job/list.php');
+            include('job/dashboard_widgets.php');
+
+            include('job/list.php'); 
+        ?>
+        </form>
+        <?php
             break;
-        } else {
-            echo '<p>There are no jobs in the database at the moment. Use this form to set one up.</p>';
-            $action = 'addJob';
-        }
+
+        else : ?>
+            <p>There are no jobs in the database at the moment. Use this form to set one up.</p>
+            <?php
+            $action = 'add';
+        endif;
 
     case 'edit' :
         // get job from database
@@ -162,6 +253,10 @@ switch ($action) {
             'JobRate'   => __('Rate', bb_agency_TEXTDOMAIN),
         );
         include('job/form.php');
+        break;
+
+    default :
+        wp_die("Unknown action '$action'");
         break;
 
 }

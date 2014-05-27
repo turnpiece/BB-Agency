@@ -281,7 +281,7 @@ if (isset($_POST['action'])) {
 <div style="clear:both"></div>
 
 <div class="wrap" style="min-width: 1020px;">
- <div id="rb-overview-icon" class="icon32"></div>
+ <div id="bb-overview-icon" class="icon32"></div>
  <h2>Profile Search</h2>
 
 	<?php

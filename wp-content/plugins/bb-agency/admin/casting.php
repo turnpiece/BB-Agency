@@ -1,7 +1,7 @@
 <?php $siteurl = get_option('siteurl'); ?>
 
 <div class="wrap">
- 	<div id="rb-overview-icon" class="icon32"></div>
+ 	<div id="bb-overview-icon" class="icon32"></div>
  	<h2>Manage Castings</h2>
 
 <?php
