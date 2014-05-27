@@ -1391,14 +1391,7 @@ EOF;
 						}
 						
 						// recategorize as family
-						die ('recategorize as family');
-						$wpdb->update(
-							table_agency_profile, 
-							array('ProfileType' => implode(',', $ptypes)), 
-							array('ProfileID' => $dataList['ProfileID']),
-							array('%s'),
-							array('%d')
-						);
+						bbagency_recategorize_as_family($dataList['ProfileID'], $ptypes);
 						
 						if (bb_agency_ismumtobe($type)) {
 							continue; // don't display this one as she's nolonger pregnant
@@ -3796,5 +3789,30 @@ function bbagency_get_models($type = null, $output = OBJECT) {
 
     return $wpdb->get_results($sql, $output);
 }
+
+/**
+ *
+ * recategorize as family
+ * when a mum has given birth
+ *
+ * @param int $id
+ * @param mixed string|array $type
+ *
+ */
+function bbagency_recategorize_as_family($id, $type) {
+	global $wpdb;
+
+	if (is_array($type))
+		$type = implode(',', $type);
+
+	$wpdb->update(
+		table_agency_profile, 
+		array('ProfileType' => implode(',', $ptypes)), 
+		array('ProfileID' => $dataList['ProfileID']),
+		array('%s'),
+		array('%d')
+	);
+}
+
 
 ?>

@@ -1483,7 +1483,7 @@ function bb_display_list() {
 
         // check if she's given birth
         if (bb_agency_ismumtobe($data['ProfileType']) && bb_agency_datepassed($ProfileDateDue)) {
-            die("due date $ProfileDateDue has passed");
+
             // switch category
             $ptypes = explode(',', $data['ProfileType']);
             for($i = 0; $i < count($ptypes); $i++){
@@ -1494,14 +1494,7 @@ function bb_display_list() {
             $data['ProfileType'] = implode(',', $ptypes);
             
             // recategorize as family
-            die('recategorize as family');
-            $wpdb->update(
-                table_agency_profile, 
-                array('ProfileType' => $data['ProfileType']), 
-                array('ProfileID' => $data['ProfileID']),
-                array('%s'),
-                array('%d')
-            );               
+            bbagency_recategorize_as_family($data['ProfileID'], $data['ProfileType']);              
         }
         
         /*
