@@ -2,7 +2,7 @@
     <a class="button-secondary" href="<?php echo admin_url('admin.php?page=' . $_GET['page']) ?>"><?php _e("Back to job list", bb_agency_TEXTDOMAIN) ?></a> 
 </h2>
 <p><?php _e("Make changes in the form below to edit a job", bb_agency_TEXTDOMAIN) ?> <strong><?php _e("Required fields are marked", bb_agency_TEXTDOMAIN) ?>*</strong></p>
-<form method="post" action="<?php echo admin_url('admin.php?page=' . $_GET['page']) ?>&action=<?php echo $action ?>">
+<form method="post" action="<?php echo admin_url('admin.php?page=' . $_GET['page'] . '&action=' . $action . (isset($_GET['id']) ? '&id='.$_GET['id'] : '')) ?>">
     <div class="boxblock-container left-half">
         <table class="form-table">
             <tbody>
@@ -33,7 +33,7 @@
                 <tr valign="top">
                     <th scope="row"><?php _e('Date', bb_agency_TEXTDOMAIN) ?>*</th>
                     <td>
-                        <input type="text" class="bbdatepicker" id="JobDate" name="Jobdate" value="<?php bbagency_posted_value('JobDate', isset($Job) ? $Job : null) ?>" />
+                        <input type="text" class="bbdatepicker" id="JobDate" name="JobDate" value="<?php bbagency_posted_value('JobDate', isset($Job) ? $Job : null) ?>" />
                     </td>
                 </tr>
                 <tr valign="top">
@@ -78,6 +78,7 @@
                     <th scope="row"><?php _e("Model booked", bb_agency_TEXTDOMAIN) ?></th>
                     <td>
                         <select id="JobModelBooked" name="JobModelBooked">
+                            <option value="">--</option>
                             <?php
                                 $booked = bbagency_get_posted_value('JobModelBooked', isset($Job) ? $Job : null);
                                 foreach ($models as $model) : ?>
@@ -88,9 +89,9 @@
                     <tr valign="top">
                         <th scope="row"><?php _e("Models called for casting", bb_agency_TEXTDOMAIN) ?></th>
                         <td>
-                            <select multiple id="JobModelCasted" name="JobModelCasted[]">
+                            <select multiple id="JobModelCasted" name="JobModelCasted[]" size="25">
                                 <?php 
-                                    $casted = bbagency_get_posted_value('JobModelCasted', isset($Job) ? $Job : null);
+                                    $casted = bbagency_get_posted_value('JobModelCasted', isset($Job) ? $Job : null, true);
                                     foreach ($models as $model) : ?>
                                 <option value="<?php echo $model->ID ?>" <?php selected(!empty($casted) && in_array($model->ID, $casted)) ?>><?php echo $model->name ?></option>    
                                 <?php endforeach; ?>
@@ -105,7 +106,7 @@
     <?php _e("Last updated on", bb_agency_TEXTDOMAIN) ?> <?php echo $Job['JobDateUpdated'] ?>
 
     <p class="submit">
-         <input type="hidden" name="JobID" value="<?php echo $Job['JobID'] ?>" />
+         <input type="hidden" name="JobID" value="<?php echo $_REQUEST['id'] ?>" />
          <input type="hidden" name="action" value="edit" />
          <input type="submit" name="submit" value="<?php _e("Update Job", bb_agency_TEXTDOMAIN) ?>" class="button-primary" />
     </p>

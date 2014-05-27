@@ -3764,12 +3764,12 @@ function bbagency_posted_value($field, $db = null) {
 	echo bbagency_get_posted_value($field, $db);
 }
 
-function bbagency_get_posted_value($field, $db = null) {
+function bbagency_get_posted_value($field, $db = null, $array = false) {
 	if (isset($_POST[$field]))
 		return $_POST[$field];
 
 	elseif (!is_null($db) && isset($db[$field]))
-		return $db[$field];
+		return $array ? explode(',', $db[$field]) : $db[$field];
 }
 
 /**

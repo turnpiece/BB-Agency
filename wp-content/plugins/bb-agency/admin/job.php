@@ -92,12 +92,23 @@ if ($_POST) {
                     }
                 }
 
+                // get model booked and models called for casting
+                if ($_POST['JobModelBooked'])
+                    $sqlData[] = '`JobModelBooked` = "'.(int)$wpdb->escape($_POST['JobModelBooked']).'"';
+
+                if (!empty($_POST['JobModelCasted'])) {
+                    // array from multiselect
+                    $casted = implode(',', $_POST['JobModelCasted']);
+                    $sqlData[] = '`JobModelCasted` = "'.$wpdb->escape($casted).'"';
+                }
+
                 if ($action == 'addJob') {
                     $sql = "INSERT INTO $t_job SET ". implode(', ', $sqlData);
                 } else {
                     $sql = "UPDATE $t_job SET ". implode(', ', $sqlData) ." WHERE `JobID` = $JobID";
                 }
                 
+                //echo $sql;
                 $results = $wpdb->query($sql) or die(mysql_error());
 
                 // display success messsage

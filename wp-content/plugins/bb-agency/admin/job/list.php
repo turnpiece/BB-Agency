@@ -31,3 +31,5 @@
     </tr>
   </tfoot>
 </table>
+
+<a href="<?php echo admin_url('admin.php?page='.$_GET['page'].'&action=add') ?>">Add a new job</a>
