@@ -1,5 +1,5 @@
 <?php 
-$bb_agency_options_arr = bbagency_get_option();
+$bb_options = bbagency_get_option();
 $bb_agency_option_agencyname = bbagency_get_option('bb_agency_option_agencyname');
 $bb_agency_option_agencylogo = bbagency_get_option('bb_agency_option_agencylogo');
 ?>

@@ -87,7 +87,7 @@ if (is_user_logged_in()) {
   if (isset($_SESSION['ProfileLastViewed']) && ($_SESSION['ProfileLastViewed'])) {
 	
 	// What do we call them?
-	$bb_agency_options_arr = bbagency_get_option();
+	$bb_options = bbagency_get_option();
 	$bb_agency_option_profilenaming = bbagency_get_option('bb_agency_option_profilenaming');
 	  
 	$query = "SELECT * FROM " . table_agency_profile . " WHERE ProfileGallery='". $_SESSION['ProfileLastViewed'] ."'";

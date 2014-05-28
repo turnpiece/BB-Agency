@@ -53,7 +53,6 @@
  */
 
     // Pull User Identified Settings/Options 
-	$bb_agency_options_arr = bbagency_get_option();
 	// Can we show the ads? Or keep it clean?
 	$bb_agency_option_advertise = bbagency_get_option('bb_agency_option_advertise');
 
@@ -130,7 +129,7 @@
 			
 		    $newrules['version-bb-agency'] = 'index.php?type=rbv'; // ping this page for version checker
 			
-		    $bb_agency_options_arr = bbagency_get_option();
+		    $bb_options = bbagency_get_option();
 			$bb_agency_option_profilelist_castingcart  = bbagency_get_option('bb_agency_option_profilelist_castingcart');
 			
 			$bb_agency_option_profilelist_favorite	 = bbagency_get_option('bb_agency_option_profilelist_favorite');
@@ -389,7 +388,6 @@
 	function bb_agency_get_age($p_strDate) {
 
 		//Get Age Option if it should display with months included
-		$bb_agency_options_arr = bbagency_get_option();
 		if (bbagency_get_option('bb_agency_option_profilelist_bday') && bbagency_get_option('bb_agency_option_profilelist_bday') == true) {
 			
 			list($Y,$m,$d) = explode("-",$p_strDate);
@@ -707,7 +705,6 @@
 	function bb_agency_profilelist($atts, $content = NULL) {
 
 		// Get Preferences
-		$bb_agency_options_arr = bbagency_get_option();
 		$bb_agency_option_privacy					 = bbagency_get_option('bb_agency_option_privacy');
 		$bb_agency_option_profilelist_count			 = bbagency_get_option('bb_agency_option_profilelist_count');
 		$bb_agency_option_profilelist_perpage		 = bbagency_get_option('bb_agency_option_profilelist_perpage');
@@ -1572,7 +1569,7 @@ EOF;
 			 AND profile.ProfileIsFeatured = 1  
 			 ORDER BY RAND() LIMIT 0,$count";
 
-		$bb_agency_options_arr = bbagency_get_option();
+		$bb_options = bbagency_get_option();
 		$resultsList = mysql_query($queryList);
 		$countList = mysql_num_rows($resultsList);
 		while ($dataList = mysql_fetch_array($resultsList)) {
@@ -1628,7 +1625,7 @@ EOF;
 			bb_agency_profilesearch($atts); }
 		*/
 		// Get Privacy Information
-		$bb_agency_options_arr = bbagency_get_option();
+		$bb_options = bbagency_get_option();
 			$bb_agency_option_privacy					 = bbagency_get_option('bb_agency_option_privacy');
 		// Set It Up	
 		global $wp_rewrite;
@@ -2032,7 +2029,7 @@ function bb_custom_fields($visibility = 0, $ProfileID, $ProfileGender, $ProfileG
 // Custom Fields TEMPLATE 
 function bb_custom_fields_template($visibility = 0, $ProfileID, $data3){
 
-	$bb_agency_options_arr 				= bbagency_get_option();
+	$bb_options 				= bbagency_get_option();
 	$bb_agency_option_unittype  		= bbagency_get_option('bb_agency_option_unittype');
 	$bb_agency_option_profilenaming 	= (int)bbagency_get_option('bb_agency_option_profilenaming');
 	$bb_agency_option_locationtimezone 	= (int)bbagency_get_option('bb_agency_option_locationtimezone');
@@ -2048,7 +2045,7 @@ function bb_custom_fields_template($visibility = 0, $ProfileID, $data3){
 	
 			// SET Label for Measurements
 			// Imperial(in/lb), Metrics(ft/kg)
-			$bb_agency_options_arr = bbagency_get_option();
+			$bb_options = bbagency_get_option();
 			 $bb_agency_option_unittype  = bbagency_get_option('bb_agency_option_unittype');
 			 $measurements_label = "";
 			if ($ProfileCustomType == 7) { //measurements field type
@@ -2236,7 +2233,7 @@ function bb_agency_filterfieldGender($ProfileCustomID, $ProfileGenderID){
 /*/		
 function bb_agency_get_miscellaneousLinks($ProfileID = ""){
  
-	//$bb_agency_options_arr 						= bbagency_get_option();
+	//$bb_options 						= bbagency_get_option();
 	//$bb_agency_option_profilelist_favorite		= bbagency_get_option('bb_agency_option_profilelist_favorite');
 	//$bb_agency_option_profilelist_castingcart 	= bbagency_get_option('bb_agency_option_profilelist_castingcart');
 	bb_agency_checkExecution();
@@ -2285,7 +2282,7 @@ function bb_agency_get_miscellaneousLinks($ProfileID = ""){
 /*/		
 function bb_agency_get_new_miscellaneousLinks($ProfileID = ""){
  
-	$bb_agency_options_arr 				= bbagency_get_option();
+	$bb_options 				= bbagency_get_option();
 	$bb_agency_option_profilelist_favorite		= bbagency_get_option('bb_agency_option_profilelist_favorite');
 	$bb_agency_option_profilelist_castingcart 	= bbagency_get_option('bb_agency_option_profilelist_castingcart');
 	bb_agency_checkExecution();
@@ -2728,7 +2725,7 @@ function bb_agency_getProfileCustomFieldsCustom($ProfileID, $ProfileGender,$echo
 
 
 
-		$bb_agency_options_arr = bbagency_get_option();
+		$bb_options = bbagency_get_option();
 		$bb_agency_option_profilelist_favorite		 = bbagency_get_option('bb_agency_option_profilelist_favorite');
 			
 //****************************************************************************************************//
@@ -2795,7 +2792,7 @@ function bb_agency_getProfileCustomFieldsCustom($ProfileID, $ProfileGender,$echo
 						jQuery(this).find("a[class=view_all_favorite]").remove(); 
 						Obj.attr("class","save_favorite");
 						<?php  if(get_query_var( 'type' )=="favorite" || get_query_var( 'type' )=="castingcart"){ 
-						$bb_agency_options_arr = bbagency_get_option();
+						$bb_options = bbagency_get_option();
 						$bb_agency_option_layoutprofilelist = bbagency_get_option('bb_agency_option_layoutprofilelist');  ?> 
 						if(jQuery("input[type=hidden][name=favorite]").val() == 1){ 
 							Obj.closest("div[class=profile-list-layout0]").fadeOut();} <?php }?>
@@ -2814,7 +2811,7 @@ function bb_agency_getProfileCustomFieldsCustom($ProfileID, $ProfileGender,$echo
 	}
 //****************************************************************************************************//
 // Add / Handles Ajax Request ===== Add To Casting Cart
-		    $bb_agency_options_arr = bbagency_get_option();
+		    $bb_options = bbagency_get_option();
 			$bb_agency_option_profilelist_castingcart  = bbagency_get_option('bb_agency_option_profilelist_castingcart');
 	
 	function bb_agency_save_castingcart() {
@@ -2869,7 +2866,7 @@ function bb_agency_getProfileCustomFieldsCustom($ProfileID, $ProfileGender,$echo
 									Obj.attr('title', 'Add to Casting Cart');   
 									$(this).find("a[class=view_all_castingcart]").remove();  
 									<?php  if(get_query_var( 'type' )=="favorite" || get_query_var( 'type' )=="castingcart"){  
-												$bb_agency_options_arr = bbagency_get_option(); 
+												$bb_options = bbagency_get_option(); 
 												$bb_agency_option_layoutprofilelist = bbagency_get_option('bb_agency_option_layoutprofilelist'); ?> 
 												if($("input[type=hidden][name=castingcart]").val() == 1){
 													Obj.closest("div[class=profile-list-layout0]").fadeOut();  } <?php } ?> } }}}) });});</script>
@@ -3004,7 +3001,7 @@ function bb_agency_checkExecution() {
 /*/ 
 function bb_agency_getSocialLinks(){
 
-	$bb_agency_options_arr = bbagency_get_option();
+	$bb_options = bbagency_get_option();
 	$bb_agency_option_showsocial = bbagency_get_option('bb_agency_option_showsocial');
 
 	if($bb_agency_option_showsocial){
@@ -3084,7 +3081,7 @@ function checkCart($currentUserID,$pid){
 /* function that lists users for generating login/password */
 function bb_display_profile_list(){  
     global $wpdb;
-    $bb_agency_options_arr = bbagency_get_option();
+    $bb_options = bbagency_get_option();
     $bb_agency_option_locationtimezone 		= (int)bbagency_get_option('bb_agency_option_locationtimezone');
 
     echo "<div class=\"wrap\">\n";
@@ -3520,7 +3517,7 @@ function fullwidth_class(){
  */
 function is_permitted($type){
     
-                $bb_agency_options_arr = bbagency_get_option();
+                $bb_options = bbagency_get_option();
                 $bb_agency_option_privacy = bbagency_get_option('bb_agency_option_privacy');
                 $bb_agency_option_profilelist_castingcart  = bbagency_get_option('bb_agency_option_profilelist_castingcart');
 				$bb_agency_option_profilelist_favorite	 = bbagency_get_option('bb_agency_option_profilelist_favorite');
@@ -3741,6 +3738,14 @@ function bbagency_get_option($name = null) {
 		return $bb_options[$name];
 
 	return $bb_options;
+}
+
+function bbagency_update_option($name, $value) {
+	$options = bbagency_get_option();
+
+	$options[$name] = $value;
+
+	return update_option('bb_agency_options', $options);
 }
 
 function bbagency_datatype_privacy($id) {

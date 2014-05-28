@@ -155,8 +155,8 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
            
 		// Update the options in the database
 		if(!get_option("bb_agency_options"))
-		add_option("bb_agency_options",$bb_agency_options_arr);
-		update_option("bb_agency_options",$bb_agency_options_arr);
+		add_option("bb_agency_options",$bb_options);
+		update_option("bb_agency_options",$bb_options);
 		
 		// Hold the version in a seprate option
 		if(!get_option("bb_agency_version"))
@@ -782,17 +782,17 @@ if ( is_admin() ){
 		/*
 		 * just not to get the tooltip error
 		 */
-		 $bb_agency_options_arr = bbagency_get_option();
-		 if($bb_agency_options_arr == ""){
-				 $bb_agency_options_arr["bb_agency_options_showtooltip"] = 1;
-				 update_option('bb_agency_options',$bb_agency_options_arr);
+		 $bb_options = bbagency_get_option();
+		 if($bb_options == ""){
+				 $bb_options["bb_agency_options_showtooltip"] = 1;
+				 update_option('bb_agency_options',$bb_options);
 		 }
-    if( $bb_agency_options_arr != "" || is_array($bb_agency_options_arr)){    	
-		 $bb_agency_options_showtooltip = $bb_agency_options_arr["bb_agency_options_showtooltip"];
+    if( $bb_options != "" || is_array($bb_options)){    	
+		 $bb_agency_options_showtooltip = $bb_options["bb_agency_options_showtooltip"];
 		 
-		if(!@in_array("bb_agency_options_showtooltip",$bb_agency_options_arr) && $bb_agency_options_showtooltip == 0){	 
-			$bb_agency_options_arr["bb_agency_options_showtooltip"] = 1;
-			update_option('bb_agency_options',$bb_agency_options_arr);
+		if(!@in_array("bb_agency_options_showtooltip",$bb_options) && $bb_agency_options_showtooltip == 0){	 
+			$bb_options["bb_agency_options_showtooltip"] = 1;
+			update_option('bb_agency_options',$bb_options);
 			wp_enqueue_style('wp-pointer');
 			wp_enqueue_script('wp-pointer');
 			function  add_js_code(){

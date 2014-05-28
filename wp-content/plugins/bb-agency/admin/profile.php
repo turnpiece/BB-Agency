@@ -4,7 +4,7 @@ global $wpdb;
 define("LabelPlural", "Profile");
 define("LabelSingular", "Profiles");
 
-$bb_agency_options_arr = bbagency_get_option();
+$bb_options = bbagency_get_option();
 $bb_agency_option_unittype = bbagency_get_option('bb_agency_option_unittype');
 $bb_agency_option_showsocial = bbagency_get_option('bb_agency_option_showsocial');
 $bb_agency_option_agencyimagemaxheight = bbagency_get_option('bb_agency_option_agencyimagemaxheight');
@@ -564,7 +564,7 @@ elseif (($_GET['action'] == "editRecord") || ($_GET['action'] == "add")) {
 // Manage Record
 function bb_display_manage($ProfileID) {
     global $wpdb;
-    $bb_agency_options_arr = bbagency_get_option();
+    $bb_options = bbagency_get_option();
     $bb_agency_option_unittype = bbagency_get_option('bb_agency_option_unittype');
     $bb_agency_option_showsocial = bbagency_get_option('bb_agency_option_showsocial');
     $bb_agency_option_agencyimagemaxheight = bbagency_get_option('bb_agency_option_agencyimagemaxheight');
@@ -1165,7 +1165,7 @@ function bb_display_manage($ProfileID) {
 
 function bb_display_list() {
     global $wpdb;
-    $bb_agency_options_arr = bbagency_get_option();
+    $bb_options = bbagency_get_option();
     $bb_agency_option_locationtimezone = (int) bbagency_get_option('bb_agency_option_locationtimezone');
     echo "<div class=\"wrap\">\n";
     // Include Admin Menu

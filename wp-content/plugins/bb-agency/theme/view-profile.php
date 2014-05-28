@@ -11,7 +11,6 @@ $CurrentUser = $current_user->id;
 // Get Profile
 $profileURL = get_query_var('target'); //$_REQUEST["profile"];
 
-$bb_agency_options_arr = bbagency_get_option();
 $bb_agency_option_agencyname = bbagency_get_option('bb_agency_option_agencyname');
 $bb_agency_option_privacy = bbagency_get_option('bb_agency_option_privacy');
 $bb_agency_option_unittype = bbagency_get_option('bb_agency_option_unittype');
@@ -106,7 +105,7 @@ if (!function_exists("bb_agency_inserthead_profile")){
 		function bb_agency_inserthead_profile() {
 			global $bb_agency_option_layoutprofile;
 
-			$bb_agency_options_arr = bbagency_get_option();
+			$bb_options = bbagency_get_option();
 			
 			if (bbagency_get_option('bb_agency_option_layoutprofile')) {
 				$layouttype = (int)bbagency_get_option('bb_agency_option_layoutprofile');

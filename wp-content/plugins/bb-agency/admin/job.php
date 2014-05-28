@@ -4,7 +4,7 @@ global $wpdb;
 define("LabelPlural", "jobs");
 define("LabelSingular", "job");
 
-$bb_agency_options_arr = bbagency_get_option();
+$bb_options = bbagency_get_option();
 $bb_agency_option_persearch = (int)bbagency_get_option('bb_agency_option_persearch');
 
 // settings

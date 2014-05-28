@@ -12,7 +12,7 @@
 
     $cusFields = array("Suit","Bust","Shirt","Dress","Height");  //for custom fields min and max
 
-    $bb_agency_options_arr = bbagency_get_option();
+    $bb_options = bbagency_get_option();
     $bb_agency_option_unittype =  bbagency_get_option('bb_agency_option_unittype');
     $bb_agency_option_persearch = (int)bbagency_get_option('bb_agency_option_persearch');
     $bb_agency_option_agencyemail = (int)bbagency_get_option('bb_agency_option_agencyemail');
@@ -721,7 +721,7 @@ if ($action) {
     // send a bulk email
     if (isset($_POST["SendEmail"])){
         
-        $bb_agency_options_arr = bbagency_get_option();
+        $bb_options = bbagency_get_option();
         $bb_agency_value_agencyname = bbagency_get_option('bb_agency_option_agencyname');
         $bb_agency_value_agencyemail = bbagency_get_option('bb_agency_option_agencyemail');
         $correspondenceEmail= $bb_agency_value_agencyemail;
@@ -834,7 +834,7 @@ if ($action) {
             }    
         }
         // Email
-        $bb_agency_options_arr = bbagency_get_option();
+        $bb_options = bbagency_get_option();
         $bb_agency_value_agencyname = bbagency_get_option('bb_agency_option_agencyname');
         $bb_agency_value_agencyemail = bbagency_get_option('bb_agency_option_agencyemail');
         echo "<form method=\"post\">";
@@ -1007,7 +1007,7 @@ if ($action) {
                     <?php
                         // SET Label for Measurements
                         // Imperial(in/lb), Metrics(ft/kg)
-                        $bb_agency_options_arr = bbagency_get_option();
+                        $bb_options = bbagency_get_option();
                         $bb_agency_option_unittype  = bbagency_get_option('bb_agency_option_unittype');
                         //$measurements_label = "";
                         /*

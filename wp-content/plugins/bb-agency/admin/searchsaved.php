@@ -6,7 +6,7 @@ global $wpdb;
 
 
 
-$bb_agency_options_arr = bbagency_get_option();
+$bb_options = bbagency_get_option();
 
 	$bb_agency_option_agencyname		= bbagency_get_option('bb_agency_option_agencyname');
 
@@ -370,7 +370,7 @@ if (isset($_POST['action'])) {
 
 
 
-		  $bb_agency_options_arr = bbagency_get_option();
+		  $bb_options = bbagency_get_option();
 
 			$bb_agency_option_locationtimezone 		= (int)bbagency_get_option('bb_agency_option_locationtimezone');
 

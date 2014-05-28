@@ -4,7 +4,7 @@ global $wpdb;
 // *************************************************************************************************** //
 // Set Default Values for Options
 
-	$bb_agency_options_arr = array(
+	$bb_options = array(
 		"bb_agency_option_agencyname" => "",
 		"bb_agency_option_agencyemail" => "",
 		"bb_agency_option_agencyheader" => "",
