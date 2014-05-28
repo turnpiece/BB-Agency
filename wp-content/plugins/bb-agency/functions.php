@@ -246,24 +246,6 @@
  */
 
 
-   /**
-     * Get Profile Name
-     *
-     * @param id $ProfileID
-     */
-	function bb_agency_getprofilename($ProfileID) {
-		global $bb_agency_option_profilenaming;
-		
-		switch (bbagency_get_option)
-		if ($bb_agency_option_profilenaming == 0) {
-			$ProfileContactDisplay = $ProfileContactNameFirst . "". $ProfileContactNameLast;
-		} elseif ($bb_agency_option_profilenaming == 1) {
-			$ProfileContactDisplay = $ProfileContactNameFirst . "". substr($ProfileContactNameLast, 0, 1);
-		} elseif ($bb_agency_option_profilenaming == 2) {
-			// It already is :)
-		}
-	}
-
 
    /**
      * Clean String, remove extra quotes
