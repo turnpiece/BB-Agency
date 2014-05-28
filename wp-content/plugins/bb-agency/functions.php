@@ -3733,12 +3733,14 @@ function bbagency_map($lat, $lng, $name) {
  *
  */
 function bbagency_get_option($name = null) {
-	$options = bbagency_get_option();
+	global $bb_options;
+	if (empty($bb_options))
+		$bb_options = get_option('bb_agency_options');
 
-	if (!is_null($name) && isset($options[$name]))
-		return $options[$name];
+	if (!is_null($name) && isset($bb_options[$name]))
+		return $bb_options[$name];
 
-	return $options;
+	return $bb_options;
 }
 
 function bbagency_datatype_privacy($id) {
