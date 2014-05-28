@@ -1151,7 +1151,7 @@ function bb_display_manage($ProfileID) {
     $results = $wpdb->get_results($sql);
     
     if (count($results)) :
-        include('job/list.php');
+        include('job/list_quick.php');
     else : ?>
     <p>No bookings yet.</p>
     <?php endif; ?>
@@ -1163,7 +1163,7 @@ function bb_display_manage($ProfileID) {
     $results = $wpdb->get_results($sql);
     
     if (count($results)) :
-        include('job/list.php');
+        include('job/list_quick.php');
     else : ?>
     <p>No casting calls yet.</p>
     <?php endif;

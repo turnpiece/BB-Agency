@@ -3731,13 +3731,19 @@ function bbagency_map($lat, $lng, $name) {
  */
 function bbagency_get_option($name = null) {
 	global $bb_options;
-	if (empty($bb_options))
+
+	if (!$bb_options) {
 		$bb_options = get_option('bb_agency_options');
+	}
 
-	if (!is_null($name) && isset($bb_options[$name]))
-		return $bb_options[$name];
-
-	return $bb_options;
+	if (!is_null($name)) {
+		if (isset($bb_options[$name]))
+			return $bb_options[$name];
+		else
+			return 0;
+	} 
+	else
+		return $bb_options;
 }
 
 function bbagency_update_option($name, $value) {
@@ -3815,14 +3821,3 @@ function bbagency_recategorize_profile($id, $type) {
 		array('%d')
 	);
 }
-
-function bbagency_admin_message($message, $class = 'updated') {
-	?>
-	<div id="message" class="<?php echo $class ?>">
-		<?php echo $message ?>
-	</div>
-	<?php
-}
-
-
-?>

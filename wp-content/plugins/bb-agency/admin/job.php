@@ -222,7 +222,7 @@ switch ($action) {
             }
             include('job/dashboard_widgets.php');
 
-            include('job/list.php'); 
+            include('job/list_full.php'); 
         ?>
         </form>
         <?php
