@@ -152,7 +152,7 @@ elseif ($ConfigID == 1) {
 		echo "<form method=\"post\" action=\"options.php\">\n";
 		settings_fields( 'bb-agency-settings-group' ); 
 		//do_settings_fields( 'bb-agency-settings-group' );
-		$bb_agency_options_arr = get_option('bb_agency_options');
+		$bb_agency_options_arr = bbagency_get_option();
 		
 		$bb_agency_value_agencyname = $bb_agency_options_arr['bb_agency_option_agencyname'];
 			if (empty($bb_agency_value_agencyname)) { $bb_agency_value_agencyname = get_bloginfo('name'); }
@@ -919,7 +919,7 @@ elseif ($ConfigID == 10) {
 	// Copy style over
 	if ($_GET["mode"] == "override") {
 		echo "<h1>OVERRIDE</h1>";
-	$bb_agency_options_arr = get_option('bb_agency_options');
+	$bb_agency_options_arr = bbagency_get_option();
 		if ($bb_agency_options_arr['bb_agency_option_defaultcss']) { $bb_agency_stylesheet_string = $bb_agency_options_arr['bb_agency_option_defaultcss']; }
 	}
 	echo "		<form method=\"post\" action=\"". admin_url("admin.php?page=". $_GET['page']) ."\">\n";
@@ -1385,7 +1385,7 @@ elseif ($ConfigID == 7) {
 	/** Identify Labels **/
 	define("LabelPlural", __("Custom Fields", bb_agency_TEXTDOMAIN));
 	define("LabelSingular", __("Custom Field", bb_agency_TEXTDOMAIN));
-	$bb_agency_options_arr = get_option('bb_agency_options');
+	$bb_agency_options_arr = bbagency_get_option();
 	$bb_agency_option_unittype  = $bb_agency_options_arr['bb_agency_option_unittype'];
 	
   /* Initial Registration [RESPOND TO POST] ***********/ 
@@ -2378,7 +2378,7 @@ elseif ($ConfigID == 7) {
 		$results = mysql_query($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ));
 		$count = mysql_num_rows($results);
            
-	     $bb_agency_options_arr = get_option('bb_agency_options');
+	     $bb_agency_options_arr = bbagency_get_option();
 		$bb_agency_option_unittype  = $bb_agency_options_arr['bb_agency_option_unittype'];
 		
 		while ($data = mysql_fetch_array($results)) {

@@ -6,7 +6,7 @@ $SearchMuxHash = get_query_var('target');
 
 get_header();
 
-	$bb_agency_options_arr = get_option('bb_agency_options');
+	$bb_agency_options_arr = bbagency_get_option();
 		$bb_agency_option_profilenaming 		= $bb_agency_options_arr['bb_agency_option_profilenaming'];
 
 	echo "<div id=\"container\" class=\"one-column\">\n";

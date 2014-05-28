@@ -10,7 +10,7 @@ header("Cache-control: private"); //IE 6 Fix
 	$CurrentUser = $current_user->id;
 
 // Set Values
-$bb_agency_options_arr = get_option('bb_agency_options');
+$bb_agency_options_arr = bbagency_get_option();
 $bb_agency_option_privacy = $bb_agency_options_arr['bb_agency_option_privacy'];
 $bb_agency_option_layoutprofile = (int)$bb_agency_options_arr['bb_agency_option_layoutprofile'];
 $bb_agency_option_profilenaming = $bb_agency_options_arr['bb_agency_option_profilenaming'];

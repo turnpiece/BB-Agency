@@ -4,15 +4,8 @@ global $wpdb;
 define("LabelPlural", "jobs");
 define("LabelSingular", "job");
 
-$bb_agency_options_arr = get_option('bb_agency_options');
-$bb_agency_option_unittype = $bb_agency_options_arr['bb_agency_option_unittype'];
-$bb_agency_option_showsocial = $bb_agency_options_arr['bb_agency_option_showsocial'];
-$bb_agency_option_agencyimagemaxheight = $bb_agency_options_arr['bb_agency_option_agencyimagemaxheight'];
-if (empty($bb_agency_option_agencyimagemaxheight) || $bb_agency_option_agencyimagemaxheight < 500) {
-    $bb_agency_option_agencyimagemaxheight = 800;
-}
-$bb_agency_option_profilenaming = (int) $bb_agency_options_arr['bb_agency_option_profilenaming'];
-$bb_agency_option_locationtimezone = (int) $bb_agency_options_arr['bb_agency_option_locationtimezone'];
+$bb_agency_options_arr = bbagency_get_option();
+$bb_agency_option_persearch = (int)$bb_agency_options_arr['bb_agency_option_persearch'];
 
 // settings
 $t_job = table_agency_job;

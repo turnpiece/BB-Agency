@@ -3,7 +3,7 @@
     // Include Admin Menu
     include ("admin-menu.php");
 	global $wpdb;
-	$bb_agency_options_arr = get_option('bb_agency_options');
+	$bb_agency_options_arr = bbagency_get_option();
 	$bb_agency_option_unittype = $bb_agency_options_arr['bb_agency_option_unittype'];
 	get_currentuserinfo(); global $user_level;
 ?>

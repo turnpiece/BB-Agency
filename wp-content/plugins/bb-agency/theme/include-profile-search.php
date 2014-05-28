@@ -1,6 +1,6 @@
 <?php
 	global $wpdb, $bb_agency_CURRENT_TYPE_ID;
-	$bb_agency_options_arr = get_option('bb_agency_options');
+	$bb_agency_options_arr = bbagency_get_option();
 	$bb_agency_option_profilenaming = $bb_agency_options_arr['bb_agency_option_profilenaming'];
 	$bb_agency_option_unittype = $bb_agency_options_arr['bb_agency_option_unittype'];
 

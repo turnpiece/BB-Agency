@@ -782,7 +782,7 @@ if ( is_admin() ){
 		/*
 		 * just not to get the tooltip error
 		 */
-		 $bb_agency_options_arr = get_option('bb_agency_options');
+		 $bb_agency_options_arr = bbagency_get_option();
 		 if($bb_agency_options_arr == ""){
 				 $bb_agency_options_arr["bb_agency_options_showtooltip"] = 1;
 				 update_option('bb_agency_options',$bb_agency_options_arr);
