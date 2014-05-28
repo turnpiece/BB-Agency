@@ -655,7 +655,7 @@ elseif ($ConfigID == 8) {
 	
 	global $wpdb;
 	$bb_agency_options_arr = bbagency_get_option();
-		$bb_agency_option_profilenaming 		= (int)$bb_agency_options_arr['bb_agency_option_profilenaming'];
+		$bb_agency_option_profilenaming 		= (int)bbagency_get_option('bb_agency_option_profilenaming');
 
 		echo "Current Naming Convention:";
 		if ($bb_agency_option_profilenaming == 0) {
@@ -843,9 +843,9 @@ elseif ($ConfigID == 13) {
 	
 	/*********** Max Size *************************************/
 	$bb_agency_options_arr = bbagency_get_option();
-		$bb_agency_option_agencyimagemaxheight 	= $bb_agency_options_arr['bb_agency_option_agencyimagemaxheight'];
+		$bb_agency_option_agencyimagemaxheight 	= bbagency_get_option('bb_agency_option_agencyimagemaxheight');
 			if (empty($bb_agency_option_agencyimagemaxheight) || $bb_agency_option_agencyimagemaxheight < 500) { $bb_agency_option_agencyimagemaxheight = 800; }
-		$bb_agency_option_agencyimagemaxwidth 	= $bb_agency_options_arr['bb_agency_option_agencyimagemaxwidth'];
+		$bb_agency_option_agencyimagemaxwidth 	= bbagency_get_option('bb_agency_option_agencyimagemaxwidth');
 			if (empty($bb_agency_option_agencyimagemaxwidth) || $bb_agency_option_agencyimagemaxwidth < 500) { $bb_agency_option_agencyimagemaxwidth = 1000; }
 	
 	/*********** Step Size *************************************/

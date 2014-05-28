@@ -5,20 +5,20 @@ define("LabelPlural", "Profile");
 define("LabelSingular", "Profiles");
 
 $bb_agency_options_arr = bbagency_get_option();
-$bb_agency_option_unittype = $bb_agency_options_arr['bb_agency_option_unittype'];
-$bb_agency_option_showsocial = $bb_agency_options_arr['bb_agency_option_showsocial'];
-$bb_agency_option_agencyimagemaxheight = $bb_agency_options_arr['bb_agency_option_agencyimagemaxheight'];
+$bb_agency_option_unittype = bbagency_get_option('bb_agency_option_unittype');
+$bb_agency_option_showsocial = bbagency_get_option('bb_agency_option_showsocial');
+$bb_agency_option_agencyimagemaxheight = bbagency_get_option('bb_agency_option_agencyimagemaxheight');
 if (empty($bb_agency_option_agencyimagemaxheight) || $bb_agency_option_agencyimagemaxheight < 500) {
     $bb_agency_option_agencyimagemaxheight = 800;
 }
-$bb_agency_option_profilenaming = (int) $bb_agency_options_arr['bb_agency_option_profilenaming'];
-$bb_agency_option_locationtimezone = (int) $bb_agency_options_arr['bb_agency_option_locationtimezone'];
+$bb_agency_option_profilenaming = (int) bbagency_get_option('bb_agency_option_profilenaming');
+$bb_agency_option_locationtimezone = (int) bbagency_get_option('bb_agency_option_locationtimezone');
 
 
 if (function_exists('bb_agencyinteract_approvemembers')) {
     // Load Interact Settings
     $bb_agencyinteract_options_arr = get_option('bb_agencyinteract_options');
-    $bb_agency_option_useraccountcreation = (int) $bb_agency_options_arr['bb_agency_option_useraccountcreation'];
+    $bb_agency_option_useraccountcreation = (int) bbagency_get_option('bb_agency_option_useraccountcreation');
 }
 
 
@@ -565,14 +565,14 @@ elseif (($_GET['action'] == "editRecord") || ($_GET['action'] == "add")) {
 function bb_display_manage($ProfileID) {
     global $wpdb;
     $bb_agency_options_arr = bbagency_get_option();
-    $bb_agency_option_unittype = $bb_agency_options_arr['bb_agency_option_unittype'];
-    $bb_agency_option_showsocial = $bb_agency_options_arr['bb_agency_option_showsocial'];
-    $bb_agency_option_agencyimagemaxheight = $bb_agency_options_arr['bb_agency_option_agencyimagemaxheight'];
+    $bb_agency_option_unittype = bbagency_get_option('bb_agency_option_unittype');
+    $bb_agency_option_showsocial = bbagency_get_option('bb_agency_option_showsocial');
+    $bb_agency_option_agencyimagemaxheight = bbagency_get_option('bb_agency_option_agencyimagemaxheight');
     if (empty($bb_agency_option_agencyimagemaxheight) || $bb_agency_option_agencyimagemaxheight < 500) {
         $bb_agency_option_agencyimagemaxheight = 800;
     }
-    $bb_agency_option_profilenaming = (int) $bb_agency_options_arr['bb_agency_option_profilenaming'];
-    $bb_agency_option_locationcountry = $bb_agency_options_arr['bb_agency_option_locationcountry'];
+    $bb_agency_option_profilenaming = (int) bbagency_get_option('bb_agency_option_profilenaming');
+    $bb_agency_option_locationcountry = bbagency_get_option('bb_agency_option_locationcountry');
     echo "<div class=\"wrap\">\n";
     // Include Admin Menu
     include ("admin-menu.php");
@@ -1166,7 +1166,7 @@ function bb_display_manage($ProfileID) {
 function bb_display_list() {
     global $wpdb;
     $bb_agency_options_arr = bbagency_get_option();
-    $bb_agency_option_locationtimezone = (int) $bb_agency_options_arr['bb_agency_option_locationtimezone'];
+    $bb_agency_option_locationtimezone = (int) bbagency_get_option('bb_agency_option_locationtimezone');
     echo "<div class=\"wrap\">\n";
     // Include Admin Menu
     include ("admin-menu.php");

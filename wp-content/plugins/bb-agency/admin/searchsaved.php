@@ -8,11 +8,11 @@ global $wpdb;
 
 $bb_agency_options_arr = bbagency_get_option();
 
-	$bb_agency_option_agencyname		= $bb_agency_options_arr['bb_agency_option_agencyname'];
+	$bb_agency_option_agencyname		= bbagency_get_option('bb_agency_option_agencyname');
 
-	$bb_agency_option_agencyemail	= $bb_agency_options_arr['bb_agency_option_agencyemail'];
+	$bb_agency_option_agencyemail	= bbagency_get_option('bb_agency_option_agencyemail');
 
-	$bb_agency_option_agencyheader	= $bb_agency_options_arr['bb_agency_option_agencyheader'];
+	$bb_agency_option_agencyheader	= bbagency_get_option('bb_agency_option_agencyheader');
 
 	$SearchMuxHash			= $_GET["SearchMuxHash"]; // Set Hash
 
@@ -372,7 +372,7 @@ if (isset($_POST['action'])) {
 
 		  $bb_agency_options_arr = bbagency_get_option();
 
-			$bb_agency_option_locationtimezone 		= (int)$bb_agency_options_arr['bb_agency_option_locationtimezone'];
+			$bb_agency_option_locationtimezone 		= (int)bbagency_get_option('bb_agency_option_locationtimezone');
 
 		
 

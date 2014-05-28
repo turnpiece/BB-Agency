@@ -12,15 +12,15 @@ $CurrentUser = $current_user->id;
 $profileURL = get_query_var('target'); //$_REQUEST["profile"];
 
 $bb_agency_options_arr = bbagency_get_option();
-$bb_agency_option_agencyname = $bb_agency_options_arr['bb_agency_option_agencyname'];
-$bb_agency_option_privacy = $bb_agency_options_arr['bb_agency_option_privacy'];
-$bb_agency_option_unittype = $bb_agency_options_arr['bb_agency_option_unittype'];
-$bb_agency_option_galleryorder = $bb_agency_options_arr['bb_agency_option_galleryorder'];
-$bb_agency_option_showcontactpage = $bb_agency_options_arr['bb_agency_option_showcontactpage'];
+$bb_agency_option_agencyname = bbagency_get_option('bb_agency_option_agencyname');
+$bb_agency_option_privacy = bbagency_get_option('bb_agency_option_privacy');
+$bb_agency_option_unittype = bbagency_get_option('bb_agency_option_unittype');
+$bb_agency_option_galleryorder = bbagency_get_option('bb_agency_option_galleryorder');
+$bb_agency_option_showcontactpage = bbagency_get_option('bb_agency_option_showcontactpage');
 
 if ($bb_agency_option_galleryorder == 1) { $orderBy = "ProfileMediaID DESC, ProfileMediaPrimary DESC"; } else { $orderBy = "ProfileMediaID ASC, ProfileMediaPrimary DESC"; }
-	$bb_agency_option_layoutprofile = (int)$bb_agency_options_arr['bb_agency_option_layoutprofile'];
-	$bb_agency_option_gallerytype = (int)$bb_agency_options_arr['bb_agency_option_gallerytype'];
+	$bb_agency_option_layoutprofile = (int)bbagency_get_option('bb_agency_option_layoutprofile');
+	$bb_agency_option_gallerytype = (int)bbagency_get_option('bb_agency_option_gallerytype');
 if ($bb_agency_option_gallerytype == 1) {
 	// Slimbox
 	$reltype = "rel=\"lightbox-profile\"";
@@ -34,9 +34,9 @@ if ($bb_agency_option_gallerytype == 1) {
 	$reltype = "rel=\"lightbox-profile\"";
 	$reltypev = "target=\"_blank\"";
 }
-$bb_agency_option_agency_urlcontact = $bb_agency_options_arr['bb_agency_option_agency_urlcontact'];
-$bb_agency_option_profilenaming = $bb_agency_options_arr['bb_agency_option_profilenaming'];
-$bb_agency_option_profilelist_sidebar = $bb_agency_options_arr['bb_agency_option_profilelist_sidebar'];
+$bb_agency_option_agency_urlcontact = bbagency_get_option('bb_agency_option_agency_urlcontact');
+$bb_agency_option_profilenaming = bbagency_get_option('bb_agency_option_profilenaming');
+$bb_agency_option_profilelist_sidebar = bbagency_get_option('bb_agency_option_profilelist_sidebar');
 
 global $wpdb;
 $t_profile = table_agency_profile;
@@ -108,8 +108,8 @@ if (!function_exists("bb_agency_inserthead_profile")){
 
 			$bb_agency_options_arr = bbagency_get_option();
 			
-			if (isset($bb_agency_options_arr['bb_agency_option_layoutprofile'])) {
-				$layouttype = (int)$bb_agency_options_arr['bb_agency_option_layoutprofile'];
+			if (bbagency_get_option('bb_agency_option_layoutprofile')) {
+				$layouttype = (int)bbagency_get_option('bb_agency_option_layoutprofile');
 				if ($layouttype == 99) {
 					// Slimbox
 					wp_enqueue_script( 'slimbox2', plugins_url('/js/slimbox2.js', __FILE__) );

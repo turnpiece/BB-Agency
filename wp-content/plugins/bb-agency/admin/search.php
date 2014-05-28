@@ -13,9 +13,9 @@
     $cusFields = array("Suit","Bust","Shirt","Dress","Height");  //for custom fields min and max
 
     $bb_agency_options_arr = bbagency_get_option();
-    $bb_agency_option_unittype =  $bb_agency_options_arr['bb_agency_option_unittype'];
-    $bb_agency_option_persearch = (int)$bb_agency_options_arr['bb_agency_option_persearch'];
-    $bb_agency_option_agencyemail = (int)$bb_agency_options_arr['bb_agency_option_agencyemail'];
+    $bb_agency_option_unittype =  bbagency_get_option('bb_agency_option_unittype');
+    $bb_agency_option_persearch = (int)bbagency_get_option('bb_agency_option_persearch');
+    $bb_agency_option_agencyemail = (int)bbagency_get_option('bb_agency_option_agencyemail');
     if ($bb_agency_option_persearch <= 1) { $bb_agency_option_persearch = 100; }
 
     echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=bb_agency_search';}</script>"; 
@@ -722,8 +722,8 @@ if ($action) {
     if (isset($_POST["SendEmail"])){
         
         $bb_agency_options_arr = bbagency_get_option();
-        $bb_agency_value_agencyname = $bb_agency_options_arr['bb_agency_option_agencyname'];
-        $bb_agency_value_agencyemail = $bb_agency_options_arr['bb_agency_option_agencyemail'];
+        $bb_agency_value_agencyname = bbagency_get_option('bb_agency_option_agencyname');
+        $bb_agency_value_agencyemail = bbagency_get_option('bb_agency_option_agencyemail');
         $correspondenceEmail= $bb_agency_value_agencyemail;
         add_filter('wp_mail_content_type','bb_agency_set_content_type');
 
@@ -835,8 +835,8 @@ if ($action) {
         }
         // Email
         $bb_agency_options_arr = bbagency_get_option();
-        $bb_agency_value_agencyname = $bb_agency_options_arr['bb_agency_option_agencyname'];
-        $bb_agency_value_agencyemail = $bb_agency_options_arr['bb_agency_option_agencyemail'];
+        $bb_agency_value_agencyname = bbagency_get_option('bb_agency_option_agencyname');
+        $bb_agency_value_agencyemail = bbagency_get_option('bb_agency_option_agencyemail');
         echo "<form method=\"post\">";
         echo "     <div class=\"boxblock\">\n";
         echo "        <h3>". __("Compose Email", bb_agency_TEXTDOMAIN) ."</h3>\n";
@@ -1008,7 +1008,7 @@ if ($action) {
                         // SET Label for Measurements
                         // Imperial(in/lb), Metrics(ft/kg)
                         $bb_agency_options_arr = bbagency_get_option();
-                        $bb_agency_option_unittype  = $bb_agency_options_arr['bb_agency_option_unittype'];
+                        $bb_agency_option_unittype  = bbagency_get_option('bb_agency_option_unittype');
                         //$measurements_label = "";
                         /*
                         0- metric

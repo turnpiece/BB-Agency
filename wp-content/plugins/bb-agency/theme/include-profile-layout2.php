@@ -171,7 +171,7 @@ echo "							<ul>\n";
 										}	//end if(checkCart(bb_agency_get_current_userid()
 																				
 										// add save to favorites
-										$bb_agency_option_profilelist_favorite	= isset($bb_agency_options_arr['bb_agency_option_profilelist_favorite']) ? (int)$bb_agency_options_arr['bb_agency_option_profilelist_favorite'] : 0;
+										$bb_agency_option_profilelist_favorite	= bbagency_get_option('bb_agency_option_profilelist_favorite') ? (int)bbagency_get_option('bb_agency_option_profilelist_favorite') : 0;
 
 										if(!is_permitted('favorite')){
 												$query_favorite = mysql_query("SELECT * FROM ".table_agency_savedfavorite." WHERE SavedFavoriteTalentID='".$ProfileID

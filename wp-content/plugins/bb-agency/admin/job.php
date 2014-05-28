@@ -5,7 +5,7 @@ define("LabelPlural", "jobs");
 define("LabelSingular", "job");
 
 $bb_agency_options_arr = bbagency_get_option();
-$bb_agency_option_persearch = (int)$bb_agency_options_arr['bb_agency_option_persearch'];
+$bb_agency_option_persearch = (int)bbagency_get_option('bb_agency_option_persearch');
 
 // settings
 $t_job = table_agency_job;
