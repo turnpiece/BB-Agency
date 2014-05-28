@@ -12,7 +12,7 @@
   <tbody>
 
   <?php foreach ($results as $data) : $id = $data->JobID; ?>
-    <tr>
+    <tr class="<?php echo $data->JobPassed != 1 && $data->JobStatus > 0 ? 'active' : 'inactive' ?>">
       <th class="check-column" scope="row"><input type="checkbox" name="JobID[]" value="<?php echo $id ?>" id="<?php echo $id ?>" class="administrator" /></th>
       <td><a href="<?php echo admin_url('admin.php?page=bb_agency_jobs&amp;action=edit&amp;id='.$id) ?>"><?php echo $data->JobTitle ?></a>
         <div class="row-actions">

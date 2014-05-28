@@ -66,7 +66,8 @@ if ($_POST) {
                     'JobPONumber',
                     'JobNotes',
                     'JobLocation',
-                    'JobDate'
+                    'JobDate',
+                    'JobStatus'
                 );
 
                 // Create insert query
@@ -105,7 +106,6 @@ if ($_POST) {
                     $sql = "UPDATE $t_job SET ". implode(', ', $sqlData) ." WHERE `JobID` = $id";
                 }
                 
-                echo $sql;
                 $results = $wpdb->query($sql) or die(mysql_error());
 
                 // display success messsage
@@ -186,7 +186,7 @@ switch ($action) {
         }
 
         // generate SQL 
-        $sql = "SELECT * FROM $t_job";
+        $sql = "SELECT *, IF(`JobDate` < NOW(), 1, 0) AS JobPassed FROM $t_job";
 
         if (isset($_REQUEST['s'])) {
             // quick filter search

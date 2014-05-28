@@ -3,104 +3,114 @@
 </h2>
 <p><?php _e("Make changes in the form below to edit a job", bb_agency_TEXTDOMAIN) ?> <strong><?php _e("Required fields are marked", bb_agency_TEXTDOMAIN) ?>*</strong></p>
 <form method="post" action="<?php echo admin_url('admin.php?page=' . $_GET['page']) ?>">
-    <div class="boxblock-container left-half">
-        <table class="form-table">
-            <tbody>
-                <tr valign="top">
-                    <th scope="row"><?php _e('Job Title', bb_agency_TEXTDOMAIN) ?>*</th>
-                    <td>
-                        <input class="regular-text" type="text" id="JobTitle" name="JobTitle" value="<?php bbagency_posted_value('JobTitle', isset($Job) ? $Job : null) ?>" />
-                    </td>
-                </tr>
-                <tr valign="top">
-                    <th scope="row"><?php _e('Client', bb_agency_TEXTDOMAIN) ?>*</th>
-                    <td>
-                        <input class="regular-text" type="text" id="JobClient" name="JobClient" value="<?php bbagency_posted_value('JobClient', isset($Job) ? $Job : null) ?>" />
-                    </td>
-                </tr>
-                <tr valign="top">
-                    <th scope="row"><?php _e('Rate', bb_agency_TEXTDOMAIN) ?>*</th>
-                    <td>
-                        <input class="regular-text" type="text" id="JobRate" name="JobRate" value="<?php bbagency_posted_value('JobRate', isset($Job) ? $Job : null) ?>" />
-                    </td>
-                </tr>
-                <tr valign="top">
-                    <th scope="row"><?php _e('Location', bb_agency_TEXTDOMAIN) ?>*</th>
-                    <td>
-                        <input class="regular-text" type="text" id="JobLocation" name="JobLocation" value="<?php bbagency_posted_value('JobLocation', isset($Job) ? $Job : null) ?>" />
-                    </td>
-                </tr>
-                <tr valign="top">
-                    <th scope="row"><?php _e('Date', bb_agency_TEXTDOMAIN) ?>*</th>
-                    <td>
-                        <input type="text" class="bbdatepicker" id="JobDate" name="JobDate" value="<?php bbagency_posted_value('JobDate', isset($Job) ? $Job : null) ?>" />
-                    </td>
-                </tr>
-                <tr valign="top">
-                    <th scope="row"><?php _e("Status", bb_agency_TEXTDOMAIN) ?>*</th>
-                    <td>
-                        <select id="ProfileIsActive" name="JobStatus">
-                            <?php
-                                $status = bbagency_get_posted_value('JobStatus', isset($Job) ? $Job : null);
-                                foreach (array( 
-                                    1 => __("Active", bb_agency_TEXTDOMAIN),
-                                    0 => __("Inactive", bb_agency_TEXTDOMAIN),
-                                    2 => __("Archived", bb_agency_TEXTDOMAIN)
-                                ) as $key => $label) : ?>
-                            <option value="<?php echo $key ?>" <?php selected($key, $status) ?>><?php echo $label ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </td>
-                </tr>
-                <tr valign="top">
-                    <th scope="row"><?php _e('PO Number', bb_agency_TEXTDOMAIN) ?></th>
-                    <td>
-                        <input class="regular-text" type="text" id="JobPONumber" name="JobPONumber" value="<?php bbagency_posted_value('JobPONumber', isset($Job) ? $Job : null) ?>" />
-                    </td>
-                </tr>
-                <tr valign="top">
-                    <th scope="row"><?php _e('Notes', bb_agency_TEXTDOMAIN) ?></th>
-                    <td>
-                        <textarea class="large-text" id="JobNotes" name="JobNotes"><?php bbagency_posted_value('JobNotes', isset($Job) ? $Job : null) ?></textarea>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="boxblock-container right-half">
-        <?php
-        // get models
-        $models = bbagency_get_models();
-        ?>
-        <table class="form-table">
-            <tbody>
-                <tr valign="top">
-                    <th scope="row"><?php _e("Model booked", bb_agency_TEXTDOMAIN) ?></th>
-                    <td>
-                        <select id="JobModelBooked" name="JobModelBooked">
-                            <option value="">--</option>
-                            <?php
-                                $booked = bbagency_get_posted_value('JobModelBooked', isset($Job) ? $Job : null);
-                                foreach ($models as $model) : ?>
-                            <option value="<?php echo $model->ID ?>" <?php selected($model->ID, $booked) ?>><?php echo $model->name ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </td>
+    <div class="form-container">
+        <div class="boxblock-container left-half">
+            <table class="form-table">
+                <tbody>
                     <tr valign="top">
-                        <th scope="row"><?php _e("Models called for casting", bb_agency_TEXTDOMAIN) ?></th>
+                        <th scope="row"><?php _e('Job Title', bb_agency_TEXTDOMAIN) ?>*</th>
                         <td>
-                            <select multiple id="JobModelCasted" name="JobModelCasted[]" size="25">
-                                <?php 
-                                    $casted = bbagency_get_posted_value('JobModelCasted', isset($Job) ? $Job : null, true);
-                                    foreach ($models as $model) : ?>
-                                <option value="<?php echo $model->ID ?>" <?php selected(!empty($casted) && in_array($model->ID, $casted)) ?>><?php echo $model->name ?></option>    
+                            <input class="regular-text" type="text" id="JobTitle" name="JobTitle" value="<?php bbagency_posted_value('JobTitle', isset($Job) ? $Job : null) ?>" />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e('Client', bb_agency_TEXTDOMAIN) ?>*</th>
+                        <td>
+                            <input class="regular-text" type="text" id="JobClient" name="JobClient" value="<?php bbagency_posted_value('JobClient', isset($Job) ? $Job : null) ?>" />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e('Rate', bb_agency_TEXTDOMAIN) ?>*</th>
+                        <td>
+                            <input class="regular-text" type="text" id="JobRate" name="JobRate" value="<?php bbagency_posted_value('JobRate', isset($Job) ? $Job : null) ?>" />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e('Location', bb_agency_TEXTDOMAIN) ?>*</th>
+                        <td>
+                            <?php
+                            // display location map
+                            $loc = bbagency_get_posted_value('JobLocation', isset($Job) ? $Job : null);
+                            $lat = bbagency_get_posted_value('JobLocationLatitude', isset($Job) ? $Job : null);
+                            $lng = bbagency_get_posted_value('JobLocationLongitude', isset($Job) ? $Job : null);
+                            if ($loc != '' && $lat != '' && $lng != '') : ?>
+                                <?php bbagency_map($lat, $lng, $loc) ?>
+                            <?php endif; ?>
+                            <input class="regular-text" type="text" id="JobLocation" name="JobLocation" value="<?php echo $loc ?>" />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e('Date', bb_agency_TEXTDOMAIN) ?>*</th>
+                        <td>
+                            <input type="text" class="bbdatepicker" id="JobDate" name="JobDate" value="<?php bbagency_posted_value('JobDate', isset($Job) ? $Job : null) ?>" />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e("Status", bb_agency_TEXTDOMAIN) ?>*</th>
+                        <td>
+                            <select id="ProfileIsActive" name="JobStatus">
+                                <?php
+                                    $status = bbagency_get_posted_value('JobStatus', isset($Job) ? $Job : null);
+                                    foreach (array( 
+                                        1 => __("Active", bb_agency_TEXTDOMAIN),
+                                        0 => __("Inactive", bb_agency_TEXTDOMAIN),
+                                        2 => __("Archived", bb_agency_TEXTDOMAIN)
+                                    ) as $key => $label) : ?>
+                                <option value="<?php echo $key ?>" <?php selected($key, $status) ?>><?php echo $label ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </td>
                     </tr>
-                </tr>
-            </tbody>
-        </table>
+                    <tr valign="top">
+                        <th scope="row"><?php _e('PO Number', bb_agency_TEXTDOMAIN) ?></th>
+                        <td>
+                            <input class="regular-text" type="text" id="JobPONumber" name="JobPONumber" value="<?php bbagency_posted_value('JobPONumber', isset($Job) ? $Job : null) ?>" />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e('Notes', bb_agency_TEXTDOMAIN) ?></th>
+                        <td>
+                            <textarea class="large-text" id="JobNotes" name="JobNotes"><?php bbagency_posted_value('JobNotes', isset($Job) ? $Job : null) ?></textarea>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="boxblock-container right-half">
+            <?php
+            // get models
+            $models = bbagency_get_models();
+            ?>
+            <table class="form-table">
+                <tbody>
+                    <tr valign="top">
+                        <th scope="row"><?php _e("Model booked", bb_agency_TEXTDOMAIN) ?></th>
+                        <td>
+                            <select id="JobModelBooked" name="JobModelBooked">
+                                <option value="">--</option>
+                                <?php
+                                    $booked = bbagency_get_posted_value('JobModelBooked', isset($Job) ? $Job : null);
+                                    foreach ($models as $model) : ?>
+                                <option value="<?php echo $model->ID ?>" <?php selected($model->ID, $booked) ?>><?php echo $model->name ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </td>
+                        <tr valign="top">
+                            <th scope="row"><?php _e("Models called for casting", bb_agency_TEXTDOMAIN) ?></th>
+                            <td>
+                                <select multiple id="JobModelCasted" name="JobModelCasted[]" size="25">
+                                    <?php 
+                                        $casted = bbagency_get_posted_value('JobModelCasted', isset($Job) ? $Job : null, true);
+                                        foreach ($models as $model) : ?>
+                                    <option value="<?php echo $model->ID ?>" <?php selected(!empty($casted) && in_array($model->ID, $casted)) ?>><?php echo $model->name ?></option>    
+                                    <?php endforeach; ?>
+                                </select>
+                            </td>
+                        </tr>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
     <?php if ($action == 'edit') : ?>
     <?php _e("Last updated on", bb_agency_TEXTDOMAIN) ?> <?php echo $Job['JobDateUpdated'] ?>
