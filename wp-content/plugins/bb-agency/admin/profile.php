@@ -4,7 +4,6 @@ global $wpdb;
 define("LabelPlural", "Profile");
 define("LabelSingular", "Profiles");
 
-$bb_options = bbagency_get_option();
 $bb_agency_option_unittype = bbagency_get_option('bb_agency_option_unittype');
 $bb_agency_option_showsocial = bbagency_get_option('bb_agency_option_showsocial');
 $bb_agency_option_agencyimagemaxheight = bbagency_get_option('bb_agency_option_agencyimagemaxheight');
@@ -1140,6 +1139,35 @@ function bb_display_manage($ProfileID) {
     echo "  </tbody>\n";
     echo "</table>\n";
 
+    // display jobs
+    $t_job = table_agency_job;
+    ?>
+    <h3>Jobs</h3>
+
+    <h4>Bookings</h4>
+    <?php
+    // booked
+    $sql = "SELECT * FROM $t_job WHERE `JobModelBooked` = $ProfileID";
+    $results = $wpdb->get_results($sql);
+    
+    if (count($results)) :
+        include('job/list.php');
+    else : ?>
+    <p>No bookings yet.</p>
+    <?php endif; ?>
+
+    <h4>Casting Calls</h4>
+    <?php
+    // castings
+    $sql = "SELECT * FROM $t_job WHERE $ProfileID IN `JobModelCasted`";
+    $results = $wpdb->get_results($sql);
+    
+    if (count($results)) :
+        include('job/list.php');
+    else : ?>
+    <p>No casting calls yet.</p>
+    <?php endif;
+
     if (!empty($ProfileID) && ($ProfileID > 0)) {
         echo "" . __("Last updated on", bb_agency_TEXTDOMAIN) . ": " . $ProfileDateUpdated . "\n";
 
@@ -1589,6 +1617,9 @@ function bb_display_list() {
 
     echo "  </div>\n";
     echo "</div>\n";
+
+    // display jobs
+
 
     echo "<p class=\"submit\">\n";
     echo "  <input type=\"hidden\" value=\"deleteRecord\" name=\"action\" />\n";
