@@ -55,7 +55,7 @@
     // Pull User Identified Settings/Options 
 	$bb_agency_options_arr = bbagency_get_option();
 	// Can we show the ads? Or keep it clean?
-	$bb_agency_option_advertise = bbagency_get_option('bb_agency_option_advertise') ? bbagency_get_option('bb_agency_option_advertise') : 0;
+	$bb_agency_option_advertise = bbagency_get_option('bb_agency_option_advertise');
 
 	if($bb_agency_option_advertise == 0) {  // Reversed it, now 1 = Hide Advertising
 
@@ -131,9 +131,9 @@
 		    $newrules['version-bb-agency'] = 'index.php?type=rbv'; // ping this page for version checker
 			
 		    $bb_agency_options_arr = bbagency_get_option();
-			$bb_agency_option_profilelist_castingcart  = bbagency_get_option('bb_agency_option_profilelist_castingcart') ? (int)bbagency_get_option('bb_agency_option_profilelist_castingcart') : 0;
+			$bb_agency_option_profilelist_castingcart  = bbagency_get_option('bb_agency_option_profilelist_castingcart');
 			
-			$bb_agency_option_profilelist_favorite	 = bbagency_get_option('bb_agency_option_profilelist_favorite') ? (int)bbagency_get_option('bb_agency_option_profilelist_favorite') : 0;
+			$bb_agency_option_profilelist_favorite	 = bbagency_get_option('bb_agency_option_profilelist_favorite');
 			
 	        if ($bb_agency_option_profilelist_favorite) {
 				$newrules['profile-favorite'] = 'index.php?type=favorite';
@@ -254,6 +254,7 @@
 	function bb_agency_getprofilename($ProfileID) {
 		global $bb_agency_option_profilenaming;
 		
+		switch (bbagency_get_option)
 		if ($bb_agency_option_profilenaming == 0) {
 			$ProfileContactDisplay = $ProfileContactNameFirst . "". $ProfileContactNameLast;
 		} elseif ($bb_agency_option_profilenaming == 1) {
@@ -645,23 +646,33 @@
      */		
 	function generate_foldername($ID = NULL, $first, $last, $display){
 			
-			$bb_agency_options_arr = bbagency_get_option();
-		    $bb_agency_option_profilenaming  = (int)bbagency_get_option('bb_agency_option_profilenaming');
-			if ($bb_agency_option_profilenaming == 0) {
-					$ProfileGalleryFixed = $first . "-". $last;
-			} elseif ($bb_agency_option_profilenaming == 1) {
-					$ProfileGalleryFixed = $first . "-". substr($last, 0, 1);
-			} elseif ($bb_agency_option_profilenaming == 2) {
-					$ProfileGalleryFixed = $display;
-			} elseif ($bb_agency_option_profilenaming == 3) {
-					$ProfileGalleryFixed = "ID".$ID;
-			} elseif ($bb_agency_option_profilenaming == 4) {
-					$ProfileGalleryFixed = $first;
-			} elseif ($bb_agency_option_profilenaming == 5) {
-					$ProfileGalleryFixed = $last;
-			}
-			
-			return bb_agency_safenames($ProfileGalleryFixed); 
+	    switch (bbagency_get_option('bb_agency_option_profilenaming')) {
+	    	case 0 :
+	    		$ProfileGalleryFixed = $first . "-". $last;
+	    		break;
+
+	    	case 1 :
+	    		$ProfileGalleryFixed = $first . "-". substr($last, 0, 1);
+	    		break;
+
+	    	case 2 :
+	    		$ProfileGalleryFixed = $display;
+	    		break;
+
+	    	case 3 :
+	    		$ProfileGalleryFixed = "ID".$ID;
+	    		break;
+
+	    	case 4 :
+	    		$ProfileGalleryFixed = $first;
+	    		break;
+
+	    	case 5 :
+	    		$ProfileGalleryFixed = $last;
+	    		break;
+	    }
+		
+		return bb_agency_safenames($ProfileGalleryFixed); 
 	}
 
    /**
@@ -715,17 +726,17 @@
 
 		// Get Preferences
 		$bb_agency_options_arr = bbagency_get_option();
-		$bb_agency_option_privacy					 = bbagency_get_option('bb_agency_option_privacy') ? bbagency_get_option('bb_agency_option_privacy') :0;
-		$bb_agency_option_profilelist_count			 = bbagency_get_option('bb_agency_option_profilelist_count') ? bbagency_get_option('bb_agency_option_profilelist_count'):0;
-		$bb_agency_option_profilelist_perpage		 = bbagency_get_option('bb_agency_option_profilelist_perpage') ?bbagency_get_option('bb_agency_option_profilelist_perpage'):0;
-		$bb_agency_option_profilelist_sortby		 = bbagency_get_option('bb_agency_option_profilelist_sortby') ?bbagency_get_option('bb_agency_option_profilelist_sortby'):0;
-		$bb_agency_option_layoutprofilelist		 	 = bbagency_get_option('bb_agency_option_layoutprofilelist') ? bbagency_get_option('bb_agency_option_layoutprofilelist'):0;
-		$bb_agency_option_profilelist_expanddetails	 = bbagency_get_option('bb_agency_option_profilelist_expanddetails') ? bbagency_get_option('bb_agency_option_profilelist_expanddetails'):0;
-		$bb_agency_option_locationtimezone 			 = bbagency_get_option('bb_agency_option_locationtimezone') ? (int)bbagency_get_option('bb_agency_option_locationtimezone'):0;
-		$bb_agency_option_profilelist_favorite		 = bbagency_get_option('bb_agency_option_profilelist_favorite') ? (int)bbagency_get_option('bb_agency_option_profilelist_favorite'):0;
-		$bb_agency_option_profilenaming				 = bbagency_get_option('bb_agency_option_profilenaming') ?bbagency_get_option('bb_agency_option_profilenaming'):0;
-		$bb_agency_option_profilelist_castingcart 	 = bbagency_get_option('bb_agency_option_profilelist_castingcart') ?(int)bbagency_get_option('bb_agency_option_profilelist_castingcart'):0;
-		$bb_agency_option_profilelist_printpdf 	     = bbagency_get_option('bb_agency_option_profilelist_printpdf') ?(int)bbagency_get_option('bb_agency_option_profilelist_printpdf'):0;
+		$bb_agency_option_privacy					 = bbagency_get_option('bb_agency_option_privacy');
+		$bb_agency_option_profilelist_count			 = bbagency_get_option('bb_agency_option_profilelist_count');
+		$bb_agency_option_profilelist_perpage		 = bbagency_get_option('bb_agency_option_profilelist_perpage');
+		$bb_agency_option_profilelist_sortby		 = bbagency_get_option('bb_agency_option_profilelist_sortby');
+		$bb_agency_option_layoutprofilelist		 	 = bbagency_get_option('bb_agency_option_layoutprofilelist');
+		$bb_agency_option_profilelist_expanddetails	 = bbagency_get_option('bb_agency_option_profilelist_expanddetails');
+		$bb_agency_option_locationtimezone 			 = bbagency_get_option('bb_agency_option_locationtimezone');
+		$bb_agency_option_profilelist_favorite		 = bbagency_get_option('bb_agency_option_profilelist_favorite');
+		$bb_agency_option_profilenaming				 = bbagency_get_option('bb_agency_option_profilenaming');
+		$bb_agency_option_profilelist_castingcart 	 = bbagency_get_option('bb_agency_option_profilelist_castingcart');
+		$bb_agency_option_profilelist_printpdf 	     = bbagency_get_option('bb_agency_option_profilelist_printpdf');
 
 		// Set It Up	
 		global $wp_rewrite, $wpdb, $bb_agency_CURRENT_TYPE_ID;
@@ -1359,7 +1370,7 @@ EOF;
 				ORDER BY $sort $dir $limit";
 			}
 			
-			$bb_agency_option_profilenaming = bbagency_get_option('bb_agency_option_profilenaming') ?bbagency_get_option('bb_agency_option_profilenaming'):0;
+			$bb_agency_option_profilenaming = bbagency_get_option('bb_agency_option_profilenaming');
 
 			$resultsList = mysql_query($queryList);
 			$countList = mysql_num_rows($resultsList);
@@ -1590,7 +1601,7 @@ EOF;
 			echo "  <div class=\"image image-broken\"><a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\">No Image</a></div>\n";
 			}
 			echo "<div class=\"profile-info\">";
-	                    $bb_agency_option_profilenaming = bbagency_get_option('bb_agency_option_profilenaming') ?bbagency_get_option('bb_agency_option_profilenaming'):0;
+	                    $bb_agency_option_profilenaming = bbagency_get_option('bb_agency_option_profilenaming');
 							if ($bb_agency_option_profilenaming == 0) {
 								$ProfileContactDisplay = $dataList["ProfileContactNameFirst"] . " ". $dataList["ProfileContactNameLast"];
 							} elseif ($bb_agency_option_profilenaming == 1) {
@@ -2244,8 +2255,8 @@ function bb_agency_filterfieldGender($ProfileCustomID, $ProfileGenderID){
 function bb_agency_get_miscellaneousLinks($ProfileID = ""){
  
 	//$bb_agency_options_arr 						= bbagency_get_option();
-	//$bb_agency_option_profilelist_favorite		= bbagency_get_option('bb_agency_option_profilelist_favorite') ? (int)bbagency_get_option('bb_agency_option_profilelist_favorite') : 0;
-	//$bb_agency_option_profilelist_castingcart 	= bbagency_get_option('bb_agency_option_profilelist_castingcart') ? (int)bbagency_get_option('bb_agency_option_profilelist_castingcart') : 0;
+	//$bb_agency_option_profilelist_favorite		= bbagency_get_option('bb_agency_option_profilelist_favorite');
+	//$bb_agency_option_profilelist_castingcart 	= bbagency_get_option('bb_agency_option_profilelist_castingcart');
 	bb_agency_checkExecution();
 
 	$disp = "";
@@ -2293,8 +2304,8 @@ function bb_agency_get_miscellaneousLinks($ProfileID = ""){
 function bb_agency_get_new_miscellaneousLinks($ProfileID = ""){
  
 	$bb_agency_options_arr 				= bbagency_get_option();
-	$bb_agency_option_profilelist_favorite		= bbagency_get_option('bb_agency_option_profilelist_favorite') ? (int)bbagency_get_option('bb_agency_option_profilelist_favorite') : 0;
-	$bb_agency_option_profilelist_castingcart 	= bbagency_get_option('bb_agency_option_profilelist_castingcart') ? (int)bbagency_get_option('bb_agency_option_profilelist_castingcart') : 0;
+	$bb_agency_option_profilelist_favorite		= bbagency_get_option('bb_agency_option_profilelist_favorite');
+	$bb_agency_option_profilelist_castingcart 	= bbagency_get_option('bb_agency_option_profilelist_castingcart');
 	bb_agency_checkExecution();
 
 	if ($bb_agency_option_profilelist_favorite) {
@@ -2736,7 +2747,7 @@ function bb_agency_getProfileCustomFieldsCustom($ProfileID, $ProfileGender,$echo
 
 
 		$bb_agency_options_arr = bbagency_get_option();
-		$bb_agency_option_profilelist_favorite		 = bbagency_get_option('bb_agency_option_profilelist_favorite') ? (int)bbagency_get_option('bb_agency_option_profilelist_favorite') : 0;
+		$bb_agency_option_profilelist_favorite		 = bbagency_get_option('bb_agency_option_profilelist_favorite');
 			
 //****************************************************************************************************//
 // Add / Handles Ajax Request ====== ADD To Favorites		
@@ -2822,7 +2833,7 @@ function bb_agency_getProfileCustomFieldsCustom($ProfileID, $ProfileGender,$echo
 //****************************************************************************************************//
 // Add / Handles Ajax Request ===== Add To Casting Cart
 		    $bb_agency_options_arr = bbagency_get_option();
-			$bb_agency_option_profilelist_castingcart  = bbagency_get_option('bb_agency_option_profilelist_castingcart') ? (int)bbagency_get_option('bb_agency_option_profilelist_castingcart') : 0;
+			$bb_agency_option_profilelist_castingcart  = bbagency_get_option('bb_agency_option_profilelist_castingcart');
 	
 	function bb_agency_save_castingcart() {
 				global $wpdb;
@@ -3529,8 +3540,8 @@ function is_permitted($type){
     
                 $bb_agency_options_arr = bbagency_get_option();
                 $bb_agency_option_privacy = bbagency_get_option('bb_agency_option_privacy');
-                $bb_agency_option_profilelist_castingcart  = bbagency_get_option('bb_agency_option_profilelist_castingcart') ? (int)bbagency_get_option('bb_agency_option_profilelist_castingcart') : 0;
-				$bb_agency_option_profilelist_favorite	 = bbagency_get_option('bb_agency_option_profilelist_favorite') ? (int)bbagency_get_option('bb_agency_option_profilelist_favorite') : 0;
+                $bb_agency_option_profilelist_castingcart  = bbagency_get_option('bb_agency_option_profilelist_castingcart');
+				$bb_agency_option_profilelist_favorite	 = bbagency_get_option('bb_agency_option_profilelist_favorite');
               	
 			  	if($type=="casting" && !$bb_agency_option_profilelist_castingcart) return false;
                 if($type=="favorite" && !$bb_agency_option_profilelist_favorite) return false;
