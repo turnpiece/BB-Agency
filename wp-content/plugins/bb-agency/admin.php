@@ -346,3 +346,25 @@ function bb_agency_set_cart($profiles) {
 function bb_agency_empty_cart() {
     unset($_SESSION['cartArray']);
 }
+
+// Age dropdown
+function bb_agency_age_dropdown($name, $value = null) {
+    $ages = array(
+        '0' => '0',
+        '6m' => '6 months',
+        '12m' => '12 months',
+        '18m' => '18 months'
+    );
+    for ($i = 2; $i <= 20; $i++) {
+        $ages[$i] = $i;
+    }
+    for ($i = 30; $i <= 100; $i += 10) {
+        $ages[$i] = $i;
+    }
+
+    $option = array();
+    foreach ($ages as $k => $v) {
+        $option[] = '<option value="'.$k.'" '.selected($k, $value).'>'.$v.'</option>';
+    }
+    return '<select name="'.$name.'" size="1">'.implode("\n", $option).'</select>';
+}

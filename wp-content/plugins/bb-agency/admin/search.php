@@ -204,21 +204,17 @@ if ($action) {
         }
 
         // Age & due date
-        $timezone_offset = 0; // GMT
-        $dateInMonth = gmdate('d', time() + $timezone_offset * 60 * 60);
-        $format = 'Y-m-d';
-        $date = gmdate($format, time() + $timezone_offset * 60 * 60);
-        
-        if (isset($_GET['ProfileDateBirth_min']) && !empty($_GET['ProfileDateBirth_min'])){
-            $ProfileDateBirth_min = $_GET['ProfileDateBirth_min'];
-            $selectedYearMin = date($format, strtotime('-'. $ProfileDateBirth_min .' year'. $date));
-            $filter .= " AND profile.`ProfileDateBirth` <= '$selectedYearMin'";
+
+        if (isset($_GET['ProfileAge_min']) && !empty($_GET['ProfileAge_min'])) {
+            $age = str_replace('m', '', $_GET['ProfileAge_min']);
+            $ym = (strpos($_GET['ProfileAge_min'], 'm') === false) ? 'YEAR' : 'MONTH';
+            $filter .= " AND profile.`ProfileDateBirth` <= DATE_SUB(NOW(), INTERVAL $age $ym)";
         }
         
-        if (isset($_GET['ProfileDateBirth_max']) && !empty($_GET['ProfileDateBirth_max'])){
-            $ProfileDateBirth_max = $_GET['ProfileDateBirth_max'];
-            $selectedYearMax = date($format, strtotime('-'. $ProfileDateBirth_max-1 .' year'. $date));
-            $filter .= " AND profile.`ProfileDateBirth` >= '$selectedYearMax'";
+        if (isset($_GET['ProfileAge_max']) && !empty($_GET['ProfileAge_max'])){
+            $age = str_replace('m', '', $_GET['ProfileAge_max']);
+            $ym = (strpos($_GET['ProfileAge_max'], 'm') === false) ? 'YEAR' : 'MONTH';
+            $filter .= " AND profile.`ProfileDateBirth` >= DATE_SUB(NOW(), INTERVAL $age $ym)";
         }
 
         // Due date
@@ -831,13 +827,13 @@ EOF;
                             <td>
                                 <fieldset>
                                     <div>
-                                        <label for="ProfileDateBirth_min"><?php _e('Min', bb_agency_TEXTDOMAIN) ?></label>
-                                        <input type="text" class="min_max" id="ProfileDateBirth_min" name="ProfileDateBirth_min" />
+                                        <label for="ProfileAge_min"><?php _e('Min', bb_agency_TEXTDOMAIN) ?></label>
+                                        <?php echo bb_agency_age_dropdown('ProfileAge_min') ?>
                                     </div>
 
                                     <div>
-                                        <label for="ProfileDateBirth_max"><?php _e('Max', bb_agency_TEXTDOMAIN) ?></label>
-                                        <input type="text" class="min_max" id="ProfileDateBirth_max" name="ProfileDateBirth_max" />
+                                        <label for="ProfileAge_max"><?php _e('Max', bb_agency_TEXTDOMAIN) ?></label>
+                                        <?php echo bb_agency_age_dropdown('ProfileAge_max') ?>
                                     </div>
                                 </fieldset>
                             </td>
