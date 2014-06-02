@@ -686,120 +686,40 @@ EOF;
                     <div style="clear: both; "></div>
                 </div>
             <?php endwhile; mysql_free_result($results); ?>
-        <div style="clear: both;"></div>
+                <div style="clear: both;"></div>
             </div>
             
          <?php else : ?>
             <p>There are no profiles added to the casting cart.</p>
-         <?php endif;
-
-    echo " </div>\n";
-    echo "</div>\n";
-  
-    // empty or remove casting cart
-    if (isset($cartAction) && ($cartAction == "cartEmpty" || $cartAction == "cartRemove")) : ?>
-        <a name="compose">&nbsp;</a> 
-        <div class="boxblock">
-            <h3><?php _e('Cart Actions', bb_agency_TEXTDOMAIN) ?></h3>
-            <div class="inner">
-                <a href="<?php echo admin_url('admin.php?page=bb_agency_searchsaved&action=searchSave') ?>" title="<?php _e('Save Search & Email', bb_agency_TEXTDOMAIN) ?>" class="button-primary"><?php _e('Save Search & Email', bb_agency_TEXTDOMAIN) ?></a>
-                <a href="<?php echo admin_url('admin.php?page=bb_agency_search&action=massEmail#compose') ?>" title="<?php _e('Mass Email', bb_agency_TEXTDOMAIN) ?>" class="button-primary"><?php _e('Mass Email', bb_agency_TEXTDOMAIN) ?></a>
-                <a href="#" onClick="window.open('<?php bloginfo('url') ?>/profile-print/?action=castingCart&cD=1','mywindow','width=930,height=600,left=0,top=50,screenX=0,screenY=50,scrollbars=yes')" title="Quick Print" class="button-primary"><?php _e('Quick Print', bb_agency_TEXTDOMAIN) ?></a>
-                <a href="#" onClick="window.open('<?php bloginfo('url') ?>/profile-print/?action=castingCart&cD=0','mywindow','width=930,height=600,left=0,top=50,screenX=0,screenY=50,scrollbars=yes')" title="Quick Print - Without Details" class="button-primary"><?php _e('Quick Print', bb_agency_TEXTDOMAIN) ?> - <?php _e('Without Details', bb_agency_TEXTDOMAIN) ?></a>
-            </div>
+         <?php endif; ?>
         </div>
+    </div>
+    
+    <?php if (isset($cartAction) && ($cartAction == "cartEmpty" || $cartAction == "cartRemove")) : // empty or remove casting cart ?>
+    <a name="compose">&nbsp;</a> 
+    <div class="boxblock">
+        <h3><?php _e('Cart Actions', bb_agency_TEXTDOMAIN) ?></h3>
+        <div class="inner">
+            <a href="<?php echo admin_url('admin.php?page=bb_agency_searchsaved&action=searchSave') ?>" title="<?php _e('Save Search & Email', bb_agency_TEXTDOMAIN) ?>" class="button-primary"><?php _e('Save Search & Email', bb_agency_TEXTDOMAIN) ?></a>
+            <a href="<?php echo admin_url('admin.php?page=bb_agency_search&action=massEmail#compose') ?>" title="<?php _e('Mass Email', bb_agency_TEXTDOMAIN) ?>" class="button-primary"><?php _e('Mass Email', bb_agency_TEXTDOMAIN) ?></a>
+            <a href="#" onClick="window.open('<?php bloginfo('url') ?>/profile-print/?action=castingCart&cD=1','mywindow','width=930,height=600,left=0,top=50,screenX=0,screenY=50,scrollbars=yes')" title="Quick Print" class="button-primary"><?php _e('Quick Print', bb_agency_TEXTDOMAIN) ?></a>
+            <a href="#" onClick="window.open('<?php bloginfo('url') ?>/profile-print/?action=castingCart&cD=0','mywindow','width=930,height=600,left=0,top=50,screenX=0,screenY=50,scrollbars=yes')" title="Quick Print - Without Details" class="button-primary"><?php _e('Quick Print', bb_agency_TEXTDOMAIN) ?> - <?php _e('Without Details', bb_agency_TEXTDOMAIN) ?></a>
+        </div>
+    </div>
     <?php endif; // Is Cart Empty 
     
     $isSent = false;
     
     // send a bulk email
     if (isset($_POST["SendEmail"])){
-        
-        $bb_options = bbagency_get_option();
-        $bb_agency_value_agencyname = bbagency_get_option('bb_agency_option_agencyname');
-        $bb_agency_value_agencyemail = bbagency_get_option('bb_agency_option_agencyemail');
-        $correspondenceEmail= $bb_agency_value_agencyemail;
-        
-        $MassEmailSubject = $_POST["MassEmailSubject"];
-        $MassEmailMessage = $_POST["MassEmailMessage"];
-        $MassEmailRecipient = $_POST["MassEmailRecipient"];
-        $MassEmailBccRecipient = $_POST["MassEmailBccRecipient"];
-
-        $SearchID               = time(U);
-        $SearchMuxHash          = bb_agency_random(8);
-        $SearchMuxToName        =$_POST["MassEmailRecipient"];
-        $SearchMuxToEmail       =$_POST["MassEmailRecipient"];
-        
-        $SearchMuxEmailToBcc    =$_POST['MassEmailBccRecipient'];
-        $SearchMuxSubject       = $_POST['MassEmailSubject'];
-        $SearchMuxMessage       =$_POST['MassEmailMessage'];
-        $SearchMuxCustomValue   ='';                    
-
-
-        
-        $cartString = bb_agency_get_cart_string();
-        $cartString = bb_agency_cleanString($cartString);
-        
-
-        $wpdb->query("INSERT INTO " . table_agency_searchsaved." (SearchProfileID,SearchTitle) VALUES('".$cartString."','".$SearchMuxSubject."')") or die(mysql_error());
-        
-        $lastid = $wpdb->insert_id;
-        
-        // Create Record
-        $insert = "INSERT INTO " . table_agency_searchsaved_mux ." 
-                (
-                SearchID,
-                SearchMuxHash,
-                SearchMuxToName,
-                SearchMuxToEmail,
-                SearchMuxSubject,
-                SearchMuxMessage,
-                SearchMuxCustomValue
-                )" .
-                "VALUES
-                (
-                '" . $wpdb->escape($lastid) . "',
-                '" . $wpdb->escape($SearchMuxHash) . "',
-                '" . $wpdb->escape($SearchMuxToName) . "',
-                '" . $wpdb->escape($SearchMuxToEmail) . "',
-                '" . $wpdb->escape($SearchMuxSubject) . "',
-                '" . $wpdb->escape($SearchMuxMessage) . "',
-                '" . $wpdb->escape($SearchMuxCustomValue) ."'
-                )";
-        $results = $wpdb->query($insert);                 
-                
-
-        if(!empty($MassEmailBccRecipient)){
-            $bccMails = explode(",",$MassEmailBccRecipient);
-            foreach($bccMails as $bccEmail){
-                $headers[] = 'Bcc: '.$bccEmail;
-            }
-            }
-        
-        // Mail it
-        $headers[]  = 'MIME-Version: 1.0';
-        $headers[] = 'Content-type: text/html; charset=iso-8859-1';
-        $headers[] = 'From: '.$bb_agency_value_agencyname.' <'. $correspondenceEmail .'>';
-        
-        if(!empty($expMail)){
-            $expMail = explode(",",$MassEmailRecipient);
-            foreach($expMail as $bccEmail){
-                $headers[] = 'Bcc: '.$bccEmail;
-            }
-        }
-         //$MassEmailMessage    = str_ireplace("[link-place-holder]",get_bloginfo("url") ."/client-view/".$SearchMuxHash,$MassEmailMessage);
-
-        $MassEmailMessage = str_replace("[link-place-holder]",site_url()."/client-view/".$SearchMuxHash,$MassEmailMessage);
-
-        $isSent = wp_mail($MassEmailRecipient, $MassEmailSubject, $MassEmailMessage, $headers);
+        bb_agency_send_email();
     }
 
     // send bulk email
     if ($action == "massEmail") :
-        
+
         // Filter Models Already in Cart
         if (bb_agency_have_cart()) {
-    
             $cartString = bb_agency_get_cart_string();
             $cartQuery = " AND profile.ProfileContactEmail !='' AND profile.ProfileID IN (". $cartString .")";
         }
@@ -822,7 +742,7 @@ EOF;
         $bb_agency_value_agencyemail = bbagency_get_option('bb_agency_option_agencyemail');
         ?>
         <form method="post">
-             <div class="boxblock">\n
+            <div class="boxblock">
                 <h3><?php _e('Compose Email', bb_agency_TEXTDOMAIN) ?></h3>
                 <div class="inner">
                 <?php if ($isSent) : ?>
@@ -834,7 +754,6 @@ EOF;
                 <textarea name="MassEmailRecipient" style="width:100%;"><?php echo $bb_agency_value_agencyemail ?></textarea><br/>
                 <strong>Bcc:</strong><br/>
                 <textarea name="MassEmailBccRecipient" style="width:100%;" placeholder="Enter Comma seperated values"><?php echo $recipient ?></textarea><br/>
-             
                 <strong>Subject:</strong> <br/>
                 <input type="text" name="MassEmailSubject" style="width:100%"/>
                 <br/>
@@ -842,7 +761,7 @@ EOF;
                 // set content
                 $content = "This message was sent to you by ".$bb_agency_value_agencyname." ".network_site_url( '/' )."<br /> [link-place-holder]";
                 $editor_id = 'MassEmailMessage';
-                wp_editor( $content, $editor_id,array("wpautop"=>false,"tinymce"=>true) );
+                wp_editor( $content, $editor_id, array("wpautop" => false, "tinymce" => true) );
 
                 ?>
                 <input type="submit" value="<?php _e('Send Email', bb_agency_TEXTDOMAIN) ?>" name="SendEmail" class="button-primary" />
@@ -857,462 +776,462 @@ EOF;
 }
 ?>
     <div class="boxblock-container left-half">
-    <div class="boxblock">
-        <h3><?php _e('Advanced Search', bb_agency_TEXTDOMAIN) ?></h3>
-        <div class="inner">
-        <form method="GET" action="<?php echo admin_url('admin.php?page='. $_GET['page']) ?>">
-            <input type="hidden" name="page" id="page" value="bb_agency_search" />
-            <input type="hidden" name="action" value="search" />
-            <table cellspacing="0" class="widefat fixed">
-                <thead>
-                    <tr>
-                        <th scope="row"><?php _e('Name', bb_agency_TEXTDOMAIN) ?>:</th>
-                        <td>
-                            <input type="text" id="ProfileContactName" name="ProfileContactName" value="<?php echo isset($ProfileContactName) ? $ProfileContactName : '' ?>" />               
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><?php _e('Classification', bb_agency_TEXTDOMAIN) ?>:</th>
-                        <td>
-                            <select name="ProfileType" id="ProfileType">               
-                                <option value="">--</option>
-                                <?php
-                                /* 
-                                 * set filter from theis array
-                                 * to block the following profile types 
-                                 * in search
-                                 */
-                                
-                                $filter = array( 'agents', 'agent', 'producer', 'producers' );
-                                 
-                                $profileDataTypes = mysql_query("SELECT * FROM ". table_agency_data_type ."");
-                                while ($dataType = mysql_fetch_array($profileDataTypes)) : if (!in_array(strtolower($dataType["DataTypeTitle"]), $filter)) : ?>
-                                <option value="<?php echo $dataType['DataTypeID'] ?>" <?php selected(isset($_SESSION['ProfileType']) ? $_SESSION['ProfileType'] : false, $dataType["DataTypeID"]) ?>><?php echo $dataType['DataTypeTitle'] ?></option>
-                                <?php endif; endwhile; ?>
-                                
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><?php _e('Gender', bb_agency_TEXTDOMAIN) ?>:</th>
-                        <td>
-                            <select name="ProfileGender" id="ProfileGender">               
-                                <option value="">--</option>
-                                <?php
-                                    $query2 = "SELECT GenderID, GenderTitle FROM ". table_agency_data_gender ." ORDER BY GenderID";
-                                    $results2 = mysql_query($query2);
-                                    while ($dataGender = mysql_fetch_array($results2)) : ?>
-                                <option value="<?php echo $dataGender['GenderID'] ?>" <?php selected(isset($_SESSION['ProfileGender']) ? $_SESSION['ProfileGender'] : 0, $dataGender['GenderID']) ?>><?php echo $dataGender['GenderTitle'] ?></option>
+        <div class="boxblock">
+            <h3><?php _e('Advanced Search', bb_agency_TEXTDOMAIN) ?></h3>
+            <div class="inner">
+            <form method="GET" action="<?php echo admin_url('admin.php?page='. $_GET['page']) ?>">
+                <input type="hidden" name="page" id="page" value="bb_agency_search" />
+                <input type="hidden" name="action" value="search" />
+                <table cellspacing="0" class="widefat fixed">
+                    <thead>
+                        <tr>
+                            <th scope="row"><?php _e('Name', bb_agency_TEXTDOMAIN) ?>:</th>
+                            <td>
+                                <input type="text" id="ProfileContactName" name="ProfileContactName" value="<?php echo isset($ProfileContactName) ? $ProfileContactName : '' ?>" />               
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><?php _e('Classification', bb_agency_TEXTDOMAIN) ?>:</th>
+                            <td>
+                                <select name="ProfileType" id="ProfileType">               
+                                    <option value="">--</option>
+                                    <?php
+                                    /* 
+                                     * set filter from theis array
+                                     * to block the following profile types 
+                                     * in search
+                                     */
+                                    
+                                    $filter = array( 'agents', 'agent', 'producer', 'producers' );
+                                     
+                                    $profileDataTypes = mysql_query("SELECT * FROM ". table_agency_data_type ."");
+                                    while ($dataType = mysql_fetch_array($profileDataTypes)) : if (!in_array(strtolower($dataType["DataTypeTitle"]), $filter)) : ?>
+                                    <option value="<?php echo $dataType['DataTypeID'] ?>" <?php selected(isset($_SESSION['ProfileType']) ? $_SESSION['ProfileType'] : false, $dataType["DataTypeID"]) ?>><?php echo $dataType['DataTypeTitle'] ?></option>
+                                    <?php endif; endwhile; ?>
+                                    
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><?php _e('Gender', bb_agency_TEXTDOMAIN) ?>:</th>
+                            <td>
+                                <select name="ProfileGender" id="ProfileGender">               
+                                    <option value="">--</option>
+                                    <?php
+                                        $query2 = "SELECT GenderID, GenderTitle FROM ". table_agency_data_gender ." ORDER BY GenderID";
+                                        $results2 = mysql_query($query2);
+                                        while ($dataGender = mysql_fetch_array($results2)) : ?>
+                                    <option value="<?php echo $dataGender['GenderID'] ?>" <?php selected(isset($_SESSION['ProfileGender']) ? $_SESSION['ProfileGender'] : 0, $dataGender['GenderID']) ?>><?php echo $dataGender['GenderTitle'] ?></option>
+                                        <?php endwhile; ?>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><?php _e('Age', bb_agency_TEXTDOMAIN) ?>:</th>
+                            <td>
+                                <fieldset>
+                                    <div>
+                                        <label for="ProfileDateBirth_min"><?php _e('Min', bb_agency_TEXTDOMAIN) ?></label>
+                                        <input type="text" class="min_max" id="ProfileDateBirth_min" name="ProfileDateBirth_min" />
+                                    </div>
+
+                                    <div>
+                                        <label for="ProfileDateBirth_max"><?php _e('Max', bb_agency_TEXTDOMAIN) ?></label>
+                                        <input type="text" class="min_max" id="ProfileDateBirth_max" name="ProfileDateBirth_max" />
+                                    </div>
+                                </fieldset>
+                            </td>
+                        </tr>
+                        <?php if (defined('bb_agency_MUMSTOBE_ID') && bb_agency_MUMSTOBE_ID) : ?>
+                        <tr>
+                            <th scope="row"><?php _e('Due date', bb_agency_TEXTDOMAIN) ?>:</th>
+                            <td>
+                                <fieldset>
+                                    <div>
+                                        <label for="ProfileDateDue_min"><?php _e('Min', bb_agency_TEXTDOMAIN) ?></label>
+                                        <input type="text" class="min_max bbdatepicker" id="ProfileDateDue_min" name="ProfileDateDue_min" />
+                                    </div>
+
+                                    <div>
+                                        <label for="ProfileDateDue_max"><?php _e('Max', bb_agency_TEXTDOMAIN) ?></label>
+                                        <input type="text" class="min_max bbdatepicker" id="ProfileDateDue_max" name="ProfileDateDue_max" />
+                                    </div>
+                                </fieldset>
+                            </td>
+                        </tr> 
+                        <?php endif; ?>
+                        <tr>
+                            <th scope="row"><?php _e('Town', bb_agency_TEXTDOMAIN) ?>:</th>
+                            <td>
+                                <select name="ProfileLocationCity" id="ProfileLocationCity">               
+                                    <option value="">--</option>
+                                    <?php  // get a list of cities 
+                                    $profilecity = mysql_query('SELECT DISTINCT `ProfileLocationCity` FROM '.table_agency_profile);
+                                    
+                                    while ($dataLocation = mysql_fetch_array($profilecity)) : $city = $dataLocation['ProfileLocationCity']; ?>
+                                    <option value="<?php echo $city ?>" <?php selected(isset($_GET['ProfileLocationCity']) ? $_GET['ProfileLocationCity'] : false, $city) ?>><?php echo bb_agency_strtoproper($city) ?></option>
                                     <?php endwhile; ?>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><?php _e('Age', bb_agency_TEXTDOMAIN) ?>:</th>
-                        <td>
-                            <fieldset>
-                                <div>
-                                    <label for="ProfileDateBirth_min"><?php _e('Min', bb_agency_TEXTDOMAIN) ?></label>
-                                    <input type="text" class="min_max" id="ProfileDateBirth_min" name="ProfileDateBirth_min" />
-                                </div>
+                                </select>
+                            </td>
+                        </tr>
 
-                                <div>
-                                    <label for="ProfileDateBirth_max"><?php _e('Max', bb_agency_TEXTDOMAIN) ?></label>
-                                    <input type="text" class="min_max" id="ProfileDateBirth_max" name="ProfileDateBirth_max" />
-                                </div>
-                            </fieldset>
-                        </td>
-                    </tr>
-                    <?php if (defined('bb_agency_MUMSTOBE_ID') && bb_agency_MUMSTOBE_ID) : ?>
-                    <tr>
-                        <th scope="row"><?php _e('Due date', bb_agency_TEXTDOMAIN) ?>:</th>
-                        <td>
-                            <fieldset>
-                                <div>
-                                    <label for="ProfileDateDue_min"><?php _e('Min', bb_agency_TEXTDOMAIN) ?></label>
-                                    <input type="text" class="min_max bbdatepicker" id="ProfileDateDue_min" name="ProfileDateDue_min" />
-                                </div>
+                        <tr>
+                            <th scope="row"><?php _e('County', bb_agency_TEXTDOMAIN) ?>:</th>
+                            <td>
+                                <select name="ProfileLocationState" id="ProfileLocationState">               
+                                    <option value="">--</option>
+                                    <?php  // get a list of states
+                                    $profilestate = mysql_query('SELECT DISTINCT `ProfileLocationState` FROM '.table_agency_profile);
+                                    
+                                    while ($dataLocation = mysql_fetch_array($profilestate)) : $state = $dataLocation['ProfileLocationState']; ?>
+                                    <option value="<?php echo $state ?>" <?php selected(isset($_GET['ProfileLocationState']) ? $_GET['ProfileLocationState'] : false, $state) ?>><?php echo bb_agency_strtoproper($state) ?></option>
+                                    <?php endwhile; ?>
+                                </select>
+                            </td>
+                        </tr>
 
-                                <div>
-                                    <label for="ProfileDateDue_max"><?php _e('Max', bb_agency_TEXTDOMAIN) ?></label>
-                                    <input type="text" class="min_max bbdatepicker" id="ProfileDateDue_max" name="ProfileDateDue_max" />
-                                </div>
-                            </fieldset>
-                        </td>
-                    </tr> 
-                    <?php endif; ?>
-                    <tr>
-                        <th scope="row"><?php _e('Town', bb_agency_TEXTDOMAIN) ?>:</th>
-                        <td>
-                            <select name="ProfileLocationCity" id="ProfileLocationCity">               
-                                <option value="">--</option>
-                                <?php  // get a list of cities 
-                                $profilecity = mysql_query('SELECT DISTINCT `ProfileLocationCity` FROM '.table_agency_profile);
-                                
-                                while ($dataLocation = mysql_fetch_array($profilecity)) : $city = $dataLocation['ProfileLocationCity']; ?>
-                                <option value="<?php echo $city ?>" <?php selected(isset($_GET['ProfileLocationCity']) ? $_GET['ProfileLocationCity'] : false, $city) ?>><?php echo bb_agency_strtoproper($city) ?></option>
-                                <?php endwhile; ?>
-                            </select>
-                        </td>
-                    </tr>
+                        <tr>
+                            <th scope="row"><?php _e('Location', bb_agency_TEXTDOMAIN) ?>:</th>
+                            <td>
+                                <input type="text" name="ProfileLocation" value="<?php echo isset($_GET['ProfileLocation']) ? $_GET['ProfileLocation'] : '' ?>" />
+                            </td>
+                        </tr>
+                        <?php
+                            //bb_custom_fields(0, $ProfileID, $ProfileGender,false);
+                            $query1 = "SELECT ProfileCustomID, ProfileCustomTitle, ProfileCustomType, ProfileCustomOptions, ProfileCustomOrder, ProfileCustomView, ProfileCustomShowGender, ProfileCustomShowProfile, ProfileCustomShowSearch, ProfileCustomShowLogged, ProfileCustomShowAdmin FROM ". table_agency_customfields ." WHERE ProfileCustomView IN('0','1')  AND ProfileCustomID != 39 AND ProfileCustomID != 48 ORDER BY ProfileCustomOrder ASC";
+                            $results1 = mysql_query($query1);
+                            $count1 = mysql_num_rows($results1);
+                            $pos = 0;
+                            while ($data1 = mysql_fetch_array($results1)) :
+                                // set data vars
+                                $id = $data1['ProfileCustomID'];
+                                $title = $data1['ProfileCustomTitle'];
+                                $type = $data1['ProfileCustomType'];
+                                $options = $data1['ProfileCustomOptions'];
+                                $field = 'ProfileCustomID'.$id;
+                        ?>
+                        <tr>
+                        <?php
+                            // SET Label for Measurements
+                            // Imperial(in/lb), Metrics(ft/kg)
+                            $bb_options = bbagency_get_option();
+                            $bb_agency_option_unittype  = bbagency_get_option('bb_agency_option_unittype');
+                            //$measurements_label = "";
+                            /*
+                            0- metric
+                            1 - cm
+                            2 - kg
+                            3 - inches/feet
+                            1 - imperials 
+                            1 - inches
+                            2 - pounds
+                            3 - inches/feet
+                            */
+                            /*
+                            if ($type == 7) { //measurements field type
+                                switch ($bb_agency_option_unittype) {
+                                    case 0:
+                                    switch ($options) {
+                                        case 1:
+                                        $measurements_label = "<em>(cm)</em>";
+                                        break;
 
-                    <tr>
-                        <th scope="row"><?php _e('County', bb_agency_TEXTDOMAIN) ?>:</th>
-                        <td>
-                            <select name="ProfileLocationState" id="ProfileLocationState">               
-                                <option value="">--</option>
-                                <?php  // get a list of states
-                                $profilestate = mysql_query('SELECT DISTINCT `ProfileLocationState` FROM '.table_agency_profile);
-                                
-                                while ($dataLocation = mysql_fetch_array($profilestate)) : $state = $dataLocation['ProfileLocationState']; ?>
-                                <option value="<?php echo $state ?>" <?php selected(isset($_GET['ProfileLocationState']) ? $_GET['ProfileLocationState'] : false, $state) ?>><?php echo bb_agency_strtoproper($state) ?></option>
-                                <?php endwhile; ?>
-                            </select>
-                        </td>
-                    </tr>
+                                        case 2:
+                                        $measurements_label = "<em>(kg)</em>";
+                                        break;
 
-                    <tr>
-                        <th scope="row"><?php _e('Location', bb_agency_TEXTDOMAIN) ?>:</th>
-                        <td>
-                            <input type="text" name="ProfileLocation" value="<?php echo isset($_GET['ProfileLocation']) ? $_GET['ProfileLocation'] : '' ?>" />
-                        </td>
-                    </tr>
-                    <?php
-                        //bb_custom_fields(0, $ProfileID, $ProfileGender,false);
-                        $query1 = "SELECT ProfileCustomID, ProfileCustomTitle, ProfileCustomType, ProfileCustomOptions, ProfileCustomOrder, ProfileCustomView, ProfileCustomShowGender, ProfileCustomShowProfile, ProfileCustomShowSearch, ProfileCustomShowLogged, ProfileCustomShowAdmin FROM ". table_agency_customfields ." WHERE ProfileCustomView IN('0','1')  AND ProfileCustomID != 39 AND ProfileCustomID != 48 ORDER BY ProfileCustomOrder ASC";
-                        $results1 = mysql_query($query1);
-                        $count1 = mysql_num_rows($results1);
-                        $pos = 0;
-                        while ($data1 = mysql_fetch_array($results1)) :
-                            // set data vars
-                            $id = $data1['ProfileCustomID'];
-                            $title = $data1['ProfileCustomTitle'];
-                            $type = $data1['ProfileCustomType'];
-                            $options = $data1['ProfileCustomOptions'];
-                            $field = 'ProfileCustomID'.$id;
-                    ?>
-                    <tr>
-                    <?php
-                        // SET Label for Measurements
-                        // Imperial(in/lb), Metrics(ft/kg)
-                        $bb_options = bbagency_get_option();
-                        $bb_agency_option_unittype  = bbagency_get_option('bb_agency_option_unittype');
-                        //$measurements_label = "";
-                        /*
-                        0- metric
-                        1 - cm
-                        2 - kg
-                        3 - inches/feet
-                        1 - imperials 
-                        1 - inches
-                        2 - pounds
-                        3 - inches/feet
-                        */
-                        /*
-                        if ($type == 7) { //measurements field type
-                            switch ($bb_agency_option_unittype) {
-                                case 0:
-                                switch ($options) {
+                                        case 3:
+                                        $measurements_label = "<em>(m)</em>";
+                                        break;
+                                    }
+                                    break;
+
                                     case 1:
-                                    $measurements_label = "<em>(cm)</em>";
-                                    break;
+                                    switch ($options) {
+                                        case 1:
+                                        $measurements_label = "<em>(Inches)</em>";
+                                        break;
 
-                                    case 2:
-                                    $measurements_label = "<em>(kg)</em>";
-                                    break;
+                                        case 2:
+                                        $measurements_label = "<em>(Pounds)</em>";
+                                        break;
 
-                                    case 3:
-                                    $measurements_label = "<em>(m)</em>";
+                                        case 3:
+                                        $measurements_label = "<em>(Feet/Inches)</em>";
+                                        break;
+                                    }
                                     break;
                                 }
-                                break;
-
-                                case 1:
-                                switch ($options) {
-                                    case 1:
-                                    $measurements_label = "<em>(Inches)</em>";
-                                    break;
-
-                                    case 2:
-                                    $measurements_label = "<em>(Pounds)</em>";
-                                    break;
-
-                                    case 3:
-                                    $measurements_label = "<em>(Feet/Inches)</em>";
-                                    break;
-                                }
-                                break;
                             }
-                        }
-                        */
-                        ?>    
-                        <th scope="row">
-                            <?php if ($type == 7) : ?>
-                            <div class="label">
-                                <?php echo $title ?>
-                            </div>
-                            <?php else : ?>
-                            <div>
-                                <label for="<?php echo $field ?>"><?php echo $title ?></label>
-                            </div>
-                            <?php endif; ?>
-                        </th>
-                        <td>
-                        <?php    
-                        if (in_array($title, $cusFields)) : // use alternative inputs for custom fields defined at top of this page
-
-                            if ($title == 'Height') : ?>
-                                <fieldset class="bbselect">
-                                    <div>
-                                        <label>Min</label>
-                                        <select name="<?php echo $field ?>_min">
-                                            <option value="">--</option>
-                                        <?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
-                                            <option value="<?php echo $i ?>" <?php selected(isset($_GET[$field.'_min']) ? $_GET[$field.'_min'] : false, $i) ?>><?php echo display_height($i) ?></option>
-                                        <?php endfor; ?>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label>Max</label>
-                                        <select name="<?php echo $field ?>_max">
-                                            <option value="">--</option>
-                                        <?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
-                                            <option value="<?php echo $i ?>" <?php selected(isset($_GET[$field.'_max']) ? $_GET[$field.'_max'] : false, $i) ?>><?php echo display_height($i) ?></option>
-                                        <?php endfor; ?>
-                                        </select>
-                                    </div>
-                                </fieldset>
-                            <?php else : ?>
-                                <fieldset class="bbtext">
-                                    <div>
-                                        <label for="ProfileCustomLabel_min"><?php _e('Min', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
-                                        <input class="min_max" type="text" name="<?php echo $field ?>_min" value="<?php echo $ProfileCustomOptions_Min_value ?>" />
-                                    </div>
-                                    <div>
-                                        <label for="ProfileCustomLabel_max"><?php _e('Max', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
-                                        <input class="min_max" type="text" name="<?php echo $field ?>_max" value="<?php echo $ProfileCustomOptions_Max_value ?>" />
-                                    </div>
-                                </fieldset>
-                            <?php endif;
-
-                        else : // standard fields
-                            switch ($type) :
-                            
-                            case 1 : ?>
-                            <div>
-                                <input type="text" name="<?php echo $field ?>" value="<?php echo isset($_SESSION[$field]) ? $_SESSION[$field] : '' ?>" />
-                            </div>
-                            <?php break; ?>
-
-                            <?php case 2 : // Min Max ?>
-
-                            <fieldset class="bbtext">
-                            <?php   
-                                $ProfileCustomOptions_String = str_replace(",", ":", strtok(strtok($options, "}"), "{"));
-                                list($ProfileCustomOptions_Min_label, $ProfileCustomOptions_Min_value, $ProfileCustomOptions_Max_label, $ProfileCustomOptions_Max_value) = explode(":", $ProfileCustomOptions_String);
-                                                     
-                                if (!empty($ProfileCustomOptions_Min_value) && !empty($ProfileCustomOptions_Max_value)) : ?>
-                                <div>
-                                    <label for="ProfileCustomLabel_min" style="text-align:right;"><?php _e('Min', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
-                                    <input class="min_max" type="text" name="<?php echo $field ?>_min" value="<?php echo $ProfileCustomOptions_Min_value ?>" />
-                                </div>
-                                <div>
-                                    <label for="ProfileCustomLabel_max" style="text-align:right;"><?php _e('Max', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
-                                    <input class="min_max" type="text" name="<?php echo $field ?>_max" value="<?php echo $ProfileCustomOptions_Max_value ?>" />
+                            */
+                            ?>    
+                            <th scope="row">
+                                <?php if ($type == 7) : ?>
+                                <div class="label">
+                                    <?php echo $title ?>
                                 </div>
                                 <?php else : ?>
                                 <div>
-                                    <label for="ProfileCustomLabel_min" style="text-align:right;"><?php _e('Min', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
-                                    <input class="min_max" type="text" name="<?php echo $field ?>_min" value="<?php echo $_SESSION[$field.'_min'] ?>" />
-                                </div>
-                                <div>
-                                    <label for="ProfileCustomLabel_max" style="text-align:right;"><?php _e('Max', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
-                                    <input class="min_max" type="text" name="<?php echo $field ?>_max" value="<?php echo $_SESSION[$field.'_max'] ?>" />
+                                    <label for="<?php echo $field ?>"><?php echo $title ?></label>
                                 </div>
                                 <?php endif; ?>
-                            </fieldset>
-                            <?php break; ?>
-                             
-                            <?php case 3 : $data = explode('|', $options); ?>       
-                            <div class="bbselect">
-                                <div>
-                                    <label><?php echo $data[0] ?></label>
-                                </div>
-                                <div>
-                                    <select name="<?php echo $field ?>">
-                                        <option value="">--</option>
-                                        <?php foreach ($data as $val1) : if ($val1 != end($data) && $val1 != $data[0]) : ?>
-                                        <option value="<?php echo $val1 ?>" <?php selected(isset($_SESSION[$field]) ? $_SESSION[$field] : false, $val1) ?>><?php echo $val1 ?></option>
-                                        <?php endif; endforeach; ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <?php break; ?>
-
-                            <?php case 4 : ?>
-                            <div class="bbtextarea">
-                                <div>
-                                    <textarea name="<?php echo $field ?>"><?php echo isset($_SESSION[$field]) ? $_SESSION[$field] : '' ?></textarea>
-                                </div>
-                            </div>
-                            <?php break; ?>
-                             
-                            <?php case 5 : ?>
-                            <fieldset class="bbcheckbox">
-                            <?php
-                                $array_customOptions_values = explode("|", $options);
-
-                                if (!empty($array_customOptions_values)) : foreach ($array_customOptions_values as $val) : 
-                                    /*
-                                     * double check this if this is array and its index 0 is empty
-                                     * then force set it to empty so it will not push through
-                                     */
-                                    if (isset($_SESSION[$field]) && is_array($_SESSION[$field])) { 
-                                        if($_SESSION[$field][0] == ''){
-                                            $_SESSION[$field] = '';
-                                        }
-                                    }
-                                    
-                                    if (isset($_SESSION[$field]) && $_SESSION[$field] != '') : $dataArr = explode(",", implode(",", explode("','", $_SESSION[$field])));
-
-                                    if (in_array($val, $dataArr, true) && $val != '') : ?>
-                                <label>
-                                    <input type="checkbox" checked="checked" value="<?php echo $val ?>" name="<?php echo $field ?>[]" />&nbsp;
-                                    <span><?php echo $val ?></span>
-                                </label>
-                                <br />
-                                    <?php elseif ($val != '') : ?>
-                                <label>
-                                    <input type="checkbox" value="<?php echo $val ?>" name="<?php echo $field ?>[]" />&nbsp;
-                                    <span><?php echo $val ?></span>
-                                </label>
-                                <br />
-                                    <?php endif; ?>
-                                    <?php else : ?>
-                                    <?php if ($val != '') : ?>  
-                                <label>
-                                    <input type="checkbox" value="<?php echo $val ?>" name="<?php echo $field ?>[]" />&nbsp;
-                                    <span><?php echo $val ?></span>
-                                </label>
-                                <br />
-                                    <?php endif; ?>
-                                    <?php endif; ?>
-                                <?php endforeach; ?>
-                                <input type="hidden" value="" name="<?php echo $field ?>[]" />
-                                <?php endif; ?>
-                            </fieldset>
-                            <?php break; ?>
-                            
-                            <?php case 6 : ?>
-                            <fieldset class="bbradio">
+                            </th>
+                            <td>
                             <?php    
-                                $array_customOptions_values = explode("|", $options);
-                                   
-                                foreach ($array_customOptions_values as $val) : 
-                                    /*
-                                     * double check this if this is array and its index 0 is empty
-                                     * then force set it to empty so it will not push through
-                                     */
-                                    if (isset($_SESSION[$field]) && is_array($_SESSION[$field]) && $_SESSION[$field][0] == '') {
-                                        $_SESSION[$field] = '';
-                                    }
-                                    
-                                    if (isset($_SESSION[$field]) && $_SESSION[$field] != '') : 
+                            if (in_array($title, $cusFields)) : // use alternative inputs for custom fields defined at top of this page
 
-                                    $dataArr = explode(",", implode(",", explode("','", $_SESSION[$field])));
-                                ?>      
-                                <label>
-                                    <input type="radio" <?php checked(isset($dataArr) && in_array($val, $dataArr) && $val != '') ?> value="<?php echo $val ?>" name="<?php echo $field ?>[]" />
-                                    <?php echo $val ?>
-                                </label>
-                                <br />
-                                <?php endif; endforeach; ?>
-                                <input type="hidden" value="" name="<?php echo $field ?>[]" /></div>                                          
-                            </fieldset>                                       
-                            <?php break; ?>
-                            
-                            <?php case 7 : 
-                                 
-                                list($min_val, $max_val) =  @explode(",", $_SESSION[$field]);
-
-                                if ($title == 'Height' && $bb_agency_option_unittype == 1) : ?>
+                                if ($title == 'Height') : ?>
                                     <fieldset class="bbselect">
                                         <div>
                                             <label>Min</label>
                                             <select name="<?php echo $field ?>_min">
                                                 <option value="">--</option>
-                                    
                                             <?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
-                                                <option value="<?php echo $i ?>" <?php echo selected($min_val, $i) ?>><?php echo display_height($i) ?></option>
+                                                <option value="<?php echo $i ?>" <?php selected(isset($_GET[$field.'_min']) ? $_GET[$field.'_min'] : false, $i) ?>><?php echo display_height($i) ?></option>
                                             <?php endfor; ?>
                                             </select>
                                         </div>
-                                  
                                         <div>
                                             <label>Max</label>
                                             <select name="<?php echo $field ?>_max">
                                                 <option value="">--</option>
                                             <?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
-                                                <option value="<?php echo $i ?>" <?php echo selected($max_val, $i) ?>><?php echo display_height($i) ?></option>
+                                                <option value="<?php echo $i ?>" <?php selected(isset($_GET[$field.'_max']) ? $_GET[$field.'_max'] : false, $i) ?>><?php echo display_height($i) ?></option>
                                             <?php endfor; ?>
                                             </select>
                                         </div>
                                     </fieldset>
-
                                 <?php else : ?>
                                     <fieldset class="bbtext">
-                                    <?php // for other search ?>
                                         <div>
-                                            <label for="<?php echo $field ?>_min">Min</label>
-                                            <input value="<?php echo (!is_array($min_val) && $min_val != "Array" ? $min_val : "") ?>" class="stubby" type="text" name="<?php echo $field ?>[]" />
+                                            <label for="ProfileCustomLabel_min"><?php _e('Min', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
+                                            <input class="min_max" type="text" name="<?php echo $field ?>_min" value="<?php echo $ProfileCustomOptions_Min_value ?>" />
                                         </div>
-
-                                         <div>
-                                            <label for="<?php echo $field ?>_max">Max</label>
-                                            <input value="<?php echo $max_val ?>" class="stubby" type="text" name="<?php echo $field ?>[]" />
+                                        <div>
+                                            <label for="ProfileCustomLabel_max"><?php _e('Max', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
+                                            <input class="min_max" type="text" name="<?php echo $field ?>_max" value="<?php echo $ProfileCustomOptions_Max_value ?>" />
                                         </div>
                                     </fieldset>
-                                <?php endif; ?>
-                            <?php break;
+                                <?php endif;
 
-                            endswitch;    
-    
-                        endif; // end of if(in_array("$title", $cusFields)) ?>
-                        </td>
-                    </tr>
-        
-                        <?php endwhile; //end of while ($data1
+                            else : // standard fields
+                                switch ($type) :
+                                
+                                case 1 : ?>
+                                <div>
+                                    <input type="text" name="<?php echo $field ?>" value="<?php echo isset($_SESSION[$field]) ? $_SESSION[$field] : '' ?>" />
+                                </div>
+                                <?php break; ?>
 
-                        // status filter
-                        ?>
-                    <tr>
-                        <th scope="row"><?php _e('Status', bb_agency_TEXTDOMAIN) ?>:</th>
-                        <td>
-                            <select name="ProfileIsActive" id="ProfileIsActive">               
-                                <option value="">--</option>
+                                <?php case 2 : // Min Max ?>
+
+                                <fieldset class="bbtext">
+                                <?php   
+                                    $ProfileCustomOptions_String = str_replace(",", ":", strtok(strtok($options, "}"), "{"));
+                                    list($ProfileCustomOptions_Min_label, $ProfileCustomOptions_Min_value, $ProfileCustomOptions_Max_label, $ProfileCustomOptions_Max_value) = explode(":", $ProfileCustomOptions_String);
+                                                         
+                                    if (!empty($ProfileCustomOptions_Min_value) && !empty($ProfileCustomOptions_Max_value)) : ?>
+                                    <div>
+                                        <label for="ProfileCustomLabel_min" style="text-align:right;"><?php _e('Min', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
+                                        <input class="min_max" type="text" name="<?php echo $field ?>_min" value="<?php echo $ProfileCustomOptions_Min_value ?>" />
+                                    </div>
+                                    <div>
+                                        <label for="ProfileCustomLabel_max" style="text-align:right;"><?php _e('Max', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
+                                        <input class="min_max" type="text" name="<?php echo $field ?>_max" value="<?php echo $ProfileCustomOptions_Max_value ?>" />
+                                    </div>
+                                    <?php else : ?>
+                                    <div>
+                                        <label for="ProfileCustomLabel_min" style="text-align:right;"><?php _e('Min', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
+                                        <input class="min_max" type="text" name="<?php echo $field ?>_min" value="<?php echo $_SESSION[$field.'_min'] ?>" />
+                                    </div>
+                                    <div>
+                                        <label for="ProfileCustomLabel_max" style="text-align:right;"><?php _e('Max', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
+                                        <input class="min_max" type="text" name="<?php echo $field ?>_max" value="<?php echo $_SESSION[$field.'_max'] ?>" />
+                                    </div>
+                                    <?php endif; ?>
+                                </fieldset>
+                                <?php break; ?>
+                                 
+                                <?php case 3 : $data = explode('|', $options); ?>       
+                                <div class="bbselect">
+                                    <div>
+                                        <label><?php echo $data[0] ?></label>
+                                    </div>
+                                    <div>
+                                        <select name="<?php echo $field ?>">
+                                            <option value="">--</option>
+                                            <?php foreach ($data as $val1) : if ($val1 != end($data) && $val1 != $data[0]) : ?>
+                                            <option value="<?php echo $val1 ?>" <?php selected(isset($_SESSION[$field]) ? $_SESSION[$field] : false, $val1) ?>><?php echo $val1 ?></option>
+                                            <?php endif; endforeach; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <?php break; ?>
+
+                                <?php case 4 : ?>
+                                <div class="bbtextarea">
+                                    <div>
+                                        <textarea name="<?php echo $field ?>"><?php echo isset($_SESSION[$field]) ? $_SESSION[$field] : '' ?></textarea>
+                                    </div>
+                                </div>
+                                <?php break; ?>
+                                 
+                                <?php case 5 : ?>
+                                <fieldset class="bbcheckbox">
                                 <?php
-                                $value = isset($_SESSION['ProfileIsActive']) ? $_SESSION['ProfileIsActive'] : false;
-                                $options = array(
-                                    1 => __('Active', bb_agency_TEXTDOMAIN),
-                                    4 => __('Not Visible', bb_agency_TEXTDOMAIN),
-                                    0 => __('Inactive', bb_agency_TEXTDOMAIN),
-                                    2 => __('Archived', bb_agency_TEXTDOMAIN)
-                                );
-                                foreach ($options as $id => $label) : ?>
-                                <option value="<?php echo $id ?>" <?php selected($value, $id) ?>><?php echo $label ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </td>
-                    </tr>
-                </thead>
-            </table>
-            <p class="submit">
-                <input type="submit" value="<?php _e('Search Profiles', bb_agency_TEXTDOMAIN) ?>" class="button-primary" />
-                <input type="reset" onclick="redirectSearch();" name="reset" value="<?php _e('Reset Form', bb_agency_TEXTDOMAIN) ?>" class="button-secondary" />
-            </p>
-         <form>
-    <div>
-</div><!-- .container -->
+                                    $array_customOptions_values = explode("|", $options);
+
+                                    if (!empty($array_customOptions_values)) : foreach ($array_customOptions_values as $val) : 
+                                        /*
+                                         * double check this if this is array and its index 0 is empty
+                                         * then force set it to empty so it will not push through
+                                         */
+                                        if (isset($_SESSION[$field]) && is_array($_SESSION[$field])) { 
+                                            if($_SESSION[$field][0] == ''){
+                                                $_SESSION[$field] = '';
+                                            }
+                                        }
+                                        
+                                        if (isset($_SESSION[$field]) && $_SESSION[$field] != '') : $dataArr = explode(",", implode(",", explode("','", $_SESSION[$field])));
+
+                                        if (in_array($val, $dataArr, true) && $val != '') : ?>
+                                    <label>
+                                        <input type="checkbox" checked="checked" value="<?php echo $val ?>" name="<?php echo $field ?>[]" />&nbsp;
+                                        <span><?php echo $val ?></span>
+                                    </label>
+                                    <br />
+                                        <?php elseif ($val != '') : ?>
+                                    <label>
+                                        <input type="checkbox" value="<?php echo $val ?>" name="<?php echo $field ?>[]" />&nbsp;
+                                        <span><?php echo $val ?></span>
+                                    </label>
+                                    <br />
+                                        <?php endif; ?>
+                                        <?php else : ?>
+                                        <?php if ($val != '') : ?>  
+                                    <label>
+                                        <input type="checkbox" value="<?php echo $val ?>" name="<?php echo $field ?>[]" />&nbsp;
+                                        <span><?php echo $val ?></span>
+                                    </label>
+                                    <br />
+                                        <?php endif; ?>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                    <input type="hidden" value="" name="<?php echo $field ?>[]" />
+                                    <?php endif; ?>
+                                </fieldset>
+                                <?php break; ?>
+                                
+                                <?php case 6 : ?>
+                                <fieldset class="bbradio">
+                                <?php    
+                                    $array_customOptions_values = explode("|", $options);
+                                       
+                                    foreach ($array_customOptions_values as $val) : 
+                                        /*
+                                         * double check this if this is array and its index 0 is empty
+                                         * then force set it to empty so it will not push through
+                                         */
+                                        if (isset($_SESSION[$field]) && is_array($_SESSION[$field]) && $_SESSION[$field][0] == '') {
+                                            $_SESSION[$field] = '';
+                                        }
+                                        
+                                        if (isset($_SESSION[$field]) && $_SESSION[$field] != '') : 
+
+                                        $dataArr = explode(",", implode(",", explode("','", $_SESSION[$field])));
+                                    ?>      
+                                    <label>
+                                        <input type="radio" <?php checked(isset($dataArr) && in_array($val, $dataArr) && $val != '') ?> value="<?php echo $val ?>" name="<?php echo $field ?>[]" />
+                                        <?php echo $val ?>
+                                    </label>
+                                    <br />
+                                    <?php endif; endforeach; ?>
+                                    <input type="hidden" value="" name="<?php echo $field ?>[]" /></div>                                          
+                                </fieldset>                                       
+                                <?php break; ?>
+                                
+                                <?php case 7 : 
+                                     
+                                    list($min_val, $max_val) =  @explode(",", $_SESSION[$field]);
+
+                                    if ($title == 'Height' && $bb_agency_option_unittype == 1) : ?>
+                                        <fieldset class="bbselect">
+                                            <div>
+                                                <label>Min</label>
+                                                <select name="<?php echo $field ?>_min">
+                                                    <option value="">--</option>
+                                        
+                                                <?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
+                                                    <option value="<?php echo $i ?>" <?php echo selected($min_val, $i) ?>><?php echo display_height($i) ?></option>
+                                                <?php endfor; ?>
+                                                </select>
+                                            </div>
+                                      
+                                            <div>
+                                                <label>Max</label>
+                                                <select name="<?php echo $field ?>_max">
+                                                    <option value="">--</option>
+                                                <?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
+                                                    <option value="<?php echo $i ?>" <?php echo selected($max_val, $i) ?>><?php echo display_height($i) ?></option>
+                                                <?php endfor; ?>
+                                                </select>
+                                            </div>
+                                        </fieldset>
+
+                                    <?php else : ?>
+                                        <fieldset class="bbtext">
+                                        <?php // for other search ?>
+                                            <div>
+                                                <label for="<?php echo $field ?>_min">Min</label>
+                                                <input value="<?php echo (!is_array($min_val) && $min_val != "Array" ? $min_val : "") ?>" class="stubby" type="text" name="<?php echo $field ?>[]" />
+                                            </div>
+
+                                             <div>
+                                                <label for="<?php echo $field ?>_max">Max</label>
+                                                <input value="<?php echo $max_val ?>" class="stubby" type="text" name="<?php echo $field ?>[]" />
+                                            </div>
+                                        </fieldset>
+                                    <?php endif; ?>
+                                <?php break;
+
+                                endswitch;    
+        
+                            endif; // end of if(in_array("$title", $cusFields)) ?>
+                            </td>
+                        </tr>
+            
+                            <?php endwhile; //end of while ($data1
+
+                            // status filter
+                            ?>
+                        <tr>
+                            <th scope="row"><?php _e('Status', bb_agency_TEXTDOMAIN) ?>:</th>
+                            <td>
+                                <select name="ProfileIsActive" id="ProfileIsActive">               
+                                    <option value="">--</option>
+                                    <?php
+                                    $value = isset($_SESSION['ProfileIsActive']) ? $_SESSION['ProfileIsActive'] : false;
+                                    $options = array(
+                                        1 => __('Active', bb_agency_TEXTDOMAIN),
+                                        4 => __('Not Visible', bb_agency_TEXTDOMAIN),
+                                        0 => __('Inactive', bb_agency_TEXTDOMAIN),
+                                        2 => __('Archived', bb_agency_TEXTDOMAIN)
+                                    );
+                                    foreach ($options as $id => $label) : ?>
+                                    <option value="<?php echo $id ?>" <?php selected($value, $id) ?>><?php echo $label ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </td>
+                        </tr>
+                    </thead>
+                </table>
+                <p class="submit">
+                    <input type="submit" value="<?php _e('Search Profiles', bb_agency_TEXTDOMAIN) ?>" class="button-primary" />
+                    <input type="reset" onclick="redirectSearch();" name="reset" value="<?php _e('Reset Form', bb_agency_TEXTDOMAIN) ?>" class="button-secondary" />
+                </p>
+             <form>
+        <div>
+    </div><!-- .container -->
 </div>
  </div>
 </div>

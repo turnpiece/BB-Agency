@@ -49,6 +49,9 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 	define("bb_agency_AFTERBIRTH_ID", 2); // id of data type to move mums to be to once they've given birth
 	define("bb_agency_CLIENTS_ID", 7); // id of clients
 	define("bb_agency_BABIES_ID", 8); // id of babies
+
+	// email sending
+	define("bb_agency_SEND_EMAILS", false); // whether or not to send emails
 	$bb_agency_CURRENT_TYPE_ID = 0; // will contain current type
 	// Clean Up:
 	$pageURL = '';
@@ -686,24 +689,9 @@ function bb_agency_notify_installation(){
 	 
 	// Getting results
 	$result =  curl_exec($ch); // Getting jSON result string
-	$isReported = get_option("bb_agency_notify");	
-         
-	if($result){
-	
-		$message .= "RB Plugin was installed in the server that is not a member of or registered to the list of clients.". "\r\n\r\n";
-		$message .= sprintf('Domain: %s',$client_domain). "\r\n\r\n";  
-		$message .= sprintf('Date: %s',date('l jS \of F Y h:i:s A')) . "\r\n\r\n";  
-		$message .= sprintf('Admin Email: %s', get_option('admin_email')) . "\r\n";  
-  		
-		$headers = array();
-		$headers[] = 'Cc: Rob <rob@clearlym.com>';
-		$headers[] = 'Cc: Operations <operations@clearlym.com>'; // note you can just use a simple email address           
-		
-	//	wp_mail("champ.kazban25@gmail.com", sprintf('RB Plugin Installed - Unknown Server/Domain[%s]', get_option('blogname')), $message,$headers);
-	}			
+	$isReported = get_option("bb_agency_notify");			
 }
 register_activation_hook(__FILE__,"bb_agency_notify_installation");
-
 
 
 /****************************************************************/

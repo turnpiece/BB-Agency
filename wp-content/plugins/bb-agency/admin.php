@@ -199,6 +199,83 @@ function bb_agency_set_content_type($content_type) {
     return 'text/html';
 }
 
+function bb_agency_send_email() {
+    $bb_agency_value_agencyname = bbagency_get_option('bb_agency_option_agencyname');
+    $bb_agency_value_agencyemail = bbagency_get_option('bb_agency_option_agencyemail');
+    $correspondenceEmail = $bb_agency_value_agencyemail;
+    
+    $MassEmailSubject = $_POST["MassEmailSubject"];
+    $MassEmailMessage = $_POST["MassEmailMessage"];
+    $MassEmailRecipient = $_POST["MassEmailRecipient"];
+    $MassEmailBccRecipient = $_POST["MassEmailBccRecipient"];
+
+    $SearchID               = time(U);
+    $SearchMuxHash          = bb_agency_random(8);
+    $SearchMuxToName        =$_POST["MassEmailRecipient"];
+    $SearchMuxToEmail       =$_POST["MassEmailRecipient"];
+    
+    $SearchMuxEmailToBcc    =$_POST['MassEmailBccRecipient'];
+    $SearchMuxSubject       = $_POST['MassEmailSubject'];
+    $SearchMuxMessage       =$_POST['MassEmailMessage'];
+    $SearchMuxCustomValue   ='';                    
+
+    $cartString = bb_agency_get_cart_string();
+
+    $wpdb->query("INSERT INTO " . table_agency_searchsaved." (SearchProfileID,SearchTitle) VALUES('".$cartString."','".$SearchMuxSubject."')") or die(mysql_error());
+    
+    $lastid = $wpdb->insert_id;
+    
+    // Create Record
+    $insert = "INSERT INTO " . table_agency_searchsaved_mux ." 
+            (
+            SearchID,
+            SearchMuxHash,
+            SearchMuxToName,
+            SearchMuxToEmail,
+            SearchMuxSubject,
+            SearchMuxMessage,
+            SearchMuxCustomValue
+            )" .
+            "VALUES
+            (
+            '" . $wpdb->escape($lastid) . "',
+            '" . $wpdb->escape($SearchMuxHash) . "',
+            '" . $wpdb->escape($SearchMuxToName) . "',
+            '" . $wpdb->escape($SearchMuxToEmail) . "',
+            '" . $wpdb->escape($SearchMuxSubject) . "',
+            '" . $wpdb->escape($SearchMuxMessage) . "',
+            '" . $wpdb->escape($SearchMuxCustomValue) ."'
+            )";
+    $results = $wpdb->query($insert);                 
+            
+    if (!empty($MassEmailBccRecipient)){
+        $bccMails = explode(",",$MassEmailBccRecipient);
+        foreach($bccMails as $bccEmail){
+            $headers[] = 'Bcc: '.$bccEmail;
+        }
+    }
+    
+    // Mail it
+    $headers[]  = 'MIME-Version: 1.0';
+    $headers[] = 'Content-type: text/html; charset=iso-8859-1';
+    $headers[] = 'From: '.$bb_agency_value_agencyname.' <'. $correspondenceEmail .'>';
+    
+    if (!empty($expMail)){
+        $expMail = explode(",",$MassEmailRecipient);
+        foreach($expMail as $bccEmail){
+            $headers[] = 'Bcc: '.$bccEmail;
+        }
+    }
+    $MassEmailMessage = str_replace("[link-place-holder]", site_url()."/client-view/".$SearchMuxHash, $MassEmailMessage);
+    if (bb_agency_SEND_EMAILS)
+        return wp_mail($MassEmailRecipient, $MassEmailSubject, $MassEmailMessage, $headers);
+    else {
+        echo "The following email would have been sent:<br /><br />";
+        echo "<pre>".implode("\n", array($MassEmailRecipient, $MassEmailSubject, $MassEmailMessage))."</pre>";
+        exit;
+    }
+}
+
 //Pages
 function bb_agency_dashboard(){
     include_once('admin/overview.php');
