@@ -45,14 +45,15 @@ if ($action) {
     // Add to Cart
     if ($action == "cartAdd" ) { 
         
-        if(count($_GET["ProfileID"])>0){
-            foreach($_GET["ProfileID"] as $value) {
-                $cartString .= $value .",";
-            }
+        if (count($_GET['ProfileID']) > 0) {
+            $_SESSION['cartArray'] = isset($_SESSION['cartArray']) ? array_push($_SESSION['cartArray'], $_GET['ProfileID']) : $_GET['ProfileID'];
+//            foreach ($_GET['ProfileID'] as $value) {
+//                $cartString .= $value .",";
+//            }
         }
         // Clean It!
-        echo $cartString = bb_agency_cleanString($cartString);
-        
+        //echo $cartString = bb_agency_cleanString($cartString);
+/*        
         if (isset($_SESSION['cartArray'])) {
             $cartArray = $_SESSION['cartArray'];
             array_push($cartArray, $cartString);
@@ -61,6 +62,9 @@ if ($action) {
         }
        
        $_SESSION['cartArray'] = $cartArray;
+*/
+       $cartArray = $_SESSION['cartArray'];
+       $cartString = implode(',', array_unique($cartArray));
     
     } elseif ($action == "formEmpty") {  // Handle Form Empty 
         extract($_SESSION);
@@ -501,7 +505,7 @@ if ($action) {
                 ?>
                     <tr class="<?php echo $isInactive ? 'inactive' : 'active' ?>">
                         <th class="check-column" scope="row" >
-                           <input type="checkbox" <?php echo $isInactiveDisable ?> value="<?php $ProfileID ?>" class="administrator" id="ProfileID<?php echo $ProfileID ?>" name="ProfileID[]" />
+                           <input type="checkbox" <?php echo $isInactiveDisable ?> value="<?php echo $ProfileID ?>" class="administrator" id="ProfileID<?php echo $ProfileID ?>" name="ProfileID[]" />
                         </th>
                         <td class="ProfileID column-ProfileID"><?php echo $ProfileID ?></td>
                         <td class="ProfileContact column-ProfileContact">
@@ -639,13 +643,13 @@ if ($action) {
     } // end of if action = search
 
     // display casting cart
-    if (($action == "search") || ($action == "cartAdd") || (isset($_SESSION['cartArray']))) {
+    if ($action == "search" || $action == "cartAdd" || isset($_SESSION['cartArray'])) { ?><pre><?php print_r($_SESSION) ?></pre>
 
-        echo "<div class=\"boxblock-container left-half\">\n";
-        echo " <div class=\"boxblock\">\n";
-        echo "  <h2>". __("Casting Cart", bb_agency_TEXTDOMAIN) ."</h2>\n";
-        echo "    <div class=\"inner\">\n";
-        if (isset($_SESSION['cartArray']) && !empty($_SESSION['cartArray'])) {
+        <div class="boxblock-container left-half">
+            <div class="boxblock">
+                <h2><?php _e("Casting Cart", bb_agency_TEXTDOMAIN) ?></h2>
+                <div class="inner">
+        <?php if (isset($_SESSION['cartArray']) && !empty($_SESSION['cartArray'])) :
              
             $cartArray = $_SESSION['cartArray'];
             $cartString = implode(",", array_unique($cartArray));
@@ -668,36 +672,36 @@ if ($action) {
             } else {
                 $cartAction = "cartRemove";
             }
-            while ($data = mysql_fetch_array($results)) {
-                
-                $ProfileDateUpdated = $data['ProfileDateUpdated'];
-                
-                echo "<div style=\"position: relative; border: 1px solid #e1e1e1; line-height: 22px; float: left; padding: 10px; width: 210px; margin: 6px; \">";
-                echo " <div style=\"text-align: center; \"><h3>". stripslashes($data['ProfileContactNameFirst']) ." ". stripslashes($data['ProfileContactNameLast']) . "</h3></div>"; 
-                echo " <div style=\"float: left; width: 100px; height: 100px; overflow: hidden; margin-top: 2px; \"><img style=\"width: 100px; \" src=\"". bb_agency_UPLOADDIR ."". $data['ProfileGallery'] ."/". $data['ProfileMediaURL'] ."\" /></div>\n";
-                echo " <div style=\"float: left; width: 100px; height: 100px; overflow: scroll-y; margin-left: 10px; line-height: 11px; font-size: 9px; \">\n";
-                
-                    if (!empty($data['ProfileDateBirth'])) {
-                        echo "<strong>Age:</strong> ". bb_agency_get_age($data['ProfileDateBirth']) ."<br />\n";
-                    }
+            while ($data = mysql_fetch_array($results)) : $ProfileDateUpdated = $data['ProfileDateUpdated']; ?>
+                <div style="position: relative; border: 1px solid #e1e1e1; line-height: 22px; float: left; padding: 10px; width: 210px; margin: 6px; ">
+                    <h3><?php echo stripslashes($data['ProfileContactDisplay']) ?></h3>
+                    <div style="float: left; width: 100px; height: 100px; overflow: hidden; margin-top: 2px; ">
+                        <img style="width: 100px; " src="<?php echo bb_agency_UPLOADDIR . $data['ProfileGallery'] .'/'. $data['ProfileMediaURL'] ?>">
 
-                    if (defined('bb_agency_MUMSTOBE_ID') && bb_agency_MUMSTOBE_ID && bb_agency_ismumtobe($data['ProfileType']) && !empty($data['ProfileDateDue'])) {
-                        echo "<strong>Due date:</strong> ". bb_agency_get_due_date($data['ProfileDateDue']) ."<br />\n";
-                    }
-                    
-                echo " </div>";
-                echo " <div style=\"position: absolute; z-index: 20; top: 120px; left: 200px; width: 20px; height: 20px; overflow: hidden; \"><a href=\"?page=". $_GET['page'] ."&action=". $cartAction ."&RemoveID=". $data['ProfileID'] ."\" title=\"". __("Remove from Cart", bb_agency_TEXTDOMAIN) ."\"><img src=\"". bb_agency_BASEDIR ."style/remove.png\" style=\"width: 20px; \" alt=\"". __("Remove from Cart", bb_agency_TEXTDOMAIN) ."\" /></a></div>";
-                echo " <div style=\"clear: both; \"></div>";
-                echo "</div>";
-            }
-            mysql_free_result($results);
-            echo "<div style=\"clear: both;\"></div>\n";
-            echo "</div>";
+                    </div>
+                    <div style="float: left; width: 100px; height: 100px; overflow: scroll-y; margin-left: 10px; line-height: 11px; font-size: 9px; ">
+                    <?php if (!empty($data['ProfileDateBirth'])) : ?>
+                        <strong>Age:</strong> <?php echo bb_agency_get_age($data['ProfileDateBirth']) ?><br />
+                    <?php endif; ?>
+
+                    <?php if (defined('bb_agency_MUMSTOBE_ID') && bb_agency_MUMSTOBE_ID && bb_agency_ismumtobe($data['ProfileType']) && !empty($data['ProfileDateDue'])) : ?>
+                        <strong>Due date:</strong> <?php echo bb_agency_get_due_date($data['ProfileDateDue']) ?><br />
+                    <?php endif; ?>
+                    </div>
+                    <div style="position: absolute; z-index: 20; top: 120px; left: 200px; width: 20px; height: 20px; overflow: hidden; ">
+                        <a href="<?php echo admin_url('admin.php?page='. $_GET['page'] .'&action='. $cartAction .'&RemoveID='. $data['ProfileID']) ?>" title="<?php _e("Remove from Cart", bb_agency_TEXTDOMAIN) ?>">
+                            <img src="". bb_agency_BASEDIR ."style/remove.png" style="width: 20px;" alt="<?php _e("Remove from Cart", bb_agency_TEXTDOMAIN) ?>" />
+                        </a>
+                    </div>
+                    <div style="clear: both; "></div>
+                </div>
+            <?php endwhile; mysql_free_result($results); ?>
+        <div style="clear: both;"></div>
+            </div>
             
-         } else {
-            //$cartAction = "cartRemove";
-            echo "<p>There are no profiles added to the casting cart.</p>\n";
-         }
+         <?php else : ?>
+            <p>There are no profiles added to the casting cart.</p>
+         <?php endif;
 
     echo " </div>\n";
     echo "</div>\n";
