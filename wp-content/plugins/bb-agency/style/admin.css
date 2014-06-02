@@ -173,3 +173,61 @@ th.column-ProfileImage {
 #bb_filter.search-box {
     margin: 1em 0;
 }
+
+/* casting cart */
+.casting-cart .profiles {
+    clear: both; 
+    border-top: 2px solid #c0c0c0;
+}
+.casting-cart .profile {
+    position: relative; 
+    border: 1px solid #e1e1e1; 
+    line-height: 22px; 
+    float: left; 
+    padding: 10px;
+    width: 210px; 
+    margin: 6px; 
+}
+.casting-cart .profile .image {
+    float: left; 
+    width: 100px; 
+    height: 100px; 
+    overflow: hidden; 
+    margin-top: 2px;
+}
+.casting-cart .profile .image img { 
+    width: 100px;
+}
+.casting-cart .profile .details {
+    float: left; 
+    width: 100px; 
+    height: 100px; 
+    overflow: scroll-y; 
+    margin-left: 10px; 
+    line-height: 11px; 
+    font-size: 9px;
+}
+.casting-cart .profile .actions {
+    position: absolute; 
+    z-index: 20; 
+    top: 120px; 
+    left: 200px; 
+    width: 20px; 
+    height: 20px; 
+    overflow: hidden; 
+}
+.casting-cart .profile .remove {
+    width: 20px;
+}
+.casting-cart .empty-cart {
+    float: right; 
+    width: 100px;
+}
+.casting-cart .contents-summary {
+    float: left; 
+    line-height: 22px; 
+    font-family:Georgia; 
+    font-size:13px; 
+    font-style: italic; 
+    color: #777777;
+}

@@ -193,6 +193,12 @@ function set_bb_agency_menu(){
     add_submenu_page("bb_agency_menu", __("Edit Settings", bb_agency_TEXTDOMAIN), __("Settings", bb_agency_TEXTDOMAIN), 7,"bb_agency_settings","bb_agency_settings");
 }
 
+// Emails
+add_filter('wp_mail_content_type', 'bb_agency_set_content_type');
+function bb_agency_set_content_type($content_type) {
+    return 'text/html';
+}
+
 //Pages
 function bb_agency_dashboard(){
     include_once('admin/overview.php');
@@ -220,4 +226,43 @@ function bb_agency_settings(){
 }
 function bb_agencyinteract_menu_approvemembers(){
     include_once('admin/profile-approve.php');
+}
+
+// Casting Cart
+
+// do we have something in the cart?
+function bb_agency_have_cart() {
+    return 
+        isset($_SESSION['cartArray']) && 
+        is_array($_SESSION['cartArray']) && 
+        !empty($_SESSION['cartArray']);
+}
+
+// return casting cart
+function bb_agency_get_cart() {
+    if (bb_agency_have_cart())
+        return $_SESSION['cartArray'];
+}
+
+function bb_agency_the_cart_string() {
+    echo bb_agency_get_cart_string();
+}
+
+function bb_agency_get_cart_string() {
+    if (bb_agency_have_cart())
+        return bb_agency_cleanString(implode(',', array_unique($_SESSION['cartArray'])));
+}
+
+function bb_agency_add_to_cart($profiles) {
+    if (count($profiles) > 0) {
+        return bb_agency_set_cart(bb_agency_have_cart() ? array_merge(bb_agency_get_cart(), $profiles) : $profiles);
+    }
+}
+
+function bb_agency_set_cart($profiles) {
+    return $_SESSION['cartArray'] = $profiles;
+}
+
+function bb_agency_empty_cart() {
+    unset($_SESSION['cartArray']);
 }

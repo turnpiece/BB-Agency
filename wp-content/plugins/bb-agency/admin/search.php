@@ -46,25 +46,9 @@ if ($action) {
     if ($action == "cartAdd" ) { 
         
         if (count($_GET['ProfileID']) > 0) {
-            $_SESSION['cartArray'] = isset($_SESSION['cartArray']) ? array_push($_SESSION['cartArray'], $_GET['ProfileID']) : $_GET['ProfileID'];
-//            foreach ($_GET['ProfileID'] as $value) {
-//                $cartString .= $value .",";
-//            }
+            bb_agency_add_to_cart($_GET['ProfileID']);
         }
-        // Clean It!
-        //echo $cartString = bb_agency_cleanString($cartString);
-/*        
-        if (isset($_SESSION['cartArray'])) {
-            $cartArray = $_SESSION['cartArray'];
-            array_push($cartArray, $cartString);
-        } else {
-            $cartArray = array($cartString);
-        }
-       
-       $_SESSION['cartArray'] = $cartArray;
-*/
-       $cartArray = $_SESSION['cartArray'];
-       $cartString = implode(',', array_unique($cartArray));
+        $cartString = bb_agency_get_cart_string();
     
     } elseif ($action == "formEmpty") {  // Handle Form Empty 
         extract($_SESSION);
@@ -75,11 +59,11 @@ if ($action) {
         }
     } elseif ($action == "cartEmpty") {  // Handle Cart Removal
         // Throw the baby out with the bathwater
-        unset($_SESSION['cartArray']);
+        bb_agency_empty_cart();
         
-    } elseif (($action == "cartRemove") && (isset($_GET["RemoveID"]))) {
-        $cartArray = $_SESSION['cartArray'];
-        $cartString = implode(",", $cartArray);
+    } elseif ($action == "cartRemove" && isset($_GET["RemoveID"])) {
+
+        $cartString = bb_agency_get_cart_string();
         $cartRemoveID = $_GET["RemoveID"];
         $cartString = str_replace($_GET['RemoveID'] ."", "", $cartString);
         $cartString = bb_agency_cleanString($cartString);
@@ -251,33 +235,26 @@ if ($action) {
         <div class="boxblock-holder">
         <?php    
         // Filter Models Already in Cart
-        if (isset($_SESSION['cartArray'])) {
-            $cartArray = $_SESSION['cartArray'];
-            $cartString = implode(",", $cartArray);
+        if (bb_agency_have_cart()) {
+            $cartString = bb_agency_get_cart_string();
             $cartQuery = " AND profile.`ProfileID` NOT IN (". $cartString .")";
         } else {
             $cartQuery = '';
         }
         $filterDropdown = array();
-            
         $filter2 = '';
         $filters = array();
 
         foreach ($_GET as $key => $val) {
-                        
             if (substr($key, 0, 15) == "ProfileCustomID") {
-                
                 if ((!empty($val) AND !is_array($val)) OR (is_array($val) AND count(array_filter($val)) > 0)) {
-                   
-                    if(is_array($val)){
-                      
-                        if(count(array_filter($val)) > 1) {
+                    if (is_array($val)){
+                        if (count(array_filter($val)) > 1) {
                             $ct =1;
                             foreach($val as $v){
                                 if($ct == 1){
                                     $val = $v;
                                     $ct++;
-
                                 } else {
                                     $val = $val .",".$v;
                                 }
@@ -286,14 +263,12 @@ if ($action) {
                             $val = array_shift(array_values($val));
                         } 
                     }
-    
                     $q = mysql_query("SELECT * FROM ". table_agency_customfields ." WHERE ProfileCustomID = '".substr($key,15)."' ");
                     $ProfileCustomType = mysql_fetch_assoc($q);
                     
                     // get key id
                     $keyID = substr($key, 15);
                     $keyID = preg_replace("/_\w+$/", '', $keyID);
-
                     
                     // Have created a holder $filter2 and
                     // create its own filter here and change
@@ -464,8 +439,8 @@ if ($action) {
         <form method="GET" action="<?php echo admin_url('admin.php?page='. $_GET['page']) ?>">
             <input type="hidden" name="page" id="page" value="<?php echo $_GET['page'] ?>" />
             <input type="hidden" name="action" value="cartAdd" />
-            <?php if (isset($_SESSION['cartArray'])) : ?>
-            <input type="hidden" name="forceCart" value="<?php echo $_SESSION['cartArray'] ?>" />
+            <?php if (bb_agency_have_cart()) : ?>
+            <input type="hidden" name="forceCart" value="<?php bb_agency_the_cart_string() ?>" />
             <?php endif; ?>
             <table cellspacing="0" class="widefat fixed">
                 <thead>
@@ -474,12 +449,12 @@ if ($action) {
                             <input type="checkbox" />
                         </th>
                         <th class="column-ProfileID" id="ProfileID" scope="col">
-                            <a href="<?php echo admin_url('admin.php?page=bb_agency_profiles&sort=ProfileID&dir='. $sortDirection) ?>"><?php _e("ID", bb_agency_TEXTDOMAIN) ?></a>
+                            <a href="<?php echo admin_url('admin.php?page=bb_agency_profiles&sort=ProfileID&dir='. $sortDirection) ?>"><?php _e('ID', bb_agency_TEXTDOMAIN) ?></a>
                         </th>
-                        <th class="column-ProfileContact" id="ProfileContact" scope="col"><?php _e("Contact Information", bb_agency_TEXTDOMAIN) ?></th>
-                        <th class="column-ProfileStats" id="ProfileStats" scope="col"><?php _e("Private Details", bb_agency_TEXTDOMAIN) ?></th>
-                        <th class="column-ProfileDetails" id="ProfileDetails" scope="col"><?php _e("Public Details", bb_agency_TEXTDOMAIN) ?></th>
-                        <th class="column-ProfileImage" id="ProfileImage" scope="col"><?php _e("Headshot", bb_agency_TEXTDOMAIN) ?></th>
+                        <th class="column-ProfileContact" id="ProfileContact" scope="col"><?php _e('Contact Information', bb_agency_TEXTDOMAIN) ?></th>
+                        <th class="column-ProfileStats" id="ProfileStats" scope="col"><?php _e('Private Details', bb_agency_TEXTDOMAIN) ?></th>
+                        <th class="column-ProfileDetails" id="ProfileDetails" scope="col"><?php _e('Public Details', bb_agency_TEXTDOMAIN) ?></th>
+                        <th class="column-ProfileImage" id="ProfileImage" scope="col"><?php _e('Headshot', bb_agency_TEXTDOMAIN) ?></th>
                     </tr>
                 </thead>
                 <tfoot>
@@ -488,12 +463,12 @@ if ($action) {
                             <input type="checkbox"/>
                         </th>
                         <th class="column-ProfileID" id="ProfileID" scope="col">
-                            <a href="<?php echo admin_url('admin.php?page=bb_agency_profiles&sort=ProfileID&dir='. $sortDirection) ?>"><?php _e("ID", bb_agency_TEXTDOMAIN) ?></a>
+                            <a href="<?php echo admin_url('admin.php?page=bb_agency_profiles&sort=ProfileID&dir='. $sortDirection) ?>"><?php _e('ID', bb_agency_TEXTDOMAIN) ?></a>
                         </th>
-                        <th class="column-ProfileContact" id="ProfileContact" scope="col"><?php _e("Contact Information", bb_agency_TEXTDOMAIN) ?></th>
-                        <th class="column-ProfileStats" id="ProfileStats" scope="col"><?php _e("Private Details", bb_agency_TEXTDOMAIN) ?></th>
-                        <th class="column-ProfileDetails" id="ProfileDetails" scope="col"><?php _e("Public Details", bb_agency_TEXTDOMAIN) ?></th>
-                        <th class="column-ProfileImage" id="ProfileImage" scope="col"><?php _e("Headshot", bb_agency_TEXTDOMAIN) ?></th>
+                        <th class="column-ProfileContact" id="ProfileContact" scope="col"><?php _e('Contact Information', bb_agency_TEXTDOMAIN) ?></th>
+                        <th class="column-ProfileStats" id="ProfileStats" scope="col"><?php _e('Private Details', bb_agency_TEXTDOMAIN) ?></th>
+                        <th class="column-ProfileDetails" id="ProfileDetails" scope="col"><?php _e('Public Details', bb_agency_TEXTDOMAIN) ?></th>
+                        <th class="column-ProfileImage" id="ProfileImage" scope="col"><?php _e('Headshot', bb_agency_TEXTDOMAIN) ?></th>
                     </tr>
                 </tfoot>
                 <tbody>
@@ -544,27 +519,27 @@ if ($action) {
                         <?php endif; ?>    
                         <?php if (!empty($data['ProfileLocationCountry'])) : ?>
                             <div>
-                                <strong><?php _e("Country", bb_agency_TEXTDOMAIN) ?>:</strong> <?php echo $data['ProfileLocationCountry'] ?>
+                                <strong><?php _e('Country', bb_agency_TEXTDOMAIN) ?>:</strong> <?php echo $data['ProfileLocationCountry'] ?>
                             </div>
                         <?php endif; ?>
                         <?php if (!empty($data['distance'])) : ?>
                             <div>
-                                <strong><?php _e("Distance", bb_agency_TEXTDOMAIN) ?>:</strong> <?php echo number_format((float)$data['distance'], 1, '.', '') ?> miles
+                                <strong><?php _e('Distance', bb_agency_TEXTDOMAIN) ?>:</strong> <?php echo number_format((float)$data['distance'], 1, '.', '') ?> miles
                             </div>
                         <?php endif; ?>
 
                         <?php if (defined('bb_agency_MUMSTOBE_ID') && bb_agency_MUMSTOBE_ID && bb_agency_ismumtobe($data['ProfileType']) && !empty($data['ProfileDateDue'])) : ?>                             
                         <div>
-                            <strong><?php _e("Due date", bb_agency_TEXTDOMAIN) ?>:</strong> <?php echo $data['ProfileDateDue'] ?></div>
+                            <strong><?php _e('Due date', bb_agency_TEXTDOMAIN) ?>:</strong> <?php echo $data['ProfileDateDue'] ?></div>
                         </div>
                         <?php endif;
 
                         foreach (array(
-                            __("Birth date", bb_agency_TEXTDOMAIN) => $data['ProfileDateBirth'],
-                            __("Website", bb_agency_TEXTDOMAIN) => $data['ProfileContactWebsite'],
-                            __("Phone Home", bb_agency_TEXTDOMAIN) => $data['ProfileContactPhoneHome'],
-                            __("Phone Cell", bb_agency_TEXTDOMAIN) => $data['ProfileContactPhoneCell'],
-                            __("Phone Work", bb_agency_TEXTDOMAIN) => $data['ProfileContactPhoneWork']
+                            __('Birth date', bb_agency_TEXTDOMAIN) => $data['ProfileDateBirth'],
+                            __('Website', bb_agency_TEXTDOMAIN) => $data['ProfileContactWebsite'],
+                            __('Phone Home', bb_agency_TEXTDOMAIN) => $data['ProfileContactPhoneHome'],
+                            __('Phone Cell', bb_agency_TEXTDOMAIN) => $data['ProfileContactPhoneCell'],
+                            __('Phone Work', bb_agency_TEXTDOMAIN) => $data['ProfileContactPhoneWork']
                             ) as $label => $value) : if ($value) : ?>
                             <div>
                                 <strong><?php echo $label ?>:</strong> <?php echo $value ?></div>
@@ -585,7 +560,7 @@ if ($action) {
 
                         <?php if (!empty($data['ProfileGender'])) : ?>
                             <div>
-                                <strong><?php _e("Gender", bb_agency_TEXTDOMAIN) ?>:</strong> <?php echo bb_agency_getGenderTitle($data['ProfileGender']) ?bb_agency_getGenderTitle($data['ProfileGender']) : '--' ?>
+                                <strong><?php _e('Gender', bb_agency_TEXTDOMAIN) ?>:</strong> <?php echo bb_agency_getGenderTitle($data['ProfileGender']) ?bb_agency_getGenderTitle($data['ProfileGender']) : '--' ?>
                             </div>
                         <?php endif;
 
@@ -620,9 +595,9 @@ if ($action) {
                             <p>
                                 <?php 
                                 if (isset($filter))
-                                    _e("No profiles found.", bb_agency_TEXTDOMAIN);
+                                    _e('No profiles found.', bb_agency_TEXTDOMAIN);
                                 else
-                                    _e("There aren't any profiles in the system yet.", bb_agency_TEXTDOMAIN);
+                                    _e('There aren\'t any profiles in the system yet.', bb_agency_TEXTDOMAIN);
                                 ?>
                             </p>
                         </td>
@@ -634,8 +609,8 @@ if ($action) {
            
             <p>
                 <input type="submit" name="CastingCart" value="<?php _e('Add to Casting Cart','bb_agency_search') ?>" class="button-primary" />
-                <a href="#" onClick="window.open('<?php bloginfo('url') ?>/profile-print/?action=quickPrint&cD=1','mywindow','width=930,height=600,left=0,top=50,screenX=0,screenY=50,scrollbars=yes')" title="Quick Print" class="button-primary"><?php _e("Quick Print", bb_agency_TEXTDOMAIN) ?></a>
-                <a href="#" onClick="window.open('<?php bloginfo('url') ?>/profile-print/?action=quickPrint&cD=0','mywindow','width=930,height=600,left=0,top=50,screenX=0,screenY=50,scrollbars=yes')" title="Quick Print - Without Details" class="button-primary"><?php _e("Quick Print", bb_agency_TEXTDOMAIN) ?> - <?php _e("Without Details", bb_agency_TEXTDOMAIN) ?></a>
+                <a href="#" onClick="window.open('<?php bloginfo('url') ?>/profile-print/?action=quickPrint&cD=1','mywindow','width=930,height=600,left=0,top=50,screenX=0,screenY=50,scrollbars=yes')" title="Quick Print" class="button-primary"><?php _e('Quick Print', bb_agency_TEXTDOMAIN) ?></a>
+                <a href="#" onClick="window.open('<?php bloginfo('url') ?>/profile-print/?action=quickPrint&cD=0','mywindow','width=930,height=600,left=0,top=50,screenX=0,screenY=50,scrollbars=yes')" title="Quick Print - Without Details" class="button-primary"><?php _e('Quick Print', bb_agency_TEXTDOMAIN) ?> - <?php _e('Without Details', bb_agency_TEXTDOMAIN) ?></a>
             </p>
         </form>
 <?php      
@@ -643,44 +618,59 @@ if ($action) {
     } // end of if action = search
 
     // display casting cart
-    if ($action == "search" || $action == "cartAdd" || isset($_SESSION['cartArray'])) { ?><pre><?php print_r($_SESSION) ?></pre>
+    if ($action == "search" || $action == "cartAdd") { ?>
 
         <div class="boxblock-container left-half">
             <div class="boxblock">
-                <h2><?php _e("Casting Cart", bb_agency_TEXTDOMAIN) ?></h2>
-                <div class="inner">
-        <?php if (isset($_SESSION['cartArray']) && !empty($_SESSION['cartArray'])) :
+                <h2><?php _e('Casting Cart', bb_agency_TEXTDOMAIN) ?></h2>
+                <div class="casting-cart inner">
+        <?php if (bb_agency_have_cart()) :
              
-            $cartArray = $_SESSION['cartArray'];
-            $cartString = implode(",", array_unique($cartArray));
+            $cartString = bb_agency_get_cart_string();
             $cartString = bb_agency_cleanString($cartString);
+
+            $t_profile = table_agency_profile;
+            $t_media = table_agency_profile_media;
             
-            // Show Cart  
-            $query = "SELECT  profile.*,media.* FROM ". table_agency_profile ." profile, ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1 AND profile.ProfileID IN (". $cartString .") ORDER BY profile.ProfileContactNameFirst ASC";
-            $results = mysql_query($query) or  die( "<a href=\"?page=". $_GET['page'] ."&action=cartEmpty\" class=\"button-secondary\">". __("No profile selected. Try again", bb_agency_TEXTDOMAIN) ."</a>"); //die ( __("Error, query failed", bb_agency_TEXTDOMAIN ));
+            // Show Cart
+            $query = <<<EOF
+SELECT  profile.*, media.* 
+FROM $t_profile profile
+LEFT JOIN $t_media media 
+ON profile.ProfileID = media.ProfileID 
+AND media.ProfileMediaType = "Image" 
+AND media.ProfileMediaPrimary = 1
+WHERE profile.ProfileID IN ($cartString) 
+ORDER BY profile.ProfileContactNameFirst ASC
+EOF;
+
+            $results = mysql_query($query) or die('Get casting cart database query failed - '.mysql_error());
             $count = mysql_num_rows($results);
-            
-            echo "<div style=\"float: right; width: 100px; \"><a href=\"?page=". $_GET['page'] ."&action=cartEmpty\" class=\"button-secondary\">". __("Empty Cart", bb_agency_TEXTDOMAIN) ."</a></div>";
-            echo "<div style=\"float: left; line-height: 22px; font-family:Georgia; font-size:13px; font-style: italic; color: #777777; \">". __("Currently", bb_agency_TEXTDOMAIN) ." <strong>". $count ."</strong> ". __("in Cart", bb_agency_TEXTDOMAIN) ."</div>";
-            echo "<div style=\"clear: both; border-top: 2px solid #c0c0c0; \" class=\"profile\">";
-            
+        ?>
+            <div class="empty-cart">
+                <a href="<?php echo admin_url('admin.php?page='. $_GET['page'] .'&action=cartEmpty') ?>" class="button-secondary empty"><?php _e('Empty Cart', bb_agency_TEXTDOMAIN) ?></a>
+            </div>
+            <div class="contents-summary"><?php _e('Currently', bb_agency_TEXTDOMAIN) ?> <strong><?php echo $count ?></strong> <?php _e('in cart', bb_agency_TEXTDOMAIN) ?></div>
+            <div class="profiles">
+            <?php
             if ($count == 1) {
                 $cartAction = "cartEmpty";
             } elseif ($count < 1) {
-                echo "". __("There are currently no profiles in the casting cart", bb_agency_TEXTDOMAIN) .".";
+                _e('There are currently no profiles in the casting cart', bb_agency_TEXTDOMAIN) .'.';
                 $cartAction = "cartEmpty";
             } else {
                 $cartAction = "cartRemove";
             }
             while ($data = mysql_fetch_array($results)) : $ProfileDateUpdated = $data['ProfileDateUpdated']; ?>
-                <div style="position: relative; border: 1px solid #e1e1e1; line-height: 22px; float: left; padding: 10px; width: 210px; margin: 6px; ">
+                <div class="profile">
                     <h3><?php echo stripslashes($data['ProfileContactDisplay']) ?></h3>
-                    <div style="float: left; width: 100px; height: 100px; overflow: hidden; margin-top: 2px; ">
-                        <img style="width: 100px; " src="<?php echo bb_agency_UPLOADDIR . $data['ProfileGallery'] .'/'. $data['ProfileMediaURL'] ?>">
-
+                    <?php if ($data['ProfileMediaURL']) : ?>
+                    <div class="image">
+                        <img src="<?php echo bb_agency_UPLOADDIR . $data['ProfileGallery'] .'/'. $data['ProfileMediaURL'] ?>">
                     </div>
-                    <div style="float: left; width: 100px; height: 100px; overflow: scroll-y; margin-left: 10px; line-height: 11px; font-size: 9px; ">
-                    <?php if (!empty($data['ProfileDateBirth'])) : ?>
+                    <?php endif; ?>
+                    <div class="details">
+                    <?php if (!empty($data['ProfileDateBirth']) && substr($data['ProfileDateBirth'], 0, 4) !== '0000') : ?>
                         <strong>Age:</strong> <?php echo bb_agency_get_age($data['ProfileDateBirth']) ?><br />
                     <?php endif; ?>
 
@@ -688,9 +678,9 @@ if ($action) {
                         <strong>Due date:</strong> <?php echo bb_agency_get_due_date($data['ProfileDateDue']) ?><br />
                     <?php endif; ?>
                     </div>
-                    <div style="position: absolute; z-index: 20; top: 120px; left: 200px; width: 20px; height: 20px; overflow: hidden; ">
-                        <a href="<?php echo admin_url('admin.php?page='. $_GET['page'] .'&action='. $cartAction .'&RemoveID='. $data['ProfileID']) ?>" title="<?php _e("Remove from Cart", bb_agency_TEXTDOMAIN) ?>">
-                            <img src="". bb_agency_BASEDIR ."style/remove.png" style="width: 20px;" alt="<?php _e("Remove from Cart", bb_agency_TEXTDOMAIN) ?>" />
+                    <div class="actions">
+                        <a href="<?php echo admin_url('admin.php?page='. $_GET['page'] .'&action='. $cartAction .'&RemoveID='. $data['ProfileID']) ?>" title="<?php _e('Remove from Cart', bb_agency_TEXTDOMAIN) ?>">
+                            <img class="remove" src="<?php echo bb_agency_BASEDIR ?>style/remove.png" alt="<?php _e('Remove from Cart', bb_agency_TEXTDOMAIN) ?>" />
                         </a>
                     </div>
                     <div style="clear: both; "></div>
@@ -710,9 +700,9 @@ if ($action) {
     if (isset($cartAction) && ($cartAction == "cartEmpty" || $cartAction == "cartRemove")) : ?>
         <a name="compose">&nbsp;</a> 
         <div class="boxblock">
-            <h3><?php _e("Cart Actions", bb_agency_TEXTDOMAIN) ?></h3>
+            <h3><?php _e('Cart Actions', bb_agency_TEXTDOMAIN) ?></h3>
             <div class="inner">
-                <a href="<?php echo admin_url('admin.php?page=bb_agency_searchsaved&action=searchSave') ?>" title="<?php _e("Save Search & Email", bb_agency_TEXTDOMAIN) ?>" class="button-primary"><?php _e('Save Search & Email', bb_agency_TEXTDOMAIN) ?></a>
+                <a href="<?php echo admin_url('admin.php?page=bb_agency_searchsaved&action=searchSave') ?>" title="<?php _e('Save Search & Email', bb_agency_TEXTDOMAIN) ?>" class="button-primary"><?php _e('Save Search & Email', bb_agency_TEXTDOMAIN) ?></a>
                 <a href="<?php echo admin_url('admin.php?page=bb_agency_search&action=massEmail#compose') ?>" title="<?php _e('Mass Email', bb_agency_TEXTDOMAIN) ?>" class="button-primary"><?php _e('Mass Email', bb_agency_TEXTDOMAIN) ?></a>
                 <a href="#" onClick="window.open('<?php bloginfo('url') ?>/profile-print/?action=castingCart&cD=1','mywindow','width=930,height=600,left=0,top=50,screenX=0,screenY=50,scrollbars=yes')" title="Quick Print" class="button-primary"><?php _e('Quick Print', bb_agency_TEXTDOMAIN) ?></a>
                 <a href="#" onClick="window.open('<?php bloginfo('url') ?>/profile-print/?action=castingCart&cD=0','mywindow','width=930,height=600,left=0,top=50,screenX=0,screenY=50,scrollbars=yes')" title="Quick Print - Without Details" class="button-primary"><?php _e('Quick Print', bb_agency_TEXTDOMAIN) ?> - <?php _e('Without Details', bb_agency_TEXTDOMAIN) ?></a>
@@ -729,13 +719,6 @@ if ($action) {
         $bb_agency_value_agencyname = bbagency_get_option('bb_agency_option_agencyname');
         $bb_agency_value_agencyemail = bbagency_get_option('bb_agency_option_agencyemail');
         $correspondenceEmail= $bb_agency_value_agencyemail;
-        add_filter('wp_mail_content_type','bb_agency_set_content_type');
-
-        function bb_agency_set_content_type($content_type) {
-            return 'text/html';
-        }
-  
-        
         
         $MassEmailSubject = $_POST["MassEmailSubject"];
         $MassEmailMessage = $_POST["MassEmailMessage"];
@@ -750,14 +733,11 @@ if ($action) {
         $SearchMuxEmailToBcc    =$_POST['MassEmailBccRecipient'];
         $SearchMuxSubject       = $_POST['MassEmailSubject'];
         $SearchMuxMessage       =$_POST['MassEmailMessage'];
-        $SearchMuxCustomValue   ='';
+        $SearchMuxCustomValue   ='';                    
 
 
-                    
-
-        $cartArray = $_SESSION['cartArray'];
         
-        $cartString = implode(",", array_unique($cartArray));
+        $cartString = bb_agency_get_cart_string();
         $cartString = bb_agency_cleanString($cartString);
         
 
@@ -815,13 +795,13 @@ if ($action) {
     }
 
     // send bulk email
-    if ($action == "massEmail") {
+    if ($action == "massEmail") :
         
         // Filter Models Already in Cart
-        if (isset($_SESSION['cartArray'])) {
-            $cartArray = $_SESSION['cartArray'];
-            $cartString = implode(",", $cartArray);
-            $cartQuery =  " AND profile.ProfileContactEmail !='' AND profile.ProfileID IN (". $cartString .")";
+        if (bb_agency_have_cart()) {
+    
+            $cartString = bb_agency_get_cart_string();
+            $cartQuery = " AND profile.ProfileContactEmail !='' AND profile.ProfileID IN (". $cartString .")";
         }
         // Search Results   
         $query = "SELECT profile.*  FROM ". table_agency_profile ." profile WHERE profile.ProfileID > 0 ".$cartQuery;
@@ -830,7 +810,7 @@ if ($action) {
         $pos = 0; 
         $recipient = "";            
         while ($data = mysql_fetch_array($results2)) {
-        $pos ++;
+            $pos ++;
             $ProfileID = $data['ProfileID'];
             $recipient .=$data['ProfileContactEmail'];
             if ($count != $pos) {
@@ -838,43 +818,47 @@ if ($action) {
             }    
         }
         // Email
-        $bb_options = bbagency_get_option();
         $bb_agency_value_agencyname = bbagency_get_option('bb_agency_option_agencyname');
         $bb_agency_value_agencyemail = bbagency_get_option('bb_agency_option_agencyemail');
-        echo "<form method=\"post\">";
-        echo "     <div class=\"boxblock\">\n";
-        echo "        <h3>". __("Compose Email", bb_agency_TEXTDOMAIN) ."</h3>\n";
-        echo "        <div class=\"inner\">\n";
-        if ($isSent) {
-            echo "<div id=\"message\" class=\"updated\"><p>Email Messages successfully sent!</p></div>";  
-        }
-        //Commented to change default recipient to wp-admin
-        // echo "<strong>Recipient:</strong><br/><textarea name=\"MassEmailRecipient\" style=\"width:100%;\">".$recipient."</textarea><br/>";
-        echo "<strong>Recipient:</strong><br/><textarea name=\"MassEmailRecipient\" style=\"width:100%;\">".$bb_agency_value_agencyemail."</textarea><br/>";
-        //Bcc recipients
-        echo "<strong>Bcc:</strong><br/><textarea name=\"MassEmailBccRecipient\" style=\"width:100%;\" placeholder=\"Enter Comma seperated values\">".$recipient."</textarea><br/>";
-     
-        echo "        <strong>Subject:</strong> <br/><input type=\"text\" name=\"MassEmailSubject\" style=\"width:100%\"/>";
-        echo "<br/>";
-        /*echo "      <strong>Message:</strong><br/>     <textarea name=\"MassEmailMessage\"  style=\"width:100%;height:300px;\">this message was sent to you by ".$bb_agency_value_agencyname." ".network_site_url( '/' )."</textarea>";*/
-        
-        $content = "This message was sent to you by ".$bb_agency_value_agencyname." ".network_site_url( '/' )."<br /> [link-place-holder]";
-        $editor_id = 'MassEmailMessage';
-        wp_editor( $content, $editor_id,array("wpautop"=>false,"tinymce"=>true) );
-        echo "<input type=\"submit\" value=\"". __("Send Email", bb_agency_TEXTDOMAIN) . "\" name=\"SendEmail\"class=\"button-primary\" />\n";
-        echo "</div>\n";
-        echo "</div>\n";
-        echo "</form>";
-    }
-    
-    echo "    </div><!-- .container -->\n";
+        ?>
+        <form method="post">
+             <div class="boxblock">\n
+                <h3><?php _e('Compose Email', bb_agency_TEXTDOMAIN) ?></h3>
+                <div class="inner">
+                <?php if ($isSent) : ?>
+                <div id="message" class="updated">
+                    <p>Email messages successfully sent!</p>
+                </div>
+                <?php endif; ?>
+                <strong>Recipient:</strong><br/>
+                <textarea name="MassEmailRecipient" style="width:100%;"><?php echo $bb_agency_value_agencyemail ?></textarea><br/>
+                <strong>Bcc:</strong><br/>
+                <textarea name="MassEmailBccRecipient" style="width:100%;" placeholder="Enter Comma seperated values"><?php echo $recipient ?></textarea><br/>
+             
+                <strong>Subject:</strong> <br/>
+                <input type="text" name="MassEmailSubject" style="width:100%"/>
+                <br/>
+                <?php
+                // set content
+                $content = "This message was sent to you by ".$bb_agency_value_agencyname." ".network_site_url( '/' )."<br /> [link-place-holder]";
+                $editor_id = 'MassEmailMessage';
+                wp_editor( $content, $editor_id,array("wpautop"=>false,"tinymce"=>true) );
+
+                ?>
+                <input type="submit" value="<?php _e('Send Email', bb_agency_TEXTDOMAIN) ?>" name="SendEmail" class="button-primary" />
+                </div>
+            </div>
+        </form>
+    <?php endif; // end of mass email ?>
+    </div><!-- .container -->
+<?php    
 } 
 
 }
 ?>
     <div class="boxblock-container left-half">
     <div class="boxblock">
-        <h3><?php _e("Advanced Search", bb_agency_TEXTDOMAIN) ?></h3>
+        <h3><?php _e('Advanced Search', bb_agency_TEXTDOMAIN) ?></h3>
         <div class="inner">
         <form method="GET" action="<?php echo admin_url('admin.php?page='. $_GET['page']) ?>">
             <input type="hidden" name="page" id="page" value="bb_agency_search" />
@@ -882,13 +866,13 @@ if ($action) {
             <table cellspacing="0" class="widefat fixed">
                 <thead>
                     <tr>
-                        <th scope="row"><?php _e("First Name", bb_agency_TEXTDOMAIN) ?>:</th>
+                        <th scope="row"><?php _e('Name', bb_agency_TEXTDOMAIN) ?>:</th>
                         <td>
                             <input type="text" id="ProfileContactName" name="ProfileContactName" value="<?php echo isset($ProfileContactName) ? $ProfileContactName : '' ?>" />               
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row"><?php _e("Classification", bb_agency_TEXTDOMAIN) ?>:</th>
+                        <th scope="row"><?php _e('Classification', bb_agency_TEXTDOMAIN) ?>:</th>
                         <td>
                             <select name="ProfileType" id="ProfileType">               
                                 <option value="">--</option>
@@ -910,7 +894,7 @@ if ($action) {
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row"><?php _e("Gender", bb_agency_TEXTDOMAIN) ?>:</th>
+                        <th scope="row"><?php _e('Gender', bb_agency_TEXTDOMAIN) ?>:</th>
                         <td>
                             <select name="ProfileGender" id="ProfileGender">               
                                 <option value="">--</option>
@@ -924,16 +908,16 @@ if ($action) {
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row"><?php _e("Age", bb_agency_TEXTDOMAIN) ?>:</th>
+                        <th scope="row"><?php _e('Age', bb_agency_TEXTDOMAIN) ?>:</th>
                         <td>
                             <fieldset>
                                 <div>
-                                    <label for="ProfileDateBirth_min"><?php _e("Min", bb_agency_TEXTDOMAIN) ?></label>
+                                    <label for="ProfileDateBirth_min"><?php _e('Min', bb_agency_TEXTDOMAIN) ?></label>
                                     <input type="text" class="min_max" id="ProfileDateBirth_min" name="ProfileDateBirth_min" />
                                 </div>
 
                                 <div>
-                                    <label for="ProfileDateBirth_max"><?php _e("Max", bb_agency_TEXTDOMAIN) ?></label>
+                                    <label for="ProfileDateBirth_max"><?php _e('Max', bb_agency_TEXTDOMAIN) ?></label>
                                     <input type="text" class="min_max" id="ProfileDateBirth_max" name="ProfileDateBirth_max" />
                                 </div>
                             </fieldset>
@@ -941,16 +925,16 @@ if ($action) {
                     </tr>
                     <?php if (defined('bb_agency_MUMSTOBE_ID') && bb_agency_MUMSTOBE_ID) : ?>
                     <tr>
-                        <th scope="row"><?php _e("Due date", bb_agency_TEXTDOMAIN) ?>:</th>
+                        <th scope="row"><?php _e('Due date', bb_agency_TEXTDOMAIN) ?>:</th>
                         <td>
                             <fieldset>
                                 <div>
-                                    <label for="ProfileDateDue_min"><?php _e("Min", bb_agency_TEXTDOMAIN) ?></label>
+                                    <label for="ProfileDateDue_min"><?php _e('Min', bb_agency_TEXTDOMAIN) ?></label>
                                     <input type="text" class="min_max bbdatepicker" id="ProfileDateDue_min" name="ProfileDateDue_min" />
                                 </div>
 
                                 <div>
-                                    <label for="ProfileDateDue_max"><?php _e("Max", bb_agency_TEXTDOMAIN) ?></label>
+                                    <label for="ProfileDateDue_max"><?php _e('Max', bb_agency_TEXTDOMAIN) ?></label>
                                     <input type="text" class="min_max bbdatepicker" id="ProfileDateDue_max" name="ProfileDateDue_max" />
                                 </div>
                             </fieldset>
@@ -958,7 +942,7 @@ if ($action) {
                     </tr> 
                     <?php endif; ?>
                     <tr>
-                        <th scope="row"><?php _e("Town", bb_agency_TEXTDOMAIN) ?>:</th>
+                        <th scope="row"><?php _e('Town', bb_agency_TEXTDOMAIN) ?>:</th>
                         <td>
                             <select name="ProfileLocationCity" id="ProfileLocationCity">               
                                 <option value="">--</option>
@@ -973,7 +957,7 @@ if ($action) {
                     </tr>
 
                     <tr>
-                        <th scope="row"><?php _e("County", bb_agency_TEXTDOMAIN) ?>:</th>
+                        <th scope="row"><?php _e('County', bb_agency_TEXTDOMAIN) ?>:</th>
                         <td>
                             <select name="ProfileLocationState" id="ProfileLocationState">               
                                 <option value="">--</option>
@@ -988,7 +972,7 @@ if ($action) {
                     </tr>
 
                     <tr>
-                        <th scope="row"><?php _e("Location", bb_agency_TEXTDOMAIN) ?>:</th>
+                        <th scope="row"><?php _e('Location', bb_agency_TEXTDOMAIN) ?>:</th>
                         <td>
                             <input type="text" name="ProfileLocation" value="<?php echo isset($_GET['ProfileLocation']) ? $_GET['ProfileLocation'] : '' ?>" />
                         </td>
@@ -1101,11 +1085,11 @@ if ($action) {
                             <?php else : ?>
                                 <fieldset class="bbtext">
                                     <div>
-                                        <label for="ProfileCustomLabel_min"><?php _e("Min", bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
+                                        <label for="ProfileCustomLabel_min"><?php _e('Min', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
                                         <input class="min_max" type="text" name="<?php echo $field ?>_min" value="<?php echo $ProfileCustomOptions_Min_value ?>" />
                                     </div>
                                     <div>
-                                        <label for="ProfileCustomLabel_max"><?php _e("Max", bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
+                                        <label for="ProfileCustomLabel_max"><?php _e('Max', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
                                         <input class="min_max" type="text" name="<?php echo $field ?>_max" value="<?php echo $ProfileCustomOptions_Max_value ?>" />
                                     </div>
                                 </fieldset>
@@ -1129,20 +1113,20 @@ if ($action) {
                                                      
                                 if (!empty($ProfileCustomOptions_Min_value) && !empty($ProfileCustomOptions_Max_value)) : ?>
                                 <div>
-                                    <label for="ProfileCustomLabel_min" style="text-align:right;"><?php _e("Min", bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
+                                    <label for="ProfileCustomLabel_min" style="text-align:right;"><?php _e('Min', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
                                     <input class="min_max" type="text" name="<?php echo $field ?>_min" value="<?php echo $ProfileCustomOptions_Min_value ?>" />
                                 </div>
                                 <div>
-                                    <label for="ProfileCustomLabel_max" style="text-align:right;"><?php _e("Max", bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
+                                    <label for="ProfileCustomLabel_max" style="text-align:right;"><?php _e('Max', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
                                     <input class="min_max" type="text" name="<?php echo $field ?>_max" value="<?php echo $ProfileCustomOptions_Max_value ?>" />
                                 </div>
                                 <?php else : ?>
                                 <div>
-                                    <label for="ProfileCustomLabel_min" style="text-align:right;"><?php _e("Min", bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
+                                    <label for="ProfileCustomLabel_min" style="text-align:right;"><?php _e('Min', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
                                     <input class="min_max" type="text" name="<?php echo $field ?>_min" value="<?php echo $_SESSION[$field.'_min'] ?>" />
                                 </div>
                                 <div>
-                                    <label for="ProfileCustomLabel_max" style="text-align:right;"><?php _e("Max", bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
+                                    <label for="ProfileCustomLabel_max" style="text-align:right;"><?php _e('Max', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
                                     <input class="min_max" type="text" name="<?php echo $field ?>_max" value="<?php echo $_SESSION[$field.'_max'] ?>" />
                                 </div>
                                 <?php endif; ?>
@@ -1302,17 +1286,17 @@ if ($action) {
                         // status filter
                         ?>
                     <tr>
-                        <th scope="row"><?php _e("Status", bb_agency_TEXTDOMAIN) ?>:</th>
+                        <th scope="row"><?php _e('Status', bb_agency_TEXTDOMAIN) ?>:</th>
                         <td>
                             <select name="ProfileIsActive" id="ProfileIsActive">               
                                 <option value="">--</option>
                                 <?php
                                 $value = isset($_SESSION['ProfileIsActive']) ? $_SESSION['ProfileIsActive'] : false;
                                 $options = array(
-                                    1 => __("Active", bb_agency_TEXTDOMAIN),
-                                    4 => __("Not Visible", bb_agency_TEXTDOMAIN),
-                                    0 => __("Inactive", bb_agency_TEXTDOMAIN),
-                                    2 => __("Archived", bb_agency_TEXTDOMAIN)
+                                    1 => __('Active', bb_agency_TEXTDOMAIN),
+                                    4 => __('Not Visible', bb_agency_TEXTDOMAIN),
+                                    0 => __('Inactive', bb_agency_TEXTDOMAIN),
+                                    2 => __('Archived', bb_agency_TEXTDOMAIN)
                                 );
                                 foreach ($options as $id => $label) : ?>
                                 <option value="<?php echo $id ?>" <?php selected($value, $id) ?>><?php echo $label ?></option>
@@ -1323,8 +1307,8 @@ if ($action) {
                 </thead>
             </table>
             <p class="submit">
-                <input type="submit" value="<?php _e("Search Profiles", bb_agency_TEXTDOMAIN) ?>" class="button-primary" />
-                <input type="reset" onclick="redirectSearch();" name="reset" value="<?php _e("Reset Form", bb_agency_TEXTDOMAIN) ?>" class="button-secondary" />
+                <input type="submit" value="<?php _e('Search Profiles', bb_agency_TEXTDOMAIN) ?>" class="button-primary" />
+                <input type="reset" onclick="redirectSearch();" name="reset" value="<?php _e('Reset Form', bb_agency_TEXTDOMAIN) ?>" class="button-secondary" />
             </p>
          <form>
     <div>
