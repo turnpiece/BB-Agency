@@ -211,52 +211,56 @@ function bb_agency_send_email() {
 
     $SearchID               = time(U);
     $SearchMuxHash          = bb_agency_random(8);
-    $SearchMuxToName        =$_POST["MassEmailRecipient"];
-    $SearchMuxToEmail       =$_POST["MassEmailRecipient"];
+    $SearchMuxToName        = $_POST["MassEmailRecipient"];
+    $SearchMuxToEmail       = $_POST["MassEmailRecipient"];
     
-    $SearchMuxEmailToBcc    =$_POST['MassEmailBccRecipient'];
+    $SearchMuxEmailToBcc    = $_POST['MassEmailBccRecipient'];
     $SearchMuxSubject       = $_POST['MassEmailSubject'];
-    $SearchMuxMessage       =$_POST['MassEmailMessage'];
-    $SearchMuxCustomValue   ='';                    
+    $SearchMuxMessage       = $_POST['MassEmailMessage'];
+    $SearchMuxCustomValue   = '';                    
 
     $cartString = bb_agency_get_cart_string();
 
-    $wpdb->query("INSERT INTO " . table_agency_searchsaved." (SearchProfileID,SearchTitle) VALUES('".$cartString."','".$SearchMuxSubject."')") or die(mysql_error());
+    global $wpdb;
+    // set tables
+    $t_ss = table_agency_searchsaved;
+    $t_ss_mux = table_agency_searchsaved_mux;
+
+    $wpdb->query("INSERT INTO $t_ss (SearchProfileID, SearchTitle) VALUES('".$cartString."','".$SearchMuxSubject."')") or die(mysql_error());
     
     $lastid = $wpdb->insert_id;
     
     // Create Record
-    $insert = "INSERT INTO " . table_agency_searchsaved_mux ." 
-            (
-            SearchID,
-            SearchMuxHash,
-            SearchMuxToName,
-            SearchMuxToEmail,
-            SearchMuxSubject,
-            SearchMuxMessage,
-            SearchMuxCustomValue
-            )" .
-            "VALUES
-            (
-            '" . $wpdb->escape($lastid) . "',
-            '" . $wpdb->escape($SearchMuxHash) . "',
-            '" . $wpdb->escape($SearchMuxToName) . "',
-            '" . $wpdb->escape($SearchMuxToEmail) . "',
-            '" . $wpdb->escape($SearchMuxSubject) . "',
-            '" . $wpdb->escape($SearchMuxMessage) . "',
-            '" . $wpdb->escape($SearchMuxCustomValue) ."'
-            )";
-    $results = $wpdb->query($insert);                 
+    $insert = <<<EOF
+INSERT INTO %s  
+(SearchID, SearchMuxHash, SearchMuxToName, SearchMuxToEmail, SearchMuxSubject, SearchMuxMessage, SearchMuxCustomValue)
+VALUES
+("%d", "%s", "%s", "%s", "%s", "%s", "%s")
+EOF;
+
+    $results = $wpdb->query(
+        sprintf(
+            $insert,
+            $t_ss_mux,
+            $SearchID,
+            $wpdb->escape($SearchMuxHash), 
+            $wpdb->escape($SearchMuxToName),
+            $wpdb->escape($SearchMuxToEmail),
+            $wpdb->escape($SearchMuxSubject),
+            $wpdb->escape($SearchMuxMessage),
+            $wpdb->escape($SearchMuxCustomValue)
+        )
+    );                 
             
     if (!empty($MassEmailBccRecipient)){
-        $bccMails = explode(",",$MassEmailBccRecipient);
+        $bccMails = explode(',', $MassEmailBccRecipient);
         foreach($bccMails as $bccEmail){
             $headers[] = 'Bcc: '.$bccEmail;
         }
     }
     
     // Mail it
-    $headers[]  = 'MIME-Version: 1.0';
+    $headers[] = 'MIME-Version: 1.0';
     $headers[] = 'Content-type: text/html; charset=iso-8859-1';
     $headers[] = 'From: '.$bb_agency_value_agencyname.' <'. $correspondenceEmail .'>';
     
@@ -270,8 +274,7 @@ function bb_agency_send_email() {
     if (bb_agency_SEND_EMAILS)
         return wp_mail($MassEmailRecipient, $MassEmailSubject, $MassEmailMessage, $headers);
     else {
-        echo "The following email would have been sent:<br /><br />";
-        echo "<pre>".implode("\n", array($MassEmailRecipient, $MassEmailSubject, $MassEmailMessage))."</pre>";
+        echo "Emailing disabled. The following would have been sent to $MassEmailRecipient:<br /><br />$MassEmailMessage";
         exit;
     }
 }

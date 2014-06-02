@@ -70,7 +70,7 @@ if ($action) {
         // Put it back in the array, and wash your hands
         $_SESSION['cartArray'] = array($cartString);
     
-    } elseif (($action == "searchSave") && isset($_SESSION['cartArray'])) {
+    } elseif ($action == "searchSave" && isset($_SESSION['cartArray'])) {
     
         extract($_SESSION);
         foreach($_SESSION as $key => $value) {
@@ -690,11 +690,10 @@ EOF;
             </div>
             
          <?php else : ?>
-            <p>There are no profiles added to the casting cart.</p>
+            <p>There are no profiles in the casting cart.</p>
          <?php endif; ?>
         </div>
     </div>
-    
     <?php if (isset($cartAction) && ($cartAction == "cartEmpty" || $cartAction == "cartRemove")) : // empty or remove casting cart ?>
     <a name="compose">&nbsp;</a> 
     <div class="boxblock">
@@ -707,6 +706,8 @@ EOF;
         </div>
     </div>
     <?php endif; // Is Cart Empty 
+
+    }
     
     $isSent = false;
     
@@ -770,8 +771,7 @@ EOF;
         </form>
     <?php endif; // end of mass email ?>
     </div><!-- .container -->
-<?php    
-} 
+<?php 
 
 }
 ?>
