@@ -505,14 +505,14 @@ msgstr ""
 #: Plugin\bb-agency/theme/include-client-layout0.php:135
 #: Plugin\bb-agency/theme/include-client-layout1.php:135
 #: Plugin\bb-agency/theme/include-client-layout2.php:155
-msgid "Hair Color"
+msgid "Hair Colour"
 msgstr ""
 
 #: C:\Dropbox\Users\Rob\Scripts\RB
 #: Plugin\bb-agency/theme/include-client-layout0.php:138
 #: Plugin\bb-agency/theme/include-client-layout1.php:138
 #: Plugin\bb-agency/theme/include-client-layout2.php:158
-msgid "Eye Color"
+msgid "Eye Colour"
 msgstr ""
 
 #: C:\Dropbox\Users\Rob\Scripts\RB

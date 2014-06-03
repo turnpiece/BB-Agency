@@ -901,7 +901,7 @@ msgstr "Hautfarbe"
 #: Plugin/bb-agency/admin/settings.php:100
 #: Plugin/bb-agency/admin/settings.php:101
 #: Plugin/bb-agency/admin/settings.php:993
-msgid "Eye Color"
+msgid "Eye Colour"
 msgstr "Augenfarbe"
 
 # @ bb-agency
@@ -913,7 +913,7 @@ msgstr "Augenfarbe"
 #: Plugin/bb-agency/admin/settings.php:106
 #: Plugin/bb-agency/admin/settings.php:107
 #: Plugin/bb-agency/admin/settings.php:1218
-msgid "Hair Color"
+msgid "Hair Colour"
 msgstr "Haarfarbe"
 
 #: C:/Dropbox/Users/Rob/Scripts/RB
@@ -1775,13 +1775,13 @@ msgstr "Alle Hautfarben"
 # @ bb-agency
 #: C:/Dropbox/Users/Rob/Scripts/RB
 #: Plugin/bb-agency/admin/search.php:735
-msgid "Any Eye Color"
+msgid "Any Eye Colour"
 msgstr "Alle Augenfarben"
 
 # @ bb-agency
 #: C:/Dropbox/Users/Rob/Scripts/RB
 #: Plugin/bb-agency/admin/search.php:751
-msgid "Any Hair Color"
+msgid "Any Hair Colour"
 msgstr "Alle Haarfarben"
 
 # @ bb-agency
@@ -2507,14 +2507,14 @@ msgstr "Hautfarbe"
 #: C:/Dropbox/Users/Rob/Scripts/RB
 #: Plugin/bb-agency/admin/settings.php:992
 #, fuzzy
-msgid "Eye Colors"
+msgid "Eye Colours"
 msgstr "Augenfarbe"
 
 # @ bb-agency
 #: C:/Dropbox/Users/Rob/Scripts/RB
 #: Plugin/bb-agency/admin/settings.php:1217
 #, fuzzy
-msgid "Hair Colors"
+msgid "Hair Colours"
 msgstr "Haarfarbe"
 
 # @ bb-agency

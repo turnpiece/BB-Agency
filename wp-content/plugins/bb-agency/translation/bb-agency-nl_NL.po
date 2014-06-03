@@ -793,7 +793,7 @@ msgstr "Huidskleur"
 #: D:\wamp\www\ClearlyM\agency1.rgbplugin.com\wp-content\plugins\bb-agency/theme/include-profile-layout5.php:93
 #: D:\wamp\www\ClearlyM\agency1.rgbplugin.com\wp-content\plugins\bb-agency/theme/include-profile-search.php:126
 #: D:\wamp\www\ClearlyM\agency1.rgbplugin.com\wp-content\plugins\bb-agency/theme/view-print.php:352
-msgid "Eye Color"
+msgid "Eye Colour"
 msgstr "Kleur ogen"
 
 #: D:\wamp\www\ClearlyM\agency1.rgbplugin.com\wp-content\plugins\bb-agency/admin/profile.php:829
@@ -811,7 +811,7 @@ msgstr "Kleur ogen"
 #: D:\wamp\www\ClearlyM\agency1.rgbplugin.com\wp-content\plugins\bb-agency/theme/include-profile-layout5.php:90
 #: D:\wamp\www\ClearlyM\agency1.rgbplugin.com\wp-content\plugins\bb-agency/theme/include-profile-search.php:144
 #: D:\wamp\www\ClearlyM\agency1.rgbplugin.com\wp-content\plugins\bb-agency/theme/view-print.php:349
-msgid "Hair Color"
+msgid "Hair Colour"
 msgstr "Kleur haar"
 
 #: D:\wamp\www\ClearlyM\agency1.rgbplugin.com\wp-content\plugins\bb-agency/admin/profile.php:851
@@ -1590,11 +1590,11 @@ msgid "Any Skin Color"
 msgstr "Selecteer..."
 
 #: D:\wamp\www\ClearlyM\agency1.rgbplugin.com\wp-content\plugins\bb-agency/admin/search.php:742
-msgid "Any Eye Color"
+msgid "Any Eye Colour"
 msgstr "Selecteer..."
 
 #: D:\wamp\www\ClearlyM\agency1.rgbplugin.com\wp-content\plugins\bb-agency/admin/search.php:758
-msgid "Any Hair Color"
+msgid "Any Hair Colour"
 msgstr "Selecteer..."
 
 #: D:\wamp\www\ClearlyM\agency1.rgbplugin.com\wp-content\plugins\bb-agency/admin/search.php:799
@@ -2133,11 +2133,11 @@ msgid "Skin Type"
 msgstr "Huidtype"
 
 #: D:\wamp\www\ClearlyM\agency1.rgbplugin.com\wp-content\plugins\bb-agency/admin/settings.php:1001
-msgid "Eye Colors"
+msgid "Eye Colours"
 msgstr "Kleur ogen"
 
 #: D:\wamp\www\ClearlyM\agency1.rgbplugin.com\wp-content\plugins\bb-agency/admin/settings.php:1226
-msgid "Hair Colors"
+msgid "Hair Colours"
 msgstr "Kleur haar"
 
 #: D:\wamp\www\ClearlyM\agency1.rgbplugin.com\wp-content\plugins\bb-agency/admin/settings.php:1451

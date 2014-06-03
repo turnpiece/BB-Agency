@@ -590,7 +590,7 @@ msgstr "สีผิว"
 #: Plugin/bb-agency/admin/settings.php:15
 #: Plugin/bb-agency/admin/settings.php:41
 #: Plugin/bb-agency/theme/include-profile-layout0.php:132
-msgid "Hair Color"
+msgid "Hair Colour"
 msgstr "สีผม"
 
 #: C:/Dropbox/Users/Rob/Scripts/RB
@@ -599,7 +599,7 @@ msgstr "สีผม"
 #: Plugin/bb-agency/admin/settings.php:14
 #: Plugin/bb-agency/admin/settings.php:40
 #: Plugin/bb-agency/theme/include-profile-layout0.php:135
-msgid "Eye Color"
+msgid "Eye Colour"
 msgstr "สีตา"
 
 #: C:/Dropbox/Users/Rob/Scripts/RB
@@ -707,13 +707,13 @@ msgstr "สีตา"
 #: C:/Dropbox/Users/Rob/Scripts/RB
 #: Plugin/bb-agency/admin/search.php:738
 #, fuzzy
-msgid "Any Eye Color"
+msgid "Any Eye Colour"
 msgstr "สีตา"
 
 #: C:/Dropbox/Users/Rob/Scripts/RB
 #: Plugin/bb-agency/admin/search.php:754
 #, fuzzy
-msgid "Any Hair Color"
+msgid "Any Hair Colour"
 msgstr "สีผม"
 
 #: C:/Dropbox/Users/Rob/Scripts/RB
