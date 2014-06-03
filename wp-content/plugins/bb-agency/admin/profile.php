@@ -1159,7 +1159,7 @@ function bb_display_manage($ProfileID) {
     <h4>Casting Calls</h4>
     <?php
     // castings
-    $sql = "SELECT * FROM $t_job WHERE $ProfileID IN `JobModelCasted`";
+    $sql = "SELECT * FROM $t_job WHERE $ProfileID IN (`JobModelCasted`)";
     $results = $wpdb->get_results($sql);
     
     if (count($results)) :
