@@ -413,7 +413,7 @@ Profile View with Scrolling Thumbnails and Primary Image
 
 			
 
-					if(bbagency_get_option('bb_agency_option_profilelist_castingcart')==1){
+					if(bb_agency_get_option('bb_agency_option_profilelist_castingcart')==1){
 
 			 			if(checkCart(bb_agency_get_current_userid(),$ProfileID)==0 ){ //check if profile is in cart already	?>
 

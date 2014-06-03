@@ -10,13 +10,13 @@ header("Cache-control: private"); //IE 6 Fix
 	$CurrentUser = $current_user->id;
 
 // Set Values
-$bb_options = bbagency_get_option();
-$bb_agency_option_privacy = bbagency_get_option('bb_agency_option_privacy');
-$bb_agency_option_layoutprofile = (int)bbagency_get_option('bb_agency_option_layoutprofile');
-$bb_agency_option_profilenaming = bbagency_get_option('bb_agency_option_profilenaming');
-$bb_agency_option_profilelist_sidebar = bbagency_get_option('bb_agency_option_profilelist_sidebar');
-$bb_agency_option_agencyemail = bbagency_get_option('bb_agency_option_agencyemail');
-$bb_agency_option_showcontactpage = bbagency_get_option('bb_agency_option_showcontactpage');
+$bb_options = bb_agency_get_option();
+$bb_agency_option_privacy = bb_agency_get_option('bb_agency_option_privacy');
+$bb_agency_option_layoutprofile = (int)bb_agency_get_option('bb_agency_option_layoutprofile');
+$bb_agency_option_profilenaming = bb_agency_get_option('bb_agency_option_profilenaming');
+$bb_agency_option_profilelist_sidebar = bb_agency_get_option('bb_agency_option_profilelist_sidebar');
+$bb_agency_option_agencyemail = bb_agency_get_option('bb_agency_option_agencyemail');
+$bb_agency_option_showcontactpage = bb_agency_get_option('bb_agency_option_showcontactpage');
 
 // Get Profile
 $profileURL = get_query_var('target'); //$_REQUEST["profile"];

@@ -1,7 +1,7 @@
 <?php 
-$bb_options = bbagency_get_option();
-$bb_agency_option_agencyname = bbagency_get_option('bb_agency_option_agencyname');
-$bb_agency_option_agencylogo = bbagency_get_option('bb_agency_option_agencylogo');
+$bb_options = bb_agency_get_option();
+$bb_agency_option_agencyname = bb_agency_get_option('bb_agency_option_agencyname');
+$bb_agency_option_agencylogo = bb_agency_get_option('bb_agency_option_agencylogo');
 
 ?>
 <?php

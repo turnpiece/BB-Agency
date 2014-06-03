@@ -152,31 +152,31 @@ elseif ($ConfigID == 1) {
 		echo "<form method=\"post\" action=\"options.php\">\n";
 		settings_fields( 'bb-agency-settings-group' ); 
 		//do_settings_fields( 'bb-agency-settings-group' );
-		$bb_options = bbagency_get_option();
+		$bb_options = bb_agency_get_option();
 		
-		$bb_agency_value_agencyname = bbagency_get_option('bb_agency_option_agencyname');
+		$bb_agency_value_agencyname = bb_agency_get_option('bb_agency_option_agencyname');
 			if (empty($bb_agency_value_agencyname)) { $bb_agency_value_agencyname = get_bloginfo('name'); }
-		$bb_agency_value_agencyemail = bbagency_get_option('bb_agency_option_agencyemail');
+		$bb_agency_value_agencyemail = bb_agency_get_option('bb_agency_option_agencyemail');
 			if (empty($bb_agency_value_agencyemail)) { $bb_agency_value_agencyemail = get_bloginfo('admin_email'); }
-		$bb_agency_value_maxwidth = bbagency_get_option('bb_agency_option_agencyimagemaxwidth');
+		$bb_agency_value_maxwidth = bb_agency_get_option('bb_agency_option_agencyimagemaxwidth');
 			if (empty($bb_agency_value_maxwidth)) { $bb_agency_value_maxwidth = "1000"; }
-		$bb_agency_value_maxheight = bbagency_get_option('bb_agency_option_agencyimagemaxheight');
+		$bb_agency_value_maxheight = bb_agency_get_option('bb_agency_option_agencyimagemaxheight');
 			if (empty($bb_agency_value_maxheight)) { $bb_agency_value_maxheight = "800"; }
-		$bb_agency_option_locationcountry = bbagency_get_option('bb_agency_option_locationcountry');
+		$bb_agency_option_locationcountry = bb_agency_get_option('bb_agency_option_locationcountry');
 			if (empty($bb_agency_option_locationcountry)) { $bb_agency_option_locationcountry = "UK"; }
-		$bb_agency_option_profilelist_perpage = bbagency_get_option('bb_agency_option_profilelist_perpage');
+		$bb_agency_option_profilelist_perpage = bb_agency_get_option('bb_agency_option_profilelist_perpage');
 			if (empty($bb_agency_option_profilelist_perpage)) { $bb_agency_option_profilelist_perpage = "20"; }
-		$bb_agency_option_persearch = bbagency_get_option('bb_agency_option_persearch');
+		$bb_agency_option_persearch = bb_agency_get_option('bb_agency_option_persearch');
 			if (empty($bb_agency_option_persearch)) { $bb_agency_option_persearch = "100"; }
-		$bb_agency_option_showcontactpage = bbagency_get_option('bb_agency_option_showcontactpage');
+		$bb_agency_option_showcontactpage = bb_agency_get_option('bb_agency_option_showcontactpage');
 			if (empty($bb_agency_option_showcontactpage)) { $bb_agency_option_showcontactpage = "0"; }
 		
-		$bb_agency_option_profilelist_favorite = bbagency_get_option('bb_agency_option_profilelist_favorite');
+		$bb_agency_option_profilelist_favorite = bb_agency_get_option('bb_agency_option_profilelist_favorite');
 			if (empty($bb_agency_option_profilelist_favorite)) { $bb_agency_option_profilelist_favorite = "1"; }
-		$bb_agency_option_profilelist_castingcart = bbagency_get_option('bb_agency_option_profilelist_castingcart');
+		$bb_agency_option_profilelist_castingcart = bb_agency_get_option('bb_agency_option_profilelist_castingcart');
 			if (empty($bb_agency_option_profilelist_castingcart)) { $bb_agency_option_profilelist_castingcart = "1"; }
 	
-		$bb_agency_option_privacy = bbagency_get_option('bb_agency_option_privacy');
+		$bb_agency_option_privacy = bb_agency_get_option('bb_agency_option_privacy');
 			if (empty($bb_agency_option_privacy)) { $bb_agency_option_privacy = "0"; }
 
 		 echo "<input type=\"hidden\" name=\"bb_agency_options[bb_agency_option_layoutprofile]\" value=\"0\" />\n";	// only have one layout for now	
@@ -208,31 +208,31 @@ elseif ($ConfigID == 1) {
 		 echo "   <th scope=\"row\">". __('Server Timezone', bb_agency_TEXTDOMAIN) ."</th>\n";
 		 echo "   <td>\n";
 		 echo "     <select name=\"bb_agency_options[bb_agency_option_locationtimezone]\">\n";
-		 echo "       <option value=\"+12\" ". selected(bbagency_get_option('bb_agency_option_locationtimezone'), "+12",false) ."> UTC+12</option>\n";
-		 echo "       <option value=\"+11\" ". selected(bbagency_get_option('bb_agency_option_locationtimezone'), "+11",false) ."> UTC+11</option>\n";
-		 echo "       <option value=\"+10\" ". selected(bbagency_get_option('bb_agency_option_locationtimezone'), "+10",false) ."> UTC+10</option>\n";
-		 echo "       <option value=\"+9\" ". selected(bbagency_get_option('bb_agency_option_locationtimezone'), "+9",false) ."> UTC+9</option>\n";
-		 echo "       <option value=\"+8\" ". selected(bbagency_get_option('bb_agency_option_locationtimezone'), "+8",false) ."> UTC+8</option>\n";
-		 echo "       <option value=\"+7\" ". selected(bbagency_get_option('bb_agency_option_locationtimezone'), "+7",false) ."> UTC+7</option>\n";
-		 echo "       <option value=\"+6\" ". selected(bbagency_get_option('bb_agency_option_locationtimezone'), "+6",false) ."> UTC+6</option>\n";
-		 echo "       <option value=\"+5\" ". selected(bbagency_get_option('bb_agency_option_locationtimezone'), "+5",false) ."> UTC+5</option>\n";
-		 echo "       <option value=\"+4\" ". selected(bbagency_get_option('bb_agency_option_locationtimezone'), "+4",false) ."> UTC+4</option>\n";
-		 echo "       <option value=\"+3\" ". selected(bbagency_get_option('bb_agency_option_locationtimezone'), "+3",false) ."> UTC+3</option>\n";
-		 echo "       <option value=\"+2\" ". selected(bbagency_get_option('bb_agency_option_locationtimezone'), "+2",false) ."> UTC+2</option>\n";
-		 echo "       <option value=\"+1\" ". selected(bbagency_get_option('bb_agency_option_locationtimezone'), "+1",false) ."> UTC+1</option>\n";
-		 echo "       <option value=\"0\" ". selected(bbagency_get_option('bb_agency_option_locationtimezone'), "0",false) ."> UTC 0</option>\n";
-		 echo "       <option value=\"-1\" ". selected(bbagency_get_option('bb_agency_option_locationtimezone'), "-1",false) ."> UTC-1</option>\n";
-		 echo "       <option value=\"-2\" ". selected(bbagency_get_option('bb_agency_option_locationtimezone'), "-2",false) ."> UTC-2</option>\n";
-		 echo "       <option value=\"-3\" ". selected(bbagency_get_option('bb_agency_option_locationtimezone'), "-3",false) ."> UTC-3</option>\n";
-		 echo "       <option value=\"-4\" ". selected(bbagency_get_option('bb_agency_option_locationtimezone'), "-4",false) ."> UTC-4</option>\n";
-		 echo "       <option value=\"-5\" ". selected(bbagency_get_option('bb_agency_option_locationtimezone'), "-5",false) ."> UTC-5</option>\n";
-		 echo "       <option value=\"-6\" ". selected(bbagency_get_option('bb_agency_option_locationtimezone'), "-6",false) ."> UTC-6</option>\n";
-		 echo "       <option value=\"-7\" ". selected(bbagency_get_option('bb_agency_option_locationtimezone'), "-7",false) ."> UTC-7</option>\n";
-		 echo "       <option value=\"-8\" ". selected(bbagency_get_option('bb_agency_option_locationtimezone'), "-8",false) ."> UTC-8</option>\n";
-		 echo "       <option value=\"-9\" ". selected(bbagency_get_option('bb_agency_option_locationtimezone'), "-9",false) ."> UTC-9</option>\n";
-		 echo "       <option value=\"-10\" ". selected(bbagency_get_option('bb_agency_option_locationtimezone'), "-10",false) ."> UTC-10</option>\n";
-		 echo "       <option value=\"-11\" ". selected(bbagency_get_option('bb_agency_option_locationtimezone'), "-11",false) ."> UTC-11</option>\n";
-		 echo "       <option value=\"-12\" ". selected(bbagency_get_option('bb_agency_option_locationtimezone'), "-12",false) ."> UTC-12</option>\n";
+		 echo "       <option value=\"+12\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "+12",false) ."> UTC+12</option>\n";
+		 echo "       <option value=\"+11\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "+11",false) ."> UTC+11</option>\n";
+		 echo "       <option value=\"+10\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "+10",false) ."> UTC+10</option>\n";
+		 echo "       <option value=\"+9\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "+9",false) ."> UTC+9</option>\n";
+		 echo "       <option value=\"+8\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "+8",false) ."> UTC+8</option>\n";
+		 echo "       <option value=\"+7\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "+7",false) ."> UTC+7</option>\n";
+		 echo "       <option value=\"+6\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "+6",false) ."> UTC+6</option>\n";
+		 echo "       <option value=\"+5\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "+5",false) ."> UTC+5</option>\n";
+		 echo "       <option value=\"+4\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "+4",false) ."> UTC+4</option>\n";
+		 echo "       <option value=\"+3\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "+3",false) ."> UTC+3</option>\n";
+		 echo "       <option value=\"+2\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "+2",false) ."> UTC+2</option>\n";
+		 echo "       <option value=\"+1\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "+1",false) ."> UTC+1</option>\n";
+		 echo "       <option value=\"0\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "0",false) ."> UTC 0</option>\n";
+		 echo "       <option value=\"-1\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "-1",false) ."> UTC-1</option>\n";
+		 echo "       <option value=\"-2\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "-2",false) ."> UTC-2</option>\n";
+		 echo "       <option value=\"-3\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "-3",false) ."> UTC-3</option>\n";
+		 echo "       <option value=\"-4\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "-4",false) ."> UTC-4</option>\n";
+		 echo "       <option value=\"-5\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "-5",false) ."> UTC-5</option>\n";
+		 echo "       <option value=\"-6\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "-6",false) ."> UTC-6</option>\n";
+		 echo "       <option value=\"-7\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "-7",false) ."> UTC-7</option>\n";
+		 echo "       <option value=\"-8\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "-8",false) ."> UTC-8</option>\n";
+		 echo "       <option value=\"-9\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "-9",false) ."> UTC-9</option>\n";
+		 echo "       <option value=\"-10\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "-10",false) ."> UTC-10</option>\n";
+		 echo "       <option value=\"-11\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "-11",false) ."> UTC-11</option>\n";
+		 echo "       <option value=\"-12\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "-12",false) ."> UTC-12</option>\n";
 		 echo "     </select> (<a href=\"http://www.worldtimezone.com/index24.php\" target=\"_blank\">Find</a>)\n";
 		 echo "   </td>\n";
 		 echo " </tr>\n";
@@ -242,8 +242,8 @@ elseif ($ConfigID == 1) {
 		 echo "   <th scope=\"row\">". __('Unit Type', bb_agency_TEXTDOMAIN) ."</th>\n";
 		 echo "   <td>\n";
 		 echo "     <select name=\"bb_agency_options[bb_agency_option_unittype]\">\n";
-		 echo "       <option value=\"1\" ". selected(bbagency_get_option('bb_agency_option_unittype'), 1,false) ."> ". __("Imperial", bb_agency_TEXTDOMAIN) ." (ft/in/lb)</option>\n";
-		 echo "       <option value=\"0\" ". selected(bbagency_get_option('bb_agency_option_unittype'), 0,false) ."> ". __("Metric", bb_agency_TEXTDOMAIN) ." (cm/kg)</option>\n";
+		 echo "       <option value=\"1\" ". selected(bb_agency_get_option('bb_agency_option_unittype'), 1,false) ."> ". __("Imperial", bb_agency_TEXTDOMAIN) ." (ft/in/lb)</option>\n";
+		 echo "       <option value=\"0\" ". selected(bb_agency_get_option('bb_agency_option_unittype'), 0,false) ."> ". __("Metric", bb_agency_TEXTDOMAIN) ." (cm/kg)</option>\n";
 		 echo "     </select>\n";
 		 echo "   </td>\n";
 		 echo " </tr>\n";
@@ -253,16 +253,16 @@ elseif ($ConfigID == 1) {
 		 echo " <tr valign=\"top\">\n";
 		 echo "   <th scope=\"row\">". __('Display', bb_agency_TEXTDOMAIN) ."</th>\n";
 		 echo "   <td>\n";
-		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_count]\" value=\"1\" ".checked(bbagency_get_option('bb_agency_option_profilelist_count'), 1,false)."/> ". __("Show Model Count", bb_agency_TEXTDOMAIN) ."<br />\n";
-		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_sortby]\" value=\"1\" ".checked(bbagency_get_option('bb_agency_option_profilelist_sortby'), 1,false)."/> ". __("Show Sort Options", bb_agency_TEXTDOMAIN) ."<br />\n";
-		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_expanddetails]\" value=\"1\" ".checked(bbagency_get_option('bb_agency_option_profilelist_expanddetails'), 1,false)."/> ". __("Expanded Model Details", bb_agency_TEXTDOMAIN) ."<br />\n";
-		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_favorite]\" value=\"1\" ".checked(bbagency_get_option('bb_agency_option_profilelist_favorite'), 1,false)."/> ". __("Enable Model Favorites", bb_agency_TEXTDOMAIN) ."<br />\n";
-		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_sidebar]\" value=\"1\" ".checked(bbagency_get_option('bb_agency_option_profilelist_sidebar'), 1,false)."/> ". __("Show Sidebar", bb_agency_TEXTDOMAIN) ."<br />\n";
-		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_castingcart]\" value=\"1\" ".checked(bbagency_get_option('bb_agency_option_profilelist_castingcart'), 1,false)."/> ". __("Show Casting Cart", bb_agency_TEXTDOMAIN) ."<br />\n";
-		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_thumbsslide]\" value=\"1\" ".checked(bbagency_get_option('bb_agency_option_profilelist_thumbsslide'), 1,false)."/> ". __("Show Thumbs Slide", bb_agency_TEXTDOMAIN) ."<br />\n";	
-		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_bday]\" value=\"1\" ".checked(bbagency_get_option('bb_agency_option_profilelist_bday'), 1,false)."/> ". __("Show Birthday With Months", bb_agency_TEXTDOMAIN) ."<br />\n";	
-		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_printpdf]\" value=\"1\" ".checked(bbagency_get_option('bb_agency_option_profilelist_printpdf'), 1,false)."/> ". __("Show Print and Download PDF Link", bb_agency_TEXTDOMAIN) ."<br />\n";	
-                 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_subscription]\" value=\"1\" ".checked(bbagency_get_option('bb_agency_option_profilelist_subscription'), 1,false)."/> ". __("Show Manage Your Subscription", bb_agency_TEXTDOMAIN) ."<br />\n";	
+		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_count]\" value=\"1\" ".checked(bb_agency_get_option('bb_agency_option_profilelist_count'), 1,false)."/> ". __("Show Model Count", bb_agency_TEXTDOMAIN) ."<br />\n";
+		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_sortby]\" value=\"1\" ".checked(bb_agency_get_option('bb_agency_option_profilelist_sortby'), 1,false)."/> ". __("Show Sort Options", bb_agency_TEXTDOMAIN) ."<br />\n";
+		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_expanddetails]\" value=\"1\" ".checked(bb_agency_get_option('bb_agency_option_profilelist_expanddetails'), 1,false)."/> ". __("Expanded Model Details", bb_agency_TEXTDOMAIN) ."<br />\n";
+		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_favorite]\" value=\"1\" ".checked(bb_agency_get_option('bb_agency_option_profilelist_favorite'), 1,false)."/> ". __("Enable Model Favorites", bb_agency_TEXTDOMAIN) ."<br />\n";
+		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_sidebar]\" value=\"1\" ".checked(bb_agency_get_option('bb_agency_option_profilelist_sidebar'), 1,false)."/> ". __("Show Sidebar", bb_agency_TEXTDOMAIN) ."<br />\n";
+		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_castingcart]\" value=\"1\" ".checked(bb_agency_get_option('bb_agency_option_profilelist_castingcart'), 1,false)."/> ". __("Show Casting Cart", bb_agency_TEXTDOMAIN) ."<br />\n";
+		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_thumbsslide]\" value=\"1\" ".checked(bb_agency_get_option('bb_agency_option_profilelist_thumbsslide'), 1,false)."/> ". __("Show Thumbs Slide", bb_agency_TEXTDOMAIN) ."<br />\n";	
+		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_bday]\" value=\"1\" ".checked(bb_agency_get_option('bb_agency_option_profilelist_bday'), 1,false)."/> ". __("Show Birthday With Months", bb_agency_TEXTDOMAIN) ."<br />\n";	
+		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_printpdf]\" value=\"1\" ".checked(bb_agency_get_option('bb_agency_option_profilelist_printpdf'), 1,false)."/> ". __("Show Print and Download PDF Link", bb_agency_TEXTDOMAIN) ."<br />\n";	
+                 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_subscription]\" value=\"1\" ".checked(bb_agency_get_option('bb_agency_option_profilelist_subscription'), 1,false)."/> ". __("Show Manage Your Subscription", bb_agency_TEXTDOMAIN) ."<br />\n";	
                  echo "   </td>\n";
 		 echo " </tr>\n";
 		 echo " <tr valign=\"top\">\n";
@@ -280,9 +280,9 @@ elseif ($ConfigID == 1) {
 		 echo " <tr valign=\"top\">\n";
 		 echo "   <th scope=\"row\">". __('Delete Options', bb_agency_TEXTDOMAIN) ."</th>\n";
 		 echo "   <td>\n";
-		 echo "     <input type=\"radio\" name=\"bb_agency_options[bb_agency_option_profiledeletion]\" value=\"1\" ".checked(bbagency_get_option('bb_agency_option_profiledeletion'), 1,false)."/> ". __("No", bb_agency_TEXTDOMAIN) ."<br />\n";
-		 echo "     <input type=\"radio\" name=\"bb_agency_options[bb_agency_option_profiledeletion]\" value=\"2\" ".checked(bbagency_get_option('bb_agency_option_profiledeletion'), 2,false)."/> ". __("Yes (Allow USers to delete)", bb_agency_TEXTDOMAIN) ."<br />\n";
-		 echo "     <input type=\"radio\" name=\"bb_agency_options[bb_agency_option_profiledeletion]\" value=\"3\" ".checked(bbagency_get_option('bb_agency_option_profiledeletion'), 3,false)."/> ". __("Archive Only (Users can remove themselves as active but profile remains)", bb_agency_TEXTDOMAIN) ."<br />\n";
+		 echo "     <input type=\"radio\" name=\"bb_agency_options[bb_agency_option_profiledeletion]\" value=\"1\" ".checked(bb_agency_get_option('bb_agency_option_profiledeletion'), 1,false)."/> ". __("No", bb_agency_TEXTDOMAIN) ."<br />\n";
+		 echo "     <input type=\"radio\" name=\"bb_agency_options[bb_agency_option_profiledeletion]\" value=\"2\" ".checked(bb_agency_get_option('bb_agency_option_profiledeletion'), 2,false)."/> ". __("Yes (Allow USers to delete)", bb_agency_TEXTDOMAIN) ."<br />\n";
+		 echo "     <input type=\"radio\" name=\"bb_agency_options[bb_agency_option_profiledeletion]\" value=\"3\" ".checked(bb_agency_get_option('bb_agency_option_profiledeletion'), 3,false)."/> ". __("Archive Only (Users can remove themselves as active but profile remains)", bb_agency_TEXTDOMAIN) ."<br />\n";
                  echo "   </td>\n";
 		 echo " </tr>\n";		 
 		                 
@@ -291,11 +291,11 @@ elseif ($ConfigID == 1) {
 		 echo " </tr>\n";
 		 echo " <tr valign=\"top\">\n";
 		 echo "   <th scope=\"row\">". __('Path to Logo', bb_agency_TEXTDOMAIN) ."</th>\n";
-		 echo "   <td><input name=\"bb_agency_options[bb_agency_option_agencylogo]\" value=\"". bbagency_get_option('bb_agency_option_agencylogo') ."\" /></td>\n";
+		 echo "   <td><input name=\"bb_agency_options[bb_agency_option_agencylogo]\" value=\"". bb_agency_get_option('bb_agency_option_agencylogo') ."\" /></td>\n";
 		 echo " </tr>\n";
 		 echo " <tr valign=\"top\">\n";
 		 echo "   <th scope=\"row\">". __('Email Header', bb_agency_TEXTDOMAIN) ."</th>\n";
-		 echo "   <td><input name=\"bb_agency_options[bb_agency_option_agencyheader]\" value=\"". bbagency_get_option('bb_agency_option_agencyheader') ."\" /></td>\n";
+		 echo "   <td><input name=\"bb_agency_options[bb_agency_option_agencyheader]\" value=\"". bb_agency_get_option('bb_agency_option_agencyheader') ."\" /></td>\n";
 		 echo " </tr>\n";
 		 echo " <tr valign=\"top\">\n";
 		 echo "   <th scope=\"row\">". __('Resize Images', bb_agency_TEXTDOMAIN) ."</th>\n";
@@ -308,12 +308,12 @@ elseif ($ConfigID == 1) {
 		 echo "   <th scope=\"row\">". __('Profile Name Format', bb_agency_TEXTDOMAIN) ."</th>\n";
 		 echo "   <td>\n";
 		 echo "     <select name=\"bb_agency_options[bb_agency_option_profilenaming]\">\n";
-		 echo "       <option value=\"0\" ". selected(bbagency_get_option('bb_agency_option_profilenaming'), 0,false) ."> ". __("First Last", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "       <option value=\"1\" ". selected(bbagency_get_option('bb_agency_option_profilenaming'), 1,false) ."> ". __("First L", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "       <option value=\"4\" ". selected(bbagency_get_option('bb_agency_option_profilenaming'), 4,false) ."> ". __("First", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "       <option value=\"5\" ". selected(bbagency_get_option('bb_agency_option_profilenaming'), 5,false) ."> ". __("Last", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "       <option value=\"2\" ". selected(bbagency_get_option('bb_agency_option_profilenaming'), 2,false) ."> ". __("Display Name", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "       <option value=\"3\" ". selected(bbagency_get_option('bb_agency_option_profilenaming'), 3,false) ."> ". __("Auto Generated Record ID", bb_agency_TEXTDOMAIN) ."</option>\n";
+		 echo "       <option value=\"0\" ". selected(bb_agency_get_option('bb_agency_option_profilenaming'), 0,false) ."> ". __("First Last", bb_agency_TEXTDOMAIN) ."</option>\n";
+		 echo "       <option value=\"1\" ". selected(bb_agency_get_option('bb_agency_option_profilenaming'), 1,false) ."> ". __("First L", bb_agency_TEXTDOMAIN) ."</option>\n";
+		 echo "       <option value=\"4\" ". selected(bb_agency_get_option('bb_agency_option_profilenaming'), 4,false) ."> ". __("First", bb_agency_TEXTDOMAIN) ."</option>\n";
+		 echo "       <option value=\"5\" ". selected(bb_agency_get_option('bb_agency_option_profilenaming'), 5,false) ."> ". __("Last", bb_agency_TEXTDOMAIN) ."</option>\n";
+		 echo "       <option value=\"2\" ". selected(bb_agency_get_option('bb_agency_option_profilenaming'), 2,false) ."> ". __("Display Name", bb_agency_TEXTDOMAIN) ."</option>\n";
+		 echo "       <option value=\"3\" ". selected(bb_agency_get_option('bb_agency_option_profilenaming'), 3,false) ."> ". __("Auto Generated Record ID", bb_agency_TEXTDOMAIN) ."</option>\n";
 		 echo "     </select>\n";
 		 echo "   </td>\n";
 		 echo " </tr>\n";
@@ -321,9 +321,9 @@ elseif ($ConfigID == 1) {
 		 echo "   <th scope=\"row\">". __('Profile List Style', bb_agency_TEXTDOMAIN) ."</th>\n";
 		 echo "   <td>\n";
 		 echo "     <select name=\"bb_agency_options[bb_agency_option_layoutprofilelist]\">\n";
-		 echo "       <option value=\"0\" ". selected(bbagency_get_option('bb_agency_option_layoutprofilelist'), 0,false) ."> ". __("Name Over Image", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "       <option value=\"1\" ". selected(bbagency_get_option('bb_agency_option_layoutprofilelist'), 1,false) ."> ". __("Name Under Image with Color", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "       <option value=\"2\" ". selected(bbagency_get_option('bb_agency_option_layoutprofilelist'), 2,false) ."> ". __("Name Under Image", bb_agency_TEXTDOMAIN) ."</option>\n";
+		 echo "       <option value=\"0\" ". selected(bb_agency_get_option('bb_agency_option_layoutprofilelist'), 0,false) ."> ". __("Name Over Image", bb_agency_TEXTDOMAIN) ."</option>\n";
+		 echo "       <option value=\"1\" ". selected(bb_agency_get_option('bb_agency_option_layoutprofilelist'), 1,false) ."> ". __("Name Under Image with Color", bb_agency_TEXTDOMAIN) ."</option>\n";
+		 echo "       <option value=\"2\" ". selected(bb_agency_get_option('bb_agency_option_layoutprofilelist'), 2,false) ."> ". __("Name Under Image", bb_agency_TEXTDOMAIN) ."</option>\n";
 		 echo "     </select>\n";
 		 echo "   </td>\n";
 		 echo " </tr>\n";
@@ -331,10 +331,10 @@ elseif ($ConfigID == 1) {
 		 echo "   <th scope=\"row\">". __('Image Gallery Type', bb_agency_TEXTDOMAIN) ."</th>\n";
 		 echo "   <td>\n";
 		 echo "     <select name=\"bb_agency_options[bb_agency_option_gallerytype]\">\n";
-		 echo "       <option value=\"1\" ". selected(bbagency_get_option('bb_agency_option_gallerytype'), 1,false) ."> ". __("Slimbox Popup", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "       <option value=\"2\" ". selected(bbagency_get_option('bb_agency_option_gallerytype'), 2,false) ."> ". __("Pretty Photo", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "       <option value=\"9\" ". selected(bbagency_get_option('bb_agency_option_gallerytype'), 9,false) ."> ". __("No Gallery, Deregister jQuery", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "       <option value=\"0\" ". selected(bbagency_get_option('bb_agency_option_gallerytype'), 0,false) ."> ". __("No Gallery", bb_agency_TEXTDOMAIN) ."</option>\n";
+		 echo "       <option value=\"1\" ". selected(bb_agency_get_option('bb_agency_option_gallerytype'), 1,false) ."> ". __("Slimbox Popup", bb_agency_TEXTDOMAIN) ."</option>\n";
+		 echo "       <option value=\"2\" ". selected(bb_agency_get_option('bb_agency_option_gallerytype'), 2,false) ."> ". __("Pretty Photo", bb_agency_TEXTDOMAIN) ."</option>\n";
+		 echo "       <option value=\"9\" ". selected(bb_agency_get_option('bb_agency_option_gallerytype'), 9,false) ."> ". __("No Gallery, Deregister jQuery", bb_agency_TEXTDOMAIN) ."</option>\n";
+		 echo "       <option value=\"0\" ". selected(bb_agency_get_option('bb_agency_option_gallerytype'), 0,false) ."> ". __("No Gallery", bb_agency_TEXTDOMAIN) ."</option>\n";
 		 echo "     </select>\n";
 		 echo "   </td>\n";
 		 echo " </tr>\n";
@@ -342,8 +342,8 @@ elseif ($ConfigID == 1) {
 		 echo "   <th scope=\"row\">". __('Image Gallery Sort Order', bb_agency_TEXTDOMAIN) ."</th>\n";
 		 echo "   <td>\n";
 		 echo "     <select name=\"bb_agency_options[bb_agency_option_galleryorder]\">\n";
-		 echo "       <option value=\"1\" ". selected(bbagency_get_option('bb_agency_option_galleryorder'), 1,false) ."> ". __("Show most recently uploaded first", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "       <option value=\"0\" ". selected(bbagency_get_option('bb_agency_option_galleryorder'), 0,false) ."> ". __("Show chronological order", bb_agency_TEXTDOMAIN) ."</option>\n";
+		 echo "       <option value=\"1\" ". selected(bb_agency_get_option('bb_agency_option_galleryorder'), 1,false) ."> ". __("Show most recently uploaded first", bb_agency_TEXTDOMAIN) ."</option>\n";
+		 echo "       <option value=\"0\" ". selected(bb_agency_get_option('bb_agency_option_galleryorder'), 0,false) ."> ". __("Show chronological order", bb_agency_TEXTDOMAIN) ."</option>\n";
 		 echo "     </select>\n";
 		 echo "   </td>\n";
 		 echo " </tr>\n";
@@ -360,8 +360,8 @@ elseif ($ConfigID == 1) {
 		 echo " <tr valign=\"top\">\n";
 		 echo "   <th scope=\"row\">". __('Show Fields', bb_agency_TEXTDOMAIN) ."</th>\n";
 		 echo "   <td>\n";
-		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_showsocial]\" value=\"1\" ".checked(bbagency_get_option('bb_agency_option_showsocial'), 1,false)."/> Extended Social Profiles<br />\n";
-		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_advertise]\" value=\"1\" ".checked(bbagency_get_option('bb_agency_option_advertise'), 1,false)."/> Remove Updates on Dashboard<br />\n";
+		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_showsocial]\" value=\"1\" ".checked(bb_agency_get_option('bb_agency_option_showsocial'), 1,false)."/> Extended Social Profiles<br />\n";
+		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_advertise]\" value=\"1\" ".checked(bb_agency_get_option('bb_agency_option_advertise'), 1,false)."/> Remove Updates on Dashboard<br />\n";
 		 echo "   </td>\n";
 		 echo " </tr>\n";
 
@@ -401,7 +401,7 @@ elseif ($ConfigID == 2) {
                     } else {
                         $strAddress = implode(', ', $address);
                         echo $strAddress .' => ';
-                        if ($location = bbagency_geocode($strAddress)) {
+                        if ($location = bb_agency_geocode($strAddress)) {
                             $set = '`ProfileLocationLatitude` = "'.$location['lat'].'", `ProfileLocationLongitude` = "'.$location['lng'].'", `ProfileDateUpdated` = NOW()';
                             $sql = "UPDATE $table SET $set WHERE `ProfileID` = $id";
                             echo '('.$location['lat'].', '.$location['lng'].')';
@@ -919,8 +919,8 @@ elseif ($ConfigID == 10) {
 	// Copy style over
 	if ($_GET["mode"] == "override") {
 		echo "<h1>OVERRIDE</h1>";
-	$bb_options = bbagency_get_option();
-		if (bbagency_get_option('bb_agency_option_defaultcss')) { $bb_agency_stylesheet_string = bbagency_get_option('bb_agency_option_defaultcss'); }
+	$bb_options = bb_agency_get_option();
+		if (bb_agency_get_option('bb_agency_option_defaultcss')) { $bb_agency_stylesheet_string = bb_agency_get_option('bb_agency_option_defaultcss'); }
 	}
 	echo "		<form method=\"post\" action=\"". admin_url("admin.php?page=". $_GET['page']) ."\">\n";
 	echo "		<table class=\"form-table\">\n";
@@ -1385,8 +1385,8 @@ elseif ($ConfigID == 7) {
 	/** Identify Labels **/
 	define("LabelPlural", __("Custom Fields", bb_agency_TEXTDOMAIN));
 	define("LabelSingular", __("Custom Field", bb_agency_TEXTDOMAIN));
-	$bb_options = bbagency_get_option();
-	$bb_agency_option_unittype  = bbagency_get_option('bb_agency_option_unittype');
+	$bb_options = bb_agency_get_option();
+	$bb_agency_option_unittype  = bb_agency_get_option('bb_agency_option_unittype');
 	
   /* Initial Registration [RESPOND TO POST] ***********/ 
   if ( isset($_POST['action']) ) {
@@ -1820,7 +1820,7 @@ elseif ($ConfigID == 7) {
 						<tr>
 							<td>Type*:</td>
 							<td>";
-								if(bbagency_get_option('bb_agency_option_unittype')==1){
+								if(bb_agency_get_option('bb_agency_option_unittype')==1){
 										echo"	<select class=\"objtype\" name=\"ProfileCustomType\" id=\"1\">";
 								}else{
 									echo"	<select class=\"objtype\" name=\"ProfileCustomType\" id=\"0\">";
@@ -1832,7 +1832,7 @@ elseif ($ConfigID == 7) {
 									<option value=\"4\">Textbox</option>
 									<option value=\"5\">Checkbox</option>
 									<option value=\"6\">Radiobutton</option>";
-									if(bbagency_get_option('bb_agency_option_unittype')==1){
+									if(bb_agency_get_option('bb_agency_option_unittype')==1){
 										echo"     <option value=\"7\" id=\"1\">Imperial(ft/in/lb)</option>";
 									}else{
 										echo"     <option value=\"7\" id=\"0\">Metric(cm/kg)</option>";
@@ -1994,7 +1994,7 @@ elseif ($ConfigID == 7) {
 											<option value=\"4\" ". ($data1["ProfileCustomType"] == 4 ? 'selected=\"selected\"':'').">Textbox</option>
 											<option value=\"5\" ". ($data1["ProfileCustomType"] == 5 ? 'selected=\"selected\"':'').">Checkbox</option>
 											<option value=\"6\" ". ($data1["ProfileCustomType"] == 6 ? 'selected=\"selected\"':'').">Radiobutton</option>";
-											if(bbagency_get_option('bb_agency_option_unittype')==1){
+											if(bb_agency_get_option('bb_agency_option_unittype')==1){
 												echo"     <option value=\"7\" ". ($data1["ProfileCustomType"] == 7 ? 'selected=\"selected\"':'').">Imperial (ft/in/lb)</option>";
 											}else{
 												echo"     <option value=\"7\" ". ($data1["ProfileCustomType"] == 7 ? 'selected=\"selected\"':'').">Metric (cm/kg)</option>";
@@ -2277,10 +2277,10 @@ elseif ($ConfigID == 7) {
 										echo "<tr><td>Title*:<input type='text' name='ProfileCustomTitle' value=\"".$data1["ProfileCustomTitle"]."\"/></td></tr>";
 										echo "<tr><td>&nbsp;</td></tr>";
 										 
-										 if (bbagency_get_option('bb_agency_option_unittype')==0) { //  Metric (cm/kg)
+										 if (bb_agency_get_option('bb_agency_option_unittype')==0) { //  Metric (cm/kg)
 												echo "<tr><td><input type='radio' name='ProfileUnitType' value='1'  ".checked($data1["ProfileCustomOptions"],1,false)."/>cm</td></tr>";
 										     	echo "<tr><td><input type='radio' name='ProfileUnitType' value='2'  ".checked($data1["ProfileCustomOptions"],2,false)." />kg</td></tr>";  
-										 } elseif (bbagency_get_option('bb_agency_option_unittype')==1) { //  Imperial (in/lb)
+										 } elseif (bb_agency_get_option('bb_agency_option_unittype')==1) { //  Imperial (in/lb)
 											
 												echo "<tr><td><input type='radio' name='ProfileUnitType' value='1' ".checked($data1["ProfileCustomOptions"],1,false)." />Inches</td></tr>";
 										    	echo "<tr><td><input type='radio' name='ProfileUnitType' value='2' ".checked($data1["ProfileCustomOptions"],2,false)."/>Pounds</td></tr>";
@@ -2378,8 +2378,8 @@ elseif ($ConfigID == 7) {
 		$results = mysql_query($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ));
 		$count = mysql_num_rows($results);
            
-	     $bb_options = bbagency_get_option();
-		$bb_agency_option_unittype  = bbagency_get_option('bb_agency_option_unittype');
+	     $bb_options = bb_agency_get_option();
+		$bb_agency_option_unittype  = bb_agency_get_option('bb_agency_option_unittype');
 		
 		while ($data = mysql_fetch_array($results)) {
 			$ProfileCustomID	=$data['ProfileCustomID'];
@@ -2391,7 +2391,7 @@ elseif ($ConfigID == 7) {
 		echo "            <span class=\"delete\"><a class=\"submitdelete\" href=\"". admin_url("admin.php?page=". $_GET['page']) ."&amp;deleteRecord&amp;ProfileCustomID=". $ProfileCustomID ."&amp;ConfigID=". $ConfigID ."\"  onclick=\"if ( confirm('". __("You are about to delete this ". LabelSingular, bb_agency_TEXTDOMAIN) . ".\'". __("Cancel", bb_agency_TEXTDOMAIN) . "\' ". __("to stop", bb_agency_TEXTDOMAIN) . ", \'". __("OK", bb_agency_TEXTDOMAIN) . "\' ". __("to delete", bb_agency_TEXTDOMAIN) . ".') ) { return true;}return false;\" title=\"". __("Delete this Record", bb_agency_TEXTDOMAIN) . "\">". __("Delete", bb_agency_TEXTDOMAIN) . "</a> </span>\n";
 		echo "          </div>\n";
 		echo "        </td>\n";
-		echo "        <td class=\"column\">"; if ($data['ProfileCustomType'] == 1 ){ echo "Text"; } elseif ($data['ProfileCustomType'] == 2 ){ echo "Search Layout"; } elseif ($data['ProfileCustomType'] == 5) { echo "Checkbox"; } elseif ($data['ProfileCustomType'] == 6) { echo "Radio"; } elseif ($data['ProfileCustomType'] == 3) { echo "Dropdown"; } elseif ($data['ProfileCustomType'] == 4) { echo "Textarea"; }  elseif ($data['ProfileCustomType'] == 7) { if(bbagency_get_option('bb_agency_option_unittype')==1){ if($data['ProfileCustomOptions']==1){echo "Imperial(in)";}elseif($data['ProfileCustomOptions']==2){echo "Imperial(lb)";}elseif($data['ProfileCustomOptions']==3){echo "Imperial(in/ft)";} } else{ if($data['ProfileCustomOptions']==2){echo "Metric(cm)";}elseif($data['ProfileCustomOptions']==2){echo "Metric(kg)";}elseif($data['ProfileCustomOptions']==3){echo "Imperial(in/ft)";} } } echo "</td>\n";
+		echo "        <td class=\"column\">"; if ($data['ProfileCustomType'] == 1 ){ echo "Text"; } elseif ($data['ProfileCustomType'] == 2 ){ echo "Search Layout"; } elseif ($data['ProfileCustomType'] == 5) { echo "Checkbox"; } elseif ($data['ProfileCustomType'] == 6) { echo "Radio"; } elseif ($data['ProfileCustomType'] == 3) { echo "Dropdown"; } elseif ($data['ProfileCustomType'] == 4) { echo "Textarea"; }  elseif ($data['ProfileCustomType'] == 7) { if(bb_agency_get_option('bb_agency_option_unittype')==1){ if($data['ProfileCustomOptions']==1){echo "Imperial(in)";}elseif($data['ProfileCustomOptions']==2){echo "Imperial(lb)";}elseif($data['ProfileCustomOptions']==3){echo "Imperial(in/ft)";} } else{ if($data['ProfileCustomOptions']==2){echo "Metric(cm)";}elseif($data['ProfileCustomOptions']==2){echo "Metric(kg)";}elseif($data['ProfileCustomOptions']==3){echo "Imperial(in/ft)";} } } echo "</td>\n";
                 
 			
 			  $measurements_label = "";

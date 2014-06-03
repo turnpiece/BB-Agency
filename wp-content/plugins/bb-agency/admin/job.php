@@ -4,8 +4,8 @@ global $wpdb;
 define("LabelPlural", "jobs");
 define("LabelSingular", "job");
 
-$bb_options = bbagency_get_option();
-$bb_agency_option_persearch = (int)bbagency_get_option('bb_agency_option_persearch');
+$bb_options = bb_agency_get_option();
+$bb_agency_option_persearch = (int)bb_agency_get_option('bb_agency_option_persearch');
 
 // database tables
 $t_job = table_agency_job;
@@ -84,7 +84,7 @@ if ($_POST) {
                 // get latitude and longitude
                 if (!empty($_POST['JobLocation'])) {
 
-                    if ($location = bbagency_geocode($_POST['JobLocation'])) {
+                    if ($location = bb_agency_geocode($_POST['JobLocation'])) {
                         // geocode address
                         $sqlData[] = '`JobLocationLatitude` = "'.$location['lat'].'"';
                         $sqlData[] = '`JobLocationLongitude` = "'.$location['lng'].'"';
@@ -118,14 +118,14 @@ if ($_POST) {
                 } else {
                     $message = __("Job successfully updated.", bb_agency_TEXTDOMAIN);
                 }
-                bbagency_admin_message("<p>$message</p>");
+                bb_agency_admin_message("<p>$message</p>");
 
                 // display list page
                 $action = 'list';
                 
             } else {
                 // display error message
-                bbagency_admin_message('<p>' . __("Error. Please ensure you have filled out all required fields.", bb_agency_TEXTDOMAIN) . '</p><ul><li>'.implode('</li><li>', $error).'</li></ul>', 'error');
+                bb_agency_admin_message('<p>' . __("Error. Please ensure you have filled out all required fields.", bb_agency_TEXTDOMAIN) . '</p><ul><li>'.implode('</li><li>', $error).'</li></ul>', 'error');
             }            
             
             break;
@@ -138,7 +138,7 @@ switch ($action) {
     case 'delete' :
         if ($_GET['id']) {
             $wpdb->query("DELETE FROM $t_job WHERE `JobID` = ".$_GET['id']);
-            bbagency_admin_message('<p>'. __("That job has been deleted.", bb_agency_TEXTDOMAIN) . '</p>');
+            bb_agency_admin_message('<p>'. __("That job has been deleted.", bb_agency_TEXTDOMAIN) . '</p>');
         }
         elseif (!empty($_GET['JobID'])) {
             $i = 0;
@@ -147,10 +147,10 @@ switch ($action) {
                 $i++;
             }
             // display success messsage
-            bbagency_admin_message('<p>'. sprintf(__("Those %d jobs have been deleted.", bb_agency_TEXTDOMAIN), $i) . '</p>');
+            bb_agency_admin_message('<p>'. sprintf(__("Those %d jobs have been deleted.", bb_agency_TEXTDOMAIN), $i) . '</p>');
         }
         else {
-            bbagency_admin_message('<p>Unable to delete as no job id was received.</p>');
+            bb_agency_admin_message('<p>Unable to delete as no job id was received.</p>');
         }
         $action = 'list';
 

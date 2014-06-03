@@ -4,20 +4,20 @@ global $wpdb;
 define("LabelPlural", "Profile");
 define("LabelSingular", "Profiles");
 
-$bb_agency_option_unittype = bbagency_get_option('bb_agency_option_unittype');
-$bb_agency_option_showsocial = bbagency_get_option('bb_agency_option_showsocial');
-$bb_agency_option_agencyimagemaxheight = bbagency_get_option('bb_agency_option_agencyimagemaxheight');
+$bb_agency_option_unittype = bb_agency_get_option('bb_agency_option_unittype');
+$bb_agency_option_showsocial = bb_agency_get_option('bb_agency_option_showsocial');
+$bb_agency_option_agencyimagemaxheight = bb_agency_get_option('bb_agency_option_agencyimagemaxheight');
 if (empty($bb_agency_option_agencyimagemaxheight) || $bb_agency_option_agencyimagemaxheight < 500) {
     $bb_agency_option_agencyimagemaxheight = 800;
 }
-$bb_agency_option_profilenaming = (int) bbagency_get_option('bb_agency_option_profilenaming');
-$bb_agency_option_locationtimezone = (int) bbagency_get_option('bb_agency_option_locationtimezone');
+$bb_agency_option_profilenaming = (int) bb_agency_get_option('bb_agency_option_profilenaming');
+$bb_agency_option_locationtimezone = (int) bb_agency_get_option('bb_agency_option_locationtimezone');
 
 
 if (function_exists('bb_agencyinteract_approvemembers')) {
     // Load Interact Settings
     $bb_agencyinteract_options_arr = get_option('bb_agencyinteract_options');
-    $bb_agency_option_useraccountcreation = (int) bbagency_get_option('bb_agency_option_useraccountcreation');
+    $bb_agency_option_useraccountcreation = (int) bb_agency_get_option('bb_agency_option_useraccountcreation');
 }
 
 
@@ -182,7 +182,7 @@ if (isset($_POST['action'])) {
                 if (!empty($arrAddress)) {
                     $address = implode(', ', $arrAddress);
 
-                    if ($location = bbagency_geocode($address)) {
+                    if ($location = bb_agency_geocode($address)) {
                         // geocode address
                         $sqlData[] = 'ProfileLocationLatitude = "'.$location['lat'].'"';
                         $sqlData[] = 'ProfileLocationLongitude = "'.$location['lng'].'"';
@@ -281,7 +281,7 @@ if (isset($_POST['action'])) {
                 if (!empty($arrAddress)) {
                     $address = implode(', ', $arrAddress);
 
-                    if ($location = bbagency_geocode($address)) {
+                    if ($location = bb_agency_geocode($address)) {
                         // geocode address
                         $sqlData[] = 'ProfileLocationLatitude = "'.$location['lat'].'"';
                         $sqlData[] = 'ProfileLocationLongitude = "'.$location['lng'].'"';
@@ -563,15 +563,15 @@ elseif (($_GET['action'] == "editRecord") || ($_GET['action'] == "add")) {
 // Manage Record
 function bb_display_manage($ProfileID) {
     global $wpdb;
-    $bb_options = bbagency_get_option();
-    $bb_agency_option_unittype = bbagency_get_option('bb_agency_option_unittype');
-    $bb_agency_option_showsocial = bbagency_get_option('bb_agency_option_showsocial');
-    $bb_agency_option_agencyimagemaxheight = bbagency_get_option('bb_agency_option_agencyimagemaxheight');
+    $bb_options = bb_agency_get_option();
+    $bb_agency_option_unittype = bb_agency_get_option('bb_agency_option_unittype');
+    $bb_agency_option_showsocial = bb_agency_get_option('bb_agency_option_showsocial');
+    $bb_agency_option_agencyimagemaxheight = bb_agency_get_option('bb_agency_option_agencyimagemaxheight');
     if (empty($bb_agency_option_agencyimagemaxheight) || $bb_agency_option_agencyimagemaxheight < 500) {
         $bb_agency_option_agencyimagemaxheight = 800;
     }
-    $bb_agency_option_profilenaming = (int) bbagency_get_option('bb_agency_option_profilenaming');
-    $bb_agency_option_locationcountry = bbagency_get_option('bb_agency_option_locationcountry');
+    $bb_agency_option_profilenaming = (int) bb_agency_get_option('bb_agency_option_profilenaming');
+    $bb_agency_option_locationcountry = bb_agency_get_option('bb_agency_option_locationcountry');
     echo "<div class=\"wrap\">\n";
     // Include Admin Menu
     include ("admin-menu.php");
@@ -767,7 +767,7 @@ function bb_display_manage($ProfileID) {
     if ($ProfileLocationLatitude != '' && $ProfileLocationLongitude != '') : ?>
         <tr valign="top">
             <td scope="row"><?php _e('Location', bb_agency_TEXTDOMAIN) ?></td>
-            <td><?php bbagency_map($ProfileLocationLatitude, $ProfileLocationLongitude, $ProfileContactDisplay) ?></td>
+            <td><?php bb_agency_map($ProfileLocationLatitude, $ProfileLocationLongitude, $ProfileContactDisplay) ?></td>
         </tr>
     <?php endif;
 
@@ -1193,8 +1193,8 @@ function bb_display_manage($ProfileID) {
 
 function bb_display_list() {
     global $wpdb;
-    $bb_options = bbagency_get_option();
-    $bb_agency_option_locationtimezone = (int) bbagency_get_option('bb_agency_option_locationtimezone');
+    $bb_options = bb_agency_get_option();
+    $bb_agency_option_locationtimezone = (int) bb_agency_get_option('bb_agency_option_locationtimezone');
     echo "<div class=\"wrap\">\n";
     // Include Admin Menu
     include ("admin-menu.php");
@@ -1518,7 +1518,7 @@ function bb_display_list() {
             $data['ProfileType'] = implode(',', $ptypes);
             
             // recategorize as family
-            bbagency_recategorize_profile($data['ProfileID'], $data['ProfileType']);              
+            bb_agency_recategorize_profile($data['ProfileID'], $data['ProfileType']);              
         }
         
         /*

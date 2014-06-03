@@ -145,7 +145,7 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 
 // Load options
 	global $bb_options;
-	$bb_options = bbagency_get_option();
+	$bb_options = bb_agency_get_option();
 
 // *************************************************************************************************** //
 	
@@ -559,7 +559,7 @@ if ( is_admin() ){
 
 	add_shortcode("profile_list", "bb_agency_shortcode_profilelist");
 		function bb_agency_shortcode_profilelist($atts, $content = null){
-			$privacy = bbagency_datatype_privacy($atts['type']);
+			$privacy = bb_agency_datatype_privacy($atts['type']);
 			ob_start();
 			if ($privacy && !is_user_logged_in()) {
 				// display login form
@@ -593,13 +593,13 @@ if ( is_admin() ){
 		 * just not to get the tooltip error
 		 */
 		
-		$bb_options = bbagency_get_option();
+		$bb_options = bb_agency_get_option();
 		if ($bb_options == ""){
 			$bb_options["bb_agency_options_showtooltip"] = 1;
 			update_option('bb_agency_options',$bb_options);
 		}
 	    if( $bb_options != "" || is_array($bb_options)){    	
-			 $bb_agency_options_showtooltip = bbagency_get_option("bb_agency_options_showtooltip");
+			 $bb_agency_options_showtooltip = bb_agency_get_option("bb_agency_options_showtooltip");
 			 
 			if(!@in_array("bb_agency_options_showtooltip",$bb_options) && $bb_agency_options_showtooltip == 0){	 
 				$bb_options["bb_agency_options_showtooltip"] = 1;

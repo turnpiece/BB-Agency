@@ -12,10 +12,10 @@
 
     $cusFields = array("Suit","Bust","Shirt","Dress","Height");  //for custom fields min and max
 
-    $bb_options = bbagency_get_option();
-    $bb_agency_option_unittype =  bbagency_get_option('bb_agency_option_unittype');
-    $bb_agency_option_persearch = (int)bbagency_get_option('bb_agency_option_persearch');
-    $bb_agency_option_agencyemail = (int)bbagency_get_option('bb_agency_option_agencyemail');
+    $bb_options = bb_agency_get_option();
+    $bb_agency_option_unittype =  bb_agency_get_option('bb_agency_option_unittype');
+    $bb_agency_option_persearch = (int)bb_agency_get_option('bb_agency_option_persearch');
+    $bb_agency_option_agencyemail = (int)bb_agency_get_option('bb_agency_option_agencyemail');
     if ($bb_agency_option_persearch <= 1) { $bb_agency_option_persearch = 100; }
 
     echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=bb_agency_search';}</script>"; 
@@ -164,7 +164,7 @@ if ($action) {
         if (isset($_GET['ProfileLocation']) && !empty($_GET['ProfileLocation'])) {
             $ProfileLocation = $_GET['ProfileLocation'];
 
-            if ($location = bbagency_geocode($ProfileLocation)) {
+            if ($location = bb_agency_geocode($ProfileLocation)) {
                 $lat = $location['lat'];
                 $lng = $location['lng'];
                 $distance = "((ACOS(SIN($lat * PI() / 180) * SIN(`ProfileLocationLatitude` * PI() / 180) + COS($lat * PI() / 180) * COS(`ProfileLocationLatitude` * PI() / 180) * COS(($lng - `ProfileLocationLongitude`) * PI() / 180)) * 180 / PI()) * 60 * 1.1515)";
@@ -735,8 +735,8 @@ EOF;
             }    
         }
         // Email
-        $bb_agency_value_agencyname = bbagency_get_option('bb_agency_option_agencyname');
-        $bb_agency_value_agencyemail = bbagency_get_option('bb_agency_option_agencyemail');
+        $bb_agency_value_agencyname = bb_agency_get_option('bb_agency_option_agencyname');
+        $bb_agency_value_agencyemail = bb_agency_get_option('bb_agency_option_agencyemail');
         ?>
         <form method="post">
             <div class="boxblock">
@@ -907,8 +907,8 @@ EOF;
                         <?php
                             // SET Label for Measurements
                             // Imperial(in/lb), Metrics(ft/kg)
-                            $bb_options = bbagency_get_option();
-                            $bb_agency_option_unittype  = bbagency_get_option('bb_agency_option_unittype');
+                            $bb_options = bb_agency_get_option();
+                            $bb_agency_option_unittype  = bb_agency_get_option('bb_agency_option_unittype');
                             //$measurements_label = "";
                             /*
                             0- metric

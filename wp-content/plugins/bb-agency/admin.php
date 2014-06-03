@@ -7,7 +7,7 @@
  * @param string $class
  *
  */
-function bbagency_admin_message($message, $class = 'updated') {
+function bb_agency_admin_message($message, $class = 'updated') {
     ?>
     <div id="message" class="<?php echo $class ?>">
         <?php echo $message ?>
@@ -200,8 +200,8 @@ function bb_agency_set_content_type($content_type) {
 }
 
 function bb_agency_send_email() {
-    $bb_agency_value_agencyname = bbagency_get_option('bb_agency_option_agencyname');
-    $bb_agency_value_agencyemail = bbagency_get_option('bb_agency_option_agencyemail');
+    $bb_agency_value_agencyname = bb_agency_get_option('bb_agency_option_agencyname');
+    $bb_agency_value_agencyemail = bb_agency_get_option('bb_agency_option_agencyemail');
     $correspondenceEmail = $bb_agency_value_agencyemail;
     
     $MassEmailSubject = $_POST["MassEmailSubject"];

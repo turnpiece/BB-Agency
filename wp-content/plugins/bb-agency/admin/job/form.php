@@ -10,19 +10,19 @@
                     <tr valign="top">
                         <th scope="row"><?php _e('Job Title', bb_agency_TEXTDOMAIN) ?>*</th>
                         <td>
-                            <input class="regular-text" type="text" id="JobTitle" name="JobTitle" value="<?php bbagency_posted_value('JobTitle', isset($Job) ? $Job : null) ?>" />
+                            <input class="regular-text" type="text" id="JobTitle" name="JobTitle" value="<?php bb_agency_posted_value('JobTitle', isset($Job) ? $Job : null) ?>" />
                         </td>
                     </tr>
                     <tr valign="top">
                         <th scope="row"><?php _e('Client', bb_agency_TEXTDOMAIN) ?>*</th>
                         <td>
-                            <?php echo bb_agency_client_dropdown('JobClient', bbagency_get_posted_value('JobClient', isset($Job) ? $Job : null)) ?>
+                            <?php echo bb_agency_client_dropdown('JobClient', bb_agency_get_posted_value('JobClient', isset($Job) ? $Job : null)) ?>
                         </td>
                     </tr>
                     <tr valign="top">
                         <th scope="row"><?php _e('Rate', bb_agency_TEXTDOMAIN) ?>*</th>
                         <td>
-                            <input class="regular-text" type="text" id="JobRate" name="JobRate" value="<?php bbagency_posted_value('JobRate', isset($Job) ? $Job : null) ?>" />
+                            <input class="regular-text" type="text" id="JobRate" name="JobRate" value="<?php bb_agency_posted_value('JobRate', isset($Job) ? $Job : null) ?>" />
                         </td>
                     </tr>
                     <tr valign="top">
@@ -30,11 +30,11 @@
                         <td>
                             <?php
                             // display location map
-                            $loc = bbagency_get_posted_value('JobLocation', isset($Job) ? $Job : null);
-                            $lat = bbagency_get_posted_value('JobLocationLatitude', isset($Job) ? $Job : null);
-                            $lng = bbagency_get_posted_value('JobLocationLongitude', isset($Job) ? $Job : null);
+                            $loc = bb_agency_get_posted_value('JobLocation', isset($Job) ? $Job : null);
+                            $lat = bb_agency_get_posted_value('JobLocationLatitude', isset($Job) ? $Job : null);
+                            $lng = bb_agency_get_posted_value('JobLocationLongitude', isset($Job) ? $Job : null);
                             if ($loc != '' && $lat != '' && $lng != '') : ?>
-                                <?php bbagency_map($lat, $lng, $loc) ?>
+                                <?php bb_agency_map($lat, $lng, $loc) ?>
                             <?php endif; ?>
                             <input class="regular-text" type="text" id="JobLocation" name="JobLocation" value="<?php echo $loc ?>" />
                         </td>
@@ -42,7 +42,7 @@
                     <tr valign="top">
                         <th scope="row"><?php _e('Date', bb_agency_TEXTDOMAIN) ?>*</th>
                         <td>
-                            <input type="text" class="bbdatepicker" id="JobDate" name="JobDate" value="<?php bbagency_posted_value('JobDate', isset($Job) ? $Job : null) ?>" />
+                            <input type="text" class="bbdatepicker" id="JobDate" name="JobDate" value="<?php bb_agency_posted_value('JobDate', isset($Job) ? $Job : null) ?>" />
                         </td>
                     </tr>
                     <tr valign="top">
@@ -50,7 +50,7 @@
                         <td>
                             <select id="ProfileIsActive" name="JobStatus">
                                 <?php
-                                    $status = bbagency_get_posted_value('JobStatus', isset($Job) ? $Job : null);
+                                    $status = bb_agency_get_posted_value('JobStatus', isset($Job) ? $Job : null);
                                     foreach (array( 
                                         1 => __("Active", bb_agency_TEXTDOMAIN),
                                         0 => __("Inactive", bb_agency_TEXTDOMAIN),
@@ -64,13 +64,13 @@
                     <tr valign="top">
                         <th scope="row"><?php _e('PO Number', bb_agency_TEXTDOMAIN) ?></th>
                         <td>
-                            <input class="regular-text" type="text" id="JobPONumber" name="JobPONumber" value="<?php bbagency_posted_value('JobPONumber', isset($Job) ? $Job : null) ?>" />
+                            <input class="regular-text" type="text" id="JobPONumber" name="JobPONumber" value="<?php bb_agency_posted_value('JobPONumber', isset($Job) ? $Job : null) ?>" />
                         </td>
                     </tr>
                     <tr valign="top">
                         <th scope="row"><?php _e('Notes', bb_agency_TEXTDOMAIN) ?></th>
                         <td>
-                            <textarea class="large-text" id="JobNotes" name="JobNotes"><?php bbagency_posted_value('JobNotes', isset($Job) ? $Job : null) ?></textarea>
+                            <textarea class="large-text" id="JobNotes" name="JobNotes"><?php bb_agency_posted_value('JobNotes', isset($Job) ? $Job : null) ?></textarea>
                         </td>
                     </tr>
                 </tbody>
@@ -79,7 +79,7 @@
         <div class="boxblock-container right-half">
             <?php
             // get models
-            $models = bbagency_get_models();
+            $models = bb_agency_get_models();
             ?>
             <table class="form-table">
                 <tbody>
@@ -89,7 +89,7 @@
                             <select id="JobModelBooked" name="JobModelBooked">
                                 <option value="">--</option>
                                 <?php
-                                    $booked = bbagency_get_posted_value('JobModelBooked', isset($Job) ? $Job : null);
+                                    $booked = bb_agency_get_posted_value('JobModelBooked', isset($Job) ? $Job : null);
                                     foreach ($models as $model) : ?>
                                 <option value="<?php echo $model->ID ?>" <?php selected($model->ID, $booked) ?>><?php echo $model->name ?></option>
                                 <?php endforeach; ?>
@@ -100,7 +100,7 @@
                             <td>
                                 <select multiple id="JobModelCasted" name="JobModelCasted[]" size="25">
                                     <?php 
-                                        $casted = bbagency_get_posted_value('JobModelCasted', isset($Job) ? $Job : null, true);
+                                        $casted = bb_agency_get_posted_value('JobModelCasted', isset($Job) ? $Job : null, true);
                                         foreach ($models as $model) : ?>
                                     <option value="<?php echo $model->ID ?>" <?php selected(!empty($casted) && in_array($model->ID, $casted)) ?>><?php echo $model->name ?></option>    
                                     <?php endforeach; ?>

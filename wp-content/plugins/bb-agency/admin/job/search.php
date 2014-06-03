@@ -70,7 +70,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'search') :
         if (isset($_REQUEST['JobLocation']) && !empty($_REQUEST['JobLocation'])) {
             $JobLocation = $_REQUEST['JobLocation'];
 
-            if ($location = bbagency_geocode($JobLocation)) {
+            if ($location = bb_agency_geocode($JobLocation)) {
                 $lat = $location['lat'];
                 $lng = $location['lng'];
                 $distance = "((ACOS(SIN($lat * PI() / 180) * SIN(`JobLocationLatitude` * PI() / 180) + COS($lat * PI() / 180) * COS(`JobLocationLatitude` * PI() / 180) * COS(($lng - `JobLocationLongitude`) * PI() / 180)) * 180 / PI()) * 60 * 1.1515)";
@@ -140,25 +140,25 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'search') :
                         <tr>
                             <th scope="row"><?php _e("Title", bb_agency_TEXTDOMAIN) ?></th>
                             <td>
-                                <input type="text" id="JobTitle" name="JobTitle" value="<?php bbagency_posted_value('JobTitle') ?>" />               
+                                <input type="text" id="JobTitle" name="JobTitle" value="<?php bb_agency_posted_value('JobTitle') ?>" />               
                             </td>
                         </tr>
                         <tr valign="top">
                             <th scope="row"><?php _e('Client', bb_agency_TEXTDOMAIN) ?></th>
                             <td>
-                                <?php echo bb_agency_client_dropdown('JobClient', bbagency_get_posted_value('JobClient', isset($Job) ? $Job : null)) ?>
+                                <?php echo bb_agency_client_dropdown('JobClient', bb_agency_get_posted_value('JobClient', isset($Job) ? $Job : null)) ?>
                             </td>
                         </tr>
                         <tr valign="top">
                             <th scope="row"><?php _e('Rate', bb_agency_TEXTDOMAIN) ?></th>
                             <td>
-                                <input type="text" id="JobRate" name="JobRate" value="<?php bbagency_posted_value('JobRate', isset($Job) ? $Job : null) ?>" />
+                                <input type="text" id="JobRate" name="JobRate" value="<?php bb_agency_posted_value('JobRate', isset($Job) ? $Job : null) ?>" />
                             </td>
                         </tr>
                         <tr valign="top">
                             <th scope="row"><?php _e('Location', bb_agency_TEXTDOMAIN) ?></th>
                             <td>
-                                <input type="text" id="JobLocation" name="JobLocation" value="<?php bbagency_posted_value('JobLocation', isset($Job) ? $Job : null) ?>" />
+                                <input type="text" id="JobLocation" name="JobLocation" value="<?php bb_agency_posted_value('JobLocation', isset($Job) ? $Job : null) ?>" />
                             </td>
                         </tr>
                         <tr>
@@ -167,7 +167,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'search') :
                                 <select name="JobStatus" id="JobStatus">               
                                     <option value="">--</option>
                                     <?php
-                                    $value = bbagency_get_posted_value('JobStatus');
+                                    $value = bb_agency_get_posted_value('JobStatus');
                                     $options = array(
                                         1 => __("Active", bb_agency_TEXTDOMAIN),
                                         0 => __("Inactive", bb_agency_TEXTDOMAIN),

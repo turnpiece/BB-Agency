@@ -1,14 +1,14 @@
 <?php
 	global $wpdb, $bb_agency_CURRENT_TYPE_ID;
-	$bb_options = bbagency_get_option();
-	$bb_agency_option_profilenaming = bbagency_get_option('bb_agency_option_profilenaming');
-	$bb_agency_option_unittype = bbagency_get_option('bb_agency_option_unittype');
+	$bb_options = bb_agency_get_option();
+	$bb_agency_option_profilenaming = bb_agency_get_option('bb_agency_option_profilenaming');
+	$bb_agency_option_unittype = bb_agency_get_option('bb_agency_option_unittype');
 
 	//Custom fields display options
-	$bb_agency_option_customfields_profilepage = bbagency_get_option('bb_agency_option_customfield_profilepage');
-	$bb_agency_option_customfields_searchpage = bbagency_get_option('bb_agency_option_customfield_searchpage');
-	$bb_agency_option_customfields_loggedin_all = bbagency_get_option('bb_agency_option_customfield_loggedin_all');
-	$bb_agency_option_customfields_loggedin_admin = bbagency_get_option('bb_agency_option_customfield_loggedin_admin');
+	$bb_agency_option_customfields_profilepage = bb_agency_get_option('bb_agency_option_customfield_profilepage');
+	$bb_agency_option_customfields_searchpage = bb_agency_get_option('bb_agency_option_customfield_searchpage');
+	$bb_agency_option_customfields_loggedin_all = bb_agency_get_option('bb_agency_option_customfield_loggedin_all');
+	$bb_agency_option_customfields_loggedin_admin = bb_agency_get_option('bb_agency_option_customfield_loggedin_admin');
 	
 	if (!empty($bb_agency_CURRENT_TYPE_ID)) $_SESSION['ProfileType'] = $bb_agency_CURRENT_TYPE_ID;
 	if (isset($_REQUEST['ProfileType']) && !empty($_REQUEST['ProfileType'])) { $_SESSION['ProfileType'] = $_REQUEST['ProfileType']; }
