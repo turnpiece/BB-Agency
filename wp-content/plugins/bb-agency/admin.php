@@ -368,8 +368,8 @@ function bb_agency_age_dropdown($name, $value = null) {
     for ($i = 30; $i <= 100; $i += 10) {
         $ages[$i] = $i;
     }
-
-    $option = array('<option value="">--</option>');
+    $label = strpos($name, '_min') !== false ? __('To', bb_agency_TEXTDOMAIN)  : __('From', bb_agency_TEXTDOMAIN); 
+    $option = array('<option value="">'.$label.'</option>');
     foreach ($ages as $k => $v) {
         $option[] = '<option value="'.$k.'" '.selected($k, $value, false).'>'.$v.'</option>';
     }

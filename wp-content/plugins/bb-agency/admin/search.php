@@ -827,12 +827,9 @@ EOF;
                             <td>
                                 <fieldset>
                                     <div>
-                                        <label for="ProfileAge_min"><?php _e('Min', bb_agency_TEXTDOMAIN) ?></label>
                                         <?php echo bb_agency_age_dropdown('ProfileAge_min') ?>
                                     </div>
-
                                     <div>
-                                        <label for="ProfileAge_max"><?php _e('Max', bb_agency_TEXTDOMAIN) ?></label>
                                         <?php echo bb_agency_age_dropdown('ProfileAge_max') ?>
                                     </div>
                                 </fieldset>
@@ -844,12 +841,12 @@ EOF;
                             <td>
                                 <fieldset>
                                     <div>
-                                        <label for="ProfileDateDue_min"><?php _e('Min', bb_agency_TEXTDOMAIN) ?></label>
+                                        <label for="ProfileDateDue_min"><?php _e('From', bb_agency_TEXTDOMAIN) ?></label>
                                         <input type="text" class="min_max bbdatepicker" id="ProfileDateDue_min" name="ProfileDateDue_min" />
                                     </div>
 
                                     <div>
-                                        <label for="ProfileDateDue_max"><?php _e('Max', bb_agency_TEXTDOMAIN) ?></label>
+                                        <label for="ProfileDateDue_max"><?php _e('To', bb_agency_TEXTDOMAIN) ?></label>
                                         <input type="text" class="min_max bbdatepicker" id="ProfileDateDue_max" name="ProfileDateDue_max" />
                                     </div>
                                 </fieldset>
@@ -1000,11 +997,11 @@ EOF;
                                 <?php else : ?>
                                     <fieldset class="bbtext">
                                         <div>
-                                            <label for="ProfileCustomLabel_min"><?php _e('Min', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
+                                            <label for="ProfileCustomLabel_min"><?php _e('From', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
                                             <input class="min_max" type="text" name="<?php echo $field ?>_min" value="<?php echo $ProfileCustomOptions_Min_value ?>" />
                                         </div>
                                         <div>
-                                            <label for="ProfileCustomLabel_max"><?php _e('Max', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
+                                            <label for="ProfileCustomLabel_max"><?php _e('To', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
                                             <input class="min_max" type="text" name="<?php echo $field ?>_max" value="<?php echo $ProfileCustomOptions_Max_value ?>" />
                                         </div>
                                     </fieldset>
@@ -1028,20 +1025,20 @@ EOF;
                                                          
                                     if (!empty($ProfileCustomOptions_Min_value) && !empty($ProfileCustomOptions_Max_value)) : ?>
                                     <div>
-                                        <label for="ProfileCustomLabel_min" style="text-align:right;"><?php _e('Min', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
+                                        <label for="ProfileCustomLabel_min" style="text-align:right;"><?php _e('From', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
                                         <input class="min_max" type="text" name="<?php echo $field ?>_min" value="<?php echo $ProfileCustomOptions_Min_value ?>" />
                                     </div>
                                     <div>
-                                        <label for="ProfileCustomLabel_max" style="text-align:right;"><?php _e('Max', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
+                                        <label for="ProfileCustomLabel_max" style="text-align:right;"><?php _e('To', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
                                         <input class="min_max" type="text" name="<?php echo $field ?>_max" value="<?php echo $ProfileCustomOptions_Max_value ?>" />
                                     </div>
                                     <?php else : ?>
                                     <div>
-                                        <label for="ProfileCustomLabel_min" style="text-align:right;"><?php _e('Min', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
+                                        <label for="ProfileCustomLabel_min" style="text-align:right;"><?php _e('From', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
                                         <input class="min_max" type="text" name="<?php echo $field ?>_min" value="<?php echo $_SESSION[$field.'_min'] ?>" />
                                     </div>
                                     <div>
-                                        <label for="ProfileCustomLabel_max" style="text-align:right;"><?php _e('Max', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
+                                        <label for="ProfileCustomLabel_max" style="text-align:right;"><?php _e('To', bb_agency_TEXTDOMAIN) ?>&nbsp;&nbsp;</label>
                                         <input class="min_max" type="text" name="<?php echo $field ?>_max" value="<?php echo $_SESSION[$field.'_max'] ?>" />
                                     </div>
                                     <?php endif; ?>
