@@ -12,11 +12,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'search') :
 // *************************************************************************************************** //
 // Get Search Results
 
-    global $wpdb;  
-
-    // tables
-    $t_job = table_agency_job;
-    $t_profile = table_agency_profile;   
+    global $wpdb;   
 
     // Sort By
     $sort = isset($_REQUEST['sort']) && !empty($_REQUEST['sort']) ? $_REQUEST['sort'] : "`JobDate`";

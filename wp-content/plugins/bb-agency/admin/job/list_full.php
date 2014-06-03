@@ -24,7 +24,7 @@
             </span>
         </div>
       </td>
-      <td><?php echo $data->ClientName ?></td>
+      <td><a href="<?php echo admin_url('admin.php?page=bb_agency_profiles&amp;action=editRecord&amp;ProfileID='.$data->JobClient) ?>" title="Edit client record"><?php echo $data->ClientName ?></a></td>
       <td><?php echo $data->JobLocation ?></td>
       <td><?php echo $data->JobPONumber ?></td>
       <td><?php echo $data->JobDate ?></td>

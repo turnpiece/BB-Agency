@@ -7,8 +7,11 @@ define("LabelSingular", "job");
 $bb_options = bbagency_get_option();
 $bb_agency_option_persearch = (int)bbagency_get_option('bb_agency_option_persearch');
 
-// settings
+// database tables
 $t_job = table_agency_job;
+$t_profile = table_agency_profile;
+
+// settings
 $job = LabelSingular;
 
 //start page display
@@ -186,7 +189,7 @@ switch ($action) {
         }
 
         // generate SQL 
-        $sql = "SELECT *, IF(`JobDate` < NOW(), 1, 0) AS JobPassed FROM $t_job";
+        $sql = "SELECT j.*, p.`ProfileContactDisplay` AS ClientName, IF(j.`JobDate` < NOW(), 1, 0) AS JobPassed FROM $t_job j LEFT JOIN $t_profile p ON j.`JobClient` = p.`ProfileID`";
 
         if (isset($_REQUEST['s'])) {
             // quick filter search
@@ -195,7 +198,6 @@ switch ($action) {
             // Standard fields
             $fields = array(
                 'JobTitle',
-                'JobClient',
                 'JobRate',
                 'JobPONumber'
             );
