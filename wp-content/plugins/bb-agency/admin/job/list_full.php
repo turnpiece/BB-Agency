@@ -24,7 +24,7 @@
             </span>
         </div>
       </td>
-      <td><?php echo $data->JobClient ?></td>
+      <td><?php echo $data->ClientName ?></td>
       <td><?php echo $data->JobLocation ?></td>
       <td><?php echo $data->JobPONumber ?></td>
       <td><?php echo $data->JobDate ?></td>

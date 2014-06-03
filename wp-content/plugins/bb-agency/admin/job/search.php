@@ -3,8 +3,6 @@
     // Include Admin Menu
     include (dirname(dirname(__FILE__)).'/admin-menu.php');
 
-    global $wpdb;
-
 // *************************************************************************************************** //
 // Get Actions 
 
@@ -12,24 +10,16 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'search') :
 
 
 // *************************************************************************************************** //
-// Get Search Results       
+// Get Search Results
+
+    global $wpdb;  
+
+    // tables
+    $t_job = table_agency_job;
+    $t_profile = table_agency_profile;   
 
     // Sort By
-    $sort = "";
-    if (isset($_REQUEST['sort']) && !empty($_REQUEST['sort'])) {
-        $sort = $_REQUEST['sort'];
-    } else {
-        $sort = "`JobDate`";
-    }
-
-    // Limit
-    if (isset($_REQUEST['limit']) && !empty($_REQUEST['limit'])){
-        $limit = "";
-    } else {
-        if ($bb_agency_option_persearch > 1) {
-            $limit = " LIMIT 0,". $bb_agency_option_persearch;
-        }
-    }
+    $sort = isset($_REQUEST['sort']) && !empty($_REQUEST['sort']) ? $_REQUEST['sort'] : "`JobDate`";
 
     // Sort Order
     $dir = "";
@@ -45,18 +35,17 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'search') :
         $dir = "asc";
     }
 
-    //// Filter
+    // Filter
     $where = array();
 
     // Standard fields
     $fields = array(
         'JobTitle',
-        'JobClient',
         'JobRate',
         'JobPONumber'
     );
 
-    if (isset($_REQUEST[['s']])) {
+    if (isset($_REQUEST['s'])) {
         // quick filter search
         $value = $_REQUEST['s'];
         foreach ($fields as $field) {
@@ -64,13 +53,13 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'search') :
         }
 
         // generate SQL 
-        $sql = 'SELECT * FROM '. table_agency_job;
+        $sql = "SELECT j.*, p.`ProfileContactDisplay` AS ClientName FROM $t_job j LEFT JOIN $t_profile p ON j.`JobClient` = p.'`ProfileID`'";
 
         if (!empty($where)) {
             $sql .= ' WHERE '.implode(' OR ', $where);
         }
         
-        $sql .= "ORDER BY $sort $dir $limit";
+        $sql .= "ORDER BY $sort $dir";
         
     } else {
         // advanced search
@@ -79,10 +68,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'search') :
                 $value = $_REQUEST[$field];
                 $where[] = "`$field` LIKE '%$value%'"; 
             }        
-        }
-
-        if (isset($_REQUEST['s']) && !empty($_REQUEST['s'])) {
-            
+        }   
 
         // Location range search
         if (isset($_REQUEST['JobLocation']) && !empty($_REQUEST['JobLocation'])) {
@@ -101,19 +87,19 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'search') :
         }
 
         // generate SQL 
-        $sql = 'SELECT *';
+        $sql = 'SELECT j.*, p.`ProfileContactDisplay` AS ClientName';
 
         if (!empty($select)) {
             $sql .= ', '. implode(', ', $select);
         }
 
-        $sql .= ' FROM '. table_agency_job;
+        $sql .= " FROM $t_job j LEFT JOIN $t_profile p ON j.`JobClient` = p.'`ProfileID`'";
 
         if (!empty($where)) {
             $sql .= ' WHERE '.implode(' AND ', $where);
         }
         
-        $sql .= "ORDER BY $sort $dir $limit";
+        $sql .= "ORDER BY $sort $dir";
     }
 
 
@@ -131,7 +117,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'search') :
         <input type="hidden" name="page" id="page" value="<?php echo $_REQUEST['page'] ?>" />
         <?php
         if ($count > 0) :
-            include('list.php');
+            include('list_full.php');
         // check for no results
         else : ?>
         <p>
@@ -148,7 +134,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'search') :
 
 <div class="boxblock-container left-half">
     <div class="boxblock">
-        <h3><?php _e("Advanced Search", bb_agency_TEXTDOMAIN) ?></h3>
+        <h3><?php _e("Job Search", bb_agency_TEXTDOMAIN) ?></h3>
         <div class="inner">
             <form method="GET" action="<?php echo admin_url('admin.php?page='. $_REQUEST['page']) ?>">
                 <input type="hidden" name="page" id="page" value="<?php echo $_REQUEST['page'] ?>" />
@@ -156,48 +142,47 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'search') :
                 <table cellspacing="0" class="widefat fixed">
                     <thead>
                         <tr>
-                            <th scope="row"><?php _e("Job Title", bb_agency_TEXTDOMAIN) ?></th>
+                            <th scope="row"><?php _e("Title", bb_agency_TEXTDOMAIN) ?></th>
                             <td>
-                                <input type="regular-text" id="JobTitle" name="JobTitle" value="<?php bbagency_posted_value('JobTitle') ?>" />               
+                                <input type="text" id="JobTitle" name="JobTitle" value="<?php bbagency_posted_value('JobTitle') ?>" />               
                             </td>
                         </tr>
                         <tr valign="top">
                             <th scope="row"><?php _e('Client', bb_agency_TEXTDOMAIN) ?></th>
                             <td>
-                                <input class="regular-text" type="text" id="JobClient" name="JobClient" value="<?php bbagency_posted_value('JobClient') ?>" />
+                                <?php echo bb_agency_client_dropdown('JobClient', bbagency_get_posted_value('JobClient', isset($Job) ? $Job : null)) ?>
                             </td>
                         </tr>
-                    <tr valign="top">
-                        <th scope="row"><?php _e('Rate', bb_agency_TEXTDOMAIN) ?></th>
-                        <td>
-                            <input class="regular-text" type="text" id="JobRate" name="JobRate" value="<?php bbagency_posted_value('JobRate', isset($Job) ? $Job : null) ?>" />
-                        </td>
-                    </tr>
-                    <tr valign="top">
-                        <th scope="row"><?php _e('Location', bb_agency_TEXTDOMAIN) ?></th>
-                        <td>
-                            <input class="regular-text" type="text" id="JobLocation" name="JobLocation" value="<?php bbagency_posted_value('JobLocation', isset($Job) ? $Job : null) ?>" />
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <th scope="row"><?php _e("Status", bb_agency_TEXTDOMAIN) ?></th>
-                        <td>
-                            <select name="JobStatus" id="JobStatus">               
-                                <option value="">--</option>
-                                <?php
-                                $value = bbagency_get_posted_value('JobStatus');
-                                $options = array(
-                                    1 => __("Active", bb_agency_TEXTDOMAIN),
-                                    0 => __("Inactive", bb_agency_TEXTDOMAIN),
-                                    2 => __("Archived", bb_agency_TEXTDOMAIN)
-                                );
-                                foreach ($options as $id => $label) : ?>
-                                <option value="<?php echo $id ?>" <?php selected($value, $id) ?>><?php echo $label ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </td>
-                    </tr>
+                        <tr valign="top">
+                            <th scope="row"><?php _e('Rate', bb_agency_TEXTDOMAIN) ?></th>
+                            <td>
+                                <input type="text" id="JobRate" name="JobRate" value="<?php bbagency_posted_value('JobRate', isset($Job) ? $Job : null) ?>" />
+                            </td>
+                        </tr>
+                        <tr valign="top">
+                            <th scope="row"><?php _e('Location', bb_agency_TEXTDOMAIN) ?></th>
+                            <td>
+                                <input type="text" id="JobLocation" name="JobLocation" value="<?php bbagency_posted_value('JobLocation', isset($Job) ? $Job : null) ?>" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><?php _e('Status', bb_agency_TEXTDOMAIN) ?></th>
+                            <td>
+                                <select name="JobStatus" id="JobStatus">               
+                                    <option value="">--</option>
+                                    <?php
+                                    $value = bbagency_get_posted_value('JobStatus');
+                                    $options = array(
+                                        1 => __("Active", bb_agency_TEXTDOMAIN),
+                                        0 => __("Inactive", bb_agency_TEXTDOMAIN),
+                                        2 => __("Archived", bb_agency_TEXTDOMAIN)
+                                    );
+                                    foreach ($options as $id => $label) : ?>
+                                    <option value="<?php echo $id ?>" <?php selected($value, $id) ?>><?php echo $label ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </td>
+                        </tr>
                     </thead>
                 </table>
                 <p class="submit">

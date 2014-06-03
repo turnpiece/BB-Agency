@@ -21,7 +21,7 @@ add_action('admin_init', 'bb_agency_register_settings');
 
 // Register our Array of settings
 function bb_agency_register_settings() {
-    register_setting('bb-agency-settings-group', 'bb_agency_options'); //, 'bb_agency_options_validate'
+    register_setting( 'bb-agency-settings-group', 'bb_agency_options' ); //, 'bb_agency_options_validate'
     register_setting( 'bb-agency-dummy-settings-group', 'bb_agency_dummy_options' ); //, setup dummy profile options
 }
 // Validate/Sanitize Data
@@ -347,7 +347,14 @@ function bb_agency_empty_cart() {
     unset($_SESSION['cartArray']);
 }
 
-// Age dropdown
+/**
+ * Age dropdown
+ *
+ * @param string $name
+ * @param string $value
+ * @return string
+ *
+ */
 function bb_agency_age_dropdown($name, $value = null) {
     $ages = array(
         '0' => '0',
@@ -362,9 +369,38 @@ function bb_agency_age_dropdown($name, $value = null) {
         $ages[$i] = $i;
     }
 
-    $option = array();
+    $option = array('<option value="">--</option>');
     foreach ($ages as $k => $v) {
-        $option[] = '<option value="'.$k.'" '.selected($k, $value).'>'.$v.'</option>';
+        $option[] = '<option value="'.$k.'" '.selected($k, $value, false).'>'.$v.'</option>';
+    }
+    return '<select name="'.$name.'" size="1">'.implode("\n", $option).'</select>';
+}
+
+/**
+ * Client dropdown
+ *
+ * @param string $name
+ * @param int $value
+ * @return string
+ *
+ */
+function bb_agency_client_dropdown($name, $value = null) {
+    global $wpdb;
+    $t_profile = table_agency_profile;
+    $client_id = bb_agency_CLIENTS_ID;
+    $sql = <<<EOF
+SELECT `ProfileID` AS id, `ProfileContactDisplay` AS name 
+FROM $t_profile 
+WHERE `ProfileType` = '$client_id' 
+AND `ProfileIsActive` = '1' 
+ORDER BY `ProfileContactDisplay` ASC 
+EOF;
+
+    $clients = $wpdb->get_results($sql);
+
+    $option = array('<option value="">--</option>');
+    foreach ($clients as $client) {
+        $option[] = '<option value="'.$client->id.'" '.selected($client->id, $value, false).'>'.$client->name.'</option>';
     }
     return '<select name="'.$name.'" size="1">'.implode("\n", $option).'</select>';
 }

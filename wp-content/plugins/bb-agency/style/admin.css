@@ -95,6 +95,7 @@ input.stubby { width: 80px; }
 .boxblock table fieldset input[type="checkbox"] { width: auto; min-width: auto; }
 .boxblock table .bbtextarea textarea { width: 218px; height: 100px; }
 .boxblock #submitbox { overflow: hidden; margin-top: 15px; }
+.boxblock .regular-text { width: 90%; }
 
 /* Profile Page */
 .profileimage { position: relative; width: 100px; float: left; padding: 5px; margin: 0px 10px 10px 0; height: 170px; overflow: hidden; }

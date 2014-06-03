@@ -16,7 +16,7 @@
                     <tr valign="top">
                         <th scope="row"><?php _e('Client', bb_agency_TEXTDOMAIN) ?>*</th>
                         <td>
-                            <input class="regular-text" type="text" id="JobClient" name="JobClient" value="<?php bbagency_posted_value('JobClient', isset($Job) ? $Job : null) ?>" />
+                            <?php echo bb_agency_client_dropdown('JobClient', bbagency_get_posted_value('JobClient', isset($Job) ? $Job : null)) ?>
                         </td>
                     </tr>
                     <tr valign="top">
