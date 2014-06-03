@@ -104,10 +104,8 @@ if (!function_exists("bb_agency_inserthead_profile")){
 		// Call Custom Code to put in header
 		function bb_agency_inserthead_profile() {
 			global $bb_agency_option_layoutprofile;
-
-			$bb_options = bb_agency_get_option();
 			
-			if (bb_agency_get_option('bb_agency_option_layoutprofile')) {
+//			if (bb_agency_get_option('bb_agency_option_layoutprofile')) {
 				$layouttype = (int)bb_agency_get_option('bb_agency_option_layoutprofile');
 
 				switch ($layouttype) {
@@ -117,15 +115,6 @@ if (!function_exists("bb_agency_inserthead_profile")){
 						wp_enqueue_script( 'slimbox2', plugins_url('/js/slimbox2.js', __FILE__) );
 						wp_register_style( 'slimbox2', plugins_url('/style/slimbox2.css', __FILE__) );
 	        			wp_enqueue_style( 'slimbox2' );
-
-						//wp_register_script( 'jquery', plugins_url( 'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js', __FILE__ ), false, '1.8.3' );
-
-						/*
-						// Prettyphoto
-						wp_register_style( 'prettyphoto', plugins_url('/style/prettyPhoto.css', __FILE__) );
-	        			wp_enqueue_style( 'prettyphoto' );
-						wp_enqueue_script( 'prettyphoto', plugins_url('/js/prettyPhoto.js', __FILE__) );
-						*/
 						break;
 					case 0 :
 						wp_enqueue_script( 'jquery-ui', plugins_url('/js/image-resize.js', dirname(__FILE__)) );
@@ -136,7 +125,6 @@ if (!function_exists("bb_agency_inserthead_profile")){
 						
 						wp_enqueue_script( 'jscroller', plugins_url('/js/scroller.js', dirname(__FILE__)), in_footer );
 						break;
-
 					case 6 :
 						wp_register_style( 'flexslider', plugins_url('/style/flexslider.css', dirname(__FILE__)) );
 	        			wp_enqueue_style( 'flexslider' );
@@ -165,7 +153,6 @@ if (!function_exists("bb_agency_inserthead_profile")){
 						wp_enqueue_script( 'js-scroller', plugins_url('/js/jquery.mCustomScrollbar.concat.min.js', dirname(__FILE__)) );
 						wp_enqueue_script( 'jscroller', plugins_url('/js/scroller.js', dirname(__FILE__)), in_footer );
 						break;
-
 					default :
 						// Slider Gallery			
 						if ($bb_agency_option_layoutprofile == "3") {
@@ -199,7 +186,7 @@ if (!function_exists("bb_agency_inserthead_profile")){
 						}
 						break;
 				} // end switch
-	        } // end if have layout profile
+//	        } // end if have layout profile
       } // function end
 }// if function exist(bb_agency_inserthead_profile)
 
