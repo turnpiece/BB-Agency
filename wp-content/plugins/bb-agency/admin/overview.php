@@ -1,5 +1,5 @@
 <div class="wrap">        
-    <?php 
+<?php 
     // Include Admin Menu
     include ("admin-menu.php");
 	global $wpdb;
