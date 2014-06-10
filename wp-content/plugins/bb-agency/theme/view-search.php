@@ -95,6 +95,14 @@ if ($_REQUEST["action"] == "search") {
 	}
 
 	// Age
+	if (isset($_REQUEST['ProfileAge_min']) && !empty($_REQUEST['ProfileAge_min'])){
+		$filterArray['profileage_min'] = $_REQUEST['ProfileAge_min'];
+	}
+	if (isset($_REQUEST['ProfileAge_max']) && !empty($_REQUEST['ProfileAge_max'])){
+		$filterArray['profileage_max'] = $_REQUEST['ProfileAge_max'];
+	}
+
+	// Date of birth
 	if (isset($_REQUEST['ProfileDateBirth_min']) && !empty($_REQUEST['ProfileDateBirth_min'])){
 		$filterArray['profiledatebirth_min'] = $_REQUEST['ProfileDateBirth_min'];
 	}

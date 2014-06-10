@@ -821,6 +821,8 @@
 		$ProfileStatWeight_max		= $profilestatheight_max;
 		$ProfileDateBirth_min		= $profiledatebirth_min;
 		$ProfileDateBirth_max		= $profiledatebirth_max;
+		$ProfileAge_min				= $profileage_min;
+		$ProfileAge_max				= $profileage_max;
 		$ProfileDateDue_min			= $profiledatedue_min;
 		$ProfileDateDue_max			= $profiledatedue_max;
 		$ProfileIsFeatured			= $featured;
@@ -1079,7 +1081,18 @@
 		}
 
 		// Age
-		/*
+		if (isset($ProfileAge_min) && !empty($ProfileAge_min)) {
+            $age = str_replace('m', '', $ProfileAge_min);
+            $ym = (strpos($ProfileAge_min, 'm') === false) ? 'YEAR' : 'MONTH';
+            $filter .= " AND profile.`ProfileDateBirth` <= DATE_SUB(NOW(), INTERVAL $age $ym)";
+        }
+        
+        if (isset($ProfileAge_max) && !empty($ProfileAge_max)){
+            $age = str_replace('m', '', $ProfileAge_max);
+            $ym = (strpos($ProfileAge_max, 'm') === false) ? 'YEAR' : 'MONTH';
+            $filter .= " AND profile.`ProfileDateBirth` >= DATE_SUB(NOW(), INTERVAL $age $ym)";
+        }
+
 		$date = gmdate('Y-m-d', time() + $bb_agency_option_locationtimezone *60 *60);
 		if (isset($ProfileDateBirth_min) && !empty($ProfileDateBirth_min)){
 			$selectedYearMin = date('Y-m-d', strtotime('-'. $ProfileDateBirth_min .' year'. $date));
@@ -1089,7 +1102,7 @@
 			$selectedYearMax = date('Y-m-d', strtotime('-'. $ProfileDateBirth_max - 1 .' year'. $date));
 			$filter .= " AND profile.ProfileDateBirth >= '$selectedYearMax'";
 		}
-		*/
+		
 		// Date of birth
 		if (isset($ProfileDateBirth_min) && !empty($ProfileDateBirth_min)){
 			$filter .= " AND profile.ProfileDateBirth >= '$ProfileDateBirth_min'";
