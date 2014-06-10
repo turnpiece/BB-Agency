@@ -17,14 +17,14 @@
 	
 	// fix advanced search to include
 	// custom fields from search fields
-	if(isset($_GET[srch])){
+	if(isset($_GET['srch'])){
 	   $profilesearch_layout = "advanced"; 	
 	}
 	
    	if ($profilesearch_layout == "condensed" || $profilesearch_layout == "simple") {
 	
 		echo "		<div id=\"profile-search-form-condensed\" class=\"rbsearch-form\">\n";
-		echo "        	<form method=\"get\" id=\"search-form-condensed\" action=\"". get_bloginfo("wpurl") ."/profile-search/\">\n";
+		echo "        	<form method=\"post\" id=\"search-form-condensed\" action=\"". get_bloginfo("wpurl") ."/profile-search/\">\n";
 		echo "        		<input type=\"hidden\" name=\"action\" value=\"search\" />\n";
 		echo "	 			    <div class=\"search-field single\">\n";
 		echo "		 				<label for=\"ProfileFirstName\">". __("First Name", bb_agency_TEXTDOMAIN) ."</label>\n";
