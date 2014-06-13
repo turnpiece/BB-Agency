@@ -68,11 +68,6 @@ if ($_REQUEST["action"] == "search") {
 		$filterArray['profiletype'] = $_REQUEST['ProfileType'];
 	}
 
-	// Active
-	if (isset($_REQUEST['ProfileIsActive'])){
-		$filterArray['profileisactive'] = $_REQUEST['ProfileIsActive'];
-	}
-
 	// Gender
 	if (isset($_REQUEST['ProfileGender']) && !empty($_REQUEST['ProfileGender'])){
 		$filterArray['profilegender'] = $_REQUEST['ProfileGender'];
