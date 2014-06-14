@@ -22,7 +22,7 @@ Large featured image and scrolling thumbnails
 
 <link rel="stylesheet" type="text/css" media="all" href="<?php echo get_bloginfo("url");?>/wp-content/plugins/bb-agency/theme/custom-layout6/css/styles.css" />
 
-<div id="rbprofile" class="model-portfolio">
+<div id="bbprofile" class="model-portfolio">
 
 	<div id="rblayout-six" class="rblayout">
 		<div class="col_12 column">
@@ -499,4 +499,4 @@ Large featured image and scrolling thumbnails
 		<div class="cb"></div>
 		
 	</div><!-- #rblayout-six -->
-</div><!-- #rbprofile -->
+</div><!-- #bbprofile -->

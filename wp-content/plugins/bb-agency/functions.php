@@ -1447,7 +1447,7 @@ EOF;
 					if($profileDisplay == 1){
 						$displayHTML.="  <div id=\"profile-list\">\n";
 					}
-					$displayHTML .= "<div id=\"rbprofile-".$dataList["ProfileID"]."\" class=\"rbprofile-list profile-list-layout0\" >\n";
+					$displayHTML .= "<div id=\"bbprofile-".$dataList["ProfileID"]."\" class=\"bbprofile-list profile-list-layout0\" >\n";
 
 					if (isset($dataList["ProfileMediaURL"]) ) { // && (file_exists(bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"] ."/". $dataList["ProfileMediaURL"])) ) {
 						
@@ -1497,7 +1497,7 @@ EOF;
 					}
 
 					$displayHTML .=" </div> <!-- .profile-info --> \n";
-					$displayHTML .=" </div><!-- .rbprofile-list -->\n";
+					$displayHTML .=" </div><!-- .bbprofile-list -->\n";
 				}	// endwhile datalist
 
 				$displayHTML .= "  <div class=\"bbclear\"></div>\n";
@@ -1597,7 +1597,7 @@ EOF;
 		$resultsList = mysql_query($queryList);
 		$countList = mysql_num_rows($resultsList);
 		while ($dataList = mysql_fetch_array($resultsList)) {
-		    echo "<div class=\"rbprofile-list\">\n";
+		    echo "<div class=\"bbprofile-list\">\n";
 			if (isset($dataList["ProfileMediaURL"]) ) { 
 			echo "  <div class=\"image\"><a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\"><img src=\"". bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"] ."/". $dataList["ProfileMediaURL"] ."\" /></a></div>\n";
 			} else {
@@ -1629,7 +1629,7 @@ EOF;
 				bb_agency_get_miscellaneousLinks($dataList["ProfileID"]);
 			}
 			echo "  </div><!-- .profile-info -->\n";
-			echo "</div><!-- .rbprofile-list -->\n";
+			echo "</div><!-- .bbprofile-list -->\n";
 		}
 		if ($countList < 1) {
 			echo __("No Featured Profiles", bb_agency_TEXTDOMAIN);

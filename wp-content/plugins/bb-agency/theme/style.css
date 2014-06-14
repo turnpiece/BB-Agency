@@ -15,7 +15,7 @@
 	margin-top: 30px;
 	text-align: center;
 }
-#profile-list .rbprofile-list {
+#profile-list .bbprofile-list {
 	width: 22%;
 	margin: 7px;
 	font-size: 100%;
@@ -23,7 +23,7 @@
 	position: relative;
 	display: inline-block;
 }
-#profile-list .rbprofile-list .image {
+#profile-list .bbprofile-list .image {
 	width: 100%;
 	height: 200px;
 	overflow: hidden;
@@ -31,7 +31,7 @@
 	border: 2px solid #fff;
 	position: relative;
 }
-#profile-list .rbprofile-list .image a {
+#profile-list .bbprofile-list .image a {
 	float: left;
 	width: 100%;
 	height: 100%;
@@ -39,35 +39,35 @@
 	background-repeat: no-repeat;
 	background-position: center top;
 }
-#profile-list .rbprofile-list .image img {
+#profile-list .bbprofile-list .image img {
 	float: left;
 	border: none;
 	border-radius: 0;
 	box-shadow: none;
 }
-#profile-list .rbprofile-list .image img.fillheight {
+#profile-list .bbprofile-list .image img.fillheight {
 	max-height: 100%;
 	max-width: none!important;
 }
-#profile-list .rbprofile-list .image.image-broken {
+#profile-list .bbprofile-list .image.image-broken {
 	height: 200px;
 	text-align: center;
 	line-height: 200px;
 	background: #f8ced6;
 }
-#profile-list .rbprofile-list .image.image-broken a {
+#profile-list .bbprofile-list .image.image-broken a {
 	font-weight: bold;
 	text-align: center;
 	text-decoration: none;
 }
-#profile-list .rbprofile-list .profile-info {
+#profile-list .bbprofile-list .profile-info {
 	
 }
-#profile-list .rbprofile-list .profile-info .details {
+#profile-list .bbprofile-list .profile-info .details {
 	font-size: 13px;
 	text-align: center;
 }
-#profile-list .rbprofile-list .profile-info h3.name {
+#profile-list .bbprofile-list .profile-info h3.name {
 	margin: 0;
 	margin: 5px 0;
 	font-size: 14px;
@@ -75,7 +75,7 @@
 	text-align: center;
 	line-height: normal;	
 }
-#profile-list .rbprofile-list .profile-info h3.name a {
+#profile-list .bbprofile-list .profile-info h3.name a {
 	white-space: nowrap;
 	text-decoration: none;
 	display: inline-block;
@@ -107,38 +107,38 @@
 }
 
 /* Profile Results Casting */
-#profile-results .rbprofile-list .favorite-casting {
+#profile-results .bbprofile-list .favorite-casting {
 	padding: 5px;
 	overflow: hidden;
 }
-#profile-results .rbprofile-list .castingcart {
+#profile-results .bbprofile-list .castingcart {
   float:right;
 }
-#profile-results .rbprofile-list .favorite {
+#profile-results .bbprofile-list .favorite {
   float:left;
 }
-#profile-results .rbprofile-list .castingcart a {
+#profile-results .bbprofile-list .castingcart a {
   width: 13px;
   height: 12px;
   display: inline-block;
   background: url(../style/icon-sprite.png) no-repeat;
 }
-#profile-results .rbprofile-list .castingcart a.saved_castingcart {
+#profile-results .bbprofile-list .castingcart a.saved_castingcart {
   background-position: 0 0;
 }
-#profile-results .rbprofile-list .castingcart a.save_castingcart {
+#profile-results .bbprofile-list .castingcart a.save_castingcart {
   background-position: 0 -16px;
 }
-#profile-results .rbprofile-list .favorite a {
+#profile-results .bbprofile-list .favorite a {
   width: 13px;
   height: 12px;
   display: inline-block;
   background: url(../style/icon-sprite.png) no-repeat;  
 }
-#profile-results .rbprofile-list .favorite a.save_favorite {
+#profile-results .bbprofile-list .favorite a.save_favorite {
 	background-position: 0 -48px;
 }
-#profile-results .rbprofile-list .favorite a.favorited {
+#profile-results .bbprofile-list .favorite a.favorited {
   background-position: 0 -31px;
 }
 

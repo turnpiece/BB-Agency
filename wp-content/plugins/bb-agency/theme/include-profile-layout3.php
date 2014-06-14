@@ -60,7 +60,7 @@ jQuery(document).ready(function(){
 Expended Profile with Tabs
 */
 
-echo "	<div id=\"rbprofile\">\n";
+echo "	<div id=\"bbprofile\">\n";
 echo " 		<div id=\"rblayout-three\" class=\"rblayout\">\n";
 echo " 			<div class=\"col_12 column\">\n";
 echo " 				<div id=\"go-back\">\n";

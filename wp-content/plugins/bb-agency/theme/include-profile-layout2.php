@@ -2,7 +2,7 @@
 /*
 Profile View with Sliding Thumbnails and Primary Image
 */
-echo "	<div id=\"rbprofile\">\n";
+echo "	<div id=\"bbprofile\">\n";
 echo " 		<div id=\"rblayout-two\" class=\"rblayout\">\n";
 
 echo "  		<div class=\"col_7 column\">\n";
