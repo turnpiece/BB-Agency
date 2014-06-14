@@ -1460,11 +1460,11 @@ EOF;
 							}
 
 							# this is removed as timthumb always has an issue.
-							#$displayHTML .="<div class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\"><img src=\"".bb_agency_BASEDIR."tasks/timthumb.php?src=".bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"] ."/". $dataList["ProfileMediaURL"]."&w=200&q=60\" id=\"roll".$dataList["ProfileID"]."\"  /></a>".$images."</div>\n";
+							$displayHTML .="<div class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\"><img src=\"".bb_agency_BASEDIR."tasks/timthumb.php?src=".bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"] ."/". $dataList["ProfileMediaURL"]."&w=200&q=60\" id=\"roll".$dataList["ProfileID"]."\"  /></a>".$images."</div>\n";
 							
 							#phel comment: i decided to remove the actual image, and put the url on anchor as background to fix the image resizing issue
 							#$displayHTML .="<div  class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\"><img src=\"".bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"] ."/". $dataList["ProfileMediaURL"]."\"  /></a>".$images."</div>\n";
-							$displayHTML .="<div  class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\" style=\"background-image: url(".bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"] ."/". $dataList["ProfileMediaURL"].")\"></a>".$images."</div>\n";
+							#$displayHTML .="<div  class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\" style=\"background-image: url(".bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"] ."/". $dataList["ProfileMediaURL"].")\"></a>".$images."</div>\n";
 
 						} else {
 							#phel comment: i decided to remove the actual image, and put the url on anchor as background to fix the image resizing issue
