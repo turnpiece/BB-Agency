@@ -41,9 +41,9 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'search') :
         'JobPONumber'
     );
 
-    if (isset($_REQUEST['s'])) {
+    if (isset($_REQUEST['state'])) {
         // quick filter search
-        $value = $_REQUEST['s'];
+        $value = $_REQUEST['state'];
         foreach ($fields as $field) {
             $where[] = "`$field` LIKE '%$value%'"; 
         }

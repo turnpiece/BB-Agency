@@ -191,9 +191,9 @@ switch ($action) {
         // generate SQL 
         $sql = "SELECT j.*, p.`ProfileContactDisplay` AS ClientName, IF(j.`JobDate` < NOW(), 1, 0) AS JobPassed FROM $t_job j LEFT JOIN $t_profile p ON j.`JobClient` = p.`ProfileID`";
 
-        if (isset($_REQUEST['s'])) {
+        if (isset($_REQUEST['state'])) {
             // quick filter search
-            $value = $_REQUEST['s'];
+            $value = $_REQUEST['state'];
 
             // Standard fields
             $fields = array(

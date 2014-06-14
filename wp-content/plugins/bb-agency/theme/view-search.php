@@ -49,12 +49,12 @@ if ($_REQUEST["action"] == "search") {
 	$filterArray = array();
 
 	// Name
-	if ((isset($_REQUEST['cnf']) && !empty($_REQUEST['cnf'])) || isset($_REQUEST['cnl']) && !empty($_REQUEST['cnl'])) {
-	  	if (isset($_REQUEST['cnf']) && !empty($_REQUEST['cnf'])) {
-			$filterArray['profilecontactnamefirst'] = $_REQUEST['cnf'];
+	if ((isset($_REQUEST['fname']) && !empty($_REQUEST['fname'])) || isset($_REQUEST['lname']) && !empty($_REQUEST['lname'])) {
+	  	if (isset($_REQUEST['fname']) && !empty($_REQUEST['fname'])) {
+			$filterArray['profilecontactnamefirst'] = $_REQUEST['fname'];
 	  	}
-	  	if (isset($_REQUEST['cnl']) && !empty($_REQUEST['cnl'])) {
-			$filterArray['profilecontactnamelast'] = $_REQUEST['cnl'];
+	  	if (isset($_REQUEST['lname']) && !empty($_REQUEST['lname'])) {
+			$filterArray['profilecontactnamelast'] = $_REQUEST['lname'];
 	  	}
 	}
 
@@ -64,37 +64,37 @@ if ($_REQUEST["action"] == "search") {
 	}
 
 	// Type
-	if (isset($_REQUEST['t']) && !empty($_REQUEST['t'])) {
-		$filterArray['profiletype'] = $_REQUEST['t'];
+	if (isset($_REQUEST['type']) && !empty($_REQUEST['type'])) {
+		$filterArray['profiletype'] = $_REQUEST['type'];
 	}
 
 	// Gender
-	if (isset($_REQUEST['g']) && !empty($_REQUEST['g'])) {
-		$filterArray['profilegender'] = $_REQUEST['g'];
+	if (isset($_REQUEST['gender']) && !empty($_REQUEST['gender'])) {
+		$filterArray['profilegender'] = $_REQUEST['gender'];
 	}
 	
 	// Height
-	if (isset($_REQUEST['sh_min']) && !empty($_REQUEST['sh_min'])) {
-		$filterArray['profilestatheight_min'] = $_REQUEST['sh_min'];
+	if (isset($_REQUEST['height_min']) && !empty($_REQUEST['height_min'])) {
+		$filterArray['profilestatheight_min'] = $_REQUEST['height_min'];
 	}
-	if (isset($_REQUEST['sh_max']) && !empty($_REQUEST['sh_max'])) {
-		$filterArray['profilestatheight_max'] = $_REQUEST['sh_max'];
+	if (isset($_REQUEST['height_max']) && !empty($_REQUEST['height_max'])) {
+		$filterArray['profilestatheight_max'] = $_REQUEST['height_max'];
 	}
 
 	// Weight
-	if (isset($_REQUEST['sw_min']) && !empty($_REQUEST['sw_min'])) {
-		$filterArray['profilestatweight_min'] = $_REQUEST['sw_min'];
+	if (isset($_REQUEST['weight_min']) && !empty($_REQUEST['weight_min'])) {
+		$filterArray['profilestatweight_min'] = $_REQUEST['weight_min'];
 	}
-	if (isset($_REQUEST['sw_max']) && !empty($_REQUEST['sw_max'])) {
-		$filterArray['profilestatweight_max'] = $_REQUEST['sw_max'];
+	if (isset($_REQUEST['weight_max']) && !empty($_REQUEST['weight_max'])) {
+		$filterArray['profilestatweight_max'] = $_REQUEST['weight_max'];
 	}
 
 	// Age
-	if (isset($_REQUEST['a_min']) && !empty($_REQUEST['a_min'])) {
-		$filterArray['profileage_min'] = $_REQUEST['a_min'];
+	if (isset($_REQUEST['age_min']) && !empty($_REQUEST['age_min'])) {
+		$filterArray['profileage_min'] = $_REQUEST['age_min'];
 	}
-	if (isset($_REQUEST['a_max']) && !empty($_REQUEST['a_max'])) {
-		$filterArray['profileage_max'] = $_REQUEST['a_max'];
+	if (isset($_REQUEST['age_max']) && !empty($_REQUEST['age_max'])) {
+		$filterArray['profileage_max'] = $_REQUEST['age_max'];
 	}
 
 	// Date of birth
@@ -114,18 +114,18 @@ if ($_REQUEST["action"] == "search") {
 	}
 
 	// City
-	if (isset($_REQUEST['c']) && !empty($_REQUEST['c'])) {
-		$filterArray['profilecity'] = $_REQUEST['c'];
+	if (isset($_REQUEST['city']) && !empty($_REQUEST['city'])) {
+		$filterArray['profilecity'] = $_REQUEST['city'];
 	}		
 
 	// State
-	if (isset($_REQUEST['s']) && !empty($_REQUEST['s'])) {
-		$filterArray['profilestate'] = $_REQUEST['s'];
+	if (isset($_REQUEST['state']) && !empty($_REQUEST['state'])) {
+		$filterArray['profilestate'] = $_REQUEST['state'];
 	}		
 
 	// ZIP
-	if (isset($_REQUEST['z']) && !empty($_REQUEST['z'])) {
-		$filterArray['profilezip'] = $_REQUEST['z'];
+	if (isset($_REQUEST['zip']) && !empty($_REQUEST['zip'])) {
+		$filterArray['profilezip'] = $_REQUEST['zip'];
 	}
 	
 	// Custom Fields

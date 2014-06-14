@@ -582,116 +582,60 @@ if ( is_admin() ){
 			return $output_string;
 		}
   /*/
-   * ======================== RB Agency Tool Tip===============
+   * ======================== BB Agency Tool Tip===============
    * 
   /*/
   
   
+	/*	
+	if (is_admin()) {
 		
-	if(is_admin()){
-		/*
-		 * just not to get the tooltip error
-		 */
-		
-		$bb_options = bb_agency_get_option();
-		if ($bb_options == ""){
-			$bb_options["bb_agency_options_showtooltip"] = 1;
-			update_option('bb_agency_options',$bb_options);
-		}
-	    if( $bb_options != "" || is_array($bb_options)){    	
-			 $bb_agency_options_showtooltip = bb_agency_get_option("bb_agency_options_showtooltip");
-			 
-			if(!@in_array("bb_agency_options_showtooltip",$bb_options) && $bb_agency_options_showtooltip == 0){	 
-				$bb_options["bb_agency_options_showtooltip"] = 1;
-				update_option('bb_agency_options',$bb_options);
-				wp_enqueue_style('wp-pointer');
-				wp_enqueue_script('wp-pointer');
-				function  add_js_code(){
-					?>
-					<script type="text/javascript">
-					jQuery(document).ready( function($) {
-						
-					var options = {"content":"<h3>BB Agency Plugin</h3><p>Thanks for installing the BB Plugin. We hope you find it useful.  Lets <a href=\'<?php echo admin_url("admin.php?page=bb_agency_settings&ConfigID=1"); ?>\'>check your settings</a> before we get started.</p>","position":{"edge":"left","align":"center"}};
-					if ( ! options )
-						return;
-						options = $.extend( options, {
-							close: function() {
-							//to do
-							}
-						});
-						<?php if(isset($_GET["page"])!="bb_agency_menu" && isset($_GET["page"]) !="bb_agency_settings") { ?>
-						$('#toplevel_page_bb_agency_menu').pointer( options ).pointer("open");
-						<?php } elseif(isset($_GET["page"])=="bb_agency_menu" && isset($_GET["page"]) !="bb_agency_settings") { ?>
-						$('#toplevel_page_bb_agency_menu li a').each(function(){
-							if($(this).text() == "Settings"){
-							   $(this).fadeOut().pointer( options ).pointer("open").fadeIn();	
-							   $(this).css("background","#EAF2FA");
-							}
-						});
-						<?php } ?>
-					});
-					</script>
-					';
-					<?php
-				}
-				add_action("admin_footer","add_js_code");
-			}
-	 	}
-	}
+		$bb_agency_options_showtooltip = bb_agency_get_option("bb_agency_options_showtooltip");
+		 
+		if ($bb_agency_options_showtooltip == 0) {
+			// set to 1 to ensure it's not shown again
+			bb_agency_update_option("bb_agency_options_showtooltip", 1);
+			wp_enqueue_style('wp-pointer');
+			wp_enqueue_script('wp-pointer');
+			function  add_js_code(){
+				?>
+				<script type="text/javascript">
+				jQuery(document).ready( function($) {
+					
+				var options = {"content":"<h3>BB Agency Plugin</h3><p>Thanks for installing the BB Plugin. We hope you find it useful. Let's <a href=\'<?php echo admin_url("admin.php?page=bb_agency_settings&ConfigID=1"); ?>\'>check your settings</a> before we get started.</p>","position":{"edge":"left","align":"center"}};
 
+					if (!options)
+						return;
+
+					options = $.extend( options, {
+						close: function() {
+						//to do
+						}
+					});
+					<?php if (isset($_GET["page"]) != "bb_agency_menu" && isset($_GET["page"]) != "bb_agency_settings") : ?>
+					$('#toplevel_page_bb_agency_menu').pointer( options ).pointer("open");
+					<?php elseif(isset($_GET["page"])=="bb_agency_menu" && isset($_GET["page"]) !="bb_agency_settings") : ?>
+					$('#toplevel_page_bb_agency_menu li a').each(function(){
+						if ($(this).text() == "Settings") {
+						   $(this).fadeOut().pointer( options ).pointer("open").fadeIn();	
+						   $(this).css("background","#EAF2FA");
+						}
+					});
+					<?php endif; ?>
+				});
+				</script>
+				';
+				<?php
+			}
+			add_action("admin_footer","add_js_code");
+		}
+	}
+	*/
 
 
 
  /*/
 
-
-
-   *================ Notify Admin installation report ==============================
-  /*/ 
-
-
-$running = true;
-function bb_agency_notify_installation(){
-
-    include_once(ABSPATH . 'wp-includes/pluggable.php');		
-	$json_url = 'http://agency.rbplugin.com/rb-license-checklist/';
-	
-	$client_domain = network_site_url('/');
-    $client_sitename = get_bloginfo( 'name' );
-	$client_admin_email = get_bloginfo('admin_email');
-    $client_plugin_version = get_option('bb_agency_version');
-	
-	 
-	$data = array(
-	"client_domain" => $client_domain,
-	"client_admin_email"  => $client_admin_email,
-	"client_sitename" =>$client_sitename,
-	"client_plugin_version" => $client_plugin_version,
-	"client_plugin_name" =>"BB Plugin");                                                                    
-	$data_string = json_encode($data);
-		if(function_exists("bb_agencyinteract_install")){
-			$client_interact_exist = get_option('bb_agency_version');	
-			array_push($data,array("client_interact_exist" => $client_interact_exist)); 
-		}
-		
-	// Initializing curl
-	$ch = curl_init( $json_url );
-	 
-	// Configuring curl options
-	$options = array(
-	CURLOPT_RETURNTRANSFER => true,
-	CURLOPT_HTTPHEADER => array('Content-type: application/json') ,
-	CURLOPT_POSTFIELDS => $data_string
-	);
-	 
-	// Setting curl options
-	curl_setopt_array( $ch, $options );
-	 
-	// Getting results
-	$result =  curl_exec($ch); // Getting jSON result string
-	$isReported = get_option("bb_agency_notify");			
-}
-register_activation_hook(__FILE__,"bb_agency_notify_installation");
 
 
 /****************************************************************/
@@ -727,6 +671,6 @@ register_activation_hook(__FILE__,"bb_agency_notify_installation");
 		do_action('deactivate_' . $thepluginfile );
 	
 		echo "<div style=\"padding:50px;font-weight:bold;\"><p>". __("Almost done...", bb_agency_TEXTDOMAIN) ."</p><h1>". __("One More Step", bb_agency_TEXTDOMAIN) ."</h1><a href=\"plugins.php?deactivate=true\">". __("Please click here to complete the uninstallation process", bb_agency_TEXTDOMAIN) ."</a></h1></div>";
-		die;
+		die();
 	}
 ?>

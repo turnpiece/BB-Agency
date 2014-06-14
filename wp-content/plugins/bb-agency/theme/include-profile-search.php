@@ -13,14 +13,14 @@ $bb_agency_option_customfields_loggedin_admin = bb_agency_get_option('bb_agency_
 if (!empty($bb_agency_CURRENT_TYPE_ID)) 
 	$_SESSION['ProfileType'] = $bb_agency_CURRENT_TYPE_ID;
 
-if (isset($_REQUEST['t']) && !empty($_REQUEST['t'])) { 
-	$_SESSION['ProfileType'] = $_REQUEST['t']; 
+if (isset($_REQUEST['type']) && !empty($_REQUEST['type'])) { 
+	$_SESSION['ProfileType'] = $_REQUEST['type']; 
 }
 if (isset($DataTypeID) && !empty($DataTypeID)) { 
 	$_SESSION['ProfileType'] = $DataTypeID; 
 }
-if (isset($_REQUEST['g']) && !empty($_REQUEST['g'])) {  
-	$_SESSION['ProfileGender'] = $_REQUEST['g']; 
+if (isset($_REQUEST['gender']) && !empty($_REQUEST['gender'])) {  
+	$_SESSION['ProfileGender'] = $_REQUEST['gender']; 
 }
 
 // fix advanced search to include

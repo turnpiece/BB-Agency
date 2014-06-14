@@ -702,7 +702,7 @@
      *
      * @param array $atts 
      */
-	function bb_agency_profilelist($atts, $content = NULL) {
+	function bb_agency_profilelist($atts, $content = null) {
 
 		// Get Preferences
 		$bb_agency_option_privacy					 = bb_agency_get_option('bb_agency_option_privacy');
@@ -722,38 +722,41 @@
 	    $cusFields = array("Suit","Bust","Shirt","Dress");  //for custom fields min and max
 	    
 	    // Exctract from Shortcode
-		extract(shortcode_atts(array(
-			"profileid" => NULL,
-			"profilecontactnamefirst" => NULL,
-			"profilecontactnamelast" => NULL,
-			"profilelocationcity" => NULL,
-			"profiletype" => NULL,
-			"type" => NULL,
-			"profileisactive" => NULL,
-			"profilegender" => NULL,
-			"gender" => NULL,
-			"profilestatheight_min" => NULL,
-			"profilestatheight_max" => NULL,
-			"profilestatweight_min" => NULL,
-			"profilestatweight_max" => NULL,
-			"profiledatebirth_min" => NULL,
-			"profiledatedue_min" => NULL,
-			"age_start" => NULL,
-			"profiledatebirth_max" => NULL,
-			"profiledatedue_max" => NULL,
-			"age_stop" => NULL,
-			"featured" => NULL,
-			"stars" => NULL,
-			"paging" => NULL,
-			"pagingperpage" => NULL,
-			"override_privacy" => NULL,
-			"profilefavorite" => NULL,
-			"profilecastingcart" => NULL,
-			"getprofile_saved" => NULL,
-			"profilecity" => NULL,
-			"profilestate" => NULL,
-			"profilezip" => NULL
-		), $atts));
+		extract(shortcode_atts(
+			array(
+				"profileid" => null,
+				"profilecontactnamefirst" => null,
+				"profilecontactnamelast" => null,
+				"profilelocationcity" => null,
+				"profiletype" => null,
+				"type" => null,
+				"profileisactive" => null,
+				"profilegender" => null,
+				"gender" => null,
+				"profilestatheight_min" => null,
+				"profilestatheight_max" => null,
+				"profilestatweight_min" => null,
+				"profilestatweight_max" => null,
+				"profiledatebirth_min" => null,
+				"profiledatedue_min" => null,
+				"age_from" => null,
+				"age_to" => null,
+				"profiledatebirth_max" => null,
+				"profiledatedue_max" => null,
+				"featured" => null,
+				"stars" => null,
+				"paging" => null,
+				"pagingperpage" => null,
+				"override_privacy" => null,
+				"profilefavorite" => null,
+				"profilecastingcart" => null,
+				"getprofile_saved" => null,
+				"profilecity" => null,
+				"profilestate" => null,
+				"profilezip" => null
+			), 
+			$atts)
+		);
 
 		// Sort by due date if a mum to be, by date of birth if a baby, otherwise sort alphabetically
 		switch(intval($type)) {
@@ -800,14 +803,21 @@
 				}
 			}
 		}
-		if (!isset($pagingperpage) || empty($pagingperpage)) { $pagingperpage = $bb_agency_option_profilelist_perpage; }
-		if($pagingperpage=="0"){$pagingperpage="10";}//make it a default value
+		if (!isset($pagingperpage) || empty($pagingperpage)) { 
+			$pagingperpage = $bb_agency_option_profilelist_perpage; 
+		}
+		if ($pagingperpage=="0"){
+			$pagingperpage="10";
+		}
 
 		// Legacy Field Names
-		if (isset($type) && !empty($type)){ $profiletype = $type; }
-		if (isset($gender) && !empty($gender)){  $profilegender = $gender; }
-		if (isset($age_start) && !empty($age_start)){ $profiledatebirth_min = $age_start; }
-		if (isset($age_stop) && !empty($age_stop)){ $profiledatebirth_max = $age_stop; }
+		if (isset($type) && !empty($type)) { 
+			$profiletype = $type; 
+		}
+		if (isset($gender) && !empty($gender)) {  
+			$profilegender = $gender; 
+		}
+
 		$ProfileID 					= $profileid;
 		$ProfileContactNameFirst	= $profilecontactnamefirst;
 		$ProfileContactNameLast    	= $profilecontactnamelast;
@@ -1180,7 +1190,7 @@
 					if(get_query_var('target')!="results" && $bb_agency_option_profilelist_printpdf){// hide print and download PDF in Search result
 						$links.='
 						<div class="rbprint-download">
-					  		<a target="_blank" href="'.get_bloginfo('wpurl').'/profile-category/print/?gd='.$atts["gender"].'&ast='.$atts["age_start"].'&asp='.$atts["age_stop"].'&t='.$atts["type"].'">Print</a></a>&nbsp;|&nbsp;<a target="_blank" href="'.get_bloginfo('wpurl').'/profile-category/pdf/?gd='.$atts["gender"].'&ast='.$atts["age_start"].'&asp='.$atts["age_stop"].'&t='.$atts["type"].'">Download PDF</a>'.$addtionalLink.'
+					  		<a target="_blank" href="'.get_bloginfo('wpurl').'/profile-category/print/?gd='.$atts["gender"].'&ast='.$atts["age_from"].'&asp='.$atts["age_to"].'&t='.$atts["type"].'">Print</a></a>&nbsp;|&nbsp;<a target="_blank" href="'.get_bloginfo('wpurl').'/profile-category/pdf/?gd='.$atts["gender"].'&ast='.$atts["age_from"].'&asp='.$atts["age_to"].'&t='.$atts["type"].'">Download PDF</a>'.$addtionalLink.'
 					  	</div><!-- .rbprint-download -->';
 					}
 					  
@@ -1221,23 +1231,24 @@
 				$limit = isset($limit) ? $limit : '';
 				$sql = <<<EOF
 SELECT
-profile.ProfileGallery, 
-profile.ProfileContactDisplay, 
-profile.ProfileDateBirth, 
-profile.ProfileDateDue,
-profile.ProfileLocationState, 
-profile.ProfileID as pID, 
-media.ProfileMediaURL,
+profile.`ProfileGallery`, 
+profile.`ProfileContactDisplay`, 
+profile.`ProfileDateBirth`, 
+profile.`ProfileDateDue`,
+profile.`ProfileLocationState`, 
+profile.`ProfileID` as pID, 
+media.`ProfileMediaURL`,
 customfield_mux.*  
 FROM $ProfileTable AS profile
 LEFT JOIN $MediaTable AS media 
-ON profile.ProfileID = media.ProfileID AND media.ProfileMediaType = "Image" AND media.ProfileMediaPrimary = 1
+ON profile.`ProfileID` = media.`ProfileID` AND media.`ProfileMediaType` = "Image" AND media.`ProfileMediaPrimary` = 1
 LEFT JOIN $CustomTable AS customfield_mux 
-ON profile.ProfileID = customfield_mux.ProfileID  
+ON profile.`ProfileID` = customfield_mux.`ProfileID`  
 $filter  
-GROUP BY profile.ProfileID 
+GROUP BY profile.`ProfileID` 
 ORDER BY $sort $dir $limit
 EOF;
+
 
 				$qItem = mysql_query($sql) or wp_die(mysql_error());
 				$items = mysql_num_rows($qItem); // number of total rows in the database
