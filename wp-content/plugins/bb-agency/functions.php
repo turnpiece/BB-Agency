@@ -682,12 +682,12 @@
 		$countList = mysql_num_rows($resultsList);			
 
 		// Loop through Results
-		while ($dataList = mysql_fetch_array($resultsList)) {
+		while ($row = mysql_fetch_array($resultsList)) {
 			echo "<div class=\"profile-category\">\n";
-			if ($DataTypeID == $dataList["DataTypeID"]) {
-				echo "  <div class=\"name\"><strong>". $dataList["DataTypeTitle"] ."</strong> <span class=\"count\">(". $dataList["CategoryCount"] .")</span></div>\n";
+			if ($DataTypeID == $row["DataTypeID"]) {
+				echo "  <div class=\"name\"><strong>". $row["DataTypeTitle"] ."</strong> <span class=\"count\">(". $row["CategoryCount"] .")</span></div>\n";
 			} else {
-				echo "  <div class=\"name\"><a href=\"/profile-category/". $dataList["DataTypeTag"] ."/\">". $dataList["DataTypeTitle"] ."</a> <span class=\"count\">(". $dataList["CategoryCount"] .")</span></div>\n";
+				echo "  <div class=\"name\"><a href=\"/profile-category/". $row["DataTypeTag"] ."/\">". $row["DataTypeTitle"] ."</a> <span class=\"count\">(". $row["CategoryCount"] .")</span></div>\n";
 			}
 			echo "</div>\n";
 		}
@@ -703,8 +703,6 @@
      * @param array $atts 
      */
 	function bb_agency_profilelist($atts, $content = null) {
-
-		?><pre><?php print_r($atts) ?></pre><?php
 
 		// Get Preferences
 		$bb_agency_option_privacy					 = bb_agency_get_option('bb_agency_option_privacy');
@@ -1221,9 +1219,13 @@
 			}
 		
 		  	//remove  if its just for client view of listing via casting email
-		 	if(get_query_var('type')=="profilesecure"){ $links="";}
+		 	if (get_query_var('type') == "profilesecure"){ 
+		 		$links="";
+		 	}
 
-			if(get_query_var('type')=="favorite"){ $links="";} // we dont need print and download pdf in favorites page
+			if (get_query_var('type') == "favorite"){ 
+				$links="";
+			} // we dont need print and download pdf in favorites page
 			
 			echo "<div class=\"bbclear\"></div>\n";
 			echo "$links<div id=\"profile-results\">\n";
@@ -1255,8 +1257,8 @@ GROUP BY profile.`ProfileID`
 ORDER BY $sort $dir $limit
 EOF;
 
-				$qItem = mysql_query($sql) or wp_die(mysql_error());
-				$items = mysql_num_rows($qItem); // number of total rows in the database
+				$qItem = $wpdb->get_results($sql, ARRAY_A);
+				$items = count($qItem); // number of total rows returned
 				  
 				if ($items > 0) {
 					$p = new bb_agency_pagination;
@@ -1281,7 +1283,6 @@ EOF;
 
 	            if(get_query_var('target')=="print"){$limit = "";} //to remove limit on print page
 				if(get_query_var('target')=="pdf"){$limit = "";} //to remove limit on pdf page
-	            mysql_free_result($qItem);
 	  
 	  		}//if(get_query_var('target')!="print" 
 					  
@@ -1319,14 +1320,16 @@ EOF;
 
 				// Execute the query showing casting cart
 				$queryList = "SELECT profile.ProfileID, profile.ProfileGallery, profile.ProfileContactDisplay, profile.ProfileDateBirth, profile.ProfileDateDue, profile.ProfileLocationState, profile.ProfileID as pID, cart.CastingCartTalentID, cart.CastingCartTalentID, (SELECT media.ProfileMediaURL FROM ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1) AS ProfileMediaURL FROM ". table_agency_profile ." profile INNER JOIN  ".table_agency_castingcart." cart WHERE $sqlCasting_userID AND ProfileIsActive = 1 GROUP BY profile.ProfileID";  
-			
+/*			
 			} elseif ($_GET['t']=="casting"){
 						   
 	// ?????????????????????  Purpose?
 				$queryList = "SELECT profile.ProfileID, profile.ProfileGallery, profile.ProfileContactDisplay, profile.ProfileDateBirth, profile.ProfileDateDue, profile.ProfileLocationState, profile.ProfileID as pID, cart.CastingCartTalentID, cart.CastingCartTalentID, (SELECT media.ProfileMediaURL FROM ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1) AS ProfileMediaURL FROM ". table_agency_profile ." profile INNER JOIN  ".table_agency_castingcart." cart WHERE  $sqlCasting_userID AND ProfileIsActive = 1 GROUP BY profile.ProfileID";  
-				 
+*/				 
 			} elseif ($fastload){
 				// Execute Query in slim down mode, only return name, face and link
+				$ProfileGivenBirth = defined('bb_agency_MUMSTOBE_ID') && bb_agency_MUMSTOBE_ID ? "IF(DATE(profile.ProfileDateDue) < CURDATE(),'yes','no') AS ProfileGivenBirth," : '';
+
 				$queryList = "
 					SELECT 
 						profile.ProfileID,
@@ -1334,16 +1337,16 @@ EOF;
 						profile.ProfileGallery,
 						profile.ProfileContactDisplay, 
 						profile.ProfileType,
-						IF(DATE(profile.ProfileDateDue) < CURDATE(),'yes','no') AS ProfileGivenBirth,
+						$ProfileGivenBirth
 						(   SELECT media.ProfileMediaURL 
-							FROM ". table_agency_profile_media ." media 
+							FROM $MediaTable media 
 							WHERE profile.ProfileID = media.ProfileID 
 								AND media.ProfileMediaType = \"Image\" 
 								AND media.ProfileMediaPrimary = 1
 						) 
 						AS ProfileMediaURL 
-					FROM ". table_agency_profile ." profile 
-					LEFT JOIN ". table_agency_customfield_mux ." 
+					FROM $ProfileTable profile 
+					LEFT JOIN $CustomTable 
 						AS customfield_mux 
 						ON profile.ProfileID = customfield_mux.ProfileID  
 						$filter  
@@ -1362,14 +1365,14 @@ EOF;
 					profile.ProfileDateDue, 
 					profile.ProfileLocationState,
 					profile.ProfileType,
-					IF(DATE(profile.ProfileDateDue) < CURDATE(),'yes','no') AS ProfileGivenBirth,
+					$ProfileGivenBirth
 					customfield_mux.ProfileCustomMuxID, customfield_mux.ProfileCustomMuxID, customfield_mux.ProfileCustomID, customfield_mux.ProfileCustomValue,  
 					media.ProfileMediaURL
-				FROM ". table_agency_profile ." profile 
-				LEFT JOIN ". table_agency_profile_media ." 
+				FROM $ProfileTable profile 
+				LEFT JOIN $MediaTable 
 					AS media 
 					ON profile.ProfileID = media.ProfileID 
-				LEFT JOIN ". table_agency_customfield_mux ." 
+				LEFT JOIN $CustomTable 
 					AS customfield_mux 
 					ON profile.ProfileID = customfield_mux.ProfileID  
 				$filter  
@@ -1380,37 +1383,37 @@ EOF;
 			
 			$bb_agency_option_profilenaming = bb_agency_get_option('bb_agency_option_profilenaming');
 
-			$resultsList = mysql_query($queryList);
-			$countList = mysql_num_rows($resultsList);
+			$resultsList = $wpdb->get_results($queryList, ARRAY_A);
+			$countList = count($resultsList);
 	                
 			$bb_user_isLogged = is_user_logged_in();
 
 			#DEBUG!
 			//echo $queryList;
 
-			if($countList > 0){
+			if ($countList > 0){
 				
 				# this will replace the timthumb function as it is not working properly all the time.	
-			  	$displayHTML ="	<script type='text/javascript' src='".bb_agency_BASEDIR."js/resize.js'></script>";
+			  	//$displayHTML ="	<script type='text/javascript' src='".bb_agency_BASEDIR."js/resize.js'></script>";
 
 		        $profileDisplay = 0;
 				$countFav = 0;
-				while ($dataList = mysql_fetch_assoc($resultsList)) {
+				foreach ($resultsList as $row) {
 					// check due date to make sure she hasn't already given birth
 
-					if (bb_agency_ismumtobe($dataList['ProfileType']) && $dataList['ProfileGivenBirth'] === "yes") {
+					if (bb_agency_ismumtobe($row['ProfileType']) && $row['ProfileGivenBirth'] === "yes") {
 
-						//echo $type.': '.$dataList['ProfileDateDue'].' given birth = "'.$dataList['ProfileGivenBirth'].'"<br />';
+						//echo $type.': '.$row['ProfileDateDue'].' given birth = "'.$row['ProfileGivenBirth'].'"<br />';
 
 						// switch category
-						$ptypes = explode(',', $dataList['ProfileType']);
+						$ptypes = explode(',', $row['ProfileType']);
 						for($i = 0; $i < count($ptypes); $i++){
 							if ($ptypes[$i] == bb_agency_MUMSTOBE_ID)
 								$ptypes[$i] = bb_agency_AFTERBIRTH_ID;
 						}
 						
 						// recategorize as family
-						bb_agency_recategorize_profile($dataList['ProfileID'], $ptypes);
+						bb_agency_recategorize_profile($row['ProfileID'], $ptypes);
 						
 						if (bb_agency_ismumtobe($type)) {
 							continue; // don't display this one as she's nolonger pregnant
@@ -1423,7 +1426,7 @@ EOF;
 						 $displayHTML .= "  <div id=\"profile-results-info\" class=\"six column\">\n";
 							
 							# Temporarily removed this as required
-							#if(count($dataList) > 0){
+							#if(count($row) > 0){
 							#	$displayHTML .="    <div class=\"profile-results-info-countpage\">\n";
 							#		echo "<strong>Item on this list: ".count($countList)."</strong>";
 							#	$displayHTML .="    </div>\n";
@@ -1452,53 +1455,53 @@ EOF;
 					if($profileDisplay == 1){
 						$displayHTML.="  <div id=\"profile-list\">\n";
 					}
-					$displayHTML .= "<div id=\"bbprofile-".$dataList["ProfileID"]."\" class=\"bbprofile-list profile-list-layout0\" >\n";
+					$displayHTML .= "<div id=\"bbprofile-".$row["ProfileID"]."\" class=\"bbprofile-list profile-list-layout0\" >\n";
 
-					if (isset($dataList["ProfileMediaURL"]) ) { // && (file_exists(bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"] ."/". $dataList["ProfileMediaURL"])) ) {
+					if (isset($row["ProfileMediaURL"]) ) { // && (file_exists(bb_agency_UPLOADDIR ."". $row["ProfileGallery"] ."/". $row["ProfileMediaURL"])) ) {
 						
 						//dont need other image for hover if its for print or pdf download view and dont use timthubm
 						if(get_query_var('target')!="print" AND get_query_var('target')!="pdf"){
 									 
 							if(bb_agency_get_option('bb_agency_option_profilelist_thumbsslide')==1){  //show profile sub thumbs for thumb slide on hover
-								$images=getAllImages($dataList["ProfileID"]);
-							    $images=str_replace("{PHOTO_PATH}",bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"]."/",$images);
+								$images=getAllImages($row["ProfileID"]);
+							    $images=str_replace("{PHOTO_PATH}",bb_agency_UPLOADDIR ."". $row["ProfileGallery"]."/",$images);
 							}
 
 							# this is removed as timthumb always has an issue.
-							$displayHTML .="<div class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\"><img src=\"".bb_agency_BASEDIR."tasks/timthumb.php?src=".bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"] ."/". $dataList["ProfileMediaURL"]."&w=200&q=60\" id=\"roll".$dataList["ProfileID"]."\"  /></a>".$images."</div>\n";
+							$displayHTML .="<div class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $row["ProfileGallery"] ."/\"><img src=\"".bb_agency_BASEDIR."tasks/timthumb.php?src=".bb_agency_UPLOADDIR ."". $row["ProfileGallery"] ."/". $row["ProfileMediaURL"]."&w=200&q=60\" id=\"roll".$row["ProfileID"]."\"  /></a>".$images."</div>\n";
 							
 							#phel comment: i decided to remove the actual image, and put the url on anchor as background to fix the image resizing issue
-							#$displayHTML .="<div  class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\"><img src=\"".bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"] ."/". $dataList["ProfileMediaURL"]."\"  /></a>".$images."</div>\n";
-							#$displayHTML .="<div  class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\" style=\"background-image: url(".bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"] ."/". $dataList["ProfileMediaURL"].")\"></a>".$images."</div>\n";
+							#$displayHTML .="<div  class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $row["ProfileGallery"] ."/\"><img src=\"".bb_agency_UPLOADDIR ."". $row["ProfileGallery"] ."/". $row["ProfileMediaURL"]."\"  /></a>".$images."</div>\n";
+							#$displayHTML .="<div  class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $row["ProfileGallery"] ."/\" style=\"background-image: url(".bb_agency_UPLOADDIR ."". $row["ProfileGallery"] ."/". $row["ProfileMediaURL"].")\"></a>".$images."</div>\n";
 
 						} else {
 							#phel comment: i decided to remove the actual image, and put the url on anchor as background to fix the image resizing issue
-							#$displayHTML .="<div  class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\"><img src=\"".bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"] ."/". $dataList["ProfileMediaURL"]."\"  /></a>".$images."</div>\n";
-							$displayHTML .="<div  class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\" style=\"background-image: url(".bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"] ."/". $dataList["ProfileMediaURL"].")\"></a>".$images."</div>\n";
+							#$displayHTML .="<div  class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $row["ProfileGallery"] ."/\"><img src=\"".bb_agency_UPLOADDIR ."". $row["ProfileGallery"] ."/". $row["ProfileMediaURL"]."\"  /></a>".$images."</div>\n";
+							$displayHTML .="<div  class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $row["ProfileGallery"] ."/\" style=\"background-image: url(".bb_agency_UPLOADDIR ."". $row["ProfileGallery"] ."/". $row["ProfileMediaURL"].")\"></a>".$images."</div>\n";
 						}
 					
 					} else {
-					 	$displayHTML .= "  <div class=\"image image-broken\"><a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\">No Image</a></div>\n";
+					 	$displayHTML .= "  <div class=\"image image-broken\"><a href=\"". bb_agency_PROFILEDIR ."". $row["ProfileGallery"] ."/\">No Image</a></div>\n";
 					}
 						
 					$displayHTML .= "  <div class=\"profile-info\">\n";
 					
 			
-					$displayHTML .= "     <h3 class=\"name\"><a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\" class=\"scroll\">". stripslashes($dataList["ProfileContactDisplay"]) ."</a></h3>\n";
+					$displayHTML .= "     <h3 class=\"name\"><a href=\"". bb_agency_PROFILEDIR ."". $row["ProfileGallery"] ."/\" class=\"scroll\">". stripslashes($row["ProfileContactDisplay"]) ."</a></h3>\n";
 
 					if ($bb_agency_option_profilelist_expanddetails) {
 						echo "expanded details";
-					 	$displayHTML .= "     <div class=\"details\"><span class=\"details-age\">". bb_agency_get_age($dataList["ProfileDateBirth"]) ."</span><span class=\"divider\">, </span><span class=\"details-state\">". $dataList["ProfileLocationState"] ."</span></div>\n";
+					 	$displayHTML .= "     <div class=\"details\"><span class=\"details-age\">". bb_agency_get_age($row["ProfileDateBirth"]) ."</span><span class=\"divider\">, </span><span class=\"details-state\">". $row["ProfileLocationState"] ."</span></div>\n";
 					 	/*
 					 	TODO - get due date if applicable
-					 	$displayHTML .= "     <div class=\"details\"><span class=\"details-due\">". bb_agency_get_age($dataList["ProfileDateDue"]) ."</span><span class=\"divider\">, </span><span class=\"details-state\">". $dataList["ProfileLocationState"] ."</span></div>\n";
+					 	$displayHTML .= "     <div class=\"details\"><span class=\"details-due\">". bb_agency_get_age($row["ProfileDateDue"]) ."</span><span class=\"divider\">, </span><span class=\"details-state\">". $row["ProfileLocationState"] ."</span></div>\n";
 					 	*/
 					}
 					
 		         	//echo "loaded: ".microtime()." ms";				
 					if($bb_user_isLogged ){
 					   	//Get Favorite & Casting Cart links
-				        $displayHTML .= bb_agency_get_miscellaneousLinks($dataList["ProfileID"]);
+				        $displayHTML .= bb_agency_get_miscellaneousLinks($row["ProfileID"]);
 					}
 
 					$displayHTML .=" </div> <!-- .profile-info --> \n";
@@ -1601,21 +1604,21 @@ EOF;
 		
 		$resultsList = mysql_query($queryList);
 		$countList = mysql_num_rows($resultsList);
-		while ($dataList = mysql_fetch_array($resultsList)) {
+		while ($row = mysql_fetch_array($resultsList)) {
 		    echo "<div class=\"bbprofile-list\">\n";
-			if (isset($dataList["ProfileMediaURL"]) ) { 
-			echo "  <div class=\"image\"><a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\"><img src=\"". bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"] ."/". $dataList["ProfileMediaURL"] ."\" /></a></div>\n";
+			if (isset($row["ProfileMediaURL"]) ) { 
+			echo "  <div class=\"image\"><a href=\"". bb_agency_PROFILEDIR ."". $row["ProfileGallery"] ."/\"><img src=\"". bb_agency_UPLOADDIR ."". $row["ProfileGallery"] ."/". $row["ProfileMediaURL"] ."\" /></a></div>\n";
 			} else {
-			echo "  <div class=\"image image-broken\"><a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\">No Image</a></div>\n";
+			echo "  <div class=\"image image-broken\"><a href=\"". bb_agency_PROFILEDIR ."". $row["ProfileGallery"] ."/\">No Image</a></div>\n";
 			}
 			echo "<div class=\"profile-info\">";
 	                    $bb_agency_option_profilenaming = bb_agency_get_option('bb_agency_option_profilenaming');
 							if ($bb_agency_option_profilenaming == 0) {
-								$ProfileContactDisplay = $dataList["ProfileContactNameFirst"] . " ". $dataList["ProfileContactNameLast"];
+								$ProfileContactDisplay = $row["ProfileContactNameFirst"] . " ". $row["ProfileContactNameLast"];
 							} elseif ($bb_agency_option_profilenaming == 1) {
-								$ProfileContactDisplay = $dataList["ProfileContactNameFirst"] . " ". substr($dataList["ProfileContactNameLast"], 0, 1);
+								$ProfileContactDisplay = $row["ProfileContactNameFirst"] . " ". substr($row["ProfileContactNameLast"], 0, 1);
 							} elseif ($bb_agency_option_profilenaming == 2) {
-								$ProfileContactDisplay = $dataList["ProfileContactNameFirst"];
+								$ProfileContactDisplay = $row["ProfileContactNameFirst"];
 							} elseif ($bb_agency_option_profilenaming == 3) {
 								$ProfileContactDisplay = "ID ". $ProfileID;
 							} elseif ($bb_agency_option_profilenaming == 4) {
@@ -1624,14 +1627,14 @@ EOF;
 								$ProfileContactDisplay = $ProfileContactNameLast;
 							}
 				 
-			echo "     <h3 class=\"name\"><a href=\"". bb_agency_PROFILEDIR ."". $dataList["ProfileGallery"] ."/\">". $ProfileContactDisplay ."</a></h3>\n";
+			echo "     <h3 class=\"name\"><a href=\"". bb_agency_PROFILEDIR ."". $row["ProfileGallery"] ."/\">". $ProfileContactDisplay ."</a></h3>\n";
 			if (isset($bb_agency_option_profilelist_expanddetails)) {
-				echo "<div class=\"details\"><span class=\"details-age\">". bb_agency_get_age($dataList["ProfileDateBirth"]) ."</span><span class=\"divider\">, </span><span class=\"details-state\">". $dataList["ProfileLocationState"] ."</span></div>\n";
+				echo "<div class=\"details\"><span class=\"details-age\">". bb_agency_get_age($row["ProfileDateBirth"]) ."</span><span class=\"divider\">, </span><span class=\"details-state\">". $row["ProfileLocationState"] ."</span></div>\n";
 			}
 
 			if(is_user_logged_in()){
 				// Add Favorite and Casting Cart links		
-				bb_agency_get_miscellaneousLinks($dataList["ProfileID"]);
+				bb_agency_get_miscellaneousLinks($row["ProfileID"]);
 			}
 			echo "  </div><!-- .profile-info -->\n";
 			echo "</div><!-- .bbprofile-list -->\n";
@@ -1822,7 +1825,7 @@ class bb_agency_image {
 class bb_agency_pagination {
 
 	/*Default values*/
-	var $total_pages = -1;//items
+	var $total_pages = -1; //items
 	var $limit = NULL;
 	var $target = ""; 
 	var $page = 1;
@@ -3110,6 +3113,9 @@ function checkCart($currentUserID,$pid){
 /* function that lists users for generating login/password */
 function bb_display_profile_list(){  
     global $wpdb;
+
+    $t_profile = table_agency_profile;
+    $t_data_type = table_agency_data_type;
     
     $bb_agency_option_locationtimezone 		= (int)bb_agency_get_option('bb_agency_option_locationtimezone');
 
@@ -3174,9 +3180,11 @@ function bb_display_profile_list(){
                     $filter .= " AND profile.ProfileGender='".$ProfileGender."'";
     }
 		
-    //Paginate
-    $items = mysql_num_rows(mysql_query("SELECT * FROM ". table_agency_profile ." profile LEFT JOIN ". table_agency_data_type ." profiletype ON profile.ProfileType = profiletype.DataTypeID ". $filter  ."")); // number of total rows in the database
-    if($items > 0) {
+    // Paginate
+    $sql = "SELECT COUNT(*) FROM $t_profile profile LEFT JOIN $t_data_type AS profiletype ON profile.`ProfileType` = profiletype.`DataTypeID` ". $filter;
+    $items = $wpdb->get_var($sql); // number of total rows in the database
+    wp_die("items = $items");
+    if ($items > 0) {
         $p = new bb_agency_pagination;
         $p->items($items);
         $p->limit(50); // Limit entries per page
@@ -3429,14 +3437,14 @@ function featured_homepage(){
 	
 	$array_data = array();
 	
-	while ($dataList = mysql_fetch_assoc($r)) {
+	while ($row = mysql_fetch_assoc($r)) {
 		
 		/*
 		 * Get From Custom Fields
 		 * per profile
 		 */
 		$get_custom = 'SELECT * FROM ' . table_agency_customfield_mux .
-					  ' WHERE ProfileID = ' . $dataList["ProfileID"]; 
+					  ' WHERE ProfileID = ' . $row["ProfileID"]; 
 					  
 		$result = mysql_query($get_custom);
 		
@@ -3451,7 +3459,7 @@ function featured_homepage(){
 		$a_female = array('bust', 'waist', 'hips', 'dress',
 							  'shoe size','hair', 'eye color');
         
-		$name = ucfirst($dataList["ProfileContactNameFirst"]) ." ". strtoupper($dataList["ProfileContactNameLast"][0]); ;
+		$name = ucfirst($row["ProfileContactNameFirst"]) ." ". strtoupper($row["ProfileContactNameLast"][0]); ;
 		
 		while ($custom = mysql_fetch_assoc($result)) {
              
@@ -3462,13 +3470,13 @@ function featured_homepage(){
 			 
 			 $custom2 = mysql_fetch_assoc($result2);
 			 
-			 if(strtolower(bb_agency_getGenderTitle($dataList['ProfileGender'])) == "male"){
+			 if(strtolower(bb_agency_getGenderTitle($row['ProfileGender'])) == "male"){
 				 
 				 if(in_array(strtolower($custom2['ProfileCustomTitle']),$a_male)){
 					 $array_male[$custom2['ProfileCustomTitle']] = $custom['ProfileCustomValue'];
 				 }
 			 
-			 } else if(strtolower(bb_agency_getGenderTitle($dataList['ProfileGender'])) == "female"){
+			 } else if(strtolower(bb_agency_getGenderTitle($row['ProfileGender'])) == "female"){
 				 
 				 if(in_array(strtolower($custom2['ProfileCustomTitle']),$a_female)){
 					 $array_female[$custom2['ProfileCustomTitle']] = $custom['ProfileCustomValue'];
@@ -3477,13 +3485,13 @@ function featured_homepage(){
 		
 		}
 		
-		if(strtolower(bb_agency_getGenderTitle($dataList['ProfileGender'])) == "male"){
+		if(strtolower(bb_agency_getGenderTitle($row['ProfileGender'])) == "male"){
 			
-			$array_data = array($name,'male',$array_male,$dataList["ProfileGallery"],$dataList["ProfileMediaURL"]);
+			$array_data = array($name,'male',$array_male,$row["ProfileGallery"],$row["ProfileMediaURL"]);
 			
-		} else if(strtolower(bb_agency_getGenderTitle($dataList['ProfileGender'])) == "female"){
+		} else if(strtolower(bb_agency_getGenderTitle($row['ProfileGender'])) == "female"){
 			
-			$array_data = array($name,'female',$array_female,$dataList["ProfileGallery"],$dataList["ProfileMediaURL"]);
+			$array_data = array($name,'female',$array_female,$row["ProfileGallery"],$row["ProfileMediaURL"]);
 					 
 		}
 		
@@ -3506,7 +3514,7 @@ function featured_homepage(){
 // 5/15/2013 sverma@ Home page
 function featured_homepage_profile($count){
 	global $wpdb;
-	$dataList = array();
+	$row = array();
 	$query = "SELECT profile.*,
 	(SELECT media.ProfileMediaURL FROM ". table_agency_profile_media ." media 
 	 WHERE profile.ProfileID = media.ProfileID 
@@ -3521,10 +3529,10 @@ function featured_homepage_profile($count){
 	$result = mysql_query($query);
 	$i=0;
 	while ($row = mysql_fetch_assoc($result)) {
-		$dataList[$i] = $row ;
+		$row[$i] = $row ;
 		$i++;
 	}
-	return $dataList ;
+	return $row ;
 
 }
 
