@@ -704,6 +704,8 @@
      */
 	function bb_agency_profilelist($atts, $content = null) {
 
+		?><pre><?php print_r($atts) ?></pre><?php
+
 		// Get Preferences
 		$bb_agency_option_privacy					 = bb_agency_get_option('bb_agency_option_privacy');
 		$bb_agency_option_profilelist_count			 = bb_agency_get_option('bb_agency_option_profilelist_count');
@@ -831,8 +833,8 @@
 		$ProfileStatWeight_max		= $profilestatheight_max;
 		$ProfileDateBirth_min		= $profiledatebirth_min;
 		$ProfileDateBirth_max		= $profiledatebirth_max;
-		$ProfileAge_min				= $profileage_min;
-		$ProfileAge_max				= $profileage_max;
+		$ProfileAge_min				= $age_from;
+		$ProfileAge_max				= $age_to;
 		$ProfileDateDue_min			= $profiledatedue_min;
 		$ProfileDateDue_max			= $profiledatedue_max;
 		$ProfileIsFeatured			= $featured;
@@ -1091,16 +1093,20 @@
 		}
 
 		// Age
-		if (isset($ProfileAge_min) && !empty($ProfileAge_min)) {
-            $age = str_replace('m', '', $ProfileAge_min);
-            $ym = (strpos($ProfileAge_min, 'm') === false) ? 'YEAR' : 'MONTH';
-            $filter .= " AND profile.`ProfileDateBirth` <= DATE_SUB(NOW(), INTERVAL $age $ym)";
-        }
-        
-        if (isset($ProfileAge_max) && !empty($ProfileAge_max)){
-            $age = str_replace('m', '', $ProfileAge_max);
-            $ym = (strpos($ProfileAge_max, 'm') === false) ? 'YEAR' : 'MONTH';
-            $filter .= " AND profile.`ProfileDateBirth` >= DATE_SUB(NOW(), INTERVAL $age $ym)";
+        if (!empty($ProfileAge_min) || !empty($ProfileAge_max)) {
+        	if (!empty($ProfileAge_min)) {
+	            $age = str_replace('m', '', $ProfileAge_min);
+	            $ym = (strpos($ProfileAge_min, 'm') === false) ? 'YEAR' : 'MONTH';
+	            $filter .= " AND profile.`ProfileDateBirth` <= DATE_SUB(NOW(), INTERVAL $age $ym)";
+	        }
+	        
+	        if (!empty($ProfileAge_max)){
+	            $age = str_replace('m', '', $ProfileAge_max);
+	            $ym = (strpos($ProfileAge_max, 'm') === false) ? 'YEAR' : 'MONTH';
+	            $filter .= " AND profile.`ProfileDateBirth` >= DATE_SUB(NOW(), INTERVAL $age $ym)";
+	        }
+        	$sort = '`ProfileDateBirth`';
+        	$dir = 'ASC';
         }
 
 		$date = gmdate('Y-m-d', time() + $bb_agency_option_locationtimezone *60 *60);
@@ -1248,7 +1254,6 @@ $filter
 GROUP BY profile.`ProfileID` 
 ORDER BY $sort $dir $limit
 EOF;
-
 
 				$qItem = mysql_query($sql) or wp_die(mysql_error());
 				$items = mysql_num_rows($qItem); // number of total rows in the database
