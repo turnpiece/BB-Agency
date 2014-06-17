@@ -107,13 +107,13 @@ function bb_agency_inner_custom_box() {
             if(gender!=''&& gender!='')
             str+=' gender="'+gender+'"';
 
-            age_start=$bbagency('#bb_agency_age_start').val();
-            if(age_start!=''&& age_start!='')
-            str+=' age_start="'+age_start+'"';
+            age_from=$bbagency('#bb_agency_age_from').val();
+            if(age_from!=''&& age_from!='')
+            str+=' age_from="'+age_from+'"';
 
-            age_stop=$bbagency('#bb_agency_age_stop').val();
-            if(age_stop!=''&& age_stop!='')
-            str+=' age_stop="'+age_stop+'"';
+            age_to=$bbagency('#bb_agency_age_to').val();
+            if(age_to!=''&& age_to!='')
+            str+=' age_to="'+age_to+'"';
 
             type=$bbagency('#bb_agency_type').val();
             if(type!='')
@@ -139,8 +139,8 @@ function bb_agency_inner_custom_box() {
                 echo "<option value=\"". $dataType["DataTypeID"] ."\"".$selectedvalue.">". $dataType["DataTypeTitle"] ." ". __("Only", bb_agency_TEXTDOMAIN) ."</option>";
             }
             echo "</select></td></tr>\n";
-    echo "  <tr><td>". __("Starting Age", bb_agency_TEXTDOMAIN) .":</td><td><input type=\"text\" id=\"bb_agency_age_start\" name=\"bb_agency_age_start\" value=\"18\" /></td></tr>\n";
-    echo "  <tr><td>". __("Ending Age", bb_agency_TEXTDOMAIN) .":</td><td><input type=\"text\" id=\"bb_agency_age_stop\" name=\"bb_agency_age_stop\" value=\"99\" /></td></tr>\n";
+    echo "  <tr><td>". __("Starting Age", bb_agency_TEXTDOMAIN) .":</td><td><input type=\"text\" id=\"bb_agency_age_from\" name=\"bb_agency_age_from\" value=\"18\" /></td></tr>\n";
+    echo "  <tr><td>". __("Ending Age", bb_agency_TEXTDOMAIN) .":</td><td><input type=\"text\" id=\"bb_agency_age_to\" name=\"bb_agency_age_to\" value=\"99\" /></td></tr>\n";
     echo "  <tr><td>". __("Gender", bb_agency_TEXTDOMAIN) .":</td><td>";
     echo "<select id=\"bb_agency_gender\" name=\"bb_agency_gender\">";
     $query= "SELECT GenderID, GenderTitle FROM " .  table_agency_data_gender . " GROUP BY GenderTitle ";

@@ -190,25 +190,25 @@ tr td{ list-style:none; padding-bottom:1px; padding-top:1px;}
 ';
 
 if($_POST['print_option']==14){  // print for division
-		$table1=do_shortcode('[profile_list gender="2" age_start="18" age_stop="99" type="1" pagingperpage="5"]');
+		$table1=do_shortcode('[profile_list gender="2" age_from="18" age_to="99" type="1" pagingperpage="5"]');
 		$table1=strip_tags($table1,'<img><script>');
 		$table1=str_replace("&#187;","-->' src",$table1);
 		$table1=str_replace('<script type="text/javascript">',"<!--' src",$table1);
 		$table1=str_replace("<img src","</td><td width='150'><img style='width:144px;' src",$table1);
 		
-		$table2.=do_shortcode('[profile_list gender="2" age_start="18" age_stop="99" type="1" pagingperpage="5" paging="2"]');
+		$table2.=do_shortcode('[profile_list gender="2" age_from="18" age_to="99" type="1" pagingperpage="5" paging="2"]');
 		$table2=strip_tags($table2,'<img><script>');
 		$table2=str_replace("&#187;","-->' src",$table2);
 		$table2=str_replace('<script type="text/javascript">',"<!--' src",$table2);
 		$table2=str_replace("<img src","</td><td width='150'><img style='width:144px;' src",$table2);
 
-		$table3.=do_shortcode('[profile_list gender="2" age_start="18" age_stop="99" type="1" pagingperpage="5" paging="3"]');
+		$table3.=do_shortcode('[profile_list gender="2" age_from="18" age_to="99" type="1" pagingperpage="5" paging="3"]');
 		$table3=strip_tags($table3,'<img><script>');
 		$table3=str_replace("&#187;","-->' src",$table3);
 		$table3=str_replace('<script type="text/javascript">',"<!--' src",$table3);
 		$table3=str_replace("<img src","</td><td width='150'><img style='width:144px;' src",$table3);
 
-		$table4=do_shortcode('[profile_list gender="2" age_start="18" age_stop="99" type="1" pagingperpage="5" paging="4"]');
+		$table4=do_shortcode('[profile_list gender="2" age_from="18" age_to="99" type="1" pagingperpage="5" paging="4"]');
 	
 	  // strpos($table2,"No Profiles Found");
 

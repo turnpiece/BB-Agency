@@ -30,9 +30,9 @@ $header='
 <body  style="background: #fff;">';
 if(!empty($type)){$type=' type="'.$type.'"';}
 
-	  $divisions = do_shortcode('[profile_list gender="'.$division.'" age_start="'.$ageStart.'" age_stop="'.$ageStop.'"'.$type.' paging="0"]'); 
+	  $divisions = do_shortcode('[profile_list gender="'.$division.'" age_from="'.$ageStart.'" age_to="'.$ageStop.'"'.$type.' paging="0"]'); 
   		
-	 $scode = do_shortcode('[profile_list gender="'.$division.'" age_start="'.$ageStart.'" age_stop="'.$ageStop.'"'.$type.' paging="0"]');
+	 $scode = do_shortcode('[profile_list gender="'.$division.'" age_from="'.$ageStart.'" age_to="'.$ageStop.'"'.$type.' paging="0"]');
  	
 	 $divisions=trim(strip_tags($divisions,'<a>'));
 	 $divisions = preg_replace( '/\s+/', ' ', $divisions );

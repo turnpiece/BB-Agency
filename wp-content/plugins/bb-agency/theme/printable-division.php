@@ -1,5 +1,5 @@
-<?php 
-$bb_options = bb_agency_get_option();
+<?php
+// get required options
 $bb_agency_option_agencyname = bb_agency_get_option('bb_agency_option_agencyname');
 $bb_agency_option_agencylogo = bb_agency_get_option('bb_agency_option_agencylogo');
 ?>
@@ -92,8 +92,8 @@ ul li{ list-style:none; padding-bottom:5px; padding-top:5px;}
 <div style="width:887px">
   <?php	
         $footerBlock="<div style='float:left; width:100%; height:90px;'><img style='width:320px; height:67px;' src='".get_bloginfo("url")."/wp-content/plugins/bb-agency/theme/custom-layout6/images/address.jpg'></div>";
-		$divisions = do_shortcode('[profile_list gender="'.$division.'" age_start="'.$ageStart.'" age_stop="'.$ageStop.'" type="'.$type.'"]'); 
-		//$shortCode = do_shortcode('[profile_list gender="'.$division.'" age_start="'.$ageStart.'" age_stop="'.$ageStop.'" type="'.$type.'"]'); 
+		$divisions = do_shortcode('[profile_list gender="'.$division.'" age_from="'.$ageStart.'" age_to="'.$ageStop.'" type="'.$type.'"]'); 
+		//$shortCode = do_shortcode('[profile_list gender="'.$division.'" age_from="'.$ageStart.'" age_to="'.$ageStop.'" type="'.$type.'"]'); 
 			 $divisions=trim(strip_tags($divisions,'<a>'));
 			 $divisions = preg_replace( '/\s+/', ' ', $divisions );
 			 $divisions = explode("<a" , $divisions);
