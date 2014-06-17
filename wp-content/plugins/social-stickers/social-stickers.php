@@ -4,7 +4,7 @@
 		Plugin Name: Social Stickers
 		Plugin URI: http://wpplugz.is-leet.com
 		Description: A simple plugin that shows the social networks you use.
-		Version: 2.2.1
+		Version: 2.2.3
 		Author: Bostjan Cigan
 		Author URI: http://bostjan.gets-it.net
 		License: GPL v2
@@ -23,11 +23,23 @@
 	register_activation_hook(__FILE__, 'social_stickers_install');
 	add_action('admin_menu', 'social_stickers_admin_menu_create');
 	add_action('widgets_init', create_function('', 'return register_widget("social_stickers_widget");')); // Register the widget
-	add_action('admin_init', 'social_stickers_sortable_script'); // Add javascript for sorting but only in admin area
+	add_action('admin_init', 'social_stickers_scripts'); // Add javascript for sorting but only in admin area
 	add_shortcode('social_stickers', 'social_stickers_shortcode_handler');
+	add_action('wp_ajax_social_stickers_reload_admin_theme', 'social_stickers_theme_reload');
 
-	function social_stickers_sortable_script() {
-		wp_enqueue_script('social-stickers-sortable-script', plugin_dir_url(__FILE__).'js/sortable.js', array("jquery", "jquery-ui-core", "jquery-ui-sortable"));
+	function social_stickers_theme_reload() {
+		ob_start();
+		$stickers = display_social_stickers(true, false, $_POST['theme']);
+		echo $stickers;
+		$response = ob_get_contents();
+	    ob_end_clean();
+	    echo $response;
+		wp_die();
+	}
+
+	function social_stickers_scripts() {
+		wp_enqueue_script('social-stickers-selectable-script', plugin_dir_url(__FILE__).'js/sortable.js', array("jquery", "jquery-ui-core", "jquery-ui-sortable"));
+		wp_localize_script('social-stickers-selectable-script', 'ajax_object', array('ajaxurl' => admin_url('admin-ajax.php')));
 	}
 	
 	// Create the admin menu
@@ -55,7 +67,7 @@
 	// The installation array, also used for the update procedure
 	global $social_stickers_options_install;
 	$social_stickers_options_install = array(
-		'version' => '2.21',
+		'version' => '2.23',
 		'powered_by_msg' => false,
 		'mode' => 0, // Mode of output - 0 is 32x32 icon, 1 is 64x64 icon, 2 is 128x128 icon, 3 is small icon and text
 		'theme' => 'default',
@@ -394,6 +406,12 @@
 				'custom' => false,
 				'username' => ''
 			),
+			'specificfeeds' => array(
+				'url' => '[:username]',
+				'name' => 'SpecificFeeds',
+				'custom' => false,
+				'username' => ''
+			),
 			'quora' => array(
 				'url' => 'http://quora.com/[:username]',
 				'name' => 'Quora',
@@ -544,7 +562,7 @@
 	// Update script ...
 	$options = get_option('social_stickers_settings');
 	if(is_array($options)) {
-		if(((float)$options['version']) < 2.21) {
+		if(((float)$options['version']) < 2.23) {
 			update_social_stickers();
 		}	
 	}
@@ -560,7 +578,7 @@
 		global $social_stickers_options_install;
 		$options = get_option('social_stickers_settings');
 		
-		if(((float) $options['version']) < 2.21) {
+		if(((float) $options['version']) < 2.23) {
 
 			unset($options['prefix']); // These two are deprecated in v2.0
 			unset($options['suffix']);
@@ -616,7 +634,7 @@
 					}
 			}
 
-			$options['version'] = '2.21';
+			$options['version'] = '2.23';
 			update_option('social_stickers_settings', $options);
 			
 		}
@@ -970,6 +988,7 @@
 				<th scope="row"><img src="<?php echo plugin_dir_url(__FILE__).'images/main.png'; ?>" height="96px" width="96px" /></th>
 				<td>
 					<p>Thank you for using this plugin. If you like the plugin, you can <a href="http://gum.co/social-stickers" target="_blank">buy me a cup of coffee</a> :)</p>
+					<p><strong>Want more features</strong> like <strong>drag and drop theme uploading</strong>, <strong>multisite</strong> compatibility, <strong>statistics</strong> tracking, shortcode generation? <strong><a href="https://gum.co/social-stickers-pro">GO PRO.</a></strong><script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
 					<p>You can visit the official website and download more themes @ <a href="http://wpplugz.is-leet.com">wpPlugz</a>.</p>
 					<p>This plugin uses icons from <a href="http://www.visualpharm.com/">VisualPharm</a> in the settings pages and the <a href="https://github.com/themattharris/tmhOAuth">tmhOAuth</a> library by Matt Harris.</p>
 				</td>
@@ -1246,7 +1265,7 @@
                     <tr>
 						<th scope="row"><label for="theme">Pick your theme</label></th>
 						<td>
-							<select name="theme" id="theme" onchange="document.forms[0].submit()">
+							<select name="theme" id="theme">
 <?php
 
 							$theme_string = "";
@@ -1254,19 +1273,17 @@
 							foreach($themes as $theme) {
 ?>
 								<option value="<?php echo $theme['id']; ?>" <?php if($theme['id'] == $options['theme']) { ?> selected="selected" <?php } ?>><?php echo esc_attr($theme['name']); ?></option>
-<?php 							if($theme['id'] == $options['theme']) {
-									$theme_string = $theme_string.$theme['name'].' by <a href="'.$theme['webpage'].'">'.$theme['author'].'</a> - '.$theme['description'];								
-								}
+<?php 							
 							}
 ?>
 							</select>
-                            <br /><span class="description"><?php echo sprintf("%s", $theme_string); ?></span> 
+                            <br /><span class="description" id="theme_description"></span> 
                         </td>
 					</tr>
 					<tr>
 						<th scope="row">Social stickers order</th>
 						<td>
-                        	<?php display_social_stickers(true); ?>
+                        	<div id="current_theme"></div>
                             <br /><br /><span class="description">Enter your social network usernames <a href="?page=social-stickers/social-stickers.php&tab=social_networks">here</a> and then hold and move around the icons to change the order.</span>
                         </td>
 					</tr>
@@ -1325,12 +1342,16 @@
 ?>				
 
 								<tr>
-									<th scope="row"><label for="<?php echo $name; ?>"><?php echo $data['name']; ?></label></th>
+									<th scope="row"><?php if($name == "specificfeeds") { ?><label for="<?php echo $name; ?>"><?php echo $data['name']; ?></label><br><span class="description">Free & easy RSS2Email solution.</span><?php } else { ?><label for="<?php echo $name; ?>"><?php echo $data['name']; ?></label><?php } ?></th>
 									<td>
 										<input type="text" name="<?php echo $name; ?>" value="<?php echo esc_attr(stripslashes($data['username'])); ?>" id="<?php echo $name; ?>" size="40"/>
 										<a href=""><img src=""></a>
 										<br />
+										<?php if($name == "specificfeeds") { ?>
+										<span class="description">Enter the pop-up link you received when setting up your feed on <a href="http://www.specificfeeds.com/rss" target="_blank">www.specificfeeds.com/rss</a>.</span>
+										<?php } else { ?>
 										<span class="description">Trouble finding your username? Hint: <?php echo str_replace(array('[:', ']'), array('', ''), $data['url']); ?>.</span>
+										<?php } ?>
 <?php 
 					
 										if($options['show_edit_url']) { 
@@ -1470,27 +1491,58 @@
 	//														FUNCTIONS FOR HTML OUTPUT AND STICKER PRESENTATION															   //
 	// ******************************************************************************************************************************************************************* //
 	
-	function social_stickers_admin_show($options) {
+	function social_stickers_admin_show($options, $theme) {
 		
 		$output = "";
+		$us_count = 0;
 
-		if(isset($options['theme_stickers_order'][$options['theme']]) && is_array($options['theme_stickers_order'][$options['theme']]) && count($options['theme_stickers_order'][$options['theme']]) > 0) {
+		if(isset($options['theme_stickers_order'][$theme]) && is_array($options['theme_stickers_order'][$theme]) && count($options['theme_stickers_order'][$theme]) > 0) {
 			$output .= '<div id="sortable">';
-			foreach($options['theme_stickers_order'][$options['theme']] as $key => $value) {
-				$file = plugin_dir_path(__FILE__).'themes/'.$options['theme'].'/'.$value.'.png';
-				$file_url = plugin_dir_url(__FILE__).'themes/'.$options['theme'].'/'.$value.'.png';
+			foreach($options['theme_stickers_order'][$theme] as $key => $value) {
+				$file = plugin_dir_path(__FILE__).'themes/'.$theme.'/'.$value.'.png';
+				$file_url = plugin_dir_url(__FILE__).'themes/'.$theme.'/'.$value.'.png';
 				$social_url = str_replace("[:username]", $options['stickers'][$value]['username'], $options['stickers'][$value]['url']);
 				if(file_exists($file)) {
+					$us_count++;
 					$output .= '<div id="social_'.$value.'" style="margin-left: 3px; float: left;"> <a href="'.$social_url.'" title="'.$options['stickers'][$value]['name'].'"><img src="'.$file_url.'" height="32" width="32" alt="'.$options['stickers'][$value]['name'].'" /></a></div>';
 				}
 			}
 			$output .= "</div>";
 		}
 		else {
+			$output .= '<div id="sortable">';
+			foreach($options['stickers'] as $key => $value) { // url, name, username
+				if(strlen($value["username"]) > 0 && $value["username"] != null) {
+					$file = plugin_dir_path(__FILE__).'themes/'.$theme.'/'.$key.'.png';
+					$file_url = plugin_dir_url(__FILE__).'themes/'.$theme.'/'.$key.'.png';
+					$social_url = str_replace("[:username]", $options['stickers'][$key]["username"], $options['stickers'][$key]["url"]);
+					if(file_exists($file)) {
+						$us_count++;
+						$output .= '<div id="social_'.$key.'" style="margin-left: 3px; float: left;"> <a href="'.$social_url.'" title="'.$options['stickers'][$key]['name'].'"><img src="'.$file_url.'" height="32" width="32" alt="'.$options['stickers'][$key]['name'].'" /></a></div>';
+					}					
+				}
+			}
+			$output .= "</div>";
+		}
+
+		if($us_count == 0) {
 			$output = "There are currently no usernames entered.";
 		}
+
+		$theme_string = "";
+
+		$themes = social_stickers_get_themes();
+		foreach($themes as $theme_data) {
+			if($theme_data['id'] == $theme) {
+				$theme_string = $theme_data['name'].' by <a href="'.$theme_data['webpage'].'">'.$theme_data['author'].'</a> - '.$theme_data['description'];
+			}
+		}
+
+		$theme_data = array();
+		$theme_data["theme_string"] = $theme_string;
+		$theme_data["template_string"] = $output;
 			
-		return $output;
+		return json_encode($theme_data);
 		
 	}
 	
@@ -1670,7 +1722,7 @@
 		return false;
 	}
 
-	function display_social_stickers($sortable = false, $shortcode = false) {
+	function display_social_stickers($sortable = false, $shortcode = false, $theme_change = false) {
 	
 		// Update Facebook and Twitter data
 		social_stickers_facebook_data_update();
@@ -1680,7 +1732,8 @@
 		$output = NULL;
 		
 		if($sortable) { // If we are in the admin area
-			$output = social_stickers_admin_show($options);
+			$output = social_stickers_admin_show($options, $theme_change);
+			return $output;
 		}
 		else if(!$sortable && $options['custom_html']) { // If the user has decided to use custom HTML
 			$output = social_stickers_custom_html_show($options);

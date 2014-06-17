@@ -758,22 +758,29 @@
 			$atts)
 		);
 
-		// Sort by due date if a mum to be, by date of birth if a baby, otherwise sort alphabetically
-		switch(intval($type)) {
-			case bb_agency_MUMSTOBE_ID:
-			$sort = "profile.ProfileDateDue";
-			$dir = "asc";
-			break;
+		if (defined('bb_agency_MUMSTOBE_ID') && defined('bb_agency_BABIES_ID')) {
+			// Settings for a Beautiful Bumps type site of pregnant women
+			// Sort by due date if a mum to be, by date of birth if a baby, otherwise sort alphabetically
+			switch(intval($type)) {
+				case bb_agency_MUMSTOBE_ID:
+				$sort = "profile.`ProfileDateDue`";
+				$dir = "asc";
+				break;
 
-			case bb_agency_BABIES_ID:
-			$sort = "profile.ProfileDateBirth";
+				case bb_agency_BABIES_ID:
+				$sort = "profile.`ProfileDateBirth`";
+				$dir = "desc";
+				break;
+
+				default:
+				$sort = "profile.`ProfileContactDisplay`";
+				$dir = "asc";
+				break;
+			}	
+		} else {
+			// Settings for a Kiddiwinks type site
+			$sort = "profile.`ProfileDateBirth`";
 			$dir = "desc";
-			break;
-
-			default:
-			$sort = "profile.ProfileContactDisplay";
-			$dir = "asc";
-			break;
 		}
 
 		// Should we override the privacy settings?
@@ -1271,18 +1278,22 @@ EOF;
 					$p->adjacents(1); //No. of page away from the current page
 					
 					if (!isset($paging)) {
-						$p->page = 1;
+						$p->page = 0;
 					} else {
 						$p->page = $paging;
 					}
 					//Query for limit paging
-					$limit = "LIMIT " . ($p->page - 1) * $p->limit  . ", " . $p->limit;
+					$limit = "LIMIT " . $p->page * $p->limit  . ", " . $p->limit;
 				} else {
 					$limit = "";
 				}
 
-	            if(get_query_var('target')=="print"){$limit = "";} //to remove limit on print page
-				if(get_query_var('target')=="pdf"){$limit = "";} //to remove limit on pdf page
+	            if (get_query_var('target')=="print"){
+	            	$limit = "";
+	            } //to remove limit on print page
+				if (get_query_var('target')=="pdf"){
+					$limit = "";
+				} //to remove limit on pdf page
 	  
 	  		}//if(get_query_var('target')!="print" 
 					  
@@ -1303,11 +1314,11 @@ EOF;
 			/*
 			 * Execute the Query
 			 */
-			if (isset($profilefavorite) && !empty($profilefavorite)){
+			if (!empty($profilefavorite)){
 				// Execute query showing favorites
 				$queryList = "SELECT profile.ProfileID, profile.ProfileGallery, profile.ProfileContactDisplay, profile.ProfileDateBirth, profile.ProfileDateDue, profile.ProfileLocationState, profile.ProfileID as pID, fav.SavedFavoriteTalentID, fav.SavedFavoriteProfileID, (SELECT media.ProfileMediaURL FROM ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1) AS ProfileMediaURL FROM ". table_agency_profile ." profile INNER JOIN  ".table_agency_savedfavorite." fav WHERE $sqlFavorite_userID AND profile.ProfileIsActive = 1 GROUP BY fav.SavedFavoriteTalentID";
 				
-			} elseif (isset($profilecastingcart) && !empty($profilecastingcart)){
+			} elseif (!empty($profilecastingcart)){
 				// There is a Casting Cart ID present
 
 				// Get User ID
@@ -1326,7 +1337,7 @@ EOF;
 	// ?????????????????????  Purpose?
 				$queryList = "SELECT profile.ProfileID, profile.ProfileGallery, profile.ProfileContactDisplay, profile.ProfileDateBirth, profile.ProfileDateDue, profile.ProfileLocationState, profile.ProfileID as pID, cart.CastingCartTalentID, cart.CastingCartTalentID, (SELECT media.ProfileMediaURL FROM ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1) AS ProfileMediaURL FROM ". table_agency_profile ." profile INNER JOIN  ".table_agency_castingcart." cart WHERE  $sqlCasting_userID AND ProfileIsActive = 1 GROUP BY profile.ProfileID";  
 */				 
-			} elseif ($fastload){
+			} elseif ($fastload) {
 				// Execute Query in slim down mode, only return name, face and link
 				$ProfileGivenBirth = defined('bb_agency_MUMSTOBE_ID') && bb_agency_MUMSTOBE_ID ? "IF(DATE(profile.ProfileDateDue) < CURDATE(),'yes','no') AS ProfileGivenBirth," : '';
 
@@ -1401,12 +1412,12 @@ EOF;
 				foreach ($resultsList as $row) {
 					// check due date to make sure she hasn't already given birth
 
-					if (bb_agency_ismumtobe($row['ProfileType']) && $row['ProfileGivenBirth'] === "yes") {
-
-						//echo $type.': '.$row['ProfileDateDue'].' given birth = "'.$row['ProfileGivenBirth'].'"<br />';
+					if (defined('bb_agency_MUMSTOBE_ID') && defined('bb_agency_AFTERBIRTH_ID') && 
+						bb_agency_ismumtobe($row['ProfileType']) && $row['ProfileGivenBirth'] === "yes") {
 
 						// switch category
 						$ptypes = explode(',', $row['ProfileType']);
+
 						for($i = 0; $i < count($ptypes); $i++){
 							if ($ptypes[$i] == bb_agency_MUMSTOBE_ID)
 								$ptypes[$i] = bb_agency_AFTERBIRTH_ID;
@@ -1417,7 +1428,7 @@ EOF;
 						
 						if (bb_agency_ismumtobe($type)) {
 							continue; // don't display this one as she's nolonger pregnant
-						}
+						}	
 					}
 					$profileDisplay++;
 					if ($profileDisplay == 1 ){
@@ -1831,7 +1842,7 @@ class bb_agency_pagination {
 	var $page = 1;
 	var $adjacents = 2;
 	var $showCounter = false;
-	var $className = "rbpagination";
+	var $className = "bbpagination";
 	var $parameterName = "page";
 	var $urlF = false;//urlFriendly
 	/*Buttons next and previous*/
@@ -3183,7 +3194,6 @@ function bb_display_profile_list(){
     // Paginate
     $sql = "SELECT COUNT(*) FROM $t_profile profile LEFT JOIN $t_data_type AS profiletype ON profile.`ProfileType` = profiletype.`DataTypeID` ". $filter;
     $items = $wpdb->get_var($sql); // number of total rows in the database
-    wp_die("items = $items");
     if ($items > 0) {
         $p = new bb_agency_pagination;
         $p->items($items);
@@ -3195,9 +3205,9 @@ function bb_display_profile_list(){
         $p->adjacents(1); //No. of page away from the current page
 
         if(!isset($_GET['paging'])) {
-                $p->page = 1;
+            $p->page = 0;
         } else {
-                $p->page = $_GET['paging'];
+            $p->page = $_GET['paging'];
         }
 
         //Query for limit paging

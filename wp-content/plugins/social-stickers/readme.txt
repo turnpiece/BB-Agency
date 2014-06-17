@@ -3,8 +3,8 @@ Contributors: ZeroCool51
 Donate link: http://gum.co/social-stickers
 Tags: social profile, social icons, social, social widget, facebook, twitter, social widget
 Requires at least: 3.0
-Tested up to: 3.5
-Stable tag: 2.2.1
+Tested up to: 3.8
+Stable tag: 2.2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,80 +24,18 @@ What this plugin offers:
 * You can also output number of Twitter followers and Facebook page likes
 * Fully customize your HTML output
 
-Currently supported social networks:
+Currently supports over 70 social networks.
 
-* 500px
-* About Me
-* Academia.edu
-* AIM
-* Anobii
-* APP.net
-* Behance
-* Bebo
-* Blogconnect
-* Bloglovin
-* Blogger
-* Coderwall
-* Dailybooth
-* Delicious
-* Designfloat
-* Deviantart
-* Digg
-* Dribble
-* Ebay
-* Email
-* exfm
-* Etsy
-* Flickr
-* Facebook
-* Forrst
-* Formspring
-* Foursquare
-* Github
-* Geeklist
-* Goodreads
-* Google+
-* Gravatar
-* Grooveshark
-* Hi5
-* IMDB
-* Instagram
-* LastFM
-* Lovelybooks
-* Livejournal
-* Linkedin
-* Mixcloud
-* Myspace
-* Newsvine
-* Orkut
-* Picassa
-* Pinboard
-* Pinterest
-* Posterous
-* Ravelry
-* RSS
-* Snapjoy
-* Spotify
-* Skype
-* Stackoverflow
-* Quora
-* Qik
-* Slashdot
-* Spotify
-* Slideshare
-* Soundcloud
-* Steam
-* Stumbleupon
-* Tout
-* Tumblr
-* Twitter
-* Vimeo
-* Youtube
-* Yelp
-* Zerply
-* Zootool
-* Xing
-* Wordpress
+**WANT MORE?**
+
+**[GO PRO](https://gum.co/social-stickers-pro).**
+
+Features:
+
+* Drag and drop theme creation,
+* multisite compatibility,
+* shortcode generation,
+* stickers statistics in beautiful graphs
 
 == Installation ==
 
@@ -118,6 +56,12 @@ None at the moment.
 4. Plugin settings page (advanced plugin mode settings)
 
 == Changelog ==
+
+= 2.2.3 =
+* [New] Added SpecificFeeds network.
+
+= 2.2.2 =
+* [Fix] Fixed theme selection bug (clashing with Omnisearch).
 
 = 2.2.1 =
 * [Fix] Fixed a custom HTML output error (not showing icons correctly if using custom HTML output)

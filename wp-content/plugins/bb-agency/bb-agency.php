@@ -45,10 +45,10 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 	define("bb_agency_UPLOADDIR", $bb_agency_WPUPLOADARRAY['baseurl'] ."/profile-media/" );  // http://domain.com/wordpress/wp-content/uploads/profile-media/
 	define("bb_agency_UPLOADPATH", $bb_agency_WPUPLOADARRAY['basedir'] ."/profile-media/" ); // /home/content/99/6048999/html/domain.com/wordpress/wp-content/uploads/profile-media/
 	define("bb_agency_TEXTDOMAIN", basename(dirname( __FILE__ )) ); //   bb-agency
-	define("bb_agency_MUMSTOBE_ID", 1); // id of mums to be data type
-	define("bb_agency_AFTERBIRTH_ID", 2); // id of data type to move mums to be to once they've given birth
+	//define("bb_agency_MUMSTOBE_ID", 1); // id of mums to be data type
+	//define("bb_agency_AFTERBIRTH_ID", 2); // id of data type to move mums to be to once they've given birth
 	define("bb_agency_CLIENTS_ID", 7); // id of clients
-	define("bb_agency_BABIES_ID", 8); // id of babies
+	//define("bb_agency_BABIES_ID", 8); // id of babies
 
 	// email sending
 	define("bb_agency_SEND_EMAILS", false); // whether or not to send emails
