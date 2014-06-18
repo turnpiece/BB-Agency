@@ -168,13 +168,12 @@ elseif ($ConfigID == 1) {
                 'bb_agency_option_layoutprofile'
             ) as $key) {
             $value = isset($options[$key]) ? $options[$key] : 0;
-        echo "$key => $value<br />";
             bb_agency_update_option($key, $value);
         }
 
+        // reload options
         global $bb_options;
-        $o = bb_agency_reload_options();
-        ?><pre><?php print_r($o) ?></pre><?php
+        $bb_options = bb_agency_reload_options();
     }
 
     // load form

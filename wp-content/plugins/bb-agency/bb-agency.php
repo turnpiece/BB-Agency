@@ -140,9 +140,9 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 // Now Call the Lanuage
 	define("bb_agency_PROFILEDIR", get_bloginfo('wpurl') . bb_agency_getActiveLanguage() ."/profile/" ); // http://domain.com/wordpress/de/profile/
 
-// Load options
+// Load options from database
 	global $bb_options;
-	$bb_options = bb_agency_get_option();
+	$bb_options = bb_agency_reload_options();
 
 
 // *************************************************************************************************** //

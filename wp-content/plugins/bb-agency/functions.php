@@ -1162,8 +1162,6 @@
 			 //  Must be logged as "Client" to view model list and profile information
 			 ($bb_agency_option_privacy == 3 && is_user_logged_in() && is_client_profiletype()) ) {
 		// P R I V A C Y FILTER ====================================================
-			
-			echo 'print pdf = '.bb_agency_get_option('bb_agency_option_profilelist_printpdf');
 			if (get_query_var('target') != "print" && get_query_var('target') != "pdf") {
 				
 				if (isset($profilecastingcart)) {   //to tell prrint and pdf generators its for casting cart and new link
@@ -2098,7 +2096,7 @@ function bb_custom_fields($visibility = 0, $ProfileID, $ProfileGender, $ProfileG
 // Custom Fields TEMPLATE 
 function bb_custom_fields_template($visibility = 0, $ProfileID, $data3) {
 
-	$bb_options 				= bb_agency_get_option();
+//	$bb_options 						= bb_agency_get_option();
 	$bb_agency_option_unittype  		= bb_agency_get_option('bb_agency_option_unittype');
 	$bb_agency_option_profilenaming 	= (int)bb_agency_get_option('bb_agency_option_profilenaming');
 	$bb_agency_option_locationtimezone 	= (int)bb_agency_get_option('bb_agency_option_locationtimezone');
@@ -2351,7 +2349,7 @@ function bb_agency_get_miscellaneousLinks($ProfileID = "") {
 /*/		
 function bb_agency_get_new_miscellaneousLinks($ProfileID = "") {
  
-	$bb_options 				= bb_agency_get_option();
+//	$bb_options 				= bb_agency_get_option();
 	$bb_agency_option_profilelist_favorite		= bb_agency_get_option('bb_agency_option_profilelist_favorite');
 	$bb_agency_option_profilelist_castingcart 	= bb_agency_get_option('bb_agency_option_profilelist_castingcart');
 	bb_agency_checkExecution();
@@ -3805,7 +3803,7 @@ function bb_agency_map($lat, $lng, $name) {
 function bb_agency_get_option($name = null, $reload = false) {
 	global $bb_options;
 
-	if (!$bb_options || $reload) {
+	if (empty($bb_options) || $reload) {
 		$bb_options = get_option('bb_agency_options');
 	}
 
@@ -3827,11 +3825,15 @@ function bb_agency_get_option($name = null, $reload = false) {
  * @return boolean
  */
 function bb_agency_update_option($name, $value) {
-	$options = bb_agency_get_option();
+	global $bb_options;
 
-	$options[$name] = $value;
+	if (!$bb_options) {
+		$bb_options = get_option('bb_agency_options');
+	}
 
-	return update_option('bb_agency_options', $options);
+	$bb_options[$name] = $value;
+
+	return update_option('bb_agency_options', $bb_options);
 }
 
 function bb_agency_reload_options() {
