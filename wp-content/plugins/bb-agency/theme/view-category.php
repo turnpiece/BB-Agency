@@ -8,17 +8,17 @@ header("Cache-control: private"); //IE 6 Fix
 // Get Profile
 $ProfileType = get_query_var('target'); 
 
-if($ProfileType=="print"){  // print by custom
+if ($ProfileType=="print") {  // print by custom
 	//$ProfileType=$_GET['cname'];
-    $division=$_GET['gd'];
-	$ageStart=$_GET['ast'];
-	$ageStop=$_GET['asp'];
-	$type=$_GET['t'];
-	  include("printable-division.php"); 
-	 die();
+    $division = $_GET['gd'];
+	$ageStart = $_GET['ast'];
+	$ageStop = $_GET['asp'];
+	$type = $_GET['t'];
+	include("printable-division.php"); 
+	die();
 }
 
-if($ProfileType=="pdf"){  // print by custom
+if ($ProfileType=="pdf") {  // print by custom
     //$ProfileType=$_GET['cname'];
     $division=$_GET['gd'];
 	$ageStart=$_GET['ast'];
@@ -28,7 +28,7 @@ if($ProfileType=="pdf"){  // print by custom
 	 die();
 }
 
-if($ProfileType=="women-print"){  //request to print women division page
+if ($ProfileType=="women-print") {  //request to print women division page
     $division="2";
 	$ageStart="18";
 	$ageStop="99";
@@ -38,7 +38,7 @@ if($ProfileType=="women-print"){  //request to print women division page
 }
 
 
-if($ProfileType=="women-pdf"){  //request to PDF women division page
+if ($ProfileType=="women-pdf") {  //request to PDF women division page
     $division="2";
 	$ageStart="18";
 	$ageStop="99";
@@ -48,7 +48,7 @@ if($ProfileType=="women-pdf"){  //request to PDF women division page
 }
 
 
-if($ProfileType=="men-print"){  //request to print men division page
+if ($ProfileType=="men-print") {  //request to print men division page
     $division="1";
 	$ageStart="18";
 	$ageStop="99";
@@ -57,7 +57,7 @@ if($ProfileType=="men-print"){  //request to print men division page
 	 die();
 }
 
-if($ProfileType=="men-pdf"){  //request to PDF men division page
+if ($ProfileType=="men-pdf") {  //request to PDF men division page
     $division="1";
 	$ageStart="18";
 	$ageStop="99";
@@ -67,7 +67,7 @@ if($ProfileType=="men-pdf"){  //request to PDF men division page
 }
 
 
-if($ProfileType=="teen-boys-print"){  //request to print men division page
+if ($ProfileType=="teen-boys-print") {  //request to print men division page
     $division="1";
 	$ageStart="13";
 	$ageStop="18";
@@ -76,7 +76,7 @@ if($ProfileType=="teen-boys-print"){  //request to print men division page
 	 die();
 }
 
-if($ProfileType=="teen-boys-pdf"){  //request to PDF men division page
+if ($ProfileType=="teen-boys-pdf") {  //request to PDF men division page
     $division="1";
 	$ageStart="13";
 	$ageStop="18";
@@ -86,7 +86,7 @@ if($ProfileType=="teen-boys-pdf"){  //request to PDF men division page
 }
 
 
-if($ProfileType=="teen-girls-print"){  //request to print men division page
+if ($ProfileType=="teen-girls-print") {  //request to print men division page
     $division="2";
 	$ageStart="13";
 	$ageStop="18";
@@ -95,7 +95,7 @@ if($ProfileType=="teen-girls-print"){  //request to print men division page
 	 die();
 }
 
-if($ProfileType=="teen-girls-pdf"){  //request to PDF men division page
+if ($ProfileType=="teen-girls-pdf") {  //request to PDF men division page
     $division="2";
 	$ageStart="13";
 	$ageStop="18";
@@ -105,7 +105,7 @@ if($ProfileType=="teen-girls-pdf"){  //request to PDF men division page
 }
 
 
-if($ProfileType=="boys-print"){  //request to print men division page
+if ($ProfileType=="boys-print") {  //request to print men division page
     $division="1";
 	$ageStart="1";
 	$ageStop="12";
@@ -114,7 +114,7 @@ if($ProfileType=="boys-print"){  //request to print men division page
 	 die();
 }
 
-if($ProfileType=="boys-pdf"){  //request to PDF men division page
+if ($ProfileType=="boys-pdf") {  //request to PDF men division page
     $division="1";
 	$ageStart="1";
 	$ageStop="12";
@@ -124,7 +124,7 @@ if($ProfileType=="boys-pdf"){  //request to PDF men division page
 }
 
 
-if($ProfileType=="girls-print"){  //request to print men division page
+if ($ProfileType=="girls-print") {  //request to print men division page
     $division="2";
 	$ageStart="1";
 	$ageStop="12";
@@ -133,7 +133,7 @@ if($ProfileType=="girls-print"){  //request to print men division page
 	 die();
 }
 
-if($ProfileType=="girls-pdf"){  //request to PDF men division page
+if ($ProfileType=="girls-pdf") {  //request to PDF men division page
     $division="2";
 	$ageStart="1";
 	$ageStop="12";
@@ -144,7 +144,7 @@ if($ProfileType=="girls-pdf"){  //request to PDF men division page
 
 
 
-if (isset($ProfileType) && !empty($ProfileType)){
+if (isset($ProfileType) && !empty($ProfileType)) {
 	$DataTypeID = 0;
 	$DataTypeTitle = "";
 	$query = "SELECT DataTypeID, DataTypeTitle FROM ". table_agency_data_type ." WHERE DataTypeTag = '". $ProfileType ."'";
