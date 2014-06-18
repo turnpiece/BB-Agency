@@ -162,13 +162,19 @@ elseif ($ConfigID == 1) {
                 'bb_agency_option_showcontactpage',
                 'bb_agency_option_profilelist_favorite',
                 'bb_agency_option_profilelist_castingcart',
+                'bb_agency_option_profilelist_printpdf',
                 'bb_agency_option_privacy',
                 'bb_agency_option_pregnant',
                 'bb_agency_option_layoutprofile'
             ) as $key) {
             $value = isset($options[$key]) ? $options[$key] : 0;
+        echo "$key => $value<br />";
             bb_agency_update_option($key, $value);
         }
+
+        global $bb_options;
+        $o = bb_agency_reload_options();
+        ?><pre><?php print_r($o) ?></pre><?php
     }
 
     // load form

@@ -33,7 +33,6 @@
     $bb_agency_option_privacy = bb_agency_get_option('bb_agency_option_privacy');
         if (empty($bb_agency_option_privacy)) { $bb_agency_option_privacy = "0"; }
 
-    $bb_agency_option_pregnant = bb_agency_get_option('bb_agency_option_pregnant');
     ?>
 
    <input type="hidden" name="bb_agency_options[bb_agency_option_layoutprofile]" value="0" />
@@ -41,7 +40,13 @@
    <tr valign="top">
      <th scope="row"><?php _e('Pregnant Women', bb_agency_TEXTDOMAIN) ?></th>
      <td>
-       <input type="checkbox" name="bb_agency_options[bb_agency_option_pregnant]" value="1" <?php checked($bb_agency_option_pregnant, '1') ?> /> This site includes pregnant women and will deal with due dates as well as birth dates<br />
+       <input type="checkbox" name="bb_agency_options[bb_agency_option_pregnant]" value="1" <?php checked(bb_agency_get_option('bb_agency_option_pregnant'), '1') ?> /> This site includes pregnant women and will deal with due dates as well as birth dates<br />
+     </td>
+   </tr>
+    <tr valign="top">
+     <th scope="row"><?php _e('Print PDF', bb_agency_TEXTDOMAIN) ?></th>
+     <td>
+       <input type="checkbox" name="bb_agency_options[bb_agency_option_profilelist_printpdf]" value="1" <?php checked(bb_agency_get_option('bb_agency_option_profilelist_printpdf'), '1') ?> /> Show print PDF links on profile listing pages<br />
      </td>
    </tr>
     <tr valign="top">

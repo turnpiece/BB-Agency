@@ -715,7 +715,6 @@
 		$bb_agency_option_profilelist_favorite		 = bb_agency_get_option('bb_agency_option_profilelist_favorite');
 		$bb_agency_option_profilenaming				 = bb_agency_get_option('bb_agency_option_profilenaming');
 		$bb_agency_option_profilelist_castingcart 	 = bb_agency_get_option('bb_agency_option_profilelist_castingcart');
-		$bb_agency_option_profilelist_printpdf 	     = bb_agency_get_option('bb_agency_option_profilelist_printpdf');
 
 		// Set It Up	
 		global $wp_rewrite, $wpdb, $bb_agency_CURRENT_TYPE_ID;
@@ -1164,7 +1163,8 @@
 			 ($bb_agency_option_privacy == 3 && is_user_logged_in() && is_client_profiletype()) ) {
 		// P R I V A C Y FILTER ====================================================
 			
-			if(get_query_var('target')!="print" AND get_query_var('target')!="pdf") {
+			echo 'print pdf = '.bb_agency_get_option('bb_agency_option_profilelist_printpdf');
+			if (get_query_var('target') != "print" && get_query_var('target') != "pdf") {
 				
 				if (isset($profilecastingcart)) {   //to tell prrint and pdf generators its for casting cart and new link
 					$atts["type"]="casting";
@@ -1172,36 +1172,38 @@
 				}
 				
 				# print, downloads links to be added on top of profile list
-				$links='<div class="rblinks">';
+				$links='<div class="bblinks">';
 				  
-			       /*
-					* Set Print / PDF in Settings
-					*/
-					if(get_query_var('target')!="results" && $bb_agency_option_profilelist_printpdf) {// hide print and download PDF in Search result
-						$links.='
-						<div class="rbprint-download">
-					  		<a target="_blank" href="'.get_bloginfo('wpurl').'/profile-category/print/?gd='.$atts["gender"].'&ast='.$atts["age_from"].'&asp='.$atts["age_to"].'&t='.$atts["type"].'">Print</a></a>&nbsp;|&nbsp;<a target="_blank" href="'.get_bloginfo('wpurl').'/profile-category/pdf/?gd='.$atts["gender"].'&ast='.$atts["age_from"].'&asp='.$atts["age_to"].'&t='.$atts["type"].'">Download PDF</a>'.$addtionalLink.'
-					  	</div><!-- .rbprint-download -->';
-					}
-					  
-					$links.='<div class="rbfavorites-castings">';
+		       /*
+				* Set Print / PDF in Settings
+				*/
+				if (get_query_var('target') != "results" && bb_agency_get_option('bb_agency_option_profilelist_printpdf')) {// hide print and download PDF in Search result
+					$links.='
+					<div class="bbprint-download">
+				  		<a target="_blank" href="'.get_bloginfo('wpurl').'/profile-category/print/?gd='.$atts["gender"].'&ast='.$atts["age_from"].'&asp='.$atts["age_to"].'&t='.$atts["type"].'">Print</a></a>&nbsp;|&nbsp;<a target="_blank" href="'.get_bloginfo('wpurl').'/profile-category/pdf/?gd='.$atts["gender"].'&ast='.$atts["age_from"].'&asp='.$atts["age_to"].'&t='.$atts["type"].'">Download PDF</a>'.$addtionalLink.'
+				  	</div><!-- .bbprint-download -->';
+				}
+				  
+				$links.='<div class="bbfavorites-castings">';
 
-					if(is_permitted("favorite")) {
-						if(bb_agency_get_option('bb_agency_option_profilelist_favorite')==1) {
-								$links.='<a href="'.get_bloginfo('siteurl').'/profile-favorite/">'.__("View Favorites", bb_agency_TEXTDOMAIN).'</a>';
+				if(is_permitted("favorite")) {
+					if(bb_agency_get_option('bb_agency_option_profilelist_favorite')==1) {
+							$links.='<a href="'.get_bloginfo('siteurl').'/profile-favorite/">'.__("View Favorites", bb_agency_TEXTDOMAIN).'</a>';
+					}
+				}
+
+				if(is_permitted("casting")) {
+					if($_SERVER['REQUEST_URI']!="/profile-casting/") {
+						if(bb_agency_get_option('bb_agency_option_profilelist_castingcart')==1) {
+							if(bb_agency_get_option('bb_agency_option_profilelist_favorite')==1) {
+								$links.='&nbsp;|&nbsp;';
+							}
+							$links.='<a href="'.get_bloginfo('siteurl').'/profile-casting/">'.__("Casting Cart", bb_agency_TEXTDOMAIN).'</a>';
 						}
 					}
-
-					if(is_permitted("casting")) {
-						if($_SERVER['REQUEST_URI']!="/profile-casting/") {
-								if(bb_agency_get_option('bb_agency_option_profilelist_castingcart')==1) {
-										if(bb_agency_get_option('bb_agency_option_profilelist_favorite')==1) {$links.='&nbsp;|&nbsp;';}
-										$links.='<a href="'.get_bloginfo('siteurl').'/profile-casting/">'.__("Casting Cart", bb_agency_TEXTDOMAIN).'</a>';
-								}
-						}
-					}    
-					$links.='</div><!-- .rbfavorites-castings -->
-				</div><!-- .rblinks -->';			
+				}    
+				$links.='</div><!-- .bbfavorites-castings -->
+				</div><!-- .bblinks -->';			
 			}
 		
 		  	//remove  if its just for client view of listing via casting email
@@ -3800,10 +3802,10 @@ function bb_agency_map($lat, $lng, $name) {
  * @return mixed
  *
  */
-function bb_agency_get_option($name = null) {
+function bb_agency_get_option($name = null, $reload = false) {
 	global $bb_options;
 
-	if (!$bb_options) {
+	if (!$bb_options || $reload) {
 		$bb_options = get_option('bb_agency_options');
 	}
 
@@ -3817,12 +3819,23 @@ function bb_agency_get_option($name = null) {
 		return $bb_options;
 }
 
+/**
+ * bbagency update option
+ *
+ * @param string $key
+ * @param string $value
+ * @return boolean
+ */
 function bb_agency_update_option($name, $value) {
 	$options = bb_agency_get_option();
 
 	$options[$name] = $value;
 
 	return update_option('bb_agency_options', $options);
+}
+
+function bb_agency_reload_options() {
+	return bb_agency_get_option(null, true);
 }
 
 function bb_agency_datatype_privacy($id) {

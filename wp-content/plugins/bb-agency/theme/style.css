@@ -82,16 +82,16 @@
 }
 
 /* RBLinks */
-.rblinks {
+.bblinks {
 	clear: both;
 	font-size: 13px;
 	padding: 15px 0;
 	overflow: hidden;
 }
-.rblinks .rbprint-download {
+.bblinks .bbprint-download {
 	float: left;
 }
-.rblinks .rbfavorites-castings {
+.bblinks .bbfavorites-castings {
 	float: right;
 }
 
