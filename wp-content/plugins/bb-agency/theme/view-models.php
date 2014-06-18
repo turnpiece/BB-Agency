@@ -53,7 +53,7 @@ if (have_posts()) : the_post();
     }
     
     //the_content();
-    bb_agency_profilelist(array('type' => get_query_var('value')));
+    bb_agency_profile_list(array('type' => get_query_var('value')));
     
     wp_link_pages(array( 
         'before' => '<div class="subpage_nav" role="navigation">' . '<strong>' . __('Pages', 'cmsmasters') . ':</strong>', 

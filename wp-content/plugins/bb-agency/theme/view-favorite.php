@@ -44,9 +44,9 @@ get_header();
 		echo "	    <td class=\"profile-category-results-wrapper\">\n";
 		echo "			<div class=\"profile-category-results\">\n";
 	
-						if (function_exists('bb_agency_profilelist')) { 
+						if (function_exists('bb_agency_profile_list')) { 
 						  $atts = array("type" => $DataTypeID,"profilefavorite" => true);
-						  bb_agency_profilelist($atts); 
+						  bb_agency_profile_list($atts); 
 						}
 									
 		echo "			</div>\n";

@@ -178,9 +178,9 @@ get_header();
 
 		echo "			<div id=\"profile-category-results\">\n";
 	
-						if (function_exists('bb_agency_profilelist')) { 
+						if (function_exists('bb_agency_profile_list')) { 
 						  $atts = array("type" => $DataTypeID);
-						  bb_agency_profilelist($atts); 
+						  bb_agency_profile_list($atts); 
 						}
 									
 		echo "			</div><!-- #profile-category-results -->\n";

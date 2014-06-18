@@ -25,9 +25,9 @@ echo "    <div id=\"content\" role=\"main\" class=\"transparent\">\n";
 		while ($data = mysql_fetch_array($results)) {
 			 $SearchProfileID = $data['SearchProfileID'];
                      
-			if (function_exists('bb_agency_profilelist')) { 
+			if (function_exists('bb_agency_profile_list')) { 
 				$atts = array("pagingperpage" => 9999, "getprofile_saved" => $SearchProfileID);
-				bb_agency_profilelist($atts); 
+				bb_agency_profile_list($atts); 
 			}
 		}
 

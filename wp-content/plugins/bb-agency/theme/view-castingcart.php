@@ -152,9 +152,9 @@ get_header(); ?>
 		  if(isset($_GET["emailSent"])){ echo "<div id=\"emailSent\">Email Sent Succesfully! Go Back to <a href=\"". get_bloginfo("url")."/search/\">Search</a>.</div>";    }
 		echo "			<div class=\"profile-category-results\" id=\"profile-category-results\">\n";
 	
-						if (function_exists('bb_agency_profilelist')) { 
+						if (function_exists('bb_agency_profile_list')) { 
 						  $atts = array("type" => $DataTypeID,"profilecastingcart" => true);
-						  bb_agency_profilelist($atts); 
+						  bb_agency_profile_list($atts); 
 						}
 									
 		echo "			</div>\n";

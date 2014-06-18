@@ -169,8 +169,8 @@ get_header(); ?>
 			<div id="profile-search-results">
 				<?php if ($_REQUEST["action"] == "search") :
                      
-				if (function_exists('bb_agency_profilelist')) { 
-					bb_agency_profilelist($filterArray); 
+				if (function_exists('bb_agency_profile_list')) { 
+					bb_agency_profile_list($filterArray); 
 				}
 				?>
 				<?php else : ?>

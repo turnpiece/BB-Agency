@@ -566,7 +566,7 @@ if ( is_admin() ){
 				include(dirname(__FILE__).'/theme/include-login.php');
 			} else {
 				// display the list of profiles
-				bb_agency_profilelist($atts);				
+				bb_agency_profile_list($atts);				
 			}
 			$output_string = ob_get_contents();;
 			ob_end_clean();
