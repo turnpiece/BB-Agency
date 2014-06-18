@@ -45,10 +45,7 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 	define("bb_agency_UPLOADDIR", $bb_agency_WPUPLOADARRAY['baseurl'] ."/profile-media/" );  // http://domain.com/wordpress/wp-content/uploads/profile-media/
 	define("bb_agency_UPLOADPATH", $bb_agency_WPUPLOADARRAY['basedir'] ."/profile-media/" ); // /home/content/99/6048999/html/domain.com/wordpress/wp-content/uploads/profile-media/
 	define("bb_agency_TEXTDOMAIN", basename(dirname( __FILE__ )) ); //   bb-agency
-	//define("bb_agency_MUMSTOBE_ID", 1); // id of mums to be data type
-	//define("bb_agency_AFTERBIRTH_ID", 2); // id of data type to move mums to be to once they've given birth
-	define("bb_agency_CLIENTS_ID", 7); // id of clients
-	//define("bb_agency_BABIES_ID", 8); // id of babies
+
 
 	// email sending
 	define("bb_agency_SEND_EMAILS", false); // whether or not to send emails
@@ -147,8 +144,16 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 	global $bb_options;
 	$bb_options = bb_agency_get_option();
 
+
 // *************************************************************************************************** //
-	
+// Settings for Beautiful Bumps & Kiddiwinks
+
+	if (bb_agency_get_option('bb_agency_option_pregnant')) {
+		define("bb_agency_MUMSTOBE_ID", 1); // id of mums to be data type
+		define("bb_agency_AFTERBIRTH_ID", 2); // id of data type to move mums to be to once they've given birth
+	}
+	define("bb_agency_CLIENTS_ID", 7); // id of clients
+	//define("bb_agency_BABIES_ID", 8); // id of babies
 
 
 // *************************************************************************************************** //
@@ -156,7 +161,7 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 
 	function bb_agency_install() {
 		// Required for all WordPress database manipulations
-		global $wpdb;
+		global $wpdb, $bb_options;
 		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 		
 		// Ensure directory is setup
@@ -167,12 +172,14 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
            
 		// Update the options in the database
 		if(!get_option("bb_agency_options"))
-		add_option("bb_agency_options",$bb_options);
+			add_option("bb_agency_options",$bb_options);
+
 		update_option("bb_agency_options",$bb_options);
 		
 		// Hold the version in a seprate option
 		if(!get_option("bb_agency_version"))
-		add_option("bb_agency_version", $bb_agency_VERSION);
+			add_option("bb_agency_version", $bb_agency_VERSION);
+		
 		update_option("bb_agency_version", $bb_agency_VERSION);
 		
 		/*

@@ -30,7 +30,7 @@
 </p>
 <?php
 
-if (isset($_REQUEST['action']) && !empty($_REQUEST['action']) ) {
+if (!empty($_REQUEST['action']) ) {
 	if ($_REQUEST['action'] == 'douninstall') {
 		bb_agency_uninstall();
 	}
@@ -148,229 +148,33 @@ if ($ConfigID == 0) {
 elseif ($ConfigID == 1) {
 // *************************************************************************************************** //
 // Manage Settings
-    echo "<h3>". __("Settings", bb_agency_TEXTDOMAIN) . "</h3>\n";
-		echo "<form method=\"post\" action=\"options.php\">\n";
-		settings_fields( 'bb-agency-settings-group' ); 
-		//do_settings_fields( 'bb-agency-settings-group' );
-		$bb_options = bb_agency_get_option();
-		
-		$bb_agency_value_agencyname = bb_agency_get_option('bb_agency_option_agencyname');
-			if (empty($bb_agency_value_agencyname)) { $bb_agency_value_agencyname = get_bloginfo('name'); }
-		$bb_agency_value_agencyemail = bb_agency_get_option('bb_agency_option_agencyemail');
-			if (empty($bb_agency_value_agencyemail)) { $bb_agency_value_agencyemail = get_bloginfo('admin_email'); }
-		$bb_agency_value_maxwidth = bb_agency_get_option('bb_agency_option_agencyimagemaxwidth');
-			if (empty($bb_agency_value_maxwidth)) { $bb_agency_value_maxwidth = "1000"; }
-		$bb_agency_value_maxheight = bb_agency_get_option('bb_agency_option_agencyimagemaxheight');
-			if (empty($bb_agency_value_maxheight)) { $bb_agency_value_maxheight = "800"; }
-		$bb_agency_option_locationcountry = bb_agency_get_option('bb_agency_option_locationcountry');
-			if (empty($bb_agency_option_locationcountry)) { $bb_agency_option_locationcountry = "UK"; }
-		$bb_agency_option_profilelist_perpage = bb_agency_get_option('bb_agency_option_profilelist_perpage');
-			if (empty($bb_agency_option_profilelist_perpage)) { $bb_agency_option_profilelist_perpage = "20"; }
-		$bb_agency_option_persearch = bb_agency_get_option('bb_agency_option_persearch');
-			if (empty($bb_agency_option_persearch)) { $bb_agency_option_persearch = "100"; }
-		$bb_agency_option_showcontactpage = bb_agency_get_option('bb_agency_option_showcontactpage');
-			if (empty($bb_agency_option_showcontactpage)) { $bb_agency_option_showcontactpage = "0"; }
-		
-		$bb_agency_option_profilelist_favorite = bb_agency_get_option('bb_agency_option_profilelist_favorite');
-			if (empty($bb_agency_option_profilelist_favorite)) { $bb_agency_option_profilelist_favorite = "1"; }
-		$bb_agency_option_profilelist_castingcart = bb_agency_get_option('bb_agency_option_profilelist_castingcart');
-			if (empty($bb_agency_option_profilelist_castingcart)) { $bb_agency_option_profilelist_castingcart = "1"; }
-	
-		$bb_agency_option_privacy = bb_agency_get_option('bb_agency_option_privacy');
-			if (empty($bb_agency_option_privacy)) { $bb_agency_option_privacy = "0"; }
+    if (isset($_REQUEST['action'])) {
+        // process submitted form
+        $options = $_REQUEST['bb_agency_options'];
+        foreach (
+            array(
+                'bb_agency_option_agencyname',
+                'bb_agency_option_agencyemail',
+                'bb_agency_option_locationcountry',
+                'bb_agency_option_profiledeletion',
+                'bb_agency_option_profilelist_perpage',
+                'bb_agency_option_persearch',
+                'bb_agency_option_showcontactpage',
+                'bb_agency_option_profilelist_favorite',
+                'bb_agency_option_profilelist_castingcart',
+                'bb_agency_option_privacy',
+                'bb_agency_option_pregnant',
+                'bb_agency_option_layoutprofile'
+            ) as $key) {
+            $value = isset($options[$key]) ? $options[$key] : 0;
+            bb_agency_update_option($key, $value);
+        }
+    }
 
-		 echo "<input type=\"hidden\" name=\"bb_agency_options[bb_agency_option_layoutprofile]\" value=\"0\" />\n";	// only have one layout for now	
-		 echo "<table class=\"form-table\">\n";
-		 echo " <tr valign=\"top\">\n";
-		 echo "   <th scope=\"row\">". __('Database Version', bb_agency_TEXTDOMAIN); echo "</th>\n";
-		 echo "   <td><input name=\"bb_agency_version\" value=\"". bb_agency_VERSION ."\" disabled /></td>\n";
-		 echo " </tr>\n";
-		 echo " <tr valign=\"top\">\n";
-		 echo "   <th scope=\"row\" colspan=\"2\"><h3>". __('Agency Details', bb_agency_TEXTDOMAIN); echo "</h3></th>\n";
-		 echo " </tr>\n";
-		 echo " <tr valign=\"top\">\n";
-		 echo "   <th scope=\"row\">". __('Agency Name', bb_agency_TEXTDOMAIN); echo "</th>\n";
-		 echo "   <td><input name=\"bb_agency_options[bb_agency_option_agencyname]\" value=\"". $bb_agency_value_agencyname ."\" /></td>\n";
-		 echo " </tr>\n";
-		 echo " <tr valign=\"top\">\n";
-		 echo "   <th scope=\"row\">". __('Agency Email', bb_agency_TEXTDOMAIN); echo "</th>\n";
-		 echo "   <td><input name=\"bb_agency_options[bb_agency_option_agencyemail]\" value=\"". $bb_agency_value_agencyemail ."\" /></td>\n";
-		 echo " </tr>\n";
-		 
-		 echo " <tr valign=\"top\">\n";
-		 echo "   <th scope=\"row\" colspan=\"2\"><h3>". __('Location Options', bb_agency_TEXTDOMAIN); echo "</h3></th>\n";
-		 echo " </tr>\n";
-		 echo " <tr valign=\"top\">\n";
-		 echo "   <th scope=\"row\">". __('Default Country', bb_agency_TEXTDOMAIN) ."</th>\n";
-		 echo "   <td><input name=\"bb_agency_options[bb_agency_option_locationcountry]\" value=\"". $bb_agency_option_locationcountry ."\" /></td>\n";
-		 echo " </tr>\n";
-		 echo " <tr valign=\"top\">\n";
-		 echo "   <th scope=\"row\">". __('Server Timezone', bb_agency_TEXTDOMAIN) ."</th>\n";
-		 echo "   <td>\n";
-		 echo "     <select name=\"bb_agency_options[bb_agency_option_locationtimezone]\">\n";
-		 echo "       <option value=\"+12\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "+12",false) ."> UTC+12</option>\n";
-		 echo "       <option value=\"+11\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "+11",false) ."> UTC+11</option>\n";
-		 echo "       <option value=\"+10\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "+10",false) ."> UTC+10</option>\n";
-		 echo "       <option value=\"+9\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "+9",false) ."> UTC+9</option>\n";
-		 echo "       <option value=\"+8\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "+8",false) ."> UTC+8</option>\n";
-		 echo "       <option value=\"+7\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "+7",false) ."> UTC+7</option>\n";
-		 echo "       <option value=\"+6\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "+6",false) ."> UTC+6</option>\n";
-		 echo "       <option value=\"+5\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "+5",false) ."> UTC+5</option>\n";
-		 echo "       <option value=\"+4\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "+4",false) ."> UTC+4</option>\n";
-		 echo "       <option value=\"+3\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "+3",false) ."> UTC+3</option>\n";
-		 echo "       <option value=\"+2\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "+2",false) ."> UTC+2</option>\n";
-		 echo "       <option value=\"+1\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "+1",false) ."> UTC+1</option>\n";
-		 echo "       <option value=\"0\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "0",false) ."> UTC 0</option>\n";
-		 echo "       <option value=\"-1\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "-1",false) ."> UTC-1</option>\n";
-		 echo "       <option value=\"-2\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "-2",false) ."> UTC-2</option>\n";
-		 echo "       <option value=\"-3\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "-3",false) ."> UTC-3</option>\n";
-		 echo "       <option value=\"-4\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "-4",false) ."> UTC-4</option>\n";
-		 echo "       <option value=\"-5\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "-5",false) ."> UTC-5</option>\n";
-		 echo "       <option value=\"-6\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "-6",false) ."> UTC-6</option>\n";
-		 echo "       <option value=\"-7\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "-7",false) ."> UTC-7</option>\n";
-		 echo "       <option value=\"-8\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "-8",false) ."> UTC-8</option>\n";
-		 echo "       <option value=\"-9\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "-9",false) ."> UTC-9</option>\n";
-		 echo "       <option value=\"-10\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "-10",false) ."> UTC-10</option>\n";
-		 echo "       <option value=\"-11\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "-11",false) ."> UTC-11</option>\n";
-		 echo "       <option value=\"-12\" ". selected(bb_agency_get_option('bb_agency_option_locationtimezone'), "-12",false) ."> UTC-12</option>\n";
-		 echo "     </select> (<a href=\"http://www.worldtimezone.com/index24.php\" target=\"_blank\">Find</a>)\n";
-		 echo "   </td>\n";
-		 echo " </tr>\n";
-		 
-		 
-		 echo " <tr valign=\"top\">\n";
-		 echo "   <th scope=\"row\">". __('Unit Type', bb_agency_TEXTDOMAIN) ."</th>\n";
-		 echo "   <td>\n";
-		 echo "     <select name=\"bb_agency_options[bb_agency_option_unittype]\">\n";
-		 echo "       <option value=\"1\" ". selected(bb_agency_get_option('bb_agency_option_unittype'), 1,false) ."> ". __("Imperial", bb_agency_TEXTDOMAIN) ." (ft/in/lb)</option>\n";
-		 echo "       <option value=\"0\" ". selected(bb_agency_get_option('bb_agency_option_unittype'), 0,false) ."> ". __("Metric", bb_agency_TEXTDOMAIN) ." (cm/kg)</option>\n";
-		 echo "     </select>\n";
-		 echo "   </td>\n";
-		 echo " </tr>\n";
-		 echo " <tr valign=\"top\">\n";
-		 echo "   <th scope=\"row\" colspan=\"2\"><h3>". __('Profile List Options', bb_agency_TEXTDOMAIN); echo "</h3></th>\n";
-		 echo " </tr>\n";
-		 echo " <tr valign=\"top\">\n";
-		 echo "   <th scope=\"row\">". __('Display', bb_agency_TEXTDOMAIN) ."</th>\n";
-		 echo "   <td>\n";
-		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_count]\" value=\"1\" ".checked(bb_agency_get_option('bb_agency_option_profilelist_count'), 1,false)."/> ". __("Show Model Count", bb_agency_TEXTDOMAIN) ."<br />\n";
-		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_sortby]\" value=\"1\" ".checked(bb_agency_get_option('bb_agency_option_profilelist_sortby'), 1,false)."/> ". __("Show Sort Options", bb_agency_TEXTDOMAIN) ."<br />\n";
-		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_expanddetails]\" value=\"1\" ".checked(bb_agency_get_option('bb_agency_option_profilelist_expanddetails'), 1,false)."/> ". __("Expanded Model Details", bb_agency_TEXTDOMAIN) ."<br />\n";
-		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_favorite]\" value=\"1\" ".checked(bb_agency_get_option('bb_agency_option_profilelist_favorite'), 1,false)."/> ". __("Enable Model Favorites", bb_agency_TEXTDOMAIN) ."<br />\n";
-		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_sidebar]\" value=\"1\" ".checked(bb_agency_get_option('bb_agency_option_profilelist_sidebar'), 1,false)."/> ". __("Show Sidebar", bb_agency_TEXTDOMAIN) ."<br />\n";
-		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_castingcart]\" value=\"1\" ".checked(bb_agency_get_option('bb_agency_option_profilelist_castingcart'), 1,false)."/> ". __("Show Casting Cart", bb_agency_TEXTDOMAIN) ."<br />\n";
-		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_thumbsslide]\" value=\"1\" ".checked(bb_agency_get_option('bb_agency_option_profilelist_thumbsslide'), 1,false)."/> ". __("Show Thumbs Slide", bb_agency_TEXTDOMAIN) ."<br />\n";	
-		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_bday]\" value=\"1\" ".checked(bb_agency_get_option('bb_agency_option_profilelist_bday'), 1,false)."/> ". __("Show Birthday With Months", bb_agency_TEXTDOMAIN) ."<br />\n";	
-		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_printpdf]\" value=\"1\" ".checked(bb_agency_get_option('bb_agency_option_profilelist_printpdf'), 1,false)."/> ". __("Show Print and Download PDF Link", bb_agency_TEXTDOMAIN) ."<br />\n";	
-                 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_profilelist_subscription]\" value=\"1\" ".checked(bb_agency_get_option('bb_agency_option_profilelist_subscription'), 1,false)."/> ". __("Show Manage Your Subscription", bb_agency_TEXTDOMAIN) ."<br />\n";	
-                 echo "   </td>\n";
-		 echo " </tr>\n";
-		 echo " <tr valign=\"top\">\n";
-		 echo "   <th scope=\"row\">". __('Profiles Per Page', bb_agency_TEXTDOMAIN) ."</th>\n";
-		 echo "   <td><input name=\"bb_agency_options[bb_agency_option_profilelist_perpage]\" value=\"". $bb_agency_option_profilelist_perpage ."\" /></td>\n";
-		 echo " </tr>\n";
-		 echo " <tr valign=\"top\">\n";
-		 echo "   <th scope=\"row\">". __('Profiles Max Per Search', bb_agency_TEXTDOMAIN) ."</th>\n";
-		 echo "   <td><input name=\"bb_agency_options[bb_agency_option_persearch]\" value=\"". $bb_agency_option_persearch ."\" /></td>\n";
-		 echo " </tr>\n";
-                 
- 		 echo " <tr valign=\"top\">\n";
-		 echo "   <th scope=\"row\" colspan=\"2\"><h3>". __('Allow Profile Deletion', bb_agency_TEXTDOMAIN); echo "</h3></th>\n";
-		 echo " </tr>\n";
-		 echo " <tr valign=\"top\">\n";
-		 echo "   <th scope=\"row\">". __('Delete Options', bb_agency_TEXTDOMAIN) ."</th>\n";
-		 echo "   <td>\n";
-		 echo "     <input type=\"radio\" name=\"bb_agency_options[bb_agency_option_profiledeletion]\" value=\"1\" ".checked(bb_agency_get_option('bb_agency_option_profiledeletion'), 1,false)."/> ". __("No", bb_agency_TEXTDOMAIN) ."<br />\n";
-		 echo "     <input type=\"radio\" name=\"bb_agency_options[bb_agency_option_profiledeletion]\" value=\"2\" ".checked(bb_agency_get_option('bb_agency_option_profiledeletion'), 2,false)."/> ". __("Yes (Allow USers to delete)", bb_agency_TEXTDOMAIN) ."<br />\n";
-		 echo "     <input type=\"radio\" name=\"bb_agency_options[bb_agency_option_profiledeletion]\" value=\"3\" ".checked(bb_agency_get_option('bb_agency_option_profiledeletion'), 3,false)."/> ". __("Archive Only (Users can remove themselves as active but profile remains)", bb_agency_TEXTDOMAIN) ."<br />\n";
-                 echo "   </td>\n";
-		 echo " </tr>\n";		 
-		                 
-		 echo " <tr valign=\"top\">\n";
-		 echo "   <th scope=\"row\" colspan=\"2\"><h3>". __('Profile View Options', bb_agency_TEXTDOMAIN) ."</h3></th>\n";
-		 echo " </tr>\n";
-		 echo " <tr valign=\"top\">\n";
-		 echo "   <th scope=\"row\">". __('Path to Logo', bb_agency_TEXTDOMAIN) ."</th>\n";
-		 echo "   <td><input name=\"bb_agency_options[bb_agency_option_agencylogo]\" value=\"". bb_agency_get_option('bb_agency_option_agencylogo') ."\" /></td>\n";
-		 echo " </tr>\n";
-		 echo " <tr valign=\"top\">\n";
-		 echo "   <th scope=\"row\">". __('Email Header', bb_agency_TEXTDOMAIN) ."</th>\n";
-		 echo "   <td><input name=\"bb_agency_options[bb_agency_option_agencyheader]\" value=\"". bb_agency_get_option('bb_agency_option_agencyheader') ."\" /></td>\n";
-		 echo " </tr>\n";
-		 echo " <tr valign=\"top\">\n";
-		 echo "   <th scope=\"row\">". __('Resize Images', bb_agency_TEXTDOMAIN) ."</th>\n";
-		 echo "   <td>";
-					 _e('Maximum Width', bb_agency_TEXTDOMAIN); echo ": <input name=\"bb_agency_options[bb_agency_option_agencyimagemaxwidth]\" value=\"". $bb_agency_value_maxwidth ."\" style=\"width: 80px;\" />\n";
-					 _e('Maximum Height', bb_agency_TEXTDOMAIN); echo ": <input name=\"bb_agency_options[bb_agency_option_agencyimagemaxheight]\" value=\"". $bb_agency_value_maxheight ."\" style=\"width: 80px;\" />\n";
-		 echo "   </td>\n";
-		 echo " </tr>\n";
-		 echo " <tr valign=\"top\">\n";
-		 echo "   <th scope=\"row\">". __('Profile Name Format', bb_agency_TEXTDOMAIN) ."</th>\n";
-		 echo "   <td>\n";
-		 echo "     <select name=\"bb_agency_options[bb_agency_option_profilenaming]\">\n";
-		 echo "       <option value=\"0\" ". selected(bb_agency_get_option('bb_agency_option_profilenaming'), 0,false) ."> ". __("First Last", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "       <option value=\"1\" ". selected(bb_agency_get_option('bb_agency_option_profilenaming'), 1,false) ."> ". __("First L", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "       <option value=\"4\" ". selected(bb_agency_get_option('bb_agency_option_profilenaming'), 4,false) ."> ". __("First", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "       <option value=\"5\" ". selected(bb_agency_get_option('bb_agency_option_profilenaming'), 5,false) ."> ". __("Last", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "       <option value=\"2\" ". selected(bb_agency_get_option('bb_agency_option_profilenaming'), 2,false) ."> ". __("Display Name", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "       <option value=\"3\" ". selected(bb_agency_get_option('bb_agency_option_profilenaming'), 3,false) ."> ". __("Auto Generated Record ID", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "     </select>\n";
-		 echo "   </td>\n";
-		 echo " </tr>\n";
-		 echo " <tr valign=\"top\">\n";
-		 echo "   <th scope=\"row\">". __('Profile List Style', bb_agency_TEXTDOMAIN) ."</th>\n";
-		 echo "   <td>\n";
-		 echo "     <select name=\"bb_agency_options[bb_agency_option_layoutprofilelist]\">\n";
-		 echo "       <option value=\"0\" ". selected(bb_agency_get_option('bb_agency_option_layoutprofilelist'), 0,false) ."> ". __("Name Over Image", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "       <option value=\"1\" ". selected(bb_agency_get_option('bb_agency_option_layoutprofilelist'), 1,false) ."> ". __("Name Under Image with Color", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "       <option value=\"2\" ". selected(bb_agency_get_option('bb_agency_option_layoutprofilelist'), 2,false) ."> ". __("Name Under Image", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "     </select>\n";
-		 echo "   </td>\n";
-		 echo " </tr>\n";
-		 echo " <tr valign=\"top\" style=\"display:none\">\n";
-		 echo "   <th scope=\"row\">". __('Image Gallery Type', bb_agency_TEXTDOMAIN) ."</th>\n";
-		 echo "   <td>\n";
-		 echo "     <select name=\"bb_agency_options[bb_agency_option_gallerytype]\">\n";
-		 echo "       <option value=\"1\" ". selected(bb_agency_get_option('bb_agency_option_gallerytype'), 1,false) ."> ". __("Slimbox Popup", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "       <option value=\"2\" ". selected(bb_agency_get_option('bb_agency_option_gallerytype'), 2,false) ."> ". __("Pretty Photo", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "       <option value=\"9\" ". selected(bb_agency_get_option('bb_agency_option_gallerytype'), 9,false) ."> ". __("No Gallery, Deregister jQuery", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "       <option value=\"0\" ". selected(bb_agency_get_option('bb_agency_option_gallerytype'), 0,false) ."> ". __("No Gallery", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "     </select>\n";
-		 echo "   </td>\n";
-		 echo " </tr>\n";
-		 echo " <tr valign=\"top\">\n";
-		 echo "   <th scope=\"row\">". __('Image Gallery Sort Order', bb_agency_TEXTDOMAIN) ."</th>\n";
-		 echo "   <td>\n";
-		 echo "     <select name=\"bb_agency_options[bb_agency_option_galleryorder]\">\n";
-		 echo "       <option value=\"1\" ". selected(bb_agency_get_option('bb_agency_option_galleryorder'), 1,false) ."> ". __("Show most recently uploaded first", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "       <option value=\"0\" ". selected(bb_agency_get_option('bb_agency_option_galleryorder'), 0,false) ."> ". __("Show chronological order", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "     </select>\n";
-		 echo "   </td>\n";
-		 echo " </tr>\n";
-		 echo " <tr valign=\"top\">\n";
-		 echo "   <th scope=\"row\">". __('Privacy Settings', bb_agency_TEXTDOMAIN) ."</th>\n";
-		 echo "   <td>\n";
-		 echo "     <select name=\"bb_agency_options[bb_agency_option_privacy]\">\n";
-		 echo "       <option value=\"2\" ". selected($bb_agency_option_privacy, 2,false) ."> ". __("Must be logged to view model list and profile information", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "       <option value=\"1\" ". selected($bb_agency_option_privacy, 1,false) ."> ". __("Model list public. Must be logged to view profile information", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "       <option value=\"0\" ". selected($bb_agency_option_privacy, 0,false) ."> ". __("Model list and profile information public", bb_agency_TEXTDOMAIN) ."</option>\n";
-		 echo "     </select>\n";
-		 echo "   </td>\n";
-		 echo " </tr>\n";
-		 echo " <tr valign=\"top\">\n";
-		 echo "   <th scope=\"row\">". __('Show Fields', bb_agency_TEXTDOMAIN) ."</th>\n";
-		 echo "   <td>\n";
-		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_showsocial]\" value=\"1\" ".checked(bb_agency_get_option('bb_agency_option_showsocial'), 1,false)."/> Extended Social Profiles<br />\n";
-		 echo "     <input type=\"checkbox\" name=\"bb_agency_options[bb_agency_option_advertise]\" value=\"1\" ".checked(bb_agency_get_option('bb_agency_option_advertise'), 1,false)."/> Remove Updates on Dashboard<br />\n";
-		 echo "   </td>\n";
-		 echo " </tr>\n";
+    // load form
+    include(dirname(__FILE__).'/settings/general.php');
 
-	
-		 echo "</table>\n";
-		 echo "<input type=\"submit\" class=\"button-primary\" value=\"". __('Save Changes') ."\" />\n";
-		  echo "<input type=\"hidden\" name=\"bb_agency_options[bb_agency_options_showtooltip]\" value=\"1\"/>";
-		 echo "</form>\n";
-}	 // End	
+}	
 elseif ($ConfigID == 2) {
     $table = table_agency_profile;
     $addressFields = array(                    
@@ -1385,7 +1189,7 @@ elseif ($ConfigID == 7) {
 	/** Identify Labels **/
 	define("LabelPlural", __("Custom Fields", bb_agency_TEXTDOMAIN));
 	define("LabelSingular", __("Custom Field", bb_agency_TEXTDOMAIN));
-	$bb_options = bb_agency_get_option();
+
 	$bb_agency_option_unittype  = bb_agency_get_option('bb_agency_option_unittype');
 	
   /* Initial Registration [RESPOND TO POST] ***********/ 
