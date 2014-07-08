@@ -53,7 +53,9 @@ if (isset($_POST['action'])) {
     }
     $ProfileGender = $_POST['ProfileGender'];
     $ProfileDateBirth = $_POST['ProfileDateBirth'];
-    $ProfileDateDue = $_POST['ProfileDateDue'];
+    if (bb_agency_SITETYPE == 'bumps') {
+        $ProfileDateDue = $_POST['ProfileDateDue'];
+    }
     $ProfileContactEmail = $_POST['ProfileContactEmail'];
     $ProfileUsername = $_POST["ProfileUsername"];
     $ProfilePassword = $_POST['ProfilePassword'];
@@ -602,7 +604,9 @@ function bb_display_manage($ProfileID) {
             $ProfileTypeArray = stripslashes($data['ProfileType']);
            
 			$ProfileDateBirth = stripslashes($data['ProfileDateBirth']);
-            $ProfileDateDue = stripslashes($data['ProfileDateDue']);
+            if (bb_agency_SITETYPE == 'bumps') {
+                $ProfileDateDue = stripslashes($data['ProfileDateDue']);
+            }
             $ProfileLocationStreet = stripslashes($data['ProfileLocationStreet']);
             $ProfileLocationCity = stripslashes($data['ProfileLocationCity']);
             $ProfileLocationState = stripslashes($data['ProfileLocationState']);
@@ -820,12 +824,14 @@ function bb_display_manage($ProfileID) {
     echo "          <input class=\"bbdatepicker\" type=\"text\" id=\"ProfileDateBirth\" name=\"ProfileDateBirth\" value=\"" . $ProfileDateBirth . "\" />\n";
     echo "      </td>\n";
     echo "    </tr>\n";
-    echo "    <tr valign=\"top\">\n";
-    echo "      <th scope=\"row\">" . __("Due date", bb_agency_TEXTDOMAIN) . " <em>YYYY-MM-DD</em></th>\n";
-    echo "      <td>\n";
-    echo "          <input class=\"bbdatepicker\" type=\"text\" id=\"ProfileDateDue\" name=\"ProfileDateDue\" value=\"" . $ProfileDateDue . "\" />\n";
-    echo "      </td>\n";
-    echo "    </tr>\n";
+    if (bb_agency_SITETYPE == 'bumps') : ?>
+        <tr valign="top">
+            <th scope="row"><?php _e("Due date", bb_agency_TEXTDOMAIN) ?><em>YYYY-MM-DD</em></th>
+            <td>
+                <input class="bbdatepicker" type="text" id="ProfileDateDue" name="ProfileDateDue" value="<?php echo $ProfileDateDue ?>" />
+            </td>
+        </tr>
+    <?php endif;
 
     // Load custom fields , Public  = 0, ProfileCustomGender = true
     // ProfileCustomView = 1 , Private
@@ -1448,7 +1454,9 @@ function bb_display_list() {
     echo "        <th class=\"column-ProfileContactNameFirst\" id=\"ProfileContactNameFirst\" scope=\"col\" style=\"width:150px;\"><a href=\"" . admin_url("admin.php?page=" . $_GET['page'] . "&sort=ProfileContactNameFirst&dir=" . $sortDirection) . "\">First Name</a></th>\n";
 //    echo "        <th class=\"column-ProfileContactNameLast\" id=\"ProfileContactNameLast\" scope=\"col\"><a href=\"" . admin_url("admin.php?page=" . $_GET['page'] . "&sort=ProfileContactNameLast&dir=" . $sortDirection) . "\">Last Name</a></th>\n";
 //    echo "        <th class=\"column-ProfileGender\" id=\"ProfileGender\" scope=\"col\"><a href=\"" . admin_url("admin.php?page=" . $_GET['page'] . "&sort=ProfileGender&dir=" . $sortDirection) . "\">Gender</a></th>\n";
+    if (bb_agency_SITETYPE == 'bumps') :
     echo "        <th class=\"column-ProfilesProfileDate\" id=\"ProfilesProfileDate\" scope=\"col\"><a href=\"" . admin_url("admin.php?page=" . $_GET['page'] . "&sort=ProfileDateDue&dir=" . $sortDirection) . "\">Due date</a></th>\n";
+    endif;
     echo "        <th class=\"column-ProfileLocationCity\" id=\"ProfileLocationCity\" scope=\"col\"><a href=\"" . admin_url("admin.php?page=" . $_GET['page'] . "&sort=ProfileLocationCity&dir=" . $sortDirection) . "\">Town</a></th>\n";
     echo "        <th class=\"column-ProfileLocationState\" id=\"ProfileLocationState\" scope=\"col\"><a href=\"" . admin_url("admin.php?page=" . $_GET['page'] . "&sort=ProfileLocationState&dir=" . $sortDirection) . "\">County</a></th>\n";
     echo "        <th class=\"column-ProfileDetails\" id=\"ProfileDetails\" scope=\"col\">Category</th>\n";
@@ -1464,7 +1472,9 @@ function bb_display_list() {
     echo "        <th class=\"column\" scope=\"col\">First Name</th>\n";
 //    echo "        <th class=\"column\" scope=\"col\">Last Name</th>\n";
 //    echo "        <th class=\"column\" scope=\"col\">Gender</th>\n";
+    if (bb_agency_SITETYPE == 'bumps') :
     echo "        <th class=\"column\" scope=\"col\">Due date</th>\n";
+    endif;
     echo "        <th class=\"column\" scope=\"col\">Town</th>\n";
     echo "        <th class=\"column\" scope=\"col\">County</th>\n";
     echo "        <th class=\"column\" scope=\"col\">Category</th>\n";
@@ -1577,7 +1587,9 @@ function bb_display_list() {
         echo "        </td>\n";
 //     echo "        <td class=\"ProfileContactNameLast column-ProfileContactNameLast\">" . $ProfileContactNameLast . "</td>\n";
 //        echo "        <td class=\"ProfileGender column-ProfileGender\">" . $ProfileGender . "</td>\n";
+        if (bb_agency_SITETYPE == 'bumps') :
         echo "        <td class=\"ProfilesProfileDate column-ProfilesProfileDate\">" . (is_null($ProfileDateDue) || $ProfileDateDue == '0000-00-00' || bb_agency_datepassed($ProfileDateDue) ? $ProfileDateBirth : $ProfileDateDue) . "</td>\n";
+        endif;
         echo "        <td class=\"ProfileLocationCity column-ProfileLocationCity\">" . $ProfileLocationCity . "</td>\n";
         echo "        <td class=\"ProfileLocationCity column-ProfileLocationState\">" . $ProfileLocationState . "</td>\n";
         echo "        <td class=\"ProfileDetails column-ProfileDetails\">" . $DataTypeTitle . "</td>\n";

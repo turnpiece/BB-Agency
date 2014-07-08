@@ -1112,12 +1112,14 @@
 			$filter .= " AND profile.ProfileDateBirth <= '$ProfileDateBirth_max'";
 		}
 
-		// Due date
-		if (!empty($ProfileDateDue_min)) {
-			$filter .= " AND profile.ProfileDateDue >= '$ProfileDateDue_min'";
-		}
-		if (!empty($ProfileDateDue_max)) {
-			$filter .= " AND profile.ProfileDateDue <= '$ProfileDateDue_max'";
+		if (bb_agency_SITETYPE == 'bumps') {
+			// Due date
+			if (!empty($ProfileDateDue_min)) {
+				$filter .= " AND profile.ProfileDateDue >= '$ProfileDateDue_min'";
+			}
+			if (!empty($ProfileDateDue_max)) {
+				$filter .= " AND profile.ProfileDateDue <= '$ProfileDateDue_max'";
+			}
 		}
 
 		if (isset($ProfileIsFeatured)) {

@@ -217,15 +217,17 @@ if ($action) {
             $filter .= " AND profile.`ProfileDateBirth` >= DATE_SUB(NOW(), INTERVAL $age $ym)";
         }
 
-        // Due date
-        if (isset($_GET['ProfileDateDue_min']) && !empty($_GET['ProfileDateDue_min'])){
-            $ProfileDateDue_min = $_GET['ProfileDateDue_min'];
-            $filter .= " AND profile.`ProfileDateDue` >= '$ProfileDateDue_min'";
-        }
-        
-        if (isset($_GET['ProfileDateDue_max']) && !empty($_GET['ProfileDateDue_max'])){
-            $ProfileDateDue_max = $_GET['ProfileDateDue_max'];
-            $filter .= " AND profile.`ProfileDateDue` <= '$ProfileDateDue_max'";
+        if (bb_agency_SITETYPE == 'bumps') {
+            // Due date
+            if (isset($_GET['ProfileDateDue_min']) && !empty($_GET['ProfileDateDue_min'])){
+                $ProfileDateDue_min = $_GET['ProfileDateDue_min'];
+                $filter .= " AND profile.`ProfileDateDue` >= '$ProfileDateDue_min'";
+            }
+            
+            if (isset($_GET['ProfileDateDue_max']) && !empty($_GET['ProfileDateDue_max'])){
+                $ProfileDateDue_max = $_GET['ProfileDateDue_max'];
+                $filter .= " AND profile.`ProfileDateDue` <= '$ProfileDateDue_max'";
+            }
         }
         ?>
         <div class="boxblock-holder">
@@ -670,7 +672,7 @@ EOF;
                         <strong>Age:</strong> <?php echo bb_agency_get_age($data['ProfileDateBirth']) ?><br />
                     <?php endif; ?>
 
-                    <?php if (defined('bb_agency_MUMSTOBE_ID') && bb_agency_MUMSTOBE_ID && bb_agency_ismumtobe($data['ProfileType']) && !empty($data['ProfileDateDue'])) : ?>
+                    <?php if (bb_agency_SITETYPE == 'bumps' && defined('bb_agency_MUMSTOBE_ID') && bb_agency_MUMSTOBE_ID && bb_agency_ismumtobe($data['ProfileType']) && !empty($data['ProfileDateDue'])) : ?>
                         <strong>Due date:</strong> <?php echo bb_agency_get_due_date($data['ProfileDateDue']) ?><br />
                     <?php endif; ?>
                     </div>

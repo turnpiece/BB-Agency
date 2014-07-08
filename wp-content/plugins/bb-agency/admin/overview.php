@@ -48,48 +48,50 @@
 									        	</select></td>
 									        </td>
 									    </tr>
-								    <tr>
-								        <th scope="row"><?php _e("Gender", bb_agency_TEXTDOMAIN) ?>:</th>
-								        <td><select name="ProfileGender" id="ProfileGender">
-								        <?php      
-											$query1 = "SELECT GenderID, GenderTitle FROM ". table_agency_data_gender ."";
-											$results1 = mysql_query($query1);
-											$count1 = mysql_num_rows($results1);
-											if ($count1 > 0) : ?>
-												<option value="">All Gender</option>";
-												<?php while ($data1 = mysql_fetch_array($results1)) : ?>
-												<option value="<?php echo $data1["GenderID"] ?>" <?php echo selected( $_SESSION['ProfileGender'], $data1["GenderID"]) ?>><?php echo $data1["GenderTitle"] ?></option>
-												<?php endwhile; ?>
-												</select>
-											<?php else : ?>
-												<?php _e("No items to select", bb_restaurant_TEXTDOMAIN) ?>
-											<?php endif; ?>
-								        </td>
-								    </tr>
-								    <tr>
-								        <th scope="row"><?php _e("Age", bb_agency_TEXTDOMAIN) ?>:</th>
-								        <td>
-								        <fieldset>
-		                                    <div>
-		                                        <?php echo bb_agency_age_dropdown('ProfileAge_min') ?>
-		                                    </div>
-		                                    <div>
-		                                        <?php echo bb_agency_age_dropdown('ProfileAge_max') ?>
-		                                    </div>
-								        </fieldset>
-								        </td>
-								    </tr>
-								    <tr>
-								        <th scope="row"><?php _e("Due date", bb_agency_TEXTDOMAIN) ?>:</th>
-								        <td>
-								        <fieldset>
-								        	<div><label><?php _e('From', bb_agency_TEXTDOMAIN) ?></label>
-								        	<input type="text" class="stubby bbdatepicker" id="ProfileDateDue_min" name="ProfileDateDue_min" value="". $_SESSION['ProfileDateDue_min'] ."" /><br /></div>
-								        	<div><label><?php _e('To', bb_agency_TEXTDOMAIN) ?></label>
-								        	<input type="text" class="stubby bbdatepicker" id="ProfileDateDue_max" name="ProfileDateDue_max" value="". $_SESSION['ProfileDateDue_max'] ."" /></div>
-								        </fieldset>
-								        </td>
-								    </tr>
+									    <tr>
+									        <th scope="row"><?php _e("Gender", bb_agency_TEXTDOMAIN) ?>:</th>
+									        <td><select name="ProfileGender" id="ProfileGender">
+									        <?php      
+												$query1 = "SELECT GenderID, GenderTitle FROM ". table_agency_data_gender ."";
+												$results1 = mysql_query($query1);
+												$count1 = mysql_num_rows($results1);
+												if ($count1 > 0) : ?>
+													<option value="">All Gender</option>";
+													<?php while ($data1 = mysql_fetch_array($results1)) : ?>
+													<option value="<?php echo $data1["GenderID"] ?>" <?php echo selected( $_SESSION['ProfileGender'], $data1["GenderID"]) ?>><?php echo $data1["GenderTitle"] ?></option>
+													<?php endwhile; ?>
+													</select>
+												<?php else : ?>
+													<?php _e("No items to select", bb_restaurant_TEXTDOMAIN) ?>
+												<?php endif; ?>
+									        </td>
+									    </tr>
+									    <tr>
+									        <th scope="row"><?php _e("Age", bb_agency_TEXTDOMAIN) ?>:</th>
+									        <td>
+									        <fieldset>
+			                                    <div>
+			                                        <?php echo bb_agency_age_dropdown('ProfileAge_min') ?>
+			                                    </div>
+			                                    <div>
+			                                        <?php echo bb_agency_age_dropdown('ProfileAge_max') ?>
+			                                    </div>
+									        </fieldset>
+									        </td>
+									    </tr>
+									    <?php if (bb_agency_SITETYPE == 'bumps') : ?>
+									    <tr>
+									        <th scope="row"><?php _e("Due date", bb_agency_TEXTDOMAIN) ?>:</th>
+									        <td>
+									        <fieldset>
+									        	<div><label><?php _e('From', bb_agency_TEXTDOMAIN) ?></label>
+									        	<input type="text" class="stubby bbdatepicker" id="ProfileDateDue_min" name="ProfileDateDue_min" value="". $_SESSION['ProfileDateDue_min'] ."" /><br /></div>
+									        	<div><label><?php _e('To', bb_agency_TEXTDOMAIN) ?></label>
+									        	<input type="text" class="stubby bbdatepicker" id="ProfileDateDue_max" name="ProfileDateDue_max" value="". $_SESSION['ProfileDateDue_max'] ."" /></div>
+									        </fieldset>
+									        </td>
+									    </tr>
+										<?php endif; ?>
 								  </thead>
 								</table>
 								<p class="submit">

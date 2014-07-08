@@ -105,12 +105,14 @@ if ($_REQUEST["action"] == "search") {
 		$filterArray['profiledatebirth_max'] = $_REQUEST['dob_max'];
 	}
 
-	// Due date
-	if (isset($_REQUEST['dd_min']) && !empty($_REQUEST['dd_min'])) {
-		$filterArray['profiledatedue_min'] = $_REQUEST['dd_min'];
-	}
-	if (isset($_REQUEST['dd_max']) && !empty($_REQUEST['dd_max'])) {
-		$filterArray['profiledatedue_max'] = $_REQUEST['dd_max'];
+	if (bb_agency_SITETYPE == 'bumps') {
+		// Due date
+		if (isset($_REQUEST['dd_min']) && !empty($_REQUEST['dd_min'])) {
+			$filterArray['profiledatedue_min'] = $_REQUEST['dd_min'];
+		}
+		if (isset($_REQUEST['dd_max']) && !empty($_REQUEST['dd_max'])) {
+			$filterArray['profiledatedue_max'] = $_REQUEST['dd_max'];
+		}
 	}
 
 	// City
