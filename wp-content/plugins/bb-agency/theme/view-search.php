@@ -8,6 +8,8 @@ foreach ($_REQUEST as $key => $value) {
   	}
 }
 
+?><pre><?php print_r($_REQUEST) ?></pre><?php
+
 
 
 // *************************************************************************************************** //
@@ -49,12 +51,13 @@ if ($_REQUEST["action"] == "search") {
 	$filterArray = array();
 
 	// Name
-	if ((isset($_REQUEST['fname']) && !empty($_REQUEST['fname'])) || isset($_REQUEST['lname']) && !empty($_REQUEST['lname'])) {
+	if ((isset($_REQUEST['fname']) && !empty($_REQUEST['fname'])) || 
+		isset($_REQUEST['lname']) && !empty($_REQUEST['lname'])) {
 	  	if (isset($_REQUEST['fname']) && !empty($_REQUEST['fname'])) {
-			$filterArray['profilecontactnamefirst'] = $_REQUEST['fname'];
+			$filterArray['fname'] = $_REQUEST['fname'];
 	  	}
 	  	if (isset($_REQUEST['lname']) && !empty($_REQUEST['lname'])) {
-			$filterArray['profilecontactnamelast'] = $_REQUEST['lname'];
+			$filterArray['lname'] = $_REQUEST['lname'];
 	  	}
 	}
 
@@ -90,28 +93,28 @@ if ($_REQUEST["action"] == "search") {
 	}
 
 	// Age
-	if (isset($_REQUEST['age_min']) && !empty($_REQUEST['age_min'])) {
-		$filterArray['profileage_min'] = $_REQUEST['age_min'];
+	if (isset($_REQUEST['age_from']) && !empty($_REQUEST['age_from'])) {
+		$filterArray['age_from'] = $_REQUEST['age_from'];
 	}
-	if (isset($_REQUEST['age_max']) && !empty($_REQUEST['age_max'])) {
-		$filterArray['profileage_max'] = $_REQUEST['age_max'];
+	if (isset($_REQUEST['age_to']) && !empty($_REQUEST['age_to'])) {
+		$filterArray['age_to'] = $_REQUEST['age_to'];
 	}
 
 	// Date of birth
 	if (isset($_REQUEST['dob_min']) && !empty($_REQUEST['dob_min'])) {
-		$filterArray['profiledatebirth_min'] = $_REQUEST['dob_min'];
+		$filterArray['dob_min'] = $_REQUEST['dob_min'];
 	}
 	if (isset($_REQUEST['dob_max']) && !empty($_REQUEST['dob_max'])) {
-		$filterArray['profiledatebirth_max'] = $_REQUEST['dob_max'];
+		$filterArray['dob_max'] = $_REQUEST['dob_max'];
 	}
 
 	if (bb_agency_SITETYPE == 'bumps') {
 		// Due date
 		if (isset($_REQUEST['dd_min']) && !empty($_REQUEST['dd_min'])) {
-			$filterArray['profiledatedue_min'] = $_REQUEST['dd_min'];
+			$filterArray['dd_min'] = $_REQUEST['dd_min'];
 		}
 		if (isset($_REQUEST['dd_max']) && !empty($_REQUEST['dd_max'])) {
-			$filterArray['profiledatedue_max'] = $_REQUEST['dd_max'];
+			$filterArray['dd_max'] = $_REQUEST['dd_max'];
 		}
 	}
 
@@ -151,6 +154,8 @@ if ($_REQUEST["action"] == "search") {
 	// Pagination
 	$filterArray['paging'] = 1;
 	$filterArray['pagingperpage'] = 1000; 
+
+	?><pre><?php print_r($filterArray) ?></pre><?php
 }
 
 // *************************************************************************************************** //

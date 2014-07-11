@@ -35,7 +35,7 @@ if ($profilesearch_layout == "condensed" || $profilesearch_layout == "simple") :
         <input type="hidden" name="action" value="search" />
 	 	<div class="search-field single">
  			<label for="ProfileFirstName"><?php _e("First Name", bb_agency_TEXTDOMAIN) ?></label>
- 			<input type="text" id="ProfileContactNameFirst" name="cnf" value="<?php echo $_SESSION["ProfileContactNameFirst"] ?>" />
+ 			<input type="text" id="ProfileContactNameFirst" name="fname" value="<?php echo $_SESSION["ProfileContactNameFirst"] ?>" />
 	 	</div>
 	 	<?php // get data types
 	 	$dataTypes = bb_agency_get_datatypes();
@@ -67,8 +67,8 @@ if ($profilesearch_layout == "condensed" || $profilesearch_layout == "simple") :
 	<input type="hidden" name="page" id="page" value="bb_agency_search" />
 	<input type="hidden" name="action" value="search" />
 	<div class="search-field single">
-		<label for="cnf"><?php _e("First Name", bb_agency_TEXTDOMAIN) ?></label>
-		<input type="text" id="ProfileContactNameFirst" name="cnf" value="<?php echo $_SESSION["ProfileContactNameFirst"] ?>" />
+		<label for="fname"><?php _e("First Name", bb_agency_TEXTDOMAIN) ?></label>
+		<input type="text" id="ProfileContactNameFirst" name="fname" value="<?php echo $_SESSION["ProfileContactNameFirst"] ?>" />
 	</div>
  	<?php // get data types
  	$dataTypes = bb_agency_get_datatypes();
@@ -89,18 +89,38 @@ if ($profilesearch_layout == "condensed" || $profilesearch_layout == "simple") :
     <?php endif; endif; ?> 
 
     <fieldset class="search-field multi">
-        <legend><?php _e("Date of birth", bb_agency_TEXTDOMAIN) ?> (* <?php _e("applies to baby searches only", bb_agency_TEXTDOMAIN) ?>)</legend>
-
+    	<?php if (bb_agency_SITETYPE == 'bumps') : // date of birth ?>
+        <legend><?php _e("Date of birth", bb_agency_TEXTDOMAIN) ?></legend>
 	    <div>
 	        <label for="dob_min"><?php _e("From", bb_agency_TEXTDOMAIN) ?></label>
 	        <input type="text" class="stubby bbdatepicker" id="ProfileDateBirth_min" name="dob_min" value="<?php echo $_SESSION['ProfileDateBirth_min'] ?>" />
 	    </div>
 	    <div>
-	    	<label for="dob_max"><?php _e("To", bb_agency_TEXTDOMAIN) ?></label>\
+	    	<label for="dob_max"><?php _e("To", bb_agency_TEXTDOMAIN) ?></label>
 	        <input type="text" class="stubby bbdatepicker" id="ProfileDateBirth_max" name="dob_max" value="<?php echo $_SESSION['ProfileDateBirth_max'] ?>" />
 	    </div>
+		<?php else : // age ?>
+        <legend><?php _e("Age", bb_agency_TEXTDOMAIN) ?></legend>
+	    <div>
+	        <label for="age_from"><?php _e("From", bb_agency_TEXTDOMAIN) ?></label>
+	        <select name="age_from">
+	        <?php for ($i = 0; $i <= 12; $i++) : ?>
+	        	<option value="<?php echo $i ?>" <?php selected($i, $_SESSION['ProfileAge_min']) ?>><?php echo $i ?></option>
+	        <?php endfor; ?>
+	        </select>
+	    </div>
+	    <div>
+	    	<label for="age_to"><?php _e("To", bb_agency_TEXTDOMAIN) ?></label>
+	       	<select name="age_to">
+	        <?php for ($i = 0; $i <= 12; $i++) : ?>
+	        	<option value="<?php echo $i ?>" <?php selected($i, $_SESSION['ProfileAge_max']) ?>><?php echo $i ?></option>
+	        <?php endfor; ?>
+	        </select>
+	    </div>
+		<?php endif; ?>
 	</fieldset>
 
+	<?php if (bb_agency_SITETYPE == 'bumps') : ?>
 	<fieldset class="search-field multi">
 	    <legend><?php _e("Due date", bb_agency_TEXTDOMAIN) ?></legend>
 	    <div>
@@ -108,19 +128,17 @@ if ($profilesearch_layout == "condensed" || $profilesearch_layout == "simple") :
 	        <input type="text" class="stubby bbdatepicker" id="ProfileDateDue_min" name="dd_min" value="<?php echo $_SESSION['ProfileDateDue_min'] ?>" />
 	    </div>
 	    <div>
-	    	<label for="dd_max"><?php _e("To", bb_agency_TEXTDOMAIN) ?></label>\
+	    	<label for="dd_max"><?php _e("To", bb_agency_TEXTDOMAIN) ?></label>
 	        <input type="text" class="stubby bbdatepicker" id="ProfileDateDue_max" name="dd_max" value="<?php echo $_SESSION['ProfileDateDue_max'] ?>" />
 	    </div>
 	</fieldset>							
-	<?php	
+	<?php endif;
+
 	if ($bb_agency_option_customfields_searchpage == 1 || $bb_agency_option_customfield_profilepage == 1 OR $_POST['advanced_search']) { // Show on Search Page or Profile Page
 
-		if (is_user_logged_in()) { // All with loggedin permissions
-
-		} else { // All with non-logged here
-		
+		if (!is_user_logged_in()) {
 			// Show custom fields to public
-	    	if($_REQUEST["action"] != 'search' || $_REQUEST["action"] ==''){
+	    	if ($_REQUEST["action"] != 'search' || $_REQUEST["action"] =='') {
 		    	//include("include-custom-fields.php");
 				$profilesearch_layout = "";
 			}

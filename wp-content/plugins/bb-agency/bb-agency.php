@@ -47,7 +47,6 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 	define("bb_agency_TEXTDOMAIN", basename(dirname( __FILE__ )) ); //   bb-agency
 	define('bb_agency_SITETYPE', 'children'); // bumps or children
 
-
 	// email sending
 	define("bb_agency_SEND_EMAILS", false); // whether or not to send emails
 	$bb_agency_CURRENT_TYPE_ID = 0; // will contain current type
@@ -560,7 +559,7 @@ if ( is_admin() ){
 		function bb_agency_shortcode_categorylist($atts, $content = null){
 			ob_start();
 			bb_agency_categorylist($atts);
-			$output_string=ob_get_contents();;
+			$output_string = ob_get_contents();
 			ob_end_clean();
 			return $output_string;
 		}
@@ -576,7 +575,7 @@ if ( is_admin() ){
 				// display the list of profiles
 				bb_agency_profile_list($atts);				
 			}
-			$output_string = ob_get_contents();;
+			$output_string = ob_get_contents();
 			ob_end_clean();
 			return $output_string;
 		}
@@ -585,7 +584,7 @@ if ( is_admin() ){
 		function bb_agency_shortcode_profilesearch($atts, $content = null){
 			ob_start();
 			bb_agency_profilesearch($atts);
-			$output_string=ob_get_contents();;
+			$output_string = ob_get_contents();
 			ob_end_clean();
 			return $output_string;
 		}

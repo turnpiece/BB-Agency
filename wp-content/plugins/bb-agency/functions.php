@@ -725,8 +725,8 @@
 		extract(shortcode_atts(
 			array(
 				"profileid" => null,
-				"profilecontactnamefirst" => null,
-				"profilecontactnamelast" => null,
+				"fname" => null,
+				"lname" => null,
 				"profilelocationcity" => null,
 				"profiletype" => null,
 				"type" => null,
@@ -737,11 +737,11 @@
 				"profilestatheight_max" => null,
 				"profilestatweight_min" => null,
 				"profilestatweight_max" => null,
-				"profiledatebirth_min" => null,
+				"dob_min" => null,
 				"profiledatedue_min" => null,
 				"age_from" => null,
 				"age_to" => null,
-				"profiledatebirth_max" => null,
+				"dob_max" => null,
 				"profiledatedue_max" => null,
 				"featured" => null,
 				"stars" => null,
@@ -758,7 +758,7 @@
 			$atts)
 		);
 
-		if (defined('bb_agency_MUMSTOBE_ID') && defined('bb_agency_BABIES_ID')) {
+		if (bb_agency_SITETYPE == 'bumps' && defined('bb_agency_MUMSTOBE_ID') && defined('bb_agency_BABIES_ID')) {
 			// Settings for a Beautiful Bumps type site of pregnant women
 			// Sort by due date if a mum to be, by date of birth if a baby, otherwise sort alphabetically
 			switch(intval($type)) {
@@ -791,9 +791,9 @@
 	    // Option to show all profiles
 		if (isset($OverridePrivacy)) {
 			// If sent link, show both hidden and visible
-			$filter = "WHERE profile.ProfileIsActive IN (1, 4) AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1";
+			$filter = "WHERE profile.`ProfileIsActive` IN (1, 4) AND media.`ProfileMediaType` = \"Image\" AND media.`ProfileMediaPrimary` = 1";
 		} else {
-			$filter = "WHERE profile.ProfileIsActive = 1 AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1";
+			$filter = "WHERE profile.`ProfileIsActive` = 1 AND media.`ProfileMediaType` = \"Image\" AND media.`ProfileMediaPrimary` = 1";
 		}
 
 		// Legacy Field Names
@@ -805,8 +805,8 @@
 		}
 
 		$ProfileID 					= $profileid;
-		$ProfileContactNameFirst	= $profilecontactnamefirst;
-		$ProfileContactNameLast    	= $profilecontactnamelast;
+		$ProfileContactNameFirst	= $fname;
+		$ProfileContactNameLast    	= $lname;
 		$ProfileLocationCity		= $profilelocationcity;
 		$ProfileType				= $profiletype;
 		$ProfileIsActive			= $profileisactive;
@@ -815,12 +815,12 @@
 		$ProfileStatHeight_max		= $profilestatheight_max;
 		$ProfileStatWeight_min		= $profilestatheight_min;
 		$ProfileStatWeight_max		= $profilestatheight_max;
-		$ProfileDateBirth_min		= $profiledatebirth_min;
-		$ProfileDateBirth_max		= $profiledatebirth_max;
+		$ProfileDateBirth_min		= $dob_min;
+		$ProfileDateBirth_max		= $dob_max;
 		$ProfileAge_min				= $age_from;
 		$ProfileAge_max				= $age_to;
-		$ProfileDateDue_min			= $profiledatedue_min;
-		$ProfileDateDue_max			= $profiledatedue_max;
+		$ProfileDateDue_min			= $dd_min;
+		$ProfileDateDue_max			= $dd_max;
 		$ProfileIsFeatured			= $featured;
 		$ProfileIsPromoted			= $stars;
 		$OverridePrivacy			= $override_privacy;
@@ -1222,12 +1222,8 @@
 				$limit = isset($limit) ? $limit : '';
 				$sql = <<<EOF
 SELECT
-profile.`ProfileGallery`, 
-profile.`ProfileContactDisplay`, 
-profile.`ProfileDateBirth`, 
-profile.`ProfileDateDue`,
-profile.`ProfileLocationState`, 
 profile.`ProfileID` as pID, 
+profile.*,
 media.`ProfileMediaURL`,
 customfield_mux.*  
 FROM $ProfileTable AS profile
@@ -1240,6 +1236,7 @@ GROUP BY profile.`ProfileID`
 ORDER BY $sort $dir $limit
 EOF;
 
+echo $sql;
 				$qItem = $wpdb->get_results($sql, ARRAY_A);
 				$items = count($qItem); // number of total rows returned
 /*
@@ -1664,7 +1661,7 @@ EOF;
 		*/
 		// Get Privacy Information
 		
-			$bb_agency_option_privacy					 = bb_agency_get_option('bb_agency_option_privacy');
+		$bb_agency_option_privacy = bb_agency_get_option('bb_agency_option_privacy');
 		// Set It Up	
 		global $wp_rewrite;
 		extract(shortcode_atts(array(
