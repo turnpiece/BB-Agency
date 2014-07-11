@@ -25,40 +25,35 @@ if (isset($_REQUEST['gender']) && !empty($_REQUEST['gender'])) {
 
 // fix advanced search to include
 // custom fields from search fields
-if (isset($_GET['srch'])){
+if (isset($_GET['srch'])) {
    $profilesearch_layout = "advanced"; 	
 }
 
 if ($profilesearch_layout == "condensed" || $profilesearch_layout == "simple") : ?>
-<div id="profile-search-form-condensed" class="rbsearch-form">
+<div id="profile-search-form-condensed" class="bbsearch-form">
     <form method="post" id="search-form-condensed" action="<?php echo get_bloginfo("wpurl") ?>/profile-search/">
         <input type="hidden" name="action" value="search" />
 	 	<div class="search-field single">
  			<label for="ProfileFirstName"><?php _e("First Name", bb_agency_TEXTDOMAIN) ?></label>
  			<input type="text" id="ProfileContactNameFirst" name="cnf" value="<?php echo $_SESSION["ProfileContactNameFirst"] ?>" />
-	 	</div>		
+	 	</div>
+	 	<?php // get data types
+	 	$dataTypes = bb_agency_get_datatypes();
+
+	 	if (!empty($dataTypes)) :
+	 	if (count($dataTypes) > 1) : ?>	
 		<div class="search-field single">
 		    <label for="ProfileType"><?php _e("Type", bb_agency_TEXTDOMAIN) ?></label>
-		    <select name="ProfileType" id="ProfileType">\              
+		    <select name="ProfileType" id="ProfileType">            
 				<option value=""><?php _e("Any Profile Type", bb_agency_TEXTDOMAIN) ?></option>
-				<?php
-					$query = "SELECT DataTypeID, DataTypeTitle FROM ". table_agency_data_type ." WHERE DataTypeID <> ".bb_agency_CLIENTS_ID." ORDER BY DataTypeTitle DESC";
-					$results2 = mysql_query($query);
-					while ($dataType = mysql_fetch_array($results2)) :
-						if ($_SESSION['ProfileType']) {
-							if ($dataType["DataTypeID"] ==  $_SESSION['ProfileType']) { 
-								$selectedvalue = " selected"; 
-							} else { 
-								$selectedvalue = ""; 
-							} 
-						} else { 
-							$selectedvalue = ""; 
-						}
-						?>
-				<option value="<?php echo $dataType["DataTypeID"] ?>"<?php echo $selectedvalue ?>><?php echo $dataType["DataTypeTitle"] ?></option>
-					<?php endwhile; ?>
+                <?php foreach ($dataTypes as $type) : ?>
+                <option value="<?php echo $type->DataTypeID ?>" <?php selected($type->DataTypeID, $ProfileType) ?>><?php echo $type->DataTypeTitle ?></option>
+                <?php endforeach; ?>
 		    </select>
-		</div>               
+		</div>
+	    <?php else : $type = $dataTypes[0]; ?>
+	    <input type="hidden" name="ProfileType" value="<?php echo $type->DataTypeID ?>" />
+	    <?php endif; endif; ?>      
 		<div class="search-field submit">
 			<input type="submit" value="<?php _e("Search Profiles", bb_agency_TEXTDOMAIN) ?>" class="button-primary" onclick="this.form.action='<?php echo get_bloginfo("wpurl") ?>/profile-search/'" />
 	
@@ -68,25 +63,30 @@ if ($profilesearch_layout == "condensed" || $profilesearch_layout == "simple") :
 </div>
 <?php else : // Advanced ?>
    
- <form method="post" id="search-form-advanced" action="". get_bloginfo("wpurl") ."/profile-search/" class="rbsearch-form">
+ <form method="post" id="search-form-advanced" action="<?php bloginfo('wpurl') ?>/profile-search/" class="bbsearch-form">
 	<input type="hidden" name="page" id="page" value="bb_agency_search" />
 	<input type="hidden" name="action" value="search" />
 	<div class="search-field single">
 		<label for="cnf"><?php _e("First Name", bb_agency_TEXTDOMAIN) ?></label>
 		<input type="text" id="ProfileContactNameFirst" name="cnf" value="<?php echo $_SESSION["ProfileContactNameFirst"] ?>" />
 	</div>
-    <div class="search-field single">
-       <label for="t"><?php _e("Type", bb_agency_TEXTDOMAIN) ?></label>\
-		<select name="t" id="ProfileType">\               
+ 	<?php // get data types
+ 	$dataTypes = bb_agency_get_datatypes();
+
+ 	if (!empty($dataTypes)) :
+ 	if (count($dataTypes) > 1) : ?>	
+	<div class="search-field single">
+	    <label for="ProfileType"><?php _e("Type", bb_agency_TEXTDOMAIN) ?></label>
+	    <select name="ProfileType" id="ProfileType">            
 			<option value=""><?php _e("Any Profile Type", bb_agency_TEXTDOMAIN) ?></option>
-			<?php
-				$query = "SELECT DataTypeID, DataTypeTitle FROM ". table_agency_data_type ." WHERE DataTypeID <> ".bb_agency_CLIENTS_ID." ORDER BY DataTypeTitle DESC";
-				$results2 = mysql_query($query);
-				while ($dataType = mysql_fetch_array($results2)) : ?>
-			<option value="<?php echo $dataType["DataTypeID"] ?>" <?php selected($_SESSION['ProfileType'], $dataType["DataTypeID"], false) ?>><?php echo $dataType["DataTypeTitle"] ?></option>
-				<?php endwhile; ?>
-        </select>
-    </div>
+            <?php foreach ($dataTypes as $type) : ?>
+            <option value="<?php echo $type->DataTypeID ?>" <?php selected($type->DataTypeID, $ProfileType) ?>><?php echo $type->DataTypeTitle ?></option>
+            <?php endforeach; ?>
+	    </select>
+	</div>
+    <?php else : $type = $dataTypes[0]; ?>
+    <input type="hidden" name="ProfileType" value="<?php echo $type->DataTypeID ?>" />
+    <?php endif; endif; ?> 
 
     <fieldset class="search-field multi">
         <legend><?php _e("Date of birth", bb_agency_TEXTDOMAIN) ?> (* <?php _e("applies to baby searches only", bb_agency_TEXTDOMAIN) ?>)</legend>

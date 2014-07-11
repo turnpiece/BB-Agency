@@ -143,11 +143,9 @@
 
 			// Set up pages
 		   	// get data types
-			global $wpdb;
-			$table = table_agency_data_type;
-			$result = $wpdb->get_results("SELECT * FROM $table");
-			foreach ($result as $row) {
-				$newrules[$row->DataTypeTag] = 'index.php?type=models&value='.$row->DataTypeID;
+		   	$types = bb_agency_get_datatypes();
+			foreach ($types as $type) {
+				$newrules[$type->DataTypeTag] = 'index.php?type=models&value='.$type->DataTypeID;
 			}
 
 			return $newrules + $rules;
@@ -3905,4 +3903,13 @@ function bb_agency_recategorize_profile($id, $type) {
 		array('%s'),
 		array('%d')
 	);
+}
+
+/**
+ *
+ * get data types
+ */
+function bb_agency_get_datatypes($public = true) {
+	global $wpdb;
+	return $wpdb->get_results('SELECT * FROM '. table_agency_data_type . ($public ? ' WHERE DataTypeID <> '.bb_agency_CLIENTS_ID : '').' ORDER BY `DataTypeTitle` ASC');
 }

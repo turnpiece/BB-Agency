@@ -2,10 +2,13 @@
 <?php 
     // Include Admin Menu
     include ("admin-menu.php");
-	global $wpdb;
+
 	$bb_agency_option_unittype = bb_agency_get_option('bb_agency_option_unittype');
 	get_currentuserinfo(); 
 	global $user_level;
+
+	// get data types
+	$dataTypes = bb_agency_get_datatypes(false);
 ?>
 	<div id="dashboard-widgets-wrap">
 		<div id="dashboard-widgets" class="metabox-holder columns-2">
@@ -24,17 +27,15 @@
 									  	<tr valign="top">
 											<th scope="row"><label for="blogname"><?php _e("Name", bb_agency_TEXTDOMAIN); ?></label></th>
 											<td><input type="text" name="ProfileContactName" value="<?php echo $_SESSION['ProfileContactName']; ?>" class="regular-text" /></td>
-									  	</tr>		
+									  	</tr>
+									  	<?php if (!empty($dataTypes)) : ?>	
 									    <tr>
 									        <th scope="row"><?php _e("Classification", bb_agency_TEXTDOMAIN) ?>:</th>
 									        <td><select name="ProfileType" id="ProfileType">               
 												<option value=""><?php _e("Any Profile Type", bb_agency_TEXTDOMAIN) ?></option>
-												<?php
-													$query = "SELECT DataTypeID, DataTypeTitle FROM ". table_agency_data_type ." ORDER BY DataTypeTitle";
-													$results2 = mysql_query($query);
-													while ($dataType = mysql_fetch_array($results2)) :
+												<?php foreach ($dataTypes as $type) :
 														if ($_SESSION['ProfileType']) {
-															if ($dataType["DataTypeID"] ==  $_SESSION['ProfileType']) { 
+															if ($type->DataTypeID ==  $_SESSION['ProfileType']) { 
 																$selectedvalue = " selected"; 
 															} else { 
 																$selectedvalue = ""; 
@@ -43,11 +44,14 @@
 															$selectedvalue = ""; 
 														}
 														?>
-														<option value="<?php echo $dataType["DataTypeID"] ?>" <?php echo $selectedvalue ?>><?php echo $dataType["DataTypeTitle"] ?></option>
+														<option value="<?php echo $dataType->DataTypeID ?>" <?php echo $selectedvalue ?>><?php echo $type->DataTypeTitle ?></option>
 													<?php endwhile; ?>
 									        	</select></td>
 									        </td>
 									    </tr>
+										<?php else : $type = $dataTypes[0]; ?>
+										<input type="hidden" name="ProfileType" value="<?php echo $type->DataTypeID ?>" />
+										<?php endif; ?>
 									    <tr>
 									        <th scope="row"><?php _e("Gender", bb_agency_TEXTDOMAIN) ?>:</th>
 									        <td><select name="ProfileGender" id="ProfileGender">

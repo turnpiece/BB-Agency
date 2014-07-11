@@ -126,19 +126,26 @@ function bb_agency_inner_custom_box() {
             send_to_editor('[profile_search]');return;
         }
     </script>
-    <?php
-    echo "<table>\n";
-    echo "  <tr><td>Type:</td><td><select id=\"bb_agency_type\" name=\"bb_agency_type\">\n";
-            global $wpdb;
-            $profileDataTypes = mysql_query("SELECT * FROM ". table_agency_data_type ."");
-            echo "<option value=\"\">". __("Any Profile Type", bb_agency_TEXTDOMAIN) ."</option>\n";
-            while ($dataType = mysql_fetch_array($profileDataTypes)) {
-                if ($_SESSION['ProfileType']) {
-                    if ($dataType["DataTypeID"] ==  $ProfileType) { $selectedvalue = " selected"; } else { $selectedvalue = ""; } 
-                } else { $selectedvalue = ""; }
-                echo "<option value=\"". $dataType["DataTypeID"] ."\"".$selectedvalue.">". $dataType["DataTypeTitle"] ." ". __("Only", bb_agency_TEXTDOMAIN) ."</option>";
-            }
-            echo "</select></td></tr>\n";
+    <table>
+    <?php    
+    // get data types
+    $profileDataTypes = bb_agency_get_datatypes(false);
+    if (!empty($profileDataTypes)) : 
+    if (count($profileDataTypes) > 1) : ?>
+        <tr>
+            <td>Type:</td>
+            <td>
+                <select id="bb_agency_type" name="bb_agency_type">
+                    <option value=""><?php _e("Any Profile Type", bb_agency_TEXTDOMAIN) ?></option>
+                    <?php foreach ($profileDataTypes as $type) : ?>
+                    <option value="<?php echo $type->DataTypeID ?>" <?php selected($type->DataTypeID, $ProfileType) ?>><?php echo $type->DataTypeTitle ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </td>
+        </tr>
+    <?php else : $type = $profileDataTypes[0]; ?>
+    <input type="hidden" name="bb_agency_type" value="<?php echo $type->DataTypeID ?>" />
+    <?php endif; endif;
     echo "  <tr><td>". __("Starting Age", bb_agency_TEXTDOMAIN) .":</td><td><input type=\"text\" id=\"bb_agency_age_from\" name=\"bb_agency_age_from\" value=\"18\" /></td></tr>\n";
     echo "  <tr><td>". __("Ending Age", bb_agency_TEXTDOMAIN) .":</td><td><input type=\"text\" id=\"bb_agency_age_to\" name=\"bb_agency_age_to\" value=\"99\" /></td></tr>\n";
     echo "  <tr><td>". __("Gender", bb_agency_TEXTDOMAIN) .":</td><td>";

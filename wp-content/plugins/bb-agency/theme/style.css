@@ -143,99 +143,99 @@
 }
 
 /* Search Forms */
-.rbsearch-form .search-field {
+.bbsearch-form .search-field {
 	float: left;
 	clear: both;
 	width: 300px;
 	border: none;
 	padding: 7px 0;
 }
-.rbsearch-form .search-field.submit {
+.bbsearch-form .search-field.submit {
 	padding: 15px 0;
 }
-.rbsearch-form .search-field.single label {
+.bbsearch-form .search-field.single label {
 	width: 35%;
 	float: left;
 }
-.rbsearch-form .search-field.single input,
-.rbsearch-form .search-field.single select {
+.bbsearch-form .search-field.single input,
+.bbsearch-form .search-field.single select {
 	margin: 0;
 	width: 65%;
 	float: left;
 }
-.rbsearch-form .search-field.single input,
-.rbsearch-form .search-field.multi div input[type="text"] {
+.bbsearch-form .search-field.single input,
+.bbsearch-form .search-field.multi div input[type="text"] {
 	padding: 5px;
 }
-.rbsearch-form .search-field.single select,
-.rbsearch-form .search-field.multi div select {
+.bbsearch-form .search-field.single select,
+.bbsearch-form .search-field.multi div select {
 	padding: 2px;
 }
-.rbsearch-form .search-field.multi legend {
+.bbsearch-form .search-field.multi legend {
 	float: left;
 	width: 100%;
 	padding-bottom: 5px;
 }
-.rbsearch-form .search-field.multi label {
+.bbsearch-form .search-field.multi label {
 	float: left;
 	width: auto;
 	clear: both;
 	line-height: normal;
 }
-.rbsearch-form .search-field.multi div {
+.bbsearch-form .search-field.multi div {
 	width: 48%;
 	float: left;
 }
-.rbsearch-form .search-field.multi div:last-child {
+.bbsearch-form .search-field.multi div:last-child {
 	margin-left: 4%;
 }
-.rbsearch-form .search-field.multi div label {
+.bbsearch-form .search-field.multi div label {
 	width: 40%;
 	float: left;
 	line-height: 28px;
 	text-align: center;
 }
-.rbsearch-form .search-field.multi div input[type="text"],
-.rbsearch-form .search-field.multi div select {
+.bbsearch-form .search-field.multi div input[type="text"],
+.bbsearch-form .search-field.multi div select {
 	margin: 0;
 	width: 60%;
 	float: left;
 }
-.rbsearch-form .search-field.multi label input[type="checkbox"],
-.rbsearch-form .search-field.multi label input[type="radio"] {
+.bbsearch-form .search-field.multi label input[type="checkbox"],
+.bbsearch-form .search-field.multi label input[type="radio"] {
 	margin: 0;
 	float: left;
 }
-.rbsearch-form .search-field.single label, .rbsearch-form .search-field.multi legend {
+.bbsearch-form .search-field.single label, .bbsearch-form .search-field.multi legend {
 	font-weight: bold;
 }
 
 /* Widget Form */
-.bb_agency_widget_showsearch .rbsearch-form .search-field {
+.bb_agency_widget_showsearch .bbsearch-form .search-field {
 	width: 100%;
 }
-.bb_agency_widget_showsearch .rbsearch-form .search-field.single label {
-	width: 100%;
-	float: none;
-	display: block;
-}
-.bb_agency_widget_showsearch .rbsearch-form .search-field.single input[type="text"] {
+.bb_agency_widget_showsearch .bbsearch-form .search-field.single label {
 	width: 100%;
 	float: none;
 	display: block;
 }
-.bb_agency_widget_showsearch .rbsearch-form .search-field.multi div label {
+.bb_agency_widget_showsearch .bbsearch-form .search-field.single input[type="text"] {
+	width: 100%;
+	float: none;
+	display: block;
+}
+.bb_agency_widget_showsearch .bbsearch-form .search-field.multi div label {
 	width: 100%;
 	float: none;
 	display: block;
 	text-align: right;
 }
-.bb_agency_widget_showsearch .rbsearch-form .search-field.multi div input[type="text"],
-.bb_agency_widget_showsearch .rbsearch-form .search-field.multi div select {
+.bb_agency_widget_showsearch .bbsearch-form .search-field.multi div input[type="text"],
+.bb_agency_widget_showsearch .bbsearch-form .search-field.multi div select {
 	width: 100%;
 	float: left;
 }
-.bb_agency_widget_showsearch .rbsearch-form .search-field.multi div input[type="text"] {
+.bb_agency_widget_showsearch .bbsearch-form .search-field.multi div input[type="text"] {
 	text-align: right;
 }
 
@@ -509,20 +509,20 @@ img.fillheight {
 /* Quick Search */
 #rbquick-search { overflow: hidden; padding: 30px 0; padding-top: 0; margin-top: 30px; }
 #rbquick-search h2 { margin-bottom: 15px; text-transform: uppercase; }
-#rbquick-search .rbsearch-form .search-field { float: left; margin: 0 15px; width: auto; padding: 0; clear: none; margin-bottom: 15px; }
-#rbquick-search .rbsearch-form .search-field label,
-#rbquick-search .rbsearch-form .search-field legend,
-#rbquick-search .rbsearch-form .search-field select,
-#rbquick-search .rbsearch-form .search-field input { text-transform: uppercase; }
-#rbquick-search .rbsearch-form .search-field label,
-#rbquick-search .rbsearch-form .search-field legend { width: auto; font-weight: normal; line-height: 22px; }
-#rbquick-search .rbsearch-form .search-field input[type="text"] { padding: 2px; border-radius: 0; margin: 0 5px; width: 200px; }
-#rbquick-search .rbsearch-form .search-field select { border: 1px solid #ccc; background: #fff; padding: 1px; margin: 0 5px; width: auto; }
-#rbquick-search .rbsearch-form .search-field.multi > div { width: auto; margin: 0; }
-#rbquick-search .rbsearch-form .search-field.multi > div,
-#rbquick-search .rbsearch-form .search-field.multi legend,
-#rbquick-search .rbsearch-form .search-field.multi input { float: left; }
-#rbquick-search .rbsearch-form .search-field.multi input { width: 100px; }
+#rbquick-search .bbsearch-form .search-field { float: left; margin: 0 15px; width: auto; padding: 0; clear: none; margin-bottom: 15px; }
+#rbquick-search .bbsearch-form .search-field label,
+#rbquick-search .bbsearch-form .search-field legend,
+#rbquick-search .bbsearch-form .search-field select,
+#rbquick-search .bbsearch-form .search-field input { text-transform: uppercase; }
+#rbquick-search .bbsearch-form .search-field label,
+#rbquick-search .bbsearch-form .search-field legend { width: auto; font-weight: normal; line-height: 22px; }
+#rbquick-search .bbsearch-form .search-field input[type="text"] { padding: 2px; border-radius: 0; margin: 0 5px; width: 200px; }
+#rbquick-search .bbsearch-form .search-field select { border: 1px solid #ccc; background: #fff; padding: 1px; margin: 0 5px; width: auto; }
+#rbquick-search .bbsearch-form .search-field.multi > div { width: auto; margin: 0; }
+#rbquick-search .bbsearch-form .search-field.multi > div,
+#rbquick-search .bbsearch-form .search-field.multi legend,
+#rbquick-search .bbsearch-form .search-field.multi input { float: left; }
+#rbquick-search .bbsearch-form .search-field.multi input { width: 100px; }
 
 /** Sign In - Register **/
 #bbsignin-register { text-align: center; vertical-align: top; }
