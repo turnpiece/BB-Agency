@@ -1236,55 +1236,8 @@ GROUP BY profile.`ProfileID`
 ORDER BY $sort $dir $limit
 EOF;
 
-echo $sql;
 				$qItem = $wpdb->get_results($sql, ARRAY_A);
 				$items = count($qItem); // number of total rows returned
-/*
-				if ($items > 0) {
-					// Pagination
-					if (empty($paging)) {
-						if (get_query_var('paging')) {
-							$paging = get_query_var('paging'); 
-						} else { 
-							preg_match('/[0-9]/', $_SERVER["REQUEST_URI"], $matches, PREG_OFFSET_CAPTURE);
-							if ($matches[0][1] > 0) {
-								$paging = str_replace("/", "", substr($_SERVER["REQUEST_URI"], $matches[0][1]));
-							} else {
-								$paging = 1; 
-							}
-						}
-					}
-					if (empty($pagingperpage)) { 
-						$pagingperpage = $bb_agency_option_profilelist_perpage; 
-					}
-					if ($pagingperpage == 0) {
-						$pagingperpage = 10;
-					}
-
-					$p = new bb_agency_pagination;
-					$p->items($items);
-					$p->limit($pagingperpage); // Limit entries per page
-					$p->target($_SERVER['REQUEST_URI']);
-					$p->currentPage($paging); // Gets and validates the current page
-					$p->calculate(); // Calculates what to show
-					$p->parameterName('paging');
-					$p->adjacents(1); //No. of page away from the current page
-					
-					//$p->page = $paging;
-					
-					//Query for limit paging
-					$limit = "LIMIT " . $p->page * $p->limit  . ", " . $p->limit;
-				} else {
-					$limit = '';
-				}
-
-	            if (get_query_var('target')=="print") {
-	            	$limit = '';
-	            } //to remove limit on print page
-				if (get_query_var('target')=="pdf") {
-					$limit = '';
-				} //to remove limit on pdf page
-*/				
 				$limit = ''; // pagination not working here
 	  
 	  		}//if (get_query_var('target')!="print" 

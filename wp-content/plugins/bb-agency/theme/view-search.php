@@ -8,8 +8,6 @@ foreach ($_REQUEST as $key => $value) {
   	}
 }
 
-?><pre><?php print_r($_REQUEST) ?></pre><?php
-
 
 
 // *************************************************************************************************** //
@@ -154,8 +152,6 @@ if ($_REQUEST["action"] == "search") {
 	// Pagination
 	$filterArray['paging'] = 1;
 	$filterArray['pagingperpage'] = 1000; 
-
-	?><pre><?php print_r($filterArray) ?></pre><?php
 }
 
 // *************************************************************************************************** //
