@@ -1146,14 +1146,24 @@ function bb_display_manage($ProfileID) {
     echo "</table>\n";
 
     // display jobs
+    $t_profile = table_agency_profile;
     $t_job = table_agency_job;
     ?>
     <h3>Jobs</h3>
+    <?php
+    // as client
+    $sql = "SELECT * FROM $t_job WHERE `JobClient` = $ProfileID";
+    $results = $wpdb->get_results($sql);
+    
+    if (count($results)) :
+        include('job/list_owned.php');
+    endif; ?>
 
     <h4>Bookings</h4>
     <?php
     // booked
-    $sql = "SELECT * FROM $t_job WHERE `JobModelBooked` = $ProfileID";
+    $sql = "SELECT j.*, p.`ProfileContactDisplay` AS ClientName FROM $t_job j LEFT JOIN $t_profile p ON p.`ProfileID` = j.`JobClient` WHERE j.`JobModelBooked` = $ProfileID";
+    echo $sql;
     $results = $wpdb->get_results($sql);
     
     if (count($results)) :
