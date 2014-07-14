@@ -1162,8 +1162,7 @@ function bb_display_manage($ProfileID) {
     <h4>Bookings</h4>
     <?php
     // booked
-    $sql = "SELECT j.*, p.`ProfileContactDisplay` AS ClientName FROM $t_job j LEFT JOIN $t_profile p ON p.`ProfileID` = j.`JobClient` WHERE j.`JobModelBooked` = $ProfileID";
-    echo $sql;
+    $sql = "SELECT j.*, p.`ProfileContactDisplay` AS ClientName FROM `$t_job` j LEFT JOIN `$t_profile` p ON p.`ProfileID` = j.`JobClient` WHERE j.`JobModelBooked` = $ProfileID";
     $results = $wpdb->get_results($sql);
     
     if (count($results)) :
@@ -1175,7 +1174,7 @@ function bb_display_manage($ProfileID) {
     <h4>Casting Calls</h4>
     <?php
     // castings
-    $sql = "SELECT * FROM $t_job WHERE $ProfileID IN (`JobModelCasted`)";
+    $sql = "SELECT j.*, p.`ProfileContactDisplay` AS ClientName FROM `$t_job` j LEFT JOIN `$t_profile` p ON p.`ProfileID` = j.`JobClient` WHERE $ProfileID IN (`JobModelCasted`)";
     $results = $wpdb->get_results($sql);
     
     if (count($results)) :
