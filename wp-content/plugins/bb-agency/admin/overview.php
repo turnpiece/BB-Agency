@@ -33,19 +33,9 @@
 									        <th scope="row"><?php _e("Classification", bb_agency_TEXTDOMAIN) ?>:</th>
 									        <td><select name="ProfileType" id="ProfileType">               
 												<option value=""><?php _e("Any Profile Type", bb_agency_TEXTDOMAIN) ?></option>
-												<?php foreach ($dataTypes as $type) :
-														if ($_SESSION['ProfileType']) {
-															if ($type->DataTypeID ==  $_SESSION['ProfileType']) { 
-																$selectedvalue = " selected"; 
-															} else { 
-																$selectedvalue = ""; 
-															} 
-														} else { 
-															$selectedvalue = ""; 
-														}
-														?>
-														<option value="<?php echo $dataType->DataTypeID ?>" <?php echo $selectedvalue ?>><?php echo $type->DataTypeTitle ?></option>
-													<?php endwhile; ?>
+												<?php foreach ($dataTypes as $type) : ?>
+												<option value="<?php echo $dataType->DataTypeID ?>" <?php selected($type->DataTypeID, $_SESSION['ProfileType']) ?>><?php echo $type->DataTypeTitle ?></option>
+												<?php endforeach; ?>
 									        	</select></td>
 									        </td>
 									    </tr>
