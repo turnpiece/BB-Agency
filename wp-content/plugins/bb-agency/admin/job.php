@@ -94,8 +94,11 @@ if ($_POST) {
                 }
 
                 // get model booked and models called for casting
-                if ($_POST['JobModelBooked'])
-                    $sqlData[] = '`JobModelBooked` = "'.(int)$wpdb->escape($_POST['JobModelBooked']).'"';
+                if (!empty($_POST['JobModelBooked'])) {
+                    // array from multiselect
+                    $booked = implode(',', $_POST['JobModelBooked']);
+                    $sqlData[] = '`JobModelBooked` = "'.$wpdb->escape($booked).'"';
+                }
 
                 if (!empty($_POST['JobModelCasted'])) {
                     // array from multiselect

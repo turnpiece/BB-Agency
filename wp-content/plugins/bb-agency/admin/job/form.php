@@ -84,21 +84,21 @@
             <table class="form-table">
                 <tbody>
                     <tr valign="top">
-                        <th scope="row"><?php _e("Model booked", bb_agency_TEXTDOMAIN) ?></th>
+                        <th scope="row"><?php _e("Models booked", bb_agency_TEXTDOMAIN) ?></th>
                         <td>
-                            <select id="JobModelBooked" name="JobModelBooked">
+                            <select multiple id="JobModelBooked" name="JobModelBooked[]" size="5">
                                 <option value="">--</option>
                                 <?php
-                                    $booked = bb_agency_get_posted_value('JobModelBooked', isset($Job) ? $Job : null);
+                                    $booked = bb_agency_get_posted_value('JobModelBooked', isset($Job) ? $Job : null, true);
                                     foreach ($models as $model) : ?>
-                                <option value="<?php echo $model->ID ?>" <?php selected($model->ID, $booked) ?>><?php echo $model->name ?></option>
+                                <option value="<?php echo $model->ID ?>" <?php selected(!empty($booked) && in_array($model->ID, $booked)) ?>><?php echo $model->name ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </td>
                         <tr valign="top">
                             <th scope="row"><?php _e("Models called for casting", bb_agency_TEXTDOMAIN) ?></th>
                             <td>
-                                <select multiple id="JobModelCasted" name="JobModelCasted[]" size="25">
+                                <select multiple id="JobModelCasted" name="JobModelCasted[]" size="15">
                                     <?php 
                                         $casted = bb_agency_get_posted_value('JobModelCasted', isset($Job) ? $Job : null, true);
                                         foreach ($models as $model) : ?>
