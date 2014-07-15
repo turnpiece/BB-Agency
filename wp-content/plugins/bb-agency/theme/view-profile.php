@@ -193,7 +193,7 @@ if (!function_exists("bb_agency_inserthead_profile")){
 // GET HEADER  
 get_header();
 	
-echo "<div id=\"container\" "; if ($bb_agency_option_profilelist_sidebar==0) { echo "class=\"one-column\""; } echo">\n";
+echo "<div id=\"container\" "; if ($bb_agency_option_profilelist_sidebar == 0) { echo "class=\"one-column\""; } echo">\n";
 echo "    <div id=\"content\" role=\"main\" class=\"transparent\">\n";
 if ($count > 0) {
 	if (( !$ProfilePrivacy || is_user_logged_in()) && (
@@ -204,7 +204,7 @@ if ($count > 0) {
 		
 	  	// Ok, but whats the status of the profile?
 	  	if ( ($ProfileIsActive == 1) || ($ProfileUserLinked == $CurrentUser) || current_user_can('level_10') ) {
-			include ("include-profile-layout". $bb_agency_option_layoutprofile .".php"); 	
+			include ("include-profile-layout.php"); 	
 	  	} else {
 			/*
 			 * display this profile as long as it came
@@ -212,7 +212,7 @@ if ($count > 0) {
 	                     * directly viewed.
 			 */
 			if(strpos($_SERVER['HTTP_REFERER'],'client-view') > 0){
-				include ("include-profile-layout". $bb_agency_option_layoutprofile .".php"); 	
+				include ("include-profile-layout.php"); 	
 			} else {
 				echo "". __("Inactive Profile", bb_agency_TEXTDOMAIN) ."\n";
 			}

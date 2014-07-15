@@ -25,28 +25,25 @@ Profile View with Scrolling Thumbnails and Primary Image
 	echo "	  <div class=\"inner\">\n";
 
 			// images
-
-		
-
-			$queryImg = "SELECT * FROM ". table_agency_profile_media ." media WHERE ProfileID =  \"". $ProfileID ."\" AND ProfileMediaType = \"Image\" ORDER BY $orderBy";
-
-			$resultsImg = mysql_query($queryImg);
-
-			$countImg = mysql_num_rows($resultsImg);
-
-			while ($dataImg = mysql_fetch_array($resultsImg)) {
-
-			  if ($countImg > 1) { 
-
-				echo "<div class=\"photo\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" rel=\"lightbox\" title=\"". $ProfileContactDisplay ."\"><img src=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt=\"". $ProfileContactDisplay ."\" /></a></div>\n";
-
+			global $wpdb;
+			$queryImg = "SELECT * FROM ". table_agency_profile_media ." media WHERE `ProfileID` =  \"". $ProfileID ."\" AND `ProfileMediaType` = \"Image\" ORDER BY $orderBy";
+			$resultsImg = $wpdb->get_results($queryImg);
+			$countImg = count($resultsImg);
+			$path = bb_agency_UPLOADPATH . $ProfileGallery .'/';
+			foreach ($resultsImg as $dataImg) : ?>
+			<div class="photo">
+				<a href="<?php echo bb_agency_UPLOADDIR . $ProfileGallery .'/'. $dataImg->ProfileMediaURL ?>" rel="lightbox" title="<?php $ProfileContactDisplay ?>">
+					<img src="<?php echo bb_agency_BASEDIR.'/tasks/timthumb.php?src=' . $path . $dataImg->ProfileMediaURL . '&h=139' ?>" alt="<?php echo $ProfileContactDisplay ?>" />
+				</a>
+			</div>
+<?php /*
 			  } else {
 
 				echo "<div class=\"photo\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" rel=\"lightbox\" title=\"". $ProfileContactDisplay ."\"><img src=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt=\"". $ProfileContactDisplay ."\" /></a></div>\n";
 
 			  }
-
-			}
+*/ ?>
+			<?php endforeach;
 
 
 

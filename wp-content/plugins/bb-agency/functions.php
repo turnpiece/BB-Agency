@@ -1344,13 +1344,7 @@ EOF;
 	                
 			$bb_user_isLogged = is_user_logged_in();
 
-			#DEBUG!
-			//echo $queryList;
-
 			if ($countList > 0) {
-				
-				# this will replace the timthumb function as it is not working properly all the time.	
-			  	//$displayHTML ="	<script type='text/javascript' src='".bb_agency_BASEDIR."js/resize.js'></script>";
 
 		        $profileDisplay = 0;
 				$countFav = 0;
@@ -1381,28 +1375,13 @@ EOF;
 						/*********** Show Count/Pages **************/
 						 $displayHTML .= "  <div id=\"profile-results-info\" class=\"six column\">\n";
 							
-							# Temporarily removed this as required
-							#if (count($row) > 0) {
-							#	$displayHTML .="    <div class=\"profile-results-info-countpage\">\n";
-							#		echo "<strong>Item on this list: ".count($countList)."</strong>";
-							#	$displayHTML .="    </div>\n";
-							#}
-							/*
-							if ($items > 0) {
-								if (empty($profilefavorite) && empty($profilecastingcart)) { 
-									$displayHTML .="    <div class=\"profile-results-info-countpage\">\n";
-									echo $p->show();  // Echo out the list of paging. 
-									$displayHTML .= "    </div>\n";
-								}
-							}
-							*/
-							if ($bb_agency_option_profilelist_count) {
-								if (empty($profilefavorite) && empty($profilecastingcart)) {  
-									$displayHTML .= "    <div id=\"profile-results-info-countrecord\">\n";
-									$displayHTML .="    	". __("Displaying", bb_agency_TEXTDOMAIN) ." <strong>". $countList ."</strong> ". __("of", bb_agency_TEXTDOMAIN) ." ". $items ." ". __(" records", bb_agency_TEXTDOMAIN) ."\n";
-									$displayHTML .="    </div>\n";
-								}				
-							}
+						if ($bb_agency_option_profilelist_count) {
+							if (empty($profilefavorite) && empty($profilecastingcart)) {  
+								$displayHTML .= "    <div id=\"profile-results-info-countrecord\">\n";
+								$displayHTML .="    	". __("Displaying", bb_agency_TEXTDOMAIN) ." <strong>". $countList ."</strong> ". __("of", bb_agency_TEXTDOMAIN) ." ". $items ." ". __(" records", bb_agency_TEXTDOMAIN) ."\n";
+								$displayHTML .="    </div>\n";
+							}				
+						}
 
 						$displayHTML.="  </div><!-- #profile-results-info -->\n";
 						$displayHTML.="  <div class=\"bbclear\"></div>\n";
@@ -1418,21 +1397,23 @@ EOF;
 						//dont need other image for hover if its for print or pdf download view and dont use timthubm
 						if (!$isDownload) {
 									 
-							if (bb_agency_get_option('bb_agency_option_profilelist_thumbsslide')==1) {  //show profile sub thumbs for thumb slide on hover
-								$images=getAllImages($row["ProfileID"]);
-							    $images=str_replace("{PHOTO_PATH}",bb_agency_UPLOADDIR ."". $row["ProfileGallery"]."/",$images);
+							if (bb_agency_get_option('bb_agency_option_profilelist_thumbsslide') == 1) {  //show profile sub thumbs for thumb slide on hover
+								$images = getAllImages($row["ProfileID"]);
+							    $images = str_replace("{PHOTO_PATH}",bb_agency_UPLOADDIR ."". $row["ProfileGallery"]."/",$images);
 							}
 
-							# this is removed as timthumb always has an issue.
-							$displayHTML .="<div class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $row["ProfileGallery"] ."/\"><img src=\"".bb_agency_BASEDIR."tasks/timthumb.php?src=".bb_agency_UPLOADDIR ."". $row["ProfileGallery"] ."/". $row["ProfileMediaURL"]."&w=200&q=60\" id=\"roll".$row["ProfileID"]."\"  /></a>".$images."</div>\n";
-							
-							#phel comment: i decided to remove the actual image, and put the url on anchor as background to fix the image resizing issue
-							#$displayHTML .="<div  class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $row["ProfileGallery"] ."/\"><img src=\"".bb_agency_UPLOADDIR ."". $row["ProfileGallery"] ."/". $row["ProfileMediaURL"]."\"  /></a>".$images."</div>\n";
-							#$displayHTML .="<div  class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $row["ProfileGallery"] ."/\" style=\"background-image: url(".bb_agency_UPLOADDIR ."". $row["ProfileGallery"] ."/". $row["ProfileMediaURL"].")\"></a>".$images."</div>\n";
+							// display thumbnail image
+							//$displayHTML .="<div class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $row["ProfileGallery"] ."/\"><img src=\"".bb_agency_BASEDIR."tasks/timthumb.php?src=".bb_agency_UPLOADDIR ."". $row["ProfileGallery"] ."/". $row["ProfileMediaURL"]."&w=200&h=300&zc=1\" id=\"roll".$row["ProfileID"]."\"  /></a>".$images."</div>\n";
+
+							$displayHTML .= '<div class="image">';
+							$displayHTML .= '<a href="'. bb_agency_PROFILEDIR . $row["ProfileGallery"] .'">';
+							$displayHTML .= '<img src="'.bb_agency_get_thumbnail_url($row["ProfileGallery"] .'/'. $row["ProfileMediaURL"]).'" id="roll'.$row['ProfileID'].'" />';
+							$displayHTML .= '</a>';
+							$displayHTML .= $images;
+							$displayHTML .= '</div>'."\n";
 
 						} else {
-							#phel comment: i decided to remove the actual image, and put the url on anchor as background to fix the image resizing issue
-							#$displayHTML .="<div  class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $row["ProfileGallery"] ."/\"><img src=\"".bb_agency_UPLOADDIR ."". $row["ProfileGallery"] ."/". $row["ProfileMediaURL"]."\"  /></a>".$images."</div>\n";
+
 							$displayHTML .="<div  class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $row["ProfileGallery"] ."/\" style=\"background-image: url(".bb_agency_UPLOADDIR ."". $row["ProfileGallery"] ."/". $row["ProfileMediaURL"].")\"></a>".$images."</div>\n";
 						}
 					
@@ -1514,13 +1495,41 @@ EOF;
 		
 	//get profile images
 	function getAllImages($profileID) {
-		$queryImg = "SELECT * FROM ". table_agency_profile_media ." media WHERE ProfileID =  \"". $profileID ."\" AND ProfileMediaType = \"Image\" ORDER BY ProfileMediaPrimary DESC LIMIT 0, 7 ";
-		$resultsImg = mysql_query($queryImg);
-		$countImg = mysql_num_rows($resultsImg);
-		while ($dataImg = mysql_fetch_array($resultsImg)) {//style=\"display:none\" 
-		 	$images.="<img  class=\"roll\" src=\"".bb_agency_BASEDIR."/tasks/timthumb.php?src={PHOTO_PATH}". $dataImg['ProfileMediaURL'] ."&w=200&q=30\" alt='' style='width:148px'   />\n";
+		global $wpdb;
+		$queryImg = "SELECT * FROM ". table_agency_profile_media ." media WHERE `ProfileID` =  \"". $profileID ."\" AND `ProfileMediaType` = \"Image\" ORDER BY `ProfileMediaPrimary` DESC LIMIT 0, 7 ";
+		$resultsImg = $wpdb->get_results($queryImg);
+		if (count($resultsImg)) {
+			foreach ($resultsImg as $dataImg) {
+			 	$images[] = "<img class=\"roll\" src=\"".bb_agency_BASEDIR."/tasks/timthumb.php?src={PHOTO_PATH}". $dataImg->ProfileMediaURL ."&w=148&zc=2\" alt='' style='width:148px'   />\n";
+			}
 		}
-	return  $images;
+		return implode("\n", $images);
+	}
+
+	/**
+	 *
+	 * get thumbnail url
+	 *
+	 * @param string $image
+	 * @param int $w width
+	 * @param int $h height
+	 * @param int $zc zoom/crop setting for timthumb
+	 * @return string
+	 *
+	 */
+	function bb_agency_get_thumbnail_url($image, $w = 200, $h = 300, $zc = false)
+	{
+		$url = bb_agency_BASEDIR . 'tasks/timthumb.php?src=' . bb_agency_UPLOADDIR . $image;
+		if ($w)
+			$url .= '&w='.$w;
+
+		if ($h)
+			$url .= '&h='.$h;
+
+		if ($zc !== false)
+			$url .= '&zc='.$zc;
+
+		return $url;
 	}
 		
 		

@@ -95,18 +95,18 @@
                                 <?php endforeach; ?>
                             </select>
                         </td>
-                        <tr valign="top">
-                            <th scope="row"><?php _e("Models called for casting", bb_agency_TEXTDOMAIN) ?></th>
-                            <td>
-                                <select multiple id="JobModelCasted" name="JobModelCasted[]" size="15">
-                                    <?php 
-                                        $casted = bb_agency_get_posted_value('JobModelCasted', isset($Job) ? $Job : null, true);
-                                        foreach ($models as $model) : ?>
-                                    <option value="<?php echo $model->ID ?>" <?php selected(!empty($casted) && in_array($model->ID, $casted)) ?>><?php echo $model->name ?></option>    
-                                    <?php endforeach; ?>
-                                </select>
-                            </td>
-                        </tr>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e("Models called for casting", bb_agency_TEXTDOMAIN) ?></th>
+                        <td>
+                            <select multiple id="JobModelCasted" name="JobModelCasted[]" size="15">
+                                <?php 
+                                    $casted = bb_agency_get_posted_value('JobModelCasted', isset($Job) ? $Job : null, true);
+                                    foreach ($models as $model) : ?>
+                                <option value="<?php echo $model->ID ?>" <?php selected(!empty($casted) && in_array($model->ID, $casted)) ?>><?php echo $model->name ?></option>    
+                                <?php endforeach; ?>
+                            </select>
+                        </td>
                     </tr>
                 </tbody>
             </table>
