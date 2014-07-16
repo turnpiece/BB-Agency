@@ -1346,6 +1346,9 @@ EOF;
 
 			if ($countList > 0) {
 
+				// scale images in the browser
+			  	$displayHTML ="	<script type='text/javascript' src='".bb_agency_BASEDIR."js/resize.js'></script>";
+
 		        $profileDisplay = 0;
 				$countFav = 0;
 				foreach ($resultsList as $row) {
@@ -1407,7 +1410,7 @@ EOF;
 
 							$displayHTML .= '<div class="image">';
 							$displayHTML .= '<a href="'. bb_agency_PROFILEDIR . $row["ProfileGallery"] .'">';
-							$displayHTML .= '<img src="'.bb_agency_get_thumbnail_url($row["ProfileGallery"] .'/'. $row["ProfileMediaURL"]).'" id="roll'.$row['ProfileID'].'" />';
+							$displayHTML .= '<img src="'.bb_agency_get_thumbnail_url($row["ProfileGallery"] .'/'. $row["ProfileMediaURL"], 200).'" id="roll'.$row['ProfileID'].'" />';
 							$displayHTML .= '</a>';
 							$displayHTML .= $images;
 							$displayHTML .= '</div>'."\n";
