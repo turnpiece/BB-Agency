@@ -628,8 +628,8 @@
             </ul>
 
             <h3>Install PDF Themes</h3>
-            <p>Download themes from the <a href="http://kingpro.me/plugins/invoice-king-pro/themes/" target="_blank">King Pro Plugins page</a>. Locate the themes folder in the invoicekingpro plugin folder, generally located:</p>
-            <pre>/wp-content/plugins/invoicekingpro/themes/</pre>
+            <p>Download themes from the <a href="http://kingpro.me/plugins/invoice-king-pro/themes/" target="_blank">King Pro Plugins page</a>. Locate the themes folder in the bb-agency-invoices plugin folder, generally located:</p>
+            <pre>/wp-content/plugins/bb-agency-invoices/themes/</pre>
             <p>Unzip the downloaded zip file and upload the entire folder into the themes folder mentioned above.</p>
             <p>Once uploaded, return to this page and your theme will be present in the PDF Theme dropdown to the left. Choose the theme and save the options. Next time you generate a report, the theme you have chosen will be used.</p>
             <p>The ability to upload the zip file straight from here will be added soon</p>

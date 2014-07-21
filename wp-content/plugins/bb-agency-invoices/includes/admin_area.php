@@ -64,7 +64,7 @@ add_action( 'admin_action_bbinvcheckthemeversion', 'bbinvcheckthemeversion_admin
 
 function bbinv_check_page($hook) {
     global $current_screen;
-    $bbinv_pages = array('king-pro-plugins_page_invoicekingpro', "toplevel_page_kpp_menu");
+    $bbinv_pages = array('king-pro-plugins_page_bb-agency-invoices', "toplevel_page_kpp_menu");
     $pages_req = array('post.php', 'post-new.php', 'edit.php');
     
     if (in_array($hook, $bbinv_pages)) return true;
@@ -626,7 +626,7 @@ function bbinv_post_invoice($object, $box) {
     if (!isset($calc_ops[0])) {
         echo __("Please visit the settings page to setup your defaults for the invoice", "bbinvtext");
         echo "<br /><br />";
-        echo "<a href='".admin_url('/admin.php?page=invoicekingpro')."'>".__('Settings Page', "bbinvtext")."</a>";
+        echo "<a href='".admin_url('/admin.php?page=bb-agency-invoices')."'>".__('Settings Page', "bbinvtext")."</a>";
         return;
     }
     $row_calc = array();
@@ -1179,7 +1179,7 @@ add_filter('get_sample_permalink_html', 'bbinv_perm', '', 4);
 function bbinv_enqueue($hook) {
     if (bbinv_check_page($hook)) :
         wp_register_style( 'bbinv_jquery_ui', plugins_url('css/jquery-ui.css', dirname(__FILE__)), false, '1.9.2' );
-        wp_register_style( 'bbinv_css', plugins_url('css/invoicekingpro-styles.css', dirname(__FILE__)), false, '1.0.0' );
+        wp_register_style( 'bbinv_css', plugins_url('css/bb-agency-invoices-styles.css', dirname(__FILE__)), false, '1.0.0' );
         $theme = get_option('bbinv_theme');
         wp_register_style( 'bbinv_'.$theme.'_css', plugins_url('themes/'.$theme.'/styles.css', dirname(__FILE__)), false, '1.0.0' );
         wp_register_style( 'fontawesome', plugins_url('css/font-awesome.min.css', dirname(__FILE__)), false, '3.2.1');
@@ -1192,7 +1192,7 @@ function bbinv_enqueue($hook) {
 
         wp_enqueue_script( 'jquery-ui-datepicker');
         wp_register_script( 'bbinv_elastic', plugins_url( '/js/jquery.elastic.source.js', dirname(__FILE__) ), array('jquery'), '1.6.11');
-        wp_register_script( 'bbinv_admin_js', plugins_url( '/js/invoicekingpro-admin-functions.js', dirname(__FILE__) ), array('jquery'), '1.0.0');
+        wp_register_script( 'bbinv_admin_js', plugins_url( '/js/bb-agency-invoices-admin-functions.js', dirname(__FILE__) ), array('jquery'), '1.0.0');
 
         wp_enqueue_script( 'bbinv_elastic' );
         wp_enqueue_script( 'bbinv_admin_js' );
@@ -1248,7 +1248,7 @@ function bbinv_add_parent_page() {
 //    remove_submenu_page('kpp_menu','kpp_menu');
 //  }
   
-  add_submenu_page('kpp_menu', 'BB Agency Invoices', 'BB Agency Invoices', 'manage_options', 'invoicekingpro', 'bbinv_settings_output');
+  add_submenu_page('kpp_menu', 'BB Agency Invoices', 'BB Agency Invoices', 'manage_options', 'bb-agency-invoices', 'bbinv_settings_output');
 }
 add_action('admin_menu', 'bbinv_add_parent_page');
 

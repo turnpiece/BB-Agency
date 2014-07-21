@@ -71,6 +71,6 @@
     add_filter('plugin_action_links','bbinv_settings_link',10,2);
     
     require_once plugin_dir_path(__FILE__).'includes/admin_area.php';
-    require_once plugin_dir_path(__FILE__).'js/invoicekingpro-js.php';
+    require_once plugin_dir_path(__FILE__).'js/bb-agency-invoices-js.php';
     
 ?>
