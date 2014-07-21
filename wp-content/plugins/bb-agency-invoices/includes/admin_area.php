@@ -64,7 +64,7 @@ add_action( 'admin_action_bbinvcheckthemeversion', 'bbinvcheckthemeversion_admin
 
 function bbinv_check_page($hook) {
     global $current_screen;
-    $bbinv_pages = array('king-pro-plugins_page_bb-agency-invoices', "toplevel_page_kpp_menu");
+    $bbinv_pages = array('king-pro-plugins_page_bb-agency-invoices', "toplevel_page_bbi_menu");
     $pages_req = array('post.php', 'post-new.php', 'edit.php');
     
     if (in_array($hook, $bbinv_pages)) return true;
@@ -232,14 +232,14 @@ add_action( 'init', 'bbinv_create_post_type' );
 function wpt_bbinv_icons() {
     ?>
     <style type="text/css" media="screen">
-        #toplevel_page_kpp_menu .wp-menu-image {
-            background: url(<?= plugins_url('/images/kpp-icon_16x16_sat.png', dirname(__FILE__)) ?>) no-repeat center center !important;
+        #toplevel_page_bbi_menu .wp-menu-image {
+            background: url(<?= plugins_url('/images/bbi-icon_16x16_sat.png', dirname(__FILE__)) ?>) no-repeat center center !important;
         }
-	#toplevel_page_kpp_menu:hover .wp-menu-image, #toplevel_page_kpp_menu.wp-has-current-submenu .wp-menu-image {
-            background: url(<?= plugins_url('/images/kpp-icon_16x16.png', dirname(__FILE__)) ?>) no-repeat center center !important;
+	#toplevel_page_bbi_menu:hover .wp-menu-image, #toplevel_page_bbi_menu.wp-has-current-submenu .wp-menu-image {
+            background: url(<?= plugins_url('/images/bbi-icon_16x16.png', dirname(__FILE__)) ?>) no-repeat center center !important;
         }
-        #toplevel_page_kpp_menu .wp-menu-image:before {display: none;}
-	#icon-options-general.icon32-posts-kpp_menu, #icon-kpp_menu.icon32 {background: url(<?= plugins_url('/images/kpp-icon_32x32.png', dirname(__FILE__)) ?>) no-repeat;}
+        #toplevel_page_bbi_menu .wp-menu-image:before {display: none;}
+	#icon-options-general.icon32-posts-bbi_menu, #icon-bbi_menu.icon32 {background: url(<?= plugins_url('/images/bbi-icon_32x32.png', dirname(__FILE__)) ?>) no-repeat;}
         
         #menu-posts-bbinv_invoices .wp-menu-image {
             background: url(<?= plugins_url('/images/bbinv-icon_16x16_sat.png', dirname(__FILE__)) ?>) no-repeat center center !important;
@@ -1209,8 +1209,8 @@ function bbinv_enqueue($hook) {
 add_action( 'admin_enqueue_scripts', 'bbinv_enqueue' );
 
 // Add King Pro Plugins Section
-if(!function_exists('find_kpp_menu_item')) {
-  function find_kpp_menu_item($handle, $sub = false) {
+if(!function_exists('find_bbi_menu_item')) {
+  function find_bbi_menu_item($handle, $sub = false) {
     if(!is_admin() || (defined('DOING_AJAX') && DOING_AJAX)) {
       return false;
     }
@@ -1238,23 +1238,23 @@ if(!function_exists('find_kpp_menu_item')) {
 }
 
 function bbinv_add_parent_page() {
-  if(!find_kpp_menu_item('kpp_menu')) {
-    add_menu_page('King Pro Plugins','King Pro Plugins', 'manage_options', 'kpp_menu', 'kpp_menu_page');
+  if(!find_bbi_menu_item('bbi_menu')) {
+    add_menu_page('King Pro Plugins','King Pro Plugins', 'manage_options', 'bbi_menu', 'bbi_menu_page');
   }
 //  if(!function_exists('remove_submenu_page')) {
-//    unset($GLOBALS['submenu']['kpp_menu'][0]);
+//    unset($GLOBALS['submenu']['bbi_menu'][0]);
 //  }
 //  else {
-//    remove_submenu_page('kpp_menu','kpp_menu');
+//    remove_submenu_page('bbi_menu','bbi_menu');
 //  }
   
-  add_submenu_page('kpp_menu', 'BB Agency Invoices', 'BB Agency Invoices', 'manage_options', 'bb-agency-invoices', 'bbinv_settings_output');
+  add_submenu_page('bbi_menu', 'BB Agency Invoices', 'BB Agency Invoices', 'manage_options', 'bb-agency-invoices', 'bbinv_settings_output');
 }
 add_action('admin_menu', 'bbinv_add_parent_page');
 
-if(!function_exists('kpp_menu_page')) {
-    function kpp_menu_page() {
-        include 'screens/kpp.php';
+if(!function_exists('bbi_menu_page')) {
+    function bbi_menu_page() {
+        include 'screens/bbi.php';
     }
 }
 

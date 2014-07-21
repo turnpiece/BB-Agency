@@ -2,12 +2,12 @@
     <?php screen_icon(); ?>
     <h2>BB Agency Invoices</h2>
     
-    <div class="kpp_block filled">
+    <div class="bbi_block filled">
         <h2><?= __('Connect', 'bbinvtext') ?></h2>
-        <div id="kpp_social">
-            <div class="kpp_social facebook"><a href="https://www.facebook.com/KingProPlugins" target="_blank"><i class="icon-facebook"></i> <span class="kpp_width"><span class="kpp_opacity">Facebook</span></span></a></div>
-            <div class="kpp_social twitter"><a href="https://twitter.com/KingProPlugins" target="_blank"><i class="icon-twitter"></i> <span class="kpp_width"><span class="kpp_opacity">Twitter</span></span></a></div>
-            <div class="kpp_social google"><a href="https://plus.google.com/b/101488033905569308183/101488033905569308183/about" target="_blank"><i class="icon-google-plus"></i> <span class="kpp_width"><span class="kpp_opacity">Google+</span></span></a></div>
+        <div id="bbi_social">
+            <div class="bbi_social facebook"><a href="https://www.facebook.com/KingProPlugins" target="_blank"><i class="icon-facebook"></i> <span class="bbi_width"><span class="bbi_opacity">Facebook</span></span></a></div>
+            <div class="bbi_social twitter"><a href="https://twitter.com/KingProPlugins" target="_blank"><i class="icon-twitter"></i> <span class="bbi_width"><span class="bbi_opacity">Twitter</span></span></a></div>
+            <div class="bbi_social google"><a href="https://plus.google.com/b/101488033905569308183/101488033905569308183/about" target="_blank"><i class="icon-google-plus"></i> <span class="bbi_width"><span class="bbi_opacity">Google+</span></span></a></div>
         </div>
         <h4><?= __("Found an issue? Post your issue on the", 'bbinvtext') ?> <a href="http://wordpress.org/support/plugin/invoice-king-pro" target="_blank"><?= __("support forums", 'bbinvtext') ?></a>. <?= __("If you would prefer, please email your concern to", 'bbinvtext') ?> <a href="mailto:plugins@kingpro.me">plugins@kingpro.me</a></h4>   
     </div>
@@ -521,21 +521,21 @@
             <p><?= __("Personalise your invoices by using an BB Agency Invoices theme. The current selection is below. If you would like one that is customised just for you,
                 contact", 'bbinvtext') ?> <a href="mailto:plugins@kingpro.me">plugins@kingpro.me</a>.</p>
             
-            <div class="kpp_item">
+            <div class="bbi_item">
                 <a href="<?= plugins_url('../images/clean-invoice-theme.png', dirname(__FILE__)) ?>"><img alt="Clean Invoice" src="<?= plugins_url('../images/clean-invoice-theme.png', dirname(__FILE__)) ?>" /></a>
                 <span class="title">Clean</span>
                 <span class="description"><?= __("Nice sharp design using<br />a custom font", 'bbinvtext') ?>.</span>
                 <span class="links"><a href="http://kingpro.me/plugins/invoice-king-pro/themes/" target='_blank' title="Get the 'Clean' theme"><?= __("Get It", 'bbinvtext') ?></a></span>
             </div>
 
-            <div class="kpp_item">
+            <div class="bbi_item">
                 <a href="<?= plugins_url('../images/default-with-image-invoice-theme.png', dirname(__FILE__)) ?>"><img alt="Default with Logo" src="<?= plugins_url('../images/default-with-image-invoice-theme.png', dirname(__FILE__)) ?>" /></a>
                 <span class="title"><?= __("Default with Logo", 'bbinvtext') ?></span>
                 <span class="description"><?= __("The default theme with added feature to upload a logo", 'bbinvtext') ?></span>
                 <span class="links"><a href="http://kingpro.me/plugins/invoice-king-pro/themes/" target='_blank' title="Get the 'Default with Logo' theme"><?= __("Get It", 'bbinvtext') ?></a></span>
             </div>
             
-            <div class="kpp_item">
+            <div class="bbi_item">
                 <a href="<?= plugins_url('../images/clean-invoice-theme.png', dirname(__FILE__)) ?>"><img alt="Clean with Logo" src="<?= plugins_url('../images/clean-invoice-theme.png', dirname(__FILE__)) ?>" /></a>
                 <span class="title"><?= __("Clean with Logo", 'bbinvtext') ?></span>
                 <span class="description"><?= __("Nice sharp design using<br />a custom font with added feature to upload a logo", 'bbinvtext') ?>.</span>
@@ -549,13 +549,13 @@
             <p><?= __("Expand the functionality of BB Agency Invoices to your necessity by installing Addons. Is there additional functionality your looking for that an addon
             doesn't cover? Contact", 'bbinvtext') ?> <a href="mailto:plugins@kingpro.me">plugins@kingpro.me</a> <?= __("and fill us in about what you after.", 'bbinvtext') ?></p>
             
-            <div class="kpp_item">
+            <div class="bbi_item">
                 <img alt="<?= __("Recurring Invoice", 'bbinvtext') ?>" src="<?= plugins_url('../images/addon-recurring.jpg', dirname(__FILE__)) ?>" />
                 <span class="title"><?= __("Recurring Invoices", 'bbinvtext') ?></span>
                 <span class="description"><?= __("Turn new and existing invoices into automatic recurring invoices via a cron", 'bbinvtext') ?></span>
                 <span class="links"><a href="http://kingpro.me/plugins/invoice-king-pro/add-ons/" target='_blank' title="Get the 'Recurring Invoices' Add-on"><?= __("Get It", 'bbinvtext') ?></a></span>
             </div> 
-            <div class="kpp_item">
+            <div class="bbi_item">
                 <img alt="<?= __("Attachments", 'bbinvtext') ?>" src="<?= plugins_url('../images/addon-attachments.jpg', dirname(__FILE__)) ?>" />
                 <span class="title"><?= __("Attachments", 'bbinvtext') ?></span>
                 <span class="description"><?= __("Attach additional files to all and individual invoices when sent to client", 'bbinvtext') ?></span>

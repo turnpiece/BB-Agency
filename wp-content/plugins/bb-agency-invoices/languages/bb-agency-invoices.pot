@@ -303,51 +303,51 @@ msgstr ""
 msgid "Save Client"
 msgstr ""
 
-#: includes/screens/kpp.php:2
+#: includes/screens/bbi.php:2
 msgid "Suite"
 msgstr ""
 
-#: includes/screens/kpp.php:4 includes/screens/settings.php:6
+#: includes/screens/bbi.php:4 includes/screens/settings.php:6
 msgid "Connect"
 msgstr ""
 
-#: includes/screens/kpp.php:14
+#: includes/screens/bbi.php:14
 msgid "Available"
 msgstr ""
 
-#: includes/screens/kpp.php:18
+#: includes/screens/bbi.php:18
 msgid "Upload. Link. Go."
 msgstr ""
 
-#: includes/screens/kpp.php:19 includes/screens/kpp.php:25
-#: includes/screens/kpp.php:31 includes/screens/kpp.php:37
-#: includes/screens/kpp.php:43 includes/screens/kpp.php:49
+#: includes/screens/bbi.php:19 includes/screens/bbi.php:25
+#: includes/screens/bbi.php:31 includes/screens/bbi.php:37
+#: includes/screens/bbi.php:43 includes/screens/bbi.php:49
 msgid "More information about"
 msgstr ""
 
-#: includes/screens/kpp.php:19 includes/screens/kpp.php:25
-#: includes/screens/kpp.php:31 includes/screens/kpp.php:37
-#: includes/screens/kpp.php:43 includes/screens/kpp.php:49
+#: includes/screens/bbi.php:19 includes/screens/bbi.php:25
+#: includes/screens/bbi.php:31 includes/screens/bbi.php:37
+#: includes/screens/bbi.php:43 includes/screens/bbi.php:49
 msgid "Install"
 msgstr ""
 
-#: includes/screens/kpp.php:24
+#: includes/screens/bbi.php:24
 msgid "Invoicing made easy!"
 msgstr ""
 
-#: includes/screens/kpp.php:30
+#: includes/screens/bbi.php:30
 msgid "RSS feeds your way"
 msgstr ""
 
-#: includes/screens/kpp.php:36
+#: includes/screens/bbi.php:36
 msgid "Site details the way you need them"
 msgstr ""
 
-#: includes/screens/kpp.php:42
+#: includes/screens/bbi.php:42
 msgid "Send mail from WP from your email"
 msgstr ""
 
-#: includes/screens/kpp.php:48
+#: includes/screens/bbi.php:48
 msgid "Keep traffic on your site"
 msgstr ""
 
