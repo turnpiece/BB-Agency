@@ -6,31 +6,31 @@
             $this->paid_label = $paid_label;
         }
         function Header() {
-            if ($this->invoice[0]->custom['invkp_paid_invoice'][0] == 1)
+            if ($this->invoice[0]->custom['bbinv_paid_invoice'][0] == 1)
                 $this->watermark(iconv('UTF-8', 'windows-1252', $this->paid_watermark));
 
             $this->SetX(15); $this->SetY($this->GetY() + 5);
             $this->SetFont('Arial','B',20);
-            $this->Cell(95,8,iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['invkp_company_name'][0]),0,0,'L');
+            $this->Cell(95,8,iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_company_name'][0]),0,0,'L');
             $this->SetFont('Arial','B',24);
-            if ($this->invoice[0]->custom['invkp_paid_invoice'][0] == 1)
+            if ($this->invoice[0]->custom['bbinv_paid_invoice'][0] == 1)
                 $this->Cell(95,8,iconv('UTF-8', 'windows-1252', $this->paid_label),0,0,'R');
             else
-                $this->Cell(95,8,iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['invkp_invoice_type'][0]),0,0,'R');
+                $this->Cell(95,8,iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_invoice_type'][0]),0,0,'R');
             $this->Ln(15);
 
             $this->SetX(10);
             $cur_y = $this->GetY();
             $this->SetFont('Arial', '', 9);
-            $this->MultiCell(95, 4, iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['invkp_address'][0])."\r\n".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['invkp_suburb'][0])."\r\n".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['invkp_state'][0])." ".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['invkp_postcode'][0])."\r\n\r\n".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['invkp_phone'][0])."\r\n".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['invkp_email'][0])."\r\n".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['invkp_add_detail'][0]));
+            $this->MultiCell(95, 4, iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_address'][0])."\r\n".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_suburb'][0])."\r\n".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_state'][0])." ".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_postcode'][0])."\r\n\r\n".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_phone'][0])."\r\n".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_email'][0])."\r\n".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_add_detail'][0]));
 
             $this->SetY($cur_y);
             $this->SetX(105);
-            $this->MultiCell(95, 4, iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['invkp_date'][0])."\r\n".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['invkp_invoice_no_label'][0])." ".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['invkp_invoice_no'][0])."\r\n".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['invkp_po_label'][0])." ".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['invkp_po'][0]), 0, 'R');
+            $this->MultiCell(95, 4, iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_date'][0])."\r\n".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_invoice_no_label'][0])." ".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_invoice_no'][0])."\r\n".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_po_label'][0])." ".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_po'][0]), 0, 'R');
             $this->Ln(4);
             $this->SetX(105);
             $this->SetFont('Arial','B',16);
-            $this->MultiCell(95, 7, iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['invkp_attn_name_label'][0])." ".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['invkp_attn_name'][0])."\r\n".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['invkp_client_company'][0]), 0, 'R');
+            $this->MultiCell(95, 7, iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_attn_name_label'][0])." ".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_attn_name'][0])."\r\n".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_client_company'][0]), 0, 'R');
             $this->Ln(6);
 
             $cur_y = $this->GetY();
@@ -55,7 +55,7 @@
     $pdf->SetX(10);
     $pdf->SetY($pdf->cur_y+7);
     $pdf->SetFont('Arial', '', 9);
-    $pdf->MultiCell(190, 4, iconv('UTF-8', 'windows-1252', $invoice[0]->custom['invkp_open_content_1'][0]));
+    $pdf->MultiCell(190, 4, iconv('UTF-8', 'windows-1252', $invoice[0]->custom['bbinv_open_content_1'][0]));
     
     $cur_y = $pdf->GetY();
     $pdf->SetFillColor(255,255,255);
@@ -147,7 +147,7 @@
             $pdf->Cell($col_width,5,$subtotal_label,0,0,'R',0);
         elseif ($c == count($columns)-1) :
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell($col_width,5,iconv('UTF-8', 'windows-1252', $currency_symbol).$invoice[0]->custom['invkp_subtotal'][0],0,0,'R',0);
+            $pdf->Cell($col_width,5,iconv('UTF-8', 'windows-1252', $currency_symbol).$invoice[0]->custom['bbinv_subtotal'][0],0,0,'R',0);
         else :
             $pdf->Cell($col_width,5,'',0,0,'C',0);
         endif;
@@ -160,7 +160,7 @@
             $pdf->Cell($col_width,5,$discount_label,0,0,'R',0);
         elseif ($c == count($columns)-1) :
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell($col_width,5,iconv('UTF-8', 'windows-1252', $currency_symbol).$invoice[0]->custom['invkp_discount'][0],0,0,'R',0);
+            $pdf->Cell($col_width,5,iconv('UTF-8', 'windows-1252', $currency_symbol).$invoice[0]->custom['bbinv_discount'][0],0,0,'R',0);
         else :
             $pdf->Cell($col_width,5,'',0,0,'C',0);
         endif;
@@ -173,7 +173,7 @@
             $pdf->Cell($col_width,5,$tax_label,0,0,'R',0);
         elseif ($c == count($columns)-1) :
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell($col_width,5,iconv('UTF-8', 'windows-1252', $currency_symbol).$invoice[0]->custom['invkp_gst'][0],0,0,'R',0);
+            $pdf->Cell($col_width,5,iconv('UTF-8', 'windows-1252', $currency_symbol).$invoice[0]->custom['bbinv_gst'][0],0,0,'R',0);
         else :
             $pdf->Cell($col_width,5,'',0,0,'C',0);
         endif;
@@ -186,7 +186,7 @@
             $pdf->Cell($col_width,5,$total_label,0,0,'R',0);
         elseif ($c == count($columns)-1) :
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell($col_width,5,iconv('UTF-8', 'windows-1252', $currency_symbol).$invoice[0]->custom['invkp_total'][0],0,0,'R',0);
+            $pdf->Cell($col_width,5,iconv('UTF-8', 'windows-1252', $currency_symbol).$invoice[0]->custom['bbinv_total'][0],0,0,'R',0);
         else :
             $pdf->Cell($col_width,5,'',0,0,'C',0);
         endif;
@@ -195,9 +195,9 @@
     $pdf->SetX(10);
     $pdf->SetY($pdf->GetY()+10);
     $pdf->SetFont('Arial', '', 9);
-    $pdf->MultiCell(190, 4, iconv('UTF-8', 'windows-1252', $invoice[0]->custom['invkp_open_content_2'][0]));
+    $pdf->MultiCell(190, 4, iconv('UTF-8', 'windows-1252', $invoice[0]->custom['bbinv_open_content_2'][0]));
     
-    $pdf_filename = invkp_gen_filename($invoice[0]);
+    $pdf_filename = bbinv_gen_filename($invoice[0]);
 
     $pdf_path = plugin_dir_path(__FILE__)."../outputs/".$pdf_filename.".pdf";
     $pdf->Output($pdf_path, "F");

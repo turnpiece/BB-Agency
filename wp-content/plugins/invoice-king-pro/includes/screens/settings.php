@@ -1,53 +1,53 @@
 <div class="wrap">
     <?php screen_icon(); ?>
-    <h2>Invoice King Pro</h2>
+    <h2>BB Agency Invoices</h2>
     
     <div class="kpp_block filled">
-        <h2><?= __('Connect', 'invkptext') ?></h2>
+        <h2><?= __('Connect', 'bbinvtext') ?></h2>
         <div id="kpp_social">
             <div class="kpp_social facebook"><a href="https://www.facebook.com/KingProPlugins" target="_blank"><i class="icon-facebook"></i> <span class="kpp_width"><span class="kpp_opacity">Facebook</span></span></a></div>
             <div class="kpp_social twitter"><a href="https://twitter.com/KingProPlugins" target="_blank"><i class="icon-twitter"></i> <span class="kpp_width"><span class="kpp_opacity">Twitter</span></span></a></div>
             <div class="kpp_social google"><a href="https://plus.google.com/b/101488033905569308183/101488033905569308183/about" target="_blank"><i class="icon-google-plus"></i> <span class="kpp_width"><span class="kpp_opacity">Google+</span></span></a></div>
         </div>
-        <h4><?= __("Found an issue? Post your issue on the", 'invkptext') ?> <a href="http://wordpress.org/support/plugin/invoice-king-pro" target="_blank"><?= __("support forums", 'invkptext') ?></a>. <?= __("If you would prefer, please email your concern to", 'invkptext') ?> <a href="mailto:plugins@kingpro.me">plugins@kingpro.me</a></h4>   
+        <h4><?= __("Found an issue? Post your issue on the", 'bbinvtext') ?> <a href="http://wordpress.org/support/plugin/invoice-king-pro" target="_blank"><?= __("support forums", 'bbinvtext') ?></a>. <?= __("If you would prefer, please email your concern to", 'bbinvtext') ?> <a href="mailto:plugins@kingpro.me">plugins@kingpro.me</a></h4>   
     </div>
     
-    <div class="invkp_tabs">
-        <a class="invkp_invoice_settings active"><?= __("Invoice Settings", 'invkptext') ?></a>
-        <a class="invkp_default_details"><?= __("Default Details", 'invkptext') ?></a>
-        <a class="invkp_email_settings"><?= __("Email Settings", 'invkptext') ?></a>
-        <?php do_action('invkp_additional_settings_tab'); ?>
-        <a class="invkp_themes"><?= __("Themes", 'invkptext') ?></a>
-        <a class="invkp_addons"><?= __("Add-ons", 'invkptext') ?></a>
-        <a class="invkp_howto"><?= __("How-To", 'invkptext') ?></a>
-        <a class="invkp_faq"><?= __("FAQ", 'invkptext') ?></a>
+    <div class="bbinv_tabs">
+        <a class="bbinv_invoice_settings active"><?= __("Invoice Settings", 'bbinvtext') ?></a>
+        <a class="bbinv_default_details"><?= __("Default Details", 'bbinvtext') ?></a>
+        <a class="bbinv_email_settings"><?= __("Email Settings", 'bbinvtext') ?></a>
+        <?php do_action('bbinv_additional_settings_tab'); ?>
+        <a class="bbinv_themes"><?= __("Themes", 'bbinvtext') ?></a>
+        <a class="bbinv_addons"><?= __("Add-ons", 'bbinvtext') ?></a>
+        <a class="bbinv_howto"><?= __("How-To", 'bbinvtext') ?></a>
+        <a class="bbinv_faq"><?= __("FAQ", 'bbinvtext') ?></a>
     </div>
     
     <?php if (isset($_GET['settings-updated']) && $_GET['settings-updated'] === 'true') :
-        do_action('invkp_on_update_settings');
+        do_action('bbinv_on_update_settings');
     ?>
-    <div class="updated invkp_notice">
-        <p><?php _e( "Settings have been saved", 'invkptext' ); ?></p>
+    <div class="updated bbinv_notice">
+        <p><?php _e( "Settings have been saved", 'bbinvtext' ); ?></p>
     </div>
     <?php elseif (isset($_GET['settings-updated']) && $_GET['settings-updated'] === 'false') : ?>
-    <div class="error invkp_notice">
-        <p><?php _e( "Settings have <strong>NOT</strong> been saved. Please try again.", 'invkptext' ); ?></p>
+    <div class="error bbinv_notice">
+        <p><?php _e( "Settings have <strong>NOT</strong> been saved. Please try again.", 'bbinvtext' ); ?></p>
     </div>
     <?php endif; ?>
     
-    <div class="invkp_sections">
+    <div class="bbinv_sections">
         <form method="post" action="options.php">
-        <?php settings_fields('invkp-options'); ?>
-        <?php do_settings_sections('invkp-options'); ?>
+        <?php settings_fields('bbinv-options'); ?>
+        <?php do_settings_sections('bbinv-options'); ?>
         
         <?php /****** INVOICE SETTINGS ******/ ?>
-        <div id="invkp_invoice_settings" class="invkp_section active">
-                <?php submit_button(__('Save Settings', 'invkptext'), 'primary', 'submit', false, array('id'=>'invkp_invoice_settings_top_submit')); ?>
+        <div id="bbinv_invoice_settings" class="bbinv_section active">
+                <?php submit_button(__('Save Settings', 'bbinvtext'), 'primary', 'submit', false, array('id'=>'bbinv_invoice_settings_top_submit')); ?>
                 <table class="form-table">
                     <tr valign="top">
-                    <th scope="row"><?= __("Invoice Theme", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Invoice Theme", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_theme'); ?>
+                        <?php $val = get_option('bbinv_theme'); ?>
                         <?php
                             $plugin_path = plugin_dir_path(__FILE__);
                             if (strstr($plugin_path, "includes\screens/")) {
@@ -59,7 +59,7 @@
                             }
                             $exclude = array('.', '..');
                         ?>
-                        <select name="invkp_theme">
+                        <select name="bbinv_theme">
                             <?php
                                 foreach ($folder as $f) {
                                     if (!in_array($f, $exclude) && is_dir($dir.$f)) {
@@ -71,233 +71,233 @@
                             ?>
                         </select>
                     </td>
-                    <td>* <?= __("More themes can be downloaded from the", 'invkptext') ?> <a href="http://kingpro.me/plugins/invoice-king-pro/themes/" target="_blank">King Pro Plugins <?=__("website", 'invkptext') ?></a></td>
+                    <td>* <?= __("More themes can be downloaded from the", 'bbinvtext') ?> <a href="http://kingpro.me/plugins/invoice-king-pro/themes/" target="_blank">King Pro Plugins <?=__("website", 'bbinvtext') ?></a></td>
                     </tr>
 
-                    <?php if ( function_exists( 'invkp_theme_options' ) ) :
-                        invkp_theme_options();
+                    <?php if ( function_exists( 'bbinv_theme_options' ) ) :
+                        bbinv_theme_options();
                      endif; ?>
 
                     <tr valign="top">
-                    <th scope="row"><?= __("Currency Symbol", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Currency Symbol", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_revenue_currency'); ?>
-                        <input type="text" name="invkp_revenue_currency" value="<?= $val ?>" />
+                        <?php $val = get_option('bbinv_revenue_currency'); ?>
+                        <input type="text" name="bbinv_revenue_currency" value="<?= $val ?>" />
                     </td>
                     <td></td>
                     </tr>
                     
                     <tr valign="top">
-                    <th scope="row"><?= __("Invoice Type Label", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Invoice Type Label", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_invoice_type'); ?>
-                        <input type="text" name="invkp_invoice_type" value="<?= $val ?>" />
+                        <?php $val = get_option('bbinv_invoice_type'); ?>
+                        <input type="text" name="bbinv_invoice_type" value="<?= $val ?>" />
                     </td>
                     <td></td>
                     </tr>
 
                     <tr valign="top">
-                    <th scope="row"><?= __("Paid Invoice Type Label", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Paid Invoice Type Label", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_paid_invoice_type'); ?>
-                        <input type="text" name="invkp_paid_invoice_type" value="<?= $val ?>" />
+                        <?php $val = get_option('bbinv_paid_invoice_type'); ?>
+                        <input type="text" name="bbinv_paid_invoice_type" value="<?= $val ?>" />
                     </td>
                     <td></td>
                     </tr>
 
                     <tr valign="top">
-                    <th scope="row"><?= __("Paid Invoice Watermark", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Paid Invoice Watermark", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_paid_watermark'); ?>
-                        <input type="text" name="invkp_paid_watermark" value="<?= $val ?>" />
+                        <?php $val = get_option('bbinv_paid_watermark'); ?>
+                        <input type="text" name="bbinv_paid_watermark" value="<?= $val ?>" />
                     </td>
                     <td></td>
                     </tr>
 
                     <tr valign="top">
-                    <th scope="row"><?= __("Invoice Number Label", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Invoice Number Label", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_invoice_no_label'); ?>
-                        <input type="text" name="invkp_invoice_no_label" value="<?= $val ?>" />
+                        <?php $val = get_option('bbinv_invoice_no_label'); ?>
+                        <input type="text" name="bbinv_invoice_no_label" value="<?= $val ?>" />
                     </td>
                     <td></td>
                     </tr>
 
                     <tr valign="top">
-                    <th scope="row"><?= __("Purchase Order Label", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Purchase Order Label", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_po_label'); ?>
-                        <input type="text" name="invkp_po_label" value="<?= $val ?>" />
+                        <?php $val = get_option('bbinv_po_label'); ?>
+                        <input type="text" name="bbinv_po_label" value="<?= $val ?>" />
                     </td>
                     <td></td>
                     </tr>
 
                     <tr valign="top">
-                    <th scope="row"><?= __("Attention to Label", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Attention to Label", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_attn_name_label'); ?>
-                        <input type="text" name="invkp_attn_name_label" value="<?= $val ?>" />
+                        <?php $val = get_option('bbinv_attn_name_label'); ?>
+                        <input type="text" name="bbinv_attn_name_label" value="<?= $val ?>" />
                     </td>
                     <td></td>
                     </tr>
                     
                     <tr valign="top">
-                    <th scope="row"><?= __("Subtotal Label", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Subtotal Label", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_subtotal_label'); ?>
-                        <input type="text" name="invkp_subtotal_label" value="<?= $val ?>" />
+                        <?php $val = get_option('bbinv_subtotal_label'); ?>
+                        <input type="text" name="bbinv_subtotal_label" value="<?= $val ?>" />
                     </td>
                     <td></td>
                     </tr>
                     
                     <tr valign="top">
-                    <th scope="row"><?= __("Discount Label", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Discount Label", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_discount_label'); ?>
-                        <input type="text" name="invkp_discount_label" value="<?= $val ?>" />
+                        <?php $val = get_option('bbinv_discount_label'); ?>
+                        <input type="text" name="bbinv_discount_label" value="<?= $val ?>" />
                     </td>
                     <td></td>
                     </tr>
 
                     <tr valign="top">
-                    <th scope="row"><?= __("GST/Tax Label", 'invkptext') ?></th>
+                    <th scope="row"><?= __("GST/Tax Label", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_tax_label'); ?>
-                        <input type="text" name="invkp_tax_label" value="<?= $val ?>" />
+                        <?php $val = get_option('bbinv_tax_label'); ?>
+                        <input type="text" name="bbinv_tax_label" value="<?= $val ?>" />
                     </td>
                     <td></td>
                     </tr>
                     
                     <tr valign="top">
-                    <th scope="row"><?= __("GST/Tax Value", 'invkptext') ?></th>
+                    <th scope="row"><?= __("GST/Tax Value", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_tax_value'); ?>
-                        <input type="text" name="invkp_tax_value" value="<?= $val ?>" />
+                        <?php $val = get_option('bbinv_tax_value'); ?>
+                        <input type="text" name="bbinv_tax_value" value="<?= $val ?>" />
                     </td>
                     <td></td>
                     </tr>
                     
                     <tr valign="top">
-                    <th scope="row"><?= __("Total Label", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Total Label", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_total_label'); ?>
-                        <input type="text" name="invkp_total_label" value="<?= $val ?>" />
+                        <?php $val = get_option('bbinv_total_label'); ?>
+                        <input type="text" name="bbinv_total_label" value="<?= $val ?>" />
                     </td>
                     <td></td>
                     </tr>
         
                     <tr valign="top">
-                    <th scope="row"><?= __("Invoice Number Generating", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Invoice Number Generating", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_invoice_no_gen'); ?>
-                        <input type="text" name="invkp_invoice_no_gen" value="<?= $val ?>" />
+                        <?php $val = get_option('bbinv_invoice_no_gen'); ?>
+                        <input type="text" name="bbinv_invoice_no_gen" value="<?= $val ?>" />
                     </td>
-                    <td><?= __("Refer to the help in the How-to tab", 'invkptext') ?></td>
+                    <td><?= __("Refer to the help in the How-to tab", 'bbinvtext') ?></td>
                     </tr>
 
                     <tr valign="top">
-                    <th scope="row"><?= __("Last Invoice Number Generated", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Last Invoice Number Generated", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_invoice_no_gen_last'); ?>
-                        <input type="text" name="invkp_invoice_no_gen_last" value="<?= $val ?>" />
+                        <?php $val = get_option('bbinv_invoice_no_gen_last'); ?>
+                        <input type="text" name="bbinv_invoice_no_gen_last" value="<?= $val ?>" />
                     </td>
-                    <td><?= __("Refer to the help in the How-to tab", 'invkptext') ?></td>
+                    <td><?= __("Refer to the help in the How-to tab", 'bbinvtext') ?></td>
                     </tr>
 
                     <tr valign="top">
-                    <th scope="row"><?= __("Current Invoice Number Increment", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Current Invoice Number Increment", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_invoice_no_gen_incr'); ?>
-                        <input type="text" name="invkp_invoice_no_gen_incr" value="<?= $val ?>" />
+                        <?php $val = get_option('bbinv_invoice_no_gen_incr'); ?>
+                        <input type="text" name="bbinv_invoice_no_gen_incr" value="<?= $val ?>" />
                     </td>
-                    <td><?= __("Refer to the help in the How-to tab", 'invkptext') ?></td>
+                    <td><?= __("Refer to the help in the How-to tab", 'bbinvtext') ?></td>
                     </tr>
                     
                     <tr valign="top">
-                    <th scope="row"><?= __("Invoice Filename Format", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Invoice Filename Format", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_pdf_filename'); ?>
-                        <input type="text" name="invkp_pdf_filename" value="<?= $val ?>" />
+                        <?php $val = get_option('bbinv_pdf_filename'); ?>
+                        <input type="text" name="bbinv_pdf_filename" value="<?= $val ?>" />
                     </td>
                     <td>
-                        <?= __("Refer to the help in the How-to tab", 'invkptext') ?> - Example:<br />
+                        <?= __("Refer to the help in the How-to tab", 'bbinvtext') ?> - Example:<br />
                         {pid}-{company_name}-{inv_id}
                     </td>
                     </tr>
 
                     <tr valign="top">
-                    <th scope="row"><?= __("Define Columns", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Define Columns", 'bbinvtext') ?></th>
                     <td>
-                        <div class="invkp_columns">
+                        <div class="bbinv_columns">
                         <?php 
-                            $val = get_option('invkp_columns'); 
-                            $type_val = get_option('invkp_column_types'); 
-                            $width_val = get_option('invkp_column_widths'); 
+                            $val = get_option('bbinv_columns'); 
+                            $type_val = get_option('bbinv_column_types'); 
+                            $width_val = get_option('bbinv_column_widths'); 
                         ?>
                         <div>
-                            <span style="width: 181px; display: inline-block; font-weight: bold; margin-bottom: 5px;"><?= __("Name", 'invkptext') ?></span>
-                            <span style="width: 72px; display: inline-block; font-weight: bold; margin-bottom: 5px;"><?= __("Type", 'invkptext') ?></span>
-                            <span style="display: inline-block; font-weight: bold; margin-bottom: 5px;"><?= __("Width", 'invkptext') ?> (%)</span>
+                            <span style="width: 181px; display: inline-block; font-weight: bold; margin-bottom: 5px;"><?= __("Name", 'bbinvtext') ?></span>
+                            <span style="width: 72px; display: inline-block; font-weight: bold; margin-bottom: 5px;"><?= __("Type", 'bbinvtext') ?></span>
+                            <span style="display: inline-block; font-weight: bold; margin-bottom: 5px;"><?= __("Width", 'bbinvtext') ?> (%)</span>
                         </div>
                         <?php if (is_array($val)) : ?>
                         <?php for ($c=0;$c<count($val);$c++) : ?>
                         <div>
-                        <input type="text" name="invkp_columns[]" value="<?= $val[$c] ?>" />
-                        <select name="invkp_column_types[]">
-                            <option value="text"<?= ($type_val[$c] == 'text') ? ' selected' : '' ?>><?= __("Text", 'invkptext') ?></option>
-                            <option value="numeric"<?= ($type_val[$c] == 'numeric') ? ' selected' : '' ?>><?= __("Numeric", 'invkptext') ?></option>
-                            <option value="price"<?= ($type_val[$c] == 'price') ? ' selected' : '' ?>><?= __("Price", 'invkptext') ?></option>
+                        <input type="text" name="bbinv_columns[]" value="<?= $val[$c] ?>" />
+                        <select name="bbinv_column_types[]">
+                            <option value="text"<?= ($type_val[$c] == 'text') ? ' selected' : '' ?>><?= __("Text", 'bbinvtext') ?></option>
+                            <option value="numeric"<?= ($type_val[$c] == 'numeric') ? ' selected' : '' ?>><?= __("Numeric", 'bbinvtext') ?></option>
+                            <option value="price"<?= ($type_val[$c] == 'price') ? ' selected' : '' ?>><?= __("Price", 'bbinvtext') ?></option>
                         </select>
-                        <input type="text" name="invkp_column_widths[]" value="<?= $width_val[$c] ?>" size="3" placeholder="0%" style="text-align: right;" />%
-                        <?php if ($c > 0) : ?><a class="remove_invkp_column"><?= __("Remove", 'invkptext') ?></a><?php endif; ?>
+                        <input type="text" name="bbinv_column_widths[]" value="<?= $width_val[$c] ?>" size="3" placeholder="0%" style="text-align: right;" />%
+                        <?php if ($c > 0) : ?><a class="remove_bbinv_column"><?= __("Remove", 'bbinvtext') ?></a><?php endif; ?>
                         </div>
                         <?php endfor; ?>
                         <?php else : ?>
                         <div>
-                        <input type="text" name="invkp_columns[]" value="" />
-                        <select name="invkp_column_types[]">
-                            <option value="text"><?= __("Text", 'invkptext') ?></option>
-                            <option value="numeric"><?= __("Numeric", 'invkptext') ?></option>
-                            <option value="price"><?= __("Price", 'invkptext') ?></option>
+                        <input type="text" name="bbinv_columns[]" value="" />
+                        <select name="bbinv_column_types[]">
+                            <option value="text"><?= __("Text", 'bbinvtext') ?></option>
+                            <option value="numeric"><?= __("Numeric", 'bbinvtext') ?></option>
+                            <option value="price"><?= __("Price", 'bbinvtext') ?></option>
                         </select>
-                        <input type="text" name="invkp_column_widths[]" value="" size="3" placeholder="0%" />%
+                        <input type="text" name="bbinv_column_widths[]" value="" size="3" placeholder="0%" />%
                         </div>
                         <?php endif; ?>
                         </div>
                         <br />
-                        <a class="add_invkp_column"><?= __("Add Column", 'invkptext') ?></a>
+                        <a class="add_bbinv_column"><?= __("Add Column", 'bbinvtext') ?></a>
                     </td>
-                    <td><?= __("Leave width blank to generate even columns", 'invkptext') ?></td>
+                    <td><?= __("Leave width blank to generate even columns", 'bbinvtext') ?></td>
                     </tr>
 
                     <tr valign="top">
-                    <th scope="row"><?= __("Row Calculation", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Row Calculation", 'bbinvtext') ?></th>
                     <td>
-                        <div class="invkp_row_calculation">
+                        <div class="bbinv_row_calculation">
                             <?php 
-                            $val = get_option('invkp_columns');
+                            $val = get_option('bbinv_columns');
                             $cols = array();
                             if (is_array($val)) :
                                 foreach ($val as $col)
                                     $cols[] = $col;
                             endif; 
-                            $calc_cols = get_option('invkp_calculate_rows');
-                            $calc_ops = get_option('invkp_calculate_operators');
+                            $calc_cols = get_option('bbinv_calculate_rows');
+                            $calc_ops = get_option('bbinv_calculate_operators');
 
                             if (!empty($calc_cols) && isset($calc_ops[0]) && $calc_ops[0] <> '') :
                                 for ($c=0;$c<count($calc_cols); $c++) :
                                     if ($calc_cols[$c] <> '') :
                             ?>
-                            <select name="invkp_calculate_rows[]" class="row">
-                                <option value="">-- <?= __("SELECT", 'invkptext') ?> --</option>
+                            <select name="bbinv_calculate_rows[]" class="row">
+                                <option value="">-- <?= __("SELECT", 'bbinvtext') ?> --</option>
                                 <?php foreach ($cols as $col) : ?>
                                 <option value="<?= $col ?>"<?php if ($calc_cols[$c] == $col) echo ' selected'; ?>><?= $col ?></option>
                                 <?php endforeach ?>
                             </select>
                             <br />
                             <?php if (isset($calc_ops[$c]) && $calc_ops[$c] <> '') : ?>
-                            <select name='invkp_calculate_operators[]'>
-                                <option value=''>-- <?= __("SELECT", 'invkptext') ?> --</option>
+                            <select name='bbinv_calculate_operators[]'>
+                                <option value=''>-- <?= __("SELECT", 'bbinvtext') ?> --</option>
                                 <option value='*'<?php if ($calc_ops[$c] == '*') echo ' selected'; ?>>*</option>
                                 <option value='+'<?php if ($calc_ops[$c] == '+') echo ' selected'; ?>>+</option>
                                 <option value='/'<?php if ($calc_ops[$c] == '/') echo ' selected'; ?>>/</option>
@@ -307,8 +307,8 @@
                             <br />
                             <?php endif; endif; endfor; ?>
                             <?php endif; ?>
-                            <select name="invkp_calculate_rows[]" class="row">
-                                <option value="">-- <?= __("SELECT", 'invkptext') ?> --</option>
+                            <select name="bbinv_calculate_rows[]" class="row">
+                                <option value="">-- <?= __("SELECT", 'bbinvtext') ?> --</option>
                                 <?php foreach ($cols as $col) : ?>
                                 <option value="<?= $col ?>"><?= $col ?></option>
                                 <?php endforeach ?>
@@ -316,260 +316,260 @@
                             <br />
                         </div>
                     </td>
-                    <td><?= __('Options available after "Define Columns" saved.', 'invkptext') ?></td>
+                    <td><?= __('Options available after "Define Columns" saved.', 'bbinvtext') ?></td>
                     </tr>
 
                     <tr valign="top">
-                    <th scope="row"><?= __("Subtotals Calculation Column", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Subtotals Calculation Column", 'bbinvtext') ?></th>
                     <td>
                         <?php 
-                        $subtotal_col = get_option('invkp_calculate_subtotal');
-                        $val = get_option('invkp_columns');
+                        $subtotal_col = get_option('bbinv_calculate_subtotal');
+                        $val = get_option('bbinv_columns');
                         $cols = array();
                         if (is_array($val)) :
                             foreach ($val as $col)
                                 $cols[] = $col;
                         endif; 
                         ?>
-                        <select name="invkp_calculate_subtotal">
-                            <option value="">-- <?= __("SELECT", 'invkptext') ?> --</option>
+                        <select name="bbinv_calculate_subtotal">
+                            <option value="">-- <?= __("SELECT", 'bbinvtext') ?> --</option>
                             <?php foreach ($cols as $col) : ?>
                             <option value="<?= $col ?>"<?php if ($subtotal_col == $col) echo ' selected'; ?>><?= $col ?></option>
                             <?php endforeach ?>
                         </select>
                     </td>
-                    <td><?= __('Options available after "Define Columns" saved.', 'invkptext') ?></td>
+                    <td><?= __('Options available after "Define Columns" saved.', 'bbinvtext') ?></td>
                     </tr>
                 </table>
-                <?php submit_button(__('Save Settings', 'invkptext'), 'primary', 'submit', false, array('id'=>'invkp_invoice_settings_bottom_submit')); ?>
+                <?php submit_button(__('Save Settings', 'bbinvtext'), 'primary', 'submit', false, array('id'=>'bbinv_invoice_settings_bottom_submit')); ?>
         </div>
         
         <?php /****** DEFAULT DETAILS ******/ ?>
-        <div id="invkp_default_details" class="invkp_section">
-                <?php submit_button(__('Save Options', 'invkptext'), 'primary', 'submit', false, array('id'=>'invkp_default_details_top_submit')); ?>
+        <div id="bbinv_default_details" class="bbinv_section">
+                <?php submit_button(__('Save Options', 'bbinvtext'), 'primary', 'submit', false, array('id'=>'bbinv_default_details_top_submit')); ?>
                 <table class="form-table">
                     <tr valign="top">
-                    <th scope="row"><?= __("Your Company Name", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Your Company Name", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_company_name'); ?>
-                        <input type="text" name="invkp_company_name" value="<?= $val ?>" />
+                        <?php $val = get_option('bbinv_company_name'); ?>
+                        <input type="text" name="bbinv_company_name" value="<?= $val ?>" />
                     </td>
                     <td></td>
                     </tr>
 
                     <tr valign="top">
-                    <th scope="row"><?= __("Your Address", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Your Address", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_address'); ?>
-                        <input type="text" name="invkp_address" value="<?= $val ?>" />
+                        <?php $val = get_option('bbinv_address'); ?>
+                        <input type="text" name="bbinv_address" value="<?= $val ?>" />
                     </td>
                     <td></td>
                     </tr>
 
                     <tr valign="top">
-                    <th scope="row"><?= __("Your Suburb/Town", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Your Suburb/Town", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_suburb'); ?>
-                        <input type="text" name="invkp_suburb" value="<?= $val ?>" />
+                        <?php $val = get_option('bbinv_suburb'); ?>
+                        <input type="text" name="bbinv_suburb" value="<?= $val ?>" />
                     </td>
                     <td></td>
                     </tr>
 
                     <tr valign="top">
-                    <th scope="row"><?= __("Your State", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Your State", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_state'); ?>
-                        <input type="text" name="invkp_state" value="<?= $val ?>" />
+                        <?php $val = get_option('bbinv_state'); ?>
+                        <input type="text" name="bbinv_state" value="<?= $val ?>" />
                     </td>
                     <td></td>
                     </tr>
 
                     <tr valign="top">
-                    <th scope="row"><?= __("Your Postcode/Zip", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Your Postcode/Zip", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_postcode'); ?>
-                        <input type="text" name="invkp_postcode" value="<?= $val ?>" />
+                        <?php $val = get_option('bbinv_postcode'); ?>
+                        <input type="text" name="bbinv_postcode" value="<?= $val ?>" />
                     </td>
                     <td></td>
                     </tr>
 
                     <tr valign="top">
-                    <th scope="row"><?= __("Your Phone", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Your Phone", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_phone'); ?>
-                        <input type="text" name="invkp_phone" value="<?= $val ?>" />
+                        <?php $val = get_option('bbinv_phone'); ?>
+                        <input type="text" name="bbinv_phone" value="<?= $val ?>" />
                     </td>
                     <td></td>
                     </tr>
 
                     <tr valign="top">
-                    <th scope="row"><?= __("Your Email", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Your Email", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_email'); ?>
-                        <input type="text" name="invkp_email" value="<?= $val ?>" />
+                        <?php $val = get_option('bbinv_email'); ?>
+                        <input type="text" name="bbinv_email" value="<?= $val ?>" />
                     </td>
                     <td></td>
                     </tr>
 
                     <tr valign="top">
-                    <th scope="row"><?= __("Additional Detail", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Additional Detail", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_add_detail'); ?>
-                        <input type="text" name="invkp_add_detail" value="<?= $val ?>" />
+                        <?php $val = get_option('bbinv_add_detail'); ?>
+                        <input type="text" name="bbinv_add_detail" value="<?= $val ?>" />
                     </td>
-                    <td><?= __("eg Business Details (ie ABN)", 'invkptext') ?></td>
+                    <td><?= __("eg Business Details (ie ABN)", 'bbinvtext') ?></td>
                     </tr>
                     
                     <tr valign="top">
-                    <th scope="row"><?= __("Open Content Block 1", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Open Content Block 1", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_open_content_1'); ?>
-                        <textarea name="invkp_open_content_1"><?= $val ?></textarea>
+                        <?php $val = get_option('bbinv_open_content_1'); ?>
+                        <textarea name="bbinv_open_content_1"><?= $val ?></textarea>
                     </td>
                     <td></td>
                     </tr>
 
                     <tr valign="top">
-                    <th scope="row"><?= __("Open Content Block 2", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Open Content Block 2", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_open_content_2'); ?>
-                        <textarea name="invkp_open_content_2"><?= $val ?></textarea>
+                        <?php $val = get_option('bbinv_open_content_2'); ?>
+                        <textarea name="bbinv_open_content_2"><?= $val ?></textarea>
                     </td>
                     <td></td>
                     </tr>
                 </table>
-                <?php submit_button(__('Save Options', 'invkptext'), 'primary', 'submit', false, array('id'=>'invkp_default_details_bottom_submit')); ?>
+                <?php submit_button(__('Save Options', 'bbinvtext'), 'primary', 'submit', false, array('id'=>'bbinv_default_details_bottom_submit')); ?>
         </div>
         
         <?php /****** EMAIL SETTINGS ******/ ?>
-        <div id="invkp_email_settings" class="invkp_section">
-                <?php submit_button(__('Save Settings', 'invkptext'), 'primary', 'submit', false, array('id'=>'invkp_email_settings_top_submit')); ?>
+        <div id="bbinv_email_settings" class="bbinv_section">
+                <?php submit_button(__('Save Settings', 'bbinvtext'), 'primary', 'submit', false, array('id'=>'bbinv_email_settings_top_submit')); ?>
                 <table class="form-table">
                     <tr valign="top">
-                    <th scope="row"><?= __("From Name", 'invkptext') ?></th>
+                    <th scope="row"><?= __("From Name", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_from'); ?>
-                        <input type="text" name="invkp_from" value="<?= $val ?>" />
+                        <?php $val = get_option('bbinv_from'); ?>
+                        <input type="text" name="bbinv_from" value="<?= $val ?>" />
                     </td>
                     <td></td>
                     </tr>
 
                     <tr valign="top">
-                    <th scope="row"><?= __("From Email", 'invkptext') ?></th>
+                    <th scope="row"><?= __("From Email", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_from_email'); ?>
-                        <input type="text" name="invkp_from_email" value="<?= $val ?>" />
+                        <?php $val = get_option('bbinv_from_email'); ?>
+                        <input type="text" name="bbinv_from_email" value="<?= $val ?>" />
                     </td>
                     <td></td>
                     </tr>
 
                     <tr valign="top">
-                    <th scope="row"><?= __("BCC the above email?", 'invkptext') ?></th>
+                    <th scope="row"><?= __("BCC the above email?", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_bcc'); ?>
-                        <input type="hidden" name="invkp_bcc" value="0" />
-                        <input type="checkbox" name="invkp_bcc" value="1"<?= ($val == 1) ? " checked" : '' ?> />
+                        <?php $val = get_option('bbinv_bcc'); ?>
+                        <input type="hidden" name="bbinv_bcc" value="0" />
+                        <input type="checkbox" name="bbinv_bcc" value="1"<?= ($val == 1) ? " checked" : '' ?> />
                     </td>
-                    <td><?= __("Have all email correspondence sent to the above email", 'invkptext') ?></td>
+                    <td><?= __("Have all email correspondence sent to the above email", 'bbinvtext') ?></td>
                     </tr>
 
                     <tr valign="top">
-                    <th scope="row"><?= __("Subject", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Subject", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_email_subject'); ?>
-                        <input type="text" name="invkp_email_subject" value="<?= $val ?>" />
-                    </td>
-                    <td></td>
-                    </tr>
-
-                    <tr valign="top">
-                    <th scope="row"><?= __("Message", 'invkptext') ?></th>
-                    <td>
-                        <?php $val = get_option('invkp_email_message'); ?>
-                        <textarea name="invkp_email_message" style="height: 280px; width: 275px;"><?= $val ?></textarea>
+                        <?php $val = get_option('bbinv_email_subject'); ?>
+                        <input type="text" name="bbinv_email_subject" value="<?= $val ?>" />
                     </td>
                     <td></td>
                     </tr>
 
                     <tr valign="top">
-                    <th scope="row"><?= __("Paid Subject", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Message", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_paid_email_subject'); ?>
-                        <input type="text" name="invkp_paid_email_subject" value="<?= $val ?>" />
+                        <?php $val = get_option('bbinv_email_message'); ?>
+                        <textarea name="bbinv_email_message" style="height: 280px; width: 275px;"><?= $val ?></textarea>
                     </td>
                     <td></td>
                     </tr>
 
                     <tr valign="top">
-                    <th scope="row"><?= __("Paid Message", 'invkptext') ?></th>
+                    <th scope="row"><?= __("Paid Subject", 'bbinvtext') ?></th>
                     <td>
-                        <?php $val = get_option('invkp_paid_email_message'); ?>
-                        <textarea name="invkp_paid_email_message" style="height: 280px; width: 275px;"><?= $val ?></textarea>
+                        <?php $val = get_option('bbinv_paid_email_subject'); ?>
+                        <input type="text" name="bbinv_paid_email_subject" value="<?= $val ?>" />
+                    </td>
+                    <td></td>
+                    </tr>
+
+                    <tr valign="top">
+                    <th scope="row"><?= __("Paid Message", 'bbinvtext') ?></th>
+                    <td>
+                        <?php $val = get_option('bbinv_paid_email_message'); ?>
+                        <textarea name="bbinv_paid_email_message" style="height: 280px; width: 275px;"><?= $val ?></textarea>
                     </td>
                     <td></td>
                     </tr>
                 </table>
-                <?php submit_button(__('Save Settings', 'invkptext'), 'primary', 'submit', false, array('id'=>'invkp_email_settings_bottom_submit')); ?>
+                <?php submit_button(__('Save Settings', 'bbinvtext'), 'primary', 'submit', false, array('id'=>'bbinv_email_settings_bottom_submit')); ?>
         </div>
             
-        <?php do_action('invkp_additional_settings_section'); ?>
+        <?php do_action('bbinv_additional_settings_section'); ?>
             
         <?php /****** THEMES ******/ ?>
-        <div id="invkp_themes" class="invkp_section">
-            <h2><?= __("Themes", 'invkptext') ?></h2>
+        <div id="bbinv_themes" class="bbinv_section">
+            <h2><?= __("Themes", 'bbinvtext') ?></h2>
             
-            <p><?= __("Personalise your invoices by using an Invoice King Pro theme. The current selection is below. If you would like one that is customised just for you,
-                contact", 'invkptext') ?> <a href="mailto:plugins@kingpro.me">plugins@kingpro.me</a>.</p>
+            <p><?= __("Personalise your invoices by using an BB Agency Invoices theme. The current selection is below. If you would like one that is customised just for you,
+                contact", 'bbinvtext') ?> <a href="mailto:plugins@kingpro.me">plugins@kingpro.me</a>.</p>
             
             <div class="kpp_item">
                 <a href="<?= plugins_url('../images/clean-invoice-theme.png', dirname(__FILE__)) ?>"><img alt="Clean Invoice" src="<?= plugins_url('../images/clean-invoice-theme.png', dirname(__FILE__)) ?>" /></a>
                 <span class="title">Clean</span>
-                <span class="description"><?= __("Nice sharp design using<br />a custom font", 'invkptext') ?>.</span>
-                <span class="links"><a href="http://kingpro.me/plugins/invoice-king-pro/themes/" target='_blank' title="Get the 'Clean' theme"><?= __("Get It", 'invkptext') ?></a></span>
+                <span class="description"><?= __("Nice sharp design using<br />a custom font", 'bbinvtext') ?>.</span>
+                <span class="links"><a href="http://kingpro.me/plugins/invoice-king-pro/themes/" target='_blank' title="Get the 'Clean' theme"><?= __("Get It", 'bbinvtext') ?></a></span>
             </div>
 
             <div class="kpp_item">
                 <a href="<?= plugins_url('../images/default-with-image-invoice-theme.png', dirname(__FILE__)) ?>"><img alt="Default with Logo" src="<?= plugins_url('../images/default-with-image-invoice-theme.png', dirname(__FILE__)) ?>" /></a>
-                <span class="title"><?= __("Default with Logo", 'invkptext') ?></span>
-                <span class="description"><?= __("The default theme with added feature to upload a logo", 'invkptext') ?></span>
-                <span class="links"><a href="http://kingpro.me/plugins/invoice-king-pro/themes/" target='_blank' title="Get the 'Default with Logo' theme"><?= __("Get It", 'invkptext') ?></a></span>
+                <span class="title"><?= __("Default with Logo", 'bbinvtext') ?></span>
+                <span class="description"><?= __("The default theme with added feature to upload a logo", 'bbinvtext') ?></span>
+                <span class="links"><a href="http://kingpro.me/plugins/invoice-king-pro/themes/" target='_blank' title="Get the 'Default with Logo' theme"><?= __("Get It", 'bbinvtext') ?></a></span>
             </div>
             
             <div class="kpp_item">
                 <a href="<?= plugins_url('../images/clean-invoice-theme.png', dirname(__FILE__)) ?>"><img alt="Clean with Logo" src="<?= plugins_url('../images/clean-invoice-theme.png', dirname(__FILE__)) ?>" /></a>
-                <span class="title"><?= __("Clean with Logo", 'invkptext') ?></span>
-                <span class="description"><?= __("Nice sharp design using<br />a custom font with added feature to upload a logo", 'invkptext') ?>.</span>
-                <span class="links"><a href="http://kingpro.me/plugins/invoice-king-pro/themes/" target='_blank' title="Get the 'Clean' theme"><?= __("Get It", 'invkptext') ?></a></span>
+                <span class="title"><?= __("Clean with Logo", 'bbinvtext') ?></span>
+                <span class="description"><?= __("Nice sharp design using<br />a custom font with added feature to upload a logo", 'bbinvtext') ?>.</span>
+                <span class="links"><a href="http://kingpro.me/plugins/invoice-king-pro/themes/" target='_blank' title="Get the 'Clean' theme"><?= __("Get It", 'bbinvtext') ?></a></span>
             </div>
         </div>
             
         <?php /****** ADDONS ******/ ?>
-        <div id="invkp_addons" class="invkp_section">
-            <h2><?= __("Add-ons", 'invkptext') ?></h2>
-            <p><?= __("Expand the functionality of Invoice King Pro to your necessity by installing Addons. Is there additional functionality your looking for that an addon
-            doesn't cover? Contact", 'invkptext') ?> <a href="mailto:plugins@kingpro.me">plugins@kingpro.me</a> <?= __("and fill us in about what you after.", 'invkptext') ?></p>
+        <div id="bbinv_addons" class="bbinv_section">
+            <h2><?= __("Add-ons", 'bbinvtext') ?></h2>
+            <p><?= __("Expand the functionality of BB Agency Invoices to your necessity by installing Addons. Is there additional functionality your looking for that an addon
+            doesn't cover? Contact", 'bbinvtext') ?> <a href="mailto:plugins@kingpro.me">plugins@kingpro.me</a> <?= __("and fill us in about what you after.", 'bbinvtext') ?></p>
             
             <div class="kpp_item">
-                <img alt="<?= __("Recurring Invoice", 'invkptext') ?>" src="<?= plugins_url('../images/addon-recurring.jpg', dirname(__FILE__)) ?>" />
-                <span class="title"><?= __("Recurring Invoices", 'invkptext') ?></span>
-                <span class="description"><?= __("Turn new and existing invoices into automatic recurring invoices via a cron", 'invkptext') ?></span>
-                <span class="links"><a href="http://kingpro.me/plugins/invoice-king-pro/add-ons/" target='_blank' title="Get the 'Recurring Invoices' Add-on"><?= __("Get It", 'invkptext') ?></a></span>
+                <img alt="<?= __("Recurring Invoice", 'bbinvtext') ?>" src="<?= plugins_url('../images/addon-recurring.jpg', dirname(__FILE__)) ?>" />
+                <span class="title"><?= __("Recurring Invoices", 'bbinvtext') ?></span>
+                <span class="description"><?= __("Turn new and existing invoices into automatic recurring invoices via a cron", 'bbinvtext') ?></span>
+                <span class="links"><a href="http://kingpro.me/plugins/invoice-king-pro/add-ons/" target='_blank' title="Get the 'Recurring Invoices' Add-on"><?= __("Get It", 'bbinvtext') ?></a></span>
             </div> 
             <div class="kpp_item">
-                <img alt="<?= __("Attachments", 'invkptext') ?>" src="<?= plugins_url('../images/addon-attachments.jpg', dirname(__FILE__)) ?>" />
-                <span class="title"><?= __("Attachments", 'invkptext') ?></span>
-                <span class="description"><?= __("Attach additional files to all and individual invoices when sent to client", 'invkptext') ?></span>
-                <span class="links"><a href="http://kingpro.me/plugins/invoice-king-pro/add-ons/" target='_blank' title="Get the 'Attachments' Add-on"><?= __("Get It", 'invkptext') ?></a></span>
+                <img alt="<?= __("Attachments", 'bbinvtext') ?>" src="<?= plugins_url('../images/addon-attachments.jpg', dirname(__FILE__)) ?>" />
+                <span class="title"><?= __("Attachments", 'bbinvtext') ?></span>
+                <span class="description"><?= __("Attach additional files to all and individual invoices when sent to client", 'bbinvtext') ?></span>
+                <span class="links"><a href="http://kingpro.me/plugins/invoice-king-pro/add-ons/" target='_blank' title="Get the 'Attachments' Add-on"><?= __("Get It", 'bbinvtext') ?></a></span>
             </div> 
         </div>
         
         <?php /****** HOW-TO ******/ ?>
-        <div id="invkp_howto" class="invkp_section">
+        <div id="bbinv_howto" class="bbinv_section">
             <h2>How To Use</h2>
             <h3>1) Set your defaults</h3>
             <p>Default fields have been provided to the left to auto-populate common data on each invoice you create. You are able to modify all default data on each invoice to suit if needed.</p>
             <h3>2) Define your columns</h3>
-            <p>Invoice King Pro is customisable right down to the columns you have in your invoice. Have as many or as little as you need. Keep in mind that the more columns you have the thinner the column width will be.</p>
+            <p>BB Agency Invoices is customisable right down to the columns you have in your invoice. Have as many or as little as you need. Keep in mind that the more columns you have the thinner the column width will be.</p>
             <h3>3) Define your row calculation</h3>
             <p>As your columns are completely customised by you, the system has no way to know what columns are part of your calculations unless you tell it. As you select a column from the dropdown provided (the dropdowns are populated after you save the settings with your columns defined), you will be given an operator to append to the calculation.</p>
             <p>Selecting the operator will give you another dropdown of columns. Continue this for all columns you need to include. Once you have chosen the columns and the operators that you need to give you a total for the row, select the equals operator followed by the row totals column.</p>
@@ -598,7 +598,7 @@
             </ul>
             <p>The invoice number field is overwritable per invoice if needed. The options to control the last invoice number generated and the currently used increment is available if needed, <strong>but is not required to be entered or changed</strong>.</p>
             <h3>Setting Invoice Filename</h3>
-            <p>By default, Invoice King Pro names your files using the invoices ID from your system. This number is required in the filename to prevent overriding of already
+            <p>By default, BB Agency Invoices names your files using the invoices ID from your system. This number is required in the filename to prevent overriding of already
             generated invoices in the system. There are a handful of variables you can use to customise your invoice filenames. These include:</p>
             <ul>
                 <li><strong>{pid}</strong> - invoices ID from your system. This variable is required SOMEWHERE in the filename</li>
@@ -636,7 +636,7 @@
         </div>
         
         <?php /****** FAQ ******/ ?>
-        <div id="invkp_faq" class="invkp_section">
+        <div id="bbinv_faq" class="bbinv_section">
             <h2>FAQ</h2>
             <h4>Q. I change my columns in the settings yet my existing invoices don't show the change. Why?</h4>
             <p>This is done to protect your existing invoices from future updates. You may run your invoices with a specific set of information
@@ -658,9 +658,9 @@
 </div>
 
 <script type="text/javascript">
-    jQuery('.invkp_tabs a').click(function() {
+    jQuery('.bbinv_tabs a').click(function() {
         jQuery(this).parent().children('a.active').removeClass('active');
-        jQuery('.invkp_sections').find('div.invkp_section.active').removeClass('active');
+        jQuery('.bbinv_sections').find('div.bbinv_section.active').removeClass('active');
         
         var active = jQuery(this).attr('class');
         jQuery(this).addClass('active');
