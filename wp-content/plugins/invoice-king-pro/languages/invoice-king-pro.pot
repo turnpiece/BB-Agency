@@ -1,0 +1,686 @@
+# Copyright (C) 2014 
+# This file is distributed under the same license as the  package.
+msgid ""
+msgstr ""
+"Project-Id-Version:  \n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/invoice-king-pro\n"
+"POT-Creation-Date: 2014-04-07 08:19:20+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2014-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: includes/admin_area.php:33
+msgid "There is a new version of the invoice theme"
+msgstr ""
+
+#: includes/admin_area.php:33
+msgid ""
+"Please make sure you up have the latest version of Invoice King Pro before "
+"downloading and installing your updated theme."
+msgstr ""
+
+#: includes/admin_area.php:33
+msgid "Please download the new version here"
+msgstr ""
+
+#: includes/admin_area.php:33
+msgid "Have you just installed this?"
+msgstr ""
+
+#: includes/admin_area.php:95
+msgid ""
+"Your email could not be sent. Please check the email address and try again."
+msgstr ""
+
+#: includes/admin_area.php:101
+msgid "Email sent successfully!"
+msgstr ""
+
+#: includes/admin_area.php:153 includes/admin_area.php:160
+msgid "From"
+msgstr ""
+
+#: includes/admin_area.php:154 includes/admin_area.php:161
+msgid "Hi"
+msgstr ""
+
+#: includes/admin_area.php:155 includes/admin_area.php:162
+msgid "Please find attached the"
+msgstr ""
+
+#: includes/admin_area.php:155
+msgid "for $"
+msgstr ""
+
+#: includes/admin_area.php:157 includes/admin_area.php:165
+msgid "Regards,"
+msgstr ""
+
+#: includes/admin_area.php:162
+msgid "for"
+msgstr ""
+
+#: includes/admin_area.php:163
+msgid "Thank you for your business"
+msgstr ""
+
+#: includes/admin_area.php:179 includes/admin_area.php:193
+#: includes/admin_area.php:311
+msgid "Invoices"
+msgstr ""
+
+#: includes/admin_area.php:180 includes/admin_area.php:522
+msgid "Invoice"
+msgstr ""
+
+#: includes/admin_area.php:181
+msgid "All Invoices"
+msgstr ""
+
+#: includes/admin_area.php:182
+msgid "Edit Invoice"
+msgstr ""
+
+#: includes/admin_area.php:183
+msgid "Update Invoice"
+msgstr ""
+
+#: includes/admin_area.php:184
+msgid "Add New Invoice"
+msgstr ""
+
+#: includes/admin_area.php:185 includes/admin_area.php:187
+msgid "New Invoice"
+msgstr ""
+
+#: includes/admin_area.php:186 includes/admin_area.php:212
+msgid "Add New"
+msgstr ""
+
+#: includes/admin_area.php:188
+msgid "View Invoice"
+msgstr ""
+
+#: includes/admin_area.php:189
+msgid "Search Invoices"
+msgstr ""
+
+#: includes/admin_area.php:190
+msgid "No invoices found"
+msgstr ""
+
+#: includes/admin_area.php:191
+msgid "No invoices found in Trash"
+msgstr ""
+
+#: includes/admin_area.php:205 includes/admin_area.php:219
+msgid "Clients"
+msgstr ""
+
+#: includes/admin_area.php:206 includes/admin_area.php:262
+msgid "Client"
+msgstr ""
+
+#: includes/admin_area.php:207
+msgid "All Clients"
+msgstr ""
+
+#: includes/admin_area.php:208
+msgid "Edit Client"
+msgstr ""
+
+#: includes/admin_area.php:209
+msgid "Update Client"
+msgstr ""
+
+#: includes/admin_area.php:210
+msgid "Add New Client"
+msgstr ""
+
+#: includes/admin_area.php:211 includes/admin_area.php:213
+msgid "New Client"
+msgstr ""
+
+#: includes/admin_area.php:214
+msgid "View Client"
+msgstr ""
+
+#: includes/admin_area.php:215
+msgid "Search Clients"
+msgstr ""
+
+#: includes/admin_area.php:216
+msgid "No clients found"
+msgstr ""
+
+#: includes/admin_area.php:217
+msgid "No clients found in Trash"
+msgstr ""
+
+#: includes/admin_area.php:260
+msgid "Description"
+msgstr ""
+
+#: includes/admin_area.php:261
+msgid "Invoice No."
+msgstr ""
+
+#: includes/admin_area.php:263
+msgid "Total"
+msgstr ""
+
+#: includes/admin_area.php:264
+msgid "Paid?"
+msgstr ""
+
+#: includes/admin_area.php:265
+msgid "Date"
+msgstr ""
+
+#: includes/admin_area.php:308
+msgid "Client Name"
+msgstr ""
+
+#: includes/admin_area.php:309 includes/admin_area.php:514
+#: includes/admin_area.php:670
+msgid "Company Name"
+msgstr ""
+
+#: includes/admin_area.php:310
+msgid "Attached Email"
+msgstr ""
+
+#: includes/admin_area.php:351
+msgid "Mark Unpaid"
+msgstr ""
+
+#: includes/admin_area.php:353
+msgid "Mark Paid"
+msgstr ""
+
+#: includes/admin_area.php:354
+msgid "View PDF"
+msgstr ""
+
+#: includes/admin_area.php:355
+msgid "Email PDF"
+msgstr ""
+
+#: includes/admin_area.php:512
+msgid "Invoice Description for your convinence"
+msgstr ""
+
+#: includes/admin_area.php:523
+msgid "Invoice Options"
+msgstr ""
+
+#: includes/admin_area.php:524 includes/admin_area.php:526
+msgid "Client Details"
+msgstr ""
+
+#: includes/admin_area.php:538 includes/admin_area.php:672
+msgid "Company Contact Name"
+msgstr ""
+
+#: includes/admin_area.php:539 includes/admin_area.php:674
+msgid "Address"
+msgstr ""
+
+#: includes/admin_area.php:540 includes/admin_area.php:676
+msgid "Suburb"
+msgstr ""
+
+#: includes/admin_area.php:541 includes/admin_area.php:678
+msgid "State"
+msgstr ""
+
+#: includes/admin_area.php:542
+msgid "Postcode/Zip"
+msgstr ""
+
+#: includes/admin_area.php:543 includes/admin_area.php:682
+msgid "Email"
+msgstr ""
+
+#: includes/admin_area.php:544 includes/admin_area.php:684
+msgid "Phone"
+msgstr ""
+
+#: includes/admin_area.php:577
+msgid "Please visit the settings page to setup your defaults for the invoice"
+msgstr ""
+
+#: includes/admin_area.php:579
+msgid "Settings Page"
+msgstr ""
+
+#: includes/admin_area.php:615
+msgid "Discount Type"
+msgstr ""
+
+#: includes/admin_area.php:616
+msgid "Percentage"
+msgstr ""
+
+#: includes/admin_area.php:616
+msgid "Set Value"
+msgstr ""
+
+#: includes/admin_area.php:618
+msgid "Discount Value"
+msgstr ""
+
+#: includes/admin_area.php:621
+msgid "Tax Percentage"
+msgstr ""
+
+#: includes/admin_area.php:624
+msgid "Invoice Paid?"
+msgstr ""
+
+#: includes/admin_area.php:666
+msgid "Use Existing Client Details"
+msgstr ""
+
+#: includes/admin_area.php:667 includes/screens/settings.php:283
+#: includes/screens/settings.php:291 includes/screens/settings.php:302
+#: includes/screens/settings.php:326
+msgid "SELECT"
+msgstr ""
+
+#: includes/admin_area.php:680
+msgid "Postcode"
+msgstr ""
+
+#: includes/admin_area.php:687
+msgid "Insert Details"
+msgstr ""
+
+#: includes/admin_area.php:687
+msgid "Save Client"
+msgstr ""
+
+#: includes/screens/kpp.php:2
+msgid "Suite"
+msgstr ""
+
+#: includes/screens/kpp.php:4 includes/screens/settings.php:6
+msgid "Connect"
+msgstr ""
+
+#: includes/screens/kpp.php:14
+msgid "Available"
+msgstr ""
+
+#: includes/screens/kpp.php:18
+msgid "Upload. Link. Go."
+msgstr ""
+
+#: includes/screens/kpp.php:19 includes/screens/kpp.php:25
+#: includes/screens/kpp.php:31 includes/screens/kpp.php:37
+#: includes/screens/kpp.php:43 includes/screens/kpp.php:49
+msgid "More information about"
+msgstr ""
+
+#: includes/screens/kpp.php:19 includes/screens/kpp.php:25
+#: includes/screens/kpp.php:31 includes/screens/kpp.php:37
+#: includes/screens/kpp.php:43 includes/screens/kpp.php:49
+msgid "Install"
+msgstr ""
+
+#: includes/screens/kpp.php:24
+msgid "Invoicing made easy!"
+msgstr ""
+
+#: includes/screens/kpp.php:30
+msgid "RSS feeds your way"
+msgstr ""
+
+#: includes/screens/kpp.php:36
+msgid "Site details the way you need them"
+msgstr ""
+
+#: includes/screens/kpp.php:42
+msgid "Send mail from WP from your email"
+msgstr ""
+
+#: includes/screens/kpp.php:48
+msgid "Keep traffic on your site"
+msgstr ""
+
+#: includes/screens/settings.php:12
+msgid "Found an issue? Post your issue on the"
+msgstr ""
+
+#: includes/screens/settings.php:12
+msgid "support forums"
+msgstr ""
+
+#: includes/screens/settings.php:12
+msgid "If you would prefer, please email your concern to"
+msgstr ""
+
+#: includes/screens/settings.php:16
+msgid "Invoice Settings"
+msgstr ""
+
+#: includes/screens/settings.php:17
+msgid "Default Details"
+msgstr ""
+
+#: includes/screens/settings.php:18
+msgid "Email Settings"
+msgstr ""
+
+#: includes/screens/settings.php:20 includes/screens/settings.php:510
+msgid "Themes"
+msgstr ""
+
+#: includes/screens/settings.php:21 includes/screens/settings.php:539
+msgid "Add-ons"
+msgstr ""
+
+#: includes/screens/settings.php:22
+msgid "How-To"
+msgstr ""
+
+#: includes/screens/settings.php:23
+msgid "FAQ"
+msgstr ""
+
+#: includes/screens/settings.php:30
+msgid "Settings have been saved"
+msgstr ""
+
+#: includes/screens/settings.php:34
+msgid "Settings have <strong>NOT</strong> been saved. Please try again."
+msgstr ""
+
+#: includes/screens/settings.php:45 includes/screens/settings.php:335
+#: includes/screens/settings.php:437 includes/screens/settings.php:503
+msgid "Save Settings"
+msgstr ""
+
+#: includes/screens/settings.php:48
+msgid "Invoice Theme"
+msgstr ""
+
+#: includes/screens/settings.php:74
+msgid "More themes can be downloaded from the"
+msgstr ""
+
+#: includes/screens/settings.php:74
+msgid "website"
+msgstr ""
+
+#: includes/screens/settings.php:82
+msgid "Currency Symbol"
+msgstr ""
+
+#: includes/screens/settings.php:91
+msgid "Invoice Type Label"
+msgstr ""
+
+#: includes/screens/settings.php:100
+msgid "Paid Invoice Type Label"
+msgstr ""
+
+#: includes/screens/settings.php:109
+msgid "Paid Invoice Watermark"
+msgstr ""
+
+#: includes/screens/settings.php:118
+msgid "Invoice Number Label"
+msgstr ""
+
+#: includes/screens/settings.php:127
+msgid "Purchase Order Label"
+msgstr ""
+
+#: includes/screens/settings.php:136
+msgid "Attention to Label"
+msgstr ""
+
+#: includes/screens/settings.php:145
+msgid "Subtotal Label"
+msgstr ""
+
+#: includes/screens/settings.php:154
+msgid "Discount Label"
+msgstr ""
+
+#: includes/screens/settings.php:163
+msgid "GST/Tax Label"
+msgstr ""
+
+#: includes/screens/settings.php:172
+msgid "Total Label"
+msgstr ""
+
+#: includes/screens/settings.php:181
+msgid "Invoice Number Generating"
+msgstr ""
+
+#: includes/screens/settings.php:186 includes/screens/settings.php:195
+#: includes/screens/settings.php:204 includes/screens/settings.php:214
+msgid "Refer to the help in the How-to tab"
+msgstr ""
+
+#: includes/screens/settings.php:190
+msgid "Last Invoice Number Generated"
+msgstr ""
+
+#: includes/screens/settings.php:199
+msgid "Current Invoice Number Increment"
+msgstr ""
+
+#: includes/screens/settings.php:208
+msgid "Invoice Filename Format"
+msgstr ""
+
+#: includes/screens/settings.php:220
+msgid "Define Columns"
+msgstr ""
+
+#: includes/screens/settings.php:229
+msgid "Name"
+msgstr ""
+
+#: includes/screens/settings.php:230
+msgid "Type"
+msgstr ""
+
+#: includes/screens/settings.php:231
+msgid "Width"
+msgstr ""
+
+#: includes/screens/settings.php:238 includes/screens/settings.php:250
+msgid "Text"
+msgstr ""
+
+#: includes/screens/settings.php:239 includes/screens/settings.php:251
+msgid "Numeric"
+msgstr ""
+
+#: includes/screens/settings.php:240 includes/screens/settings.php:252
+msgid "Price"
+msgstr ""
+
+#: includes/screens/settings.php:243
+msgid "Remove"
+msgstr ""
+
+#: includes/screens/settings.php:259
+msgid "Add Column"
+msgstr ""
+
+#: includes/screens/settings.php:261
+msgid "Leave width blank to generate even columns"
+msgstr ""
+
+#: includes/screens/settings.php:265
+msgid "Row Calculation"
+msgstr ""
+
+#: includes/screens/settings.php:310 includes/screens/settings.php:332
+msgid "Options available after \"Define Columns\" saved."
+msgstr ""
+
+#: includes/screens/settings.php:314
+msgid "Subtotals Calculation Column"
+msgstr ""
+
+#: includes/screens/settings.php:340 includes/screens/settings.php:432
+msgid "Save Options"
+msgstr ""
+
+#: includes/screens/settings.php:343
+msgid "Your Company Name"
+msgstr ""
+
+#: includes/screens/settings.php:352
+msgid "Your Address"
+msgstr ""
+
+#: includes/screens/settings.php:361
+msgid "Your Suburb/Town"
+msgstr ""
+
+#: includes/screens/settings.php:370
+msgid "Your State"
+msgstr ""
+
+#: includes/screens/settings.php:379
+msgid "Your Postcode/Zip"
+msgstr ""
+
+#: includes/screens/settings.php:388
+msgid "Your Phone"
+msgstr ""
+
+#: includes/screens/settings.php:397
+msgid "Your Email"
+msgstr ""
+
+#: includes/screens/settings.php:406
+msgid "Additional Detail"
+msgstr ""
+
+#: includes/screens/settings.php:411
+msgid "eg Business Details (ie ABN)"
+msgstr ""
+
+#: includes/screens/settings.php:415
+msgid "Open Content Block 1"
+msgstr ""
+
+#: includes/screens/settings.php:424
+msgid "Open Content Block 2"
+msgstr ""
+
+#: includes/screens/settings.php:440
+msgid "From Name"
+msgstr ""
+
+#: includes/screens/settings.php:449
+msgid "From Email"
+msgstr ""
+
+#: includes/screens/settings.php:458
+msgid "BCC the above email?"
+msgstr ""
+
+#: includes/screens/settings.php:464
+msgid "Have all email correspondence sent to the above email"
+msgstr ""
+
+#: includes/screens/settings.php:468
+msgid "Subject"
+msgstr ""
+
+#: includes/screens/settings.php:477
+msgid "Message"
+msgstr ""
+
+#: includes/screens/settings.php:486
+msgid "Paid Subject"
+msgstr ""
+
+#: includes/screens/settings.php:495
+msgid "Paid Message"
+msgstr ""
+
+#: includes/screens/settings.php:512
+msgid ""
+"Personalise your invoices by using an Invoice King Pro theme. The current "
+"selection is below. If you would like one that is customised just for you,\n"
+"                contact"
+msgstr ""
+
+#: includes/screens/settings.php:518
+msgid "Nice sharp design using<br />a custom font"
+msgstr ""
+
+#: includes/screens/settings.php:519 includes/screens/settings.php:526
+#: includes/screens/settings.php:533 includes/screens/settings.php:547
+#: includes/screens/settings.php:553
+msgid "Get It"
+msgstr ""
+
+#: includes/screens/settings.php:524
+msgid "Default with Logo"
+msgstr ""
+
+#: includes/screens/settings.php:525
+msgid "The default theme with added feature to upload a logo"
+msgstr ""
+
+#: includes/screens/settings.php:531
+msgid "Clean with Logo"
+msgstr ""
+
+#: includes/screens/settings.php:532
+msgid ""
+"Nice sharp design using<br />a custom font with added feature to upload a "
+"logo"
+msgstr ""
+
+#: includes/screens/settings.php:540
+msgid ""
+"Expand the functionality of Invoice King Pro to your necessity by installing "
+"Addons. Is there additional functionality your looking for that an addon\n"
+"            doesn't cover? Contact"
+msgstr ""
+
+#: includes/screens/settings.php:541
+msgid "and fill us in about what you after."
+msgstr ""
+
+#: includes/screens/settings.php:544
+msgid "Recurring Invoice"
+msgstr ""
+
+#: includes/screens/settings.php:545
+msgid "Recurring Invoices"
+msgstr ""
+
+#: includes/screens/settings.php:546
+msgid ""
+"Turn new and existing invoices into automatic recurring invoices via a cron"
+msgstr ""
+
+#: includes/screens/settings.php:550 includes/screens/settings.php:551
+msgid "Attachments"
+msgstr ""
+
+#: includes/screens/settings.php:552
+msgid ""
+"Attach additional files to all and individual invoices when sent to client"
+msgstr ""
+
+#: invoicekingpro.php:66
+msgid "Settings"
+msgstr ""
