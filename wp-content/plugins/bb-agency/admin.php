@@ -302,6 +302,9 @@ function bb_agency_jobs(){
 function bb_agency_jobsearch(){
     include_once('admin/job/search.php');
 }
+function bb_agency_job_invoice(){
+    include_once('admin/job_invoice.php');
+}
 function bb_agency_searchsaved(){
     include_once('admin/searchsaved.php');
 }

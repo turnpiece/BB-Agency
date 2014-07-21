@@ -132,6 +132,11 @@ if ($_POST) {
             }            
             
             break;
+
+        case 'invoice' :
+            // invoice generation
+            echo 'Generate an invoice';
+            break;
     } 
 }
 
@@ -251,6 +256,11 @@ switch ($action) {
             'JobRate'   => __('Rate', bb_agency_TEXTDOMAIN),
         );
         include('job/form.php');
+        break;
+
+    case 'invoice' :
+        // invoice generation
+        echo 'Generate an invoice';
         break;
 
     default :
