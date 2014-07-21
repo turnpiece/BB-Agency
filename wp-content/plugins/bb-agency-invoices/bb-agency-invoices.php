@@ -37,7 +37,7 @@
 
        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
        
-       add_option("invpk_db_version", $bbinv_db_version);
+       add_option("bbinv_db_version", $bbinv_db_version);
        add_option('bbinv_safe_theme', $bbinv_safe_theme);
     }
     
@@ -57,7 +57,7 @@
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
         // Then update the version value
-        update_option("invpk_db_version", $bbinv_db_version);
+        update_option("bbinv_db_version", $bbinv_db_version);
         update_option('bbinv_safe_theme', $bbinv_safe_theme);
     }
     

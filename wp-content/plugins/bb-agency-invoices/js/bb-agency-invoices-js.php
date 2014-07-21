@@ -2,9 +2,11 @@
 
 function bbinv_save_client() {
     if (wp_verify_nonce( $_POST['ajaxnonce'], 'bbinvN0nc3' )) {
-	global $wpdb;
+	   global $wpdb;
         // Check if client email exists
         $existing_client = query_posts(array('post_type'=>'bbinv_clients', 'meta_key'=>'bbinv_client_email', 'meta_value'=>$_POST['email']));
+
+        $existing_client = bbinv_get_client_by_email($_POST['email']);
         
         if (empty($existing_client)) :
             $post_id = wp_insert_post(array(

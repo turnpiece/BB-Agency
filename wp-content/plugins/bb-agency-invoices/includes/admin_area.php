@@ -68,7 +68,7 @@ function bbinv_check_page($hook) {
     $pages_req = array('post.php', 'post-new.php', 'edit.php');
     
     if (in_array($hook, $bbinv_pages)) return true;
-    if (in_array($hook, $pages_req) && ($current_screen->post_type == 'bbinv_invoices' || $current_screen->post_type == 'bbinv_clients')) return true;
+    if (in_array($hook, $pages_req) && $current_screen->post_type == 'bbinv_invoices') return true;
     return false;
 }
 
@@ -199,7 +199,7 @@ function bbinv_create_post_type() {
             'supports' => array('title')
         )
     );
-    
+    /*
     register_post_type( 'bbinv_clients',
         array(
             'labels' => array(
@@ -225,6 +225,7 @@ function bbinv_create_post_type() {
             'supports' => array('title')
         )
     );
+    */
 }
 add_action( 'init', 'bbinv_create_post_type' );
 
@@ -327,17 +328,18 @@ add_filter( 'manage_edit-bbinv_clients_columns', 'bbinv_edit_client_columns' ) ;
 
 // Update column data with custom data
 function bbinv_client_columns($column_name, $ID) {
+    // get this client
+    global $wpdb;
+    $client = $wpdb->get_row("SELECT * FROM `bb_agency_profile` WHERE `ProfileID` = $ID");
     switch ($column_name) {
         case 'name' :
-            // Get client email
-            $email = get_post_meta($ID, 'bbinv_client_attn_name');
-            echo $email[0];
+            // Get client name
+            echo $client->ProfileContactDisplay;
             break;
         
         case 'email' :
             // Get client email
-            $email = get_post_meta($ID, 'bbinv_client_email');
-            echo $email[0];
+            echo $client->ProfileContactEmail;
             break;
             
         case 'invoices_attached' :
@@ -558,10 +560,8 @@ add_action( 'admin_action_bbinvemailpdf', 'bbinvemailpdf_admin_action' );
 // Update title field to become URL field
 function bbinv_title_text_input( $title ){
     global $post;
-    if($post->post_type == 'bbinv_invoices') 
+    if ($post->post_type == 'bbinv_invoices') 
         return $title = __('Invoice Description for your convenience', "bbinvtext");
-    if($post->post_type == 'bbinv_clients')
-        return $title = __('Company Name', "bbinvtext");
     return $title;
 }
 add_filter( 'enter_title_here', 'bbinv_title_text_input' );
@@ -573,7 +573,7 @@ function bbinv_change_meta_boxes()
     add_meta_box('postinvoiceoptionsdatadiv', __('Invoice Options', "bbinvtext"), 'bbinv_post_invoice_options', 'bbinv_invoices', 'side', 'high');
     add_meta_box('postinvoiceclientdatadiv', __('Client Details', "bbinvtext"), 'bbinv_post_client_details', 'bbinv_invoices', 'side', 'high');
     
-    add_meta_box('postclientdatadiv', __('Client Details', "bbinvtext"), 'bbinv_post_client', 'bbinv_clients', 'advanced', 'high');
+    //add_meta_box('postclientdatadiv', __('Client Details', "bbinvtext"), 'bbinv_post_client', 'bbinv_clients', 'advanced', 'high');
     do_action('bbinv_additional_invoice_meta_box');
 }
 add_action('do_meta_boxes', 'bbinv_change_meta_boxes');
@@ -679,6 +679,7 @@ function bbinv_post_invoice_options($object, $box) {
 
 function bbinv_post_client_details($object, $box) {
     global $wpdb;
+    /*
     global $post;
     
     $output = array();
@@ -691,31 +692,33 @@ function bbinv_post_client_details($object, $box) {
     $output['bbinv_selected_client_postcode'] = (get_post_meta( $post->ID, 'bbinv_selected_client_postcode' ) ? get_post_meta( $post->ID, 'bbinv_selected_client_postcode' ) : array(''));
     $output['bbinv_selected_client_email'] = (get_post_meta( $post->ID, 'bbinv_selected_client_email' ) ? get_post_meta( $post->ID, 'bbinv_selected_client_email' ) : array(''));
     $output['bbinv_selected_client_phone'] = (get_post_meta( $post->ID, 'bbinv_selected_client_phone' ) ? get_post_meta( $post->ID, 'bbinv_selected_client_phone' ) : array(''));
-    
-    $clients = query_posts(array('post_type'=>'bbinv_clients', "posts_per_page"=>-1));
+    */
+    //$clients = query_posts(array('post_type'=>'bbinv_clients', "posts_per_page"=>-1));
+    $clients = $wpdb->get_results("SELECT * FROM `bb_agency_profile` ORDER BY `ProfileContactDisplay` ASC");
     $client_dropdown = '';
     foreach ($clients as $client) {
         $client_val = array(
-            'id'=>$client->ID,
-            'company_name'=>$client->post_title,
-            'attn_name'=>get_post_meta( $client->ID, 'bbinv_client_attn_name'),
-            'address'=>get_post_meta( $client->ID, 'bbinv_client_address'),
-            'suburb'=>get_post_meta( $client->ID, 'bbinv_client_suburb'),
-            'state'=>get_post_meta( $client->ID, 'bbinv_client_state'),
-            'postcode'=>get_post_meta( $client->ID, 'bbinv_client_postcode'),
-            'email'=>get_post_meta( $client->ID, 'bbinv_client_email'),
-            'phone'=>get_post_meta( $client->ID, 'bbinv_client_phone')
+            'id' => $client->ProfileID,
+            'company_name' => $client->ProfileContactDisplay,
+            'attn_name' => $client->ProfileContactNameFirst.' '.$client->ProfileContactNameLast,
+            'address' => $client->ProfileLocationStreet,
+            'suburb' => $client->ProfileLocationCity,
+            'state' => $client->ProfileLocationState,
+            'postcode' => $client->ProfileLocationZip,
+            'email' => $client->ProfileContactEmail,
+            'phone' => $client->ProfileContactPhoneWork ? $client->ProfileContactPhoneWork : $client->ProfileContactPhoneHome
         );
         
         $selected = '';
         //echo $client->ID." = ".$output['bbinv_client_link'][0]."<br />";
         if ($client->ID == $output['bbinv_client_link'][0]) $selected = ' selected';
-        $client_dropdown .= "<option value='".json_encode($client_val)."'".$selected.">".$client->post_title."</option>";
+        $client_dropdown .= "<option value='".json_encode($client_val)."'".$selected.">".$client->ProfileContactDisplay."</option>";
     }
     
-    echo '<div class="misc-pub-section" style="margin-bottom: 20px;"><label for="bbinv_select_client">'.__('Use Existing Client Details', "bbinvtext").':</label>';
+    echo '<div class="misc-pub-section" style="margin-bottom: 20px;"><label for="bbinv_select_client">'.__('Client', "bbinvtext").':</label>';
     echo '<select id="bbinv_select_client" style="display:block;width: 100%;"><option value="">-- '.__('SELECT', "bbinvtext").' --</option>'.$client_dropdown.'</select>';
     echo '</div>';
+    /*
     echo '<input type="hidden" name="bbinv_client_link" id="bbinv_client_link" value="'.$output['bbinv_client_link'][0].'" />';
     echo '<div style="margin-bottom: 10px;"><label for="bbinv_selected_client_company">'.__('Company Name', "bbinvtext").':</label>';
     echo '<input type="text" name="bbinv_selected_client_company" id="bbinv_selected_client_company" value="'.$output['bbinv_selected_client_company'][0].'" style="width: 100%;" /></div>';
@@ -736,6 +739,7 @@ function bbinv_post_client_details($object, $box) {
     echo '<div style="margin-bottom: 10px;">';
     echo '<input type="button" id="insert_details" class="button" value="'.__('Insert Details', "bbinvtext").'" /><input type="button" id="save_client" class="button-primary right" value="'.__('Save Client', "bbinvtext").'" />';
     echo '</div>';
+    */
 }
 
 // Process the custom metabox fields
@@ -1341,5 +1345,32 @@ add_action( 'admin_init', 'register_bbinv_options' );
 
 function bbinv_settings_output() {
     include 'screens/settings.php';
-} 
+}
+
+/**
+ *
+ * get client
+ *
+ * @param int $ID
+ * @return object
+ *
+ */
+function bbinv_get_client($ID) {
+    global $wpdb;
+    return $wpdb->get_row("SELECT * FROM `bb_agency_profile` WHERE `ProfileID` = $ID");
+}
+
+/**
+ *
+ * get client
+ *
+ * @param string $email
+ * @return object
+ *
+ */
+function bbinv_get_client_by_email($email) {
+    global $wpdb;
+    $email = trim(strtolower($email));
+    return $wpdb->get_row("SELECT * FROM `bb_agency_profile` WHERE `ProfileContactEmail` = '$email'");
+}
 ?>
