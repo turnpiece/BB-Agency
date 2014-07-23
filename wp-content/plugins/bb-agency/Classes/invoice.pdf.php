@@ -6,40 +6,64 @@
             $this->paid_label = $paid_label;
         }
         function Header() {
-            if ($this->invoice[0]->custom['bbinv_paid_invoice'][0] == 1)
+            if ($this->invoice['paid_invoice'][0] == 1)
                 $this->watermark(iconv('UTF-8', 'windows-1252', $this->paid_watermark));
 
-            $this->SetX(15); $this->SetY($this->GetY() + 5);
+            $this->SetX(15); 
+            $this->SetY($this->GetY() + 5);
             $this->SetFont('Arial','B',20);
-            $this->Cell(95,8,iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_company_name'][0]),0,0,'L');
+            $this->Cell(95,8,iconv('UTF-8', 'windows-1252', $this->invoice['CompanyName'][0]),0,0,'L');
+            /*
             $this->SetFont('Arial','B',24);
-            if ($this->invoice[0]->custom['bbinv_paid_invoice'][0] == 1)
+            if ($this->invoice['paid_invoice'][0] == 1)
                 $this->Cell(95,8,iconv('UTF-8', 'windows-1252', $this->paid_label),0,0,'R');
             else
-                $this->Cell(95,8,iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_invoice_type'][0]),0,0,'R');
+                $this->Cell(95,8,iconv('UTF-8', 'windows-1252', $this->invoice['invoice_type'][0]),0,0,'R');
+            */
             $this->Ln(15);
 
-            $this->SetX(10);
-            $cur_y = $this->GetY();
-            $this->SetFont('Arial', '', 9);
-            $this->MultiCell(95, 4, iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_address'][0])."\r\n".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_suburb'][0])."\r\n".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_state'][0])." ".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_postcode'][0])."\r\n\r\n".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_phone'][0])."\r\n".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_email'][0])."\r\n".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_add_detail'][0]));
-
-            $this->SetY($cur_y);
-            $this->SetX(105);
-            $this->MultiCell(95, 4, iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_date'][0])."\r\n".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_invoice_no_label'][0])." ".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_invoice_no'][0])."\r\n".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_po_label'][0])." ".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_po'][0]), 0, 'R');
             $this->Ln(4);
+            $this->SetX(10);
+            $this->SetFont('Arial','',9);
+            $this->MultiCell(95, 7, iconv('UTF-8', 'windows-1252', 'Invoice to:-'));
+            $this->Ln(6);
+
+            $this->SetX(10);
+            $this->SetFont('Arial', '', 9);
+
+            $address = iconv('UTF-8', 'windows-1252', $this->invoice['ProfileContactDisplay'])."\r\n";
+            foreach (array('ProfileLocationStreet', 'ProfileLocationCity', 'ProfileLocationState', 'ProfileLocationZip', 'ProfileContactPhoneWork', 'ProfileContactEmail') as $field)
+                $address .= $this->iconv($field);
+
+            $this->MultiCell(95, 8, $address);
+
             $this->SetX(105);
-            $this->SetFont('Arial','B',16);
-            $this->MultiCell(95, 7, iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_attn_name_label'][0])." ".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_attn_name'][0])."\r\n".iconv('UTF-8', 'windows-1252', $this->invoice[0]->custom['bbinv_client_company'][0]), 0, 'R');
+            $this->SetFont('Arial', 'B', 9);
+            $payment = '';
+            foreach ($this->invoice['InvoicePayment'] as $key => $value) {
+                $payment .= $this->iconv("$key: $value");
+            }
+            $this->MultiCell(95, 4, $payment);
+            $this->Ln(6);
+
+            $this->SetX(105);
+            $this->MultiCell(95, 4, iconv('UTF-8', 'windows-1252', $this->invoice['InvoiceDate']));
             $this->Ln(6);
 
             $cur_y = $this->GetY();
+
             $this->SetDrawColor(204, 204, 204);
             $this->Rect(10, $cur_y, 190, 0);
             
             $this->cur_y = $cur_y;
         }
+
+        private function iconv($field, $append = "\r\n") {
+            if (!empty($this->invoice[$field]) && !is_null($this->invoice[$field]))
+                return iconv('UTF-8', 'windows-1252', $this->invoice[$field]).$append;
+        }
     }
+?><pre><?php print_r($invoice) ?></pre><?php
     $pdf = new LocalPDF('P','mm','A4');
     $pdf->setData($invoice, $paid_watermark, $paid_label);
     $pdf->AliasNbPages();
@@ -54,20 +78,23 @@
     
     $pdf->SetX(10);
     $pdf->SetY($pdf->cur_y+7);
+    /*
     $pdf->SetFont('Arial', '', 9);
     $pdf->MultiCell(190, 4, iconv('UTF-8', 'windows-1252', $invoice[0]->custom['bbinv_open_content_1'][0]));
-    
+    */
     $cur_y = $pdf->GetY();
     $pdf->SetFillColor(255,255,255);
     $pdf->SetTextColor(0,0,0);
     $pdf->SetX(10);
     $pdf->SetY($cur_y+10);
-    $pdf->SetFont('Arial','B',9);
-    $pdf->SetFillColor(227,227,227);
+    //$pdf->SetFont('Arial','B',9);
+    //$pdf->SetFillColor(227,227,227);
     
     $col_width = 190 / count($columns);
+    /*
     foreach ($columns as $column)
         $pdf->Cell($col_width,5,iconv('UTF-8', 'windows-1252', $column),1,0,'C',1);
+    */
     $pdf->Ln(5);
     $pdf->SetFillColor(255,255,255);
     $pdf->SetX(10);
@@ -94,20 +121,21 @@
         $space_left -= $bottom_margin;
 
         if ( $row_height >= $space_left) {   
-           $pdf->AddPage();
+            $pdf->AddPage();
             $pdf->SetX(10);
             $pdf->SetY($pdf->cur_y+7);
-           $pdf->SetFont('Arial','B',9);
-            $pdf->SetFillColor(227,227,227);
-
+            //$pdf->SetFont('Arial','B',9);
+            //$pdf->SetFillColor(227,227,227);
+            /*
             foreach ($columns as $column)
                 $pdf->Cell($col_width,5,iconv('UTF-8', 'windows-1252', $column),1,0,'C',1);
+            */
             $pdf->Ln(5);
             $pdf->SetFillColor(255,255,255);
             $pdf->SetX(10);
             $pdf->SetFont('Arial','',9);
         }
-        
+        /*
         if ($r % 2) {
             $pdf->SetFillColor(238,238,238);
             $fill = 1;
@@ -115,12 +143,11 @@
             $pdf->SetFillColor(255,255,255);
             $fill = 0;
         }
-        
+        */
         for ($c=0;$c<count($columns);$c++) :
             $align = 'L';
       
-            if ($column_types[$c] == 'numeric') $align = 'C';
-            if ($column_types[$c] == 'price') {
+            if (strtolower($columns[$c]) == 'price') {
                 $align = 'R';
                 $row[$columns[$c]] = iconv('UTF-8', 'windows-1252', $currency_symbol).iconv('UTF-8', 'windows-1252', $row[$columns[$c]]);
             }
@@ -140,65 +167,23 @@
     $pdf->SetY($pdf->GetY()+7);
     
     $pdf->SetFillColor(255,255,255);
-    
-    for ($c=0;$c<count($columns);$c++) :
-        if ($c == count($columns)-2) :
-            $pdf->SetFont('Arial','B',9);
-            $pdf->Cell($col_width,5,$subtotal_label,0,0,'R',0);
-        elseif ($c == count($columns)-1) :
-            $pdf->SetFont('Arial','',9);
-            $pdf->Cell($col_width,5,iconv('UTF-8', 'windows-1252', $currency_symbol).$invoice[0]->custom['bbinv_subtotal'][0],0,0,'R',0);
-        else :
-            $pdf->Cell($col_width,5,'',0,0,'C',0);
-        endif;
-    endfor;
-    $pdf->Ln(5);
-    
-    for ($c=0;$c<count($columns);$c++) :
-        if ($c == count($columns)-2) :
-            $pdf->SetFont('Arial','B',9);
-            $pdf->Cell($col_width,5,$discount_label,0,0,'R',0);
-        elseif ($c == count($columns)-1) :
-            $pdf->SetFont('Arial','',9);
-            $pdf->Cell($col_width,5,iconv('UTF-8', 'windows-1252', $currency_symbol).$invoice[0]->custom['bbinv_discount'][0],0,0,'R',0);
-        else :
-            $pdf->Cell($col_width,5,'',0,0,'C',0);
-        endif;
-    endfor;
-    $pdf->Ln(5);
-    
-    for ($c=0;$c<count($columns);$c++) :
-        if ($c == count($columns)-2) :
-            $pdf->SetFont('Arial','B',9);
-            $pdf->Cell($col_width,5,$tax_label,0,0,'R',0);
-        elseif ($c == count($columns)-1) :
-            $pdf->SetFont('Arial','',9);
-            $pdf->Cell($col_width,5,iconv('UTF-8', 'windows-1252', $currency_symbol).$invoice[0]->custom['bbinv_gst'][0],0,0,'R',0);
-        else :
-            $pdf->Cell($col_width,5,'',0,0,'C',0);
-        endif;
-    endfor;
-    $pdf->Ln(5);
-    
+
     for ($c=0;$c<count($columns);$c++) :
         if ($c == count($columns)-2) :
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell($col_width,5,$total_label,0,0,'R',0);
         elseif ($c == count($columns)-1) :
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell($col_width,5,iconv('UTF-8', 'windows-1252', $currency_symbol).$invoice[0]->custom['bbinv_total'][0],0,0,'R',0);
+            $pdf->Cell($col_width,5,iconv('UTF-8', 'windows-1252', $currency_symbol).$invoice['InvoiceTotal'],0,0,'R',0);
         else :
             $pdf->Cell($col_width,5,'',0,0,'C',0);
         endif;
     endfor;
-    $pdf->Ln(5);
+    $pdf->Ln(6);
     $pdf->SetX(10);
     $pdf->SetY($pdf->GetY()+10);
     $pdf->SetFont('Arial', '', 9);
-    $pdf->MultiCell(190, 4, iconv('UTF-8', 'windows-1252', $invoice[0]->custom['bbinv_open_content_2'][0]));
-    
-    $pdf_filename = bbinv_gen_filename($invoice[0]);
 
-    $pdf_path = plugin_dir_path(__FILE__)."../outputs/".$pdf_filename.".pdf";
+    $pdf_path = plugin_dir_path(__FILE__)."../invoices/".$invoice['FileName'].".pdf";
     $pdf->Output($pdf_path, "F");
 ?>

@@ -82,6 +82,10 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 		define("table_agency_profile", "bb_agency_profile");
 	if (!defined("table_agency_job"))
 		define("table_agency_job", "bb_agency_job");
+	if (!defined("table_agency_invoice"))
+		define("table_agency_job", "bb_agency_invoice");
+	if (!defined("table_agency_invoice_item"))
+		define("table_agency_job", "bb_agency_invoice_item");
 	if (!defined("table_agency_profile_media"))
 		define("table_agency_profile_media", "bb_agency_profile_media");
 	if (!defined("table_agency_data_ethnicity"))

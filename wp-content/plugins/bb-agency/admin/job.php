@@ -135,7 +135,46 @@ if ($_POST) {
 
         case 'invoice' :
             // invoice generation
-            echo 'Generate an invoice';
+
+            /*
+            $t_invoice = table_agency_invoice;
+            $t_item = table_agency_invoice_item;
+            $invoice = $wpdb->get_row("SELECT * FROM `$t_invoice` WHERE `InvoiceID` = $id", ARRAY_A);
+            */
+            // get job and client details
+            $sql = "SELECT * FROM `$t_job` j LEFT JOIN `$t_profile` p ON j.`JobClient` = p.`ProfileID` WHERE j.`JobID` = ".(int)$_POST['JobID'];
+
+            $invoice = $wpdb->get_row($sql, ARRAY_A);
+
+            $columns = array('Description', 'Price');
+            $rows = array(
+                array(
+                    'Description' => $_POST['JobDescription'],
+                    'Price' => $_POST['JobPrice']
+                )
+            );
+            $currency_symbol = '£';
+            $total_label = 'TOTAL INVOICE INCLUDING AGENCY FEES';
+            $paid_label = 'P';
+            $paid_watermark = '';
+            $invoice['InvoiceNumber'] = $_POST['InvoiceNumber'];
+            $invoice['InvoiceDate'] = date('jS F Y', strtotime($_POST['InvoiceDate']));
+            $invoice['InvoiceTotal'] = $_POST['JobPrice'];
+            $invoice['FileName'] = $invoice['InvoiceNumber'];
+            $invoice['InvoicePayment'] = array(
+                'Bankers' => 'Santander',
+                'Account' => 'Beautiful Bumps',
+                'Sort Code' => '09 01 50',
+                'Account No.' => '05677807'
+            );
+
+            include plugin_dir_path(__FILE__)."../Classes/fpdf/fpdf.php";
+            include plugin_dir_path(__FILE__)."../Classes/invoice.pdf.php";
+
+            break;
+
+        default :
+            wp_die('Unknown action '.$action);
             break;
     } 
 }
@@ -260,7 +299,11 @@ switch ($action) {
 
     case 'invoice' :
         // invoice generation
-        echo 'Generate an invoice';
+        // get job and client from database
+        $sql = "SELECT * FROM `$t_job` j LEFT JOIN `$t_profile` p ON j.`JobClient` = p.`ProfileID` WHERE j.`JobID` = ".(int)$_REQUEST['id'];
+        $Invoice = $wpdb->get_row($sql, ARRAY_A);
+        // load invoice creation template
+        include('job/invoice.php');
         break;
 
     default :
