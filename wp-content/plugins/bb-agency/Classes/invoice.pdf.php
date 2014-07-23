@@ -1,189 +1,203 @@
 <?php
     class LocalPDF extends FPDF {
-        function setData($invoice, $paid_watermark, $paid_label) {
-            $this->invoice = $invoice;
-            $this->paid_watermark = $paid_watermark;
-            $this->paid_label = $paid_label;
-        }
-        function Header() {
-            if ($this->invoice['paid_invoice'][0] == 1)
-                $this->watermark(iconv('UTF-8', 'windows-1252', $this->paid_watermark));
 
-            $this->SetX(15); 
-            $this->SetY($this->GetY() + 5);
-            $this->SetFont('Arial','B',20);
-            $this->Cell(95,8,iconv('UTF-8', 'windows-1252', $this->invoice['CompanyName'][0]),0,0,'L');
-            /*
-            $this->SetFont('Arial','B',24);
-            if ($this->invoice['paid_invoice'][0] == 1)
-                $this->Cell(95,8,iconv('UTF-8', 'windows-1252', $this->paid_label),0,0,'R');
-            else
-                $this->Cell(95,8,iconv('UTF-8', 'windows-1252', $this->invoice['invoice_type'][0]),0,0,'R');
-            */
-            $this->Ln(15);
+        const LEFT = 5;
+        const RIGHT = 125;
+
+        const BB_URL = 'www.beautifulbumpsagency.co.uk';
+        const KW_URL = 'www.kiddiwinksagency.co.uk';
+
+        const PAGE_HEIGHT = 279.4;
+        const BOTTOM_MARGIN = 20;
+
+        const CURRENCY = '£';
+
+        function setData($invoice, $columns, $rows) {
+            $this->invoice = $invoice;
+            $this->columns = $columns;
+            $this->rows = $rows;
+        }
+
+        function Header() {
+            $cell_width = 95;
+
+            // images
+            $bb = bb_agency_BASEDIR.'style/logos/bbumps.jpg';
+            $kw = bb_agency_BASEDIR.'style/logos/kiddiwinks.png';
+
+            //$this->SetX(15);
+            $this->Image($bb, self::LEFT, 10, 35, null, null, 'http://'.self::BB_URL);
+            $this->Image($kw, 145, 15, 50, null, null, 'http://'.self::KW_URL);
+
+            $this->SetY(30);
 
             $this->Ln(4);
-            $this->SetX(10);
-            $this->SetFont('Arial','',9);
-            $this->MultiCell(95, 7, iconv('UTF-8', 'windows-1252', 'Invoice to:-'));
+
+            $this->SetX(self::RIGHT);
+            $this->SetTextColor(204, 102, 102);
+            $this->SetFont('Arial', 'B', 12);
+            $this->MultiCell(
+                $cell_width, 
+                8, 
+                $this->iconv('INVOICE NO.:') . $this->ficonv('InvoiceNumber') . $this->iconv('Please quote in all payments')
+            );
+
+            //$this->Cell(self::RIGHT, 8, $this->ficonv('CompanyName'), 0, 0, 'L');
+
+            $this->Ln(15);
+            $this->SetX(self::LEFT);
+            $this->SetTextColor(0, 0, 0);
+            $this->SetFont('Arial', '', 12);
+            $this->MultiCell($cell_width, 7, $this->iconv('INVOICE TO:-'));
             $this->Ln(6);
 
-            $this->SetX(10);
-            $this->SetFont('Arial', '', 9);
+            //$this->SetFont('Arial', '', 12);
 
-            $address = iconv('UTF-8', 'windows-1252', $this->invoice['ProfileContactDisplay'])."\r\n";
+            $address = $this->ficonv('ProfileContactDisplay')."\r\n";
             foreach (array('ProfileLocationStreet', 'ProfileLocationCity', 'ProfileLocationState', 'ProfileLocationZip', 'ProfileContactPhoneWork', 'ProfileContactEmail') as $field)
-                $address .= $this->iconv($field);
+                $address .= $this->ficonv($field);
 
-            $this->MultiCell(95, 8, $address);
+            $this->MultiCell($cell_width, 8, $address);
 
-            $this->SetX(105);
+            $this->SetX(self::RIGHT);
             $this->SetFont('Arial', 'B', 9);
             $payment = '';
             foreach ($this->invoice['InvoicePayment'] as $key => $value) {
                 $payment .= $this->iconv("$key: $value");
             }
-            $this->MultiCell(95, 4, $payment);
+            $this->MultiCell($cell_width, 4, $payment);
             $this->Ln(6);
 
-            $this->SetX(105);
-            $this->MultiCell(95, 4, iconv('UTF-8', 'windows-1252', $this->invoice['InvoiceDate']));
+            // draw a line
+            $this->SetDrawColor(0, 0, 0);
+            $this->Rect(10, $this->GetY(), 190, 0);
             $this->Ln(6);
+
+            $this->SetFont('Arial', '', 11);
+            $this->SetX(105);
+            $this->MultiCell($cell_width, 4, $this->ficonv('InvoiceDate'));
+            $this->Ln(6);
+            
+            $this->cur_y = $this->GetY();
+        }
+
+        function Body() {
+            $this->SetX(self::LEFT);
+            $this->SetY($this->cur_y+7);
 
             $cur_y = $this->GetY();
-
-            $this->SetDrawColor(204, 204, 204);
-            $this->Rect(10, $cur_y, 190, 0);
+            $this->SetFillColor(255,255,255);
+            $this->SetTextColor(0,0,0);
+            $this->SetX(10);
+            $this->SetY($cur_y+10);
             
-            $this->cur_y = $cur_y;
+            $col_width = 190 / count($this->columns);
+            /*
+            foreach ($this->columns as $column)
+                $this->Cell($col_width,5,iconv('UTF-8', 'windows-1252', $column),1,0,'C',1);
+            */
+            $this->Ln(5);
+            $this->SetFillColor(255,255,255);
+            $this->SetX(10);
+            $this->SetFont('Arial', '', 11);
+            
+            $r = 0;
+            foreach ($this->rows as $row) :
+                
+                $row_height = 0;
+                for ($c=0;$c<count($this->columns);$c++) :
+                    $content = $row[$this->columns[$c]];
+
+                    $total_string_width = $this->GetStringWidth($content);
+                    $number_of_lines = ceil( $total_string_width / ($col_width + 5) );
+
+                    $line_height = 5;
+                    $height_of_cell = ceil( $number_of_lines * $line_height ) + ($line_height * 2); 
+
+                    if ($height_of_cell > $row_height)
+                        $row_height = $height_of_cell;
+                endfor;
+
+                $space_left = self::PAGE_HEIGHT - $this->GetY();
+                $space_left -= self::BOTTOM_MARGIN;
+
+                if ( $row_height >= $space_left) {   
+                    $this->AddPage();
+                    $this->SetX(self::LEFT);
+                    $this->SetY($this->cur_y+7);
+
+                    $this->Ln(5);
+                    $this->SetFillColor(255,255,255);
+                    $this->SetX(10);
+                    //$this->SetFont('Arial', '', 12);
+                }
+
+                for ($c=0;$c<count($this->columns);$c++) :
+                    $align = 'L';
+              
+                    if (strtolower($this->columns[$c]) == 'price') {
+                        $align = 'R';
+                        $row[$this->columns[$c]] = $this->price($row[$this->columns[$c]]);
+                    }
+                    
+                    $row_y = $this->GetY();
+                    $row_x = $this->GetX();
+                    $this->Rect($row_x, $row_y, $col_width, $row_height, "FD");
+                    $this->MultiCell($col_width, 5, $row[$this->columns[$c]], 0, $align);
+                    $this->SetY($row_y);
+                    $this->SetX($row_x + $col_width);
+                    
+                endfor;
+                $this->Ln($row_height); 
+                $r++;
+            endforeach;
+            
+            $this->SetY($this->GetY()+7);
+            
+            $this->SetFillColor(255,255,255);
+
+            for ($c=0;$c<count($this->columns);$c++) :
+                if ($c == count($this->columns)-2) :
+                    $this->SetFont('Arial', 'B', 12);
+                    $this->Cell($col_width, 5, $total_label, 0, 0, 'R', 0);
+                elseif ($c == count($this->columns)-1) :
+                    $this->SetFont('Arial', 'B', 12);
+                    $this->Cell($col_width, 5, $this->price($this->invoice['InvoiceTotal']), 0, 0, 'R', 0);
+                else :
+                    $this->Cell($col_width, 5, '', 0, 0, 'C', 0);
+                endif;
+            endfor;
+            $this->Ln(6);
+            $this->SetX(10);
+            $this->SetY($this->GetY()+10);            
         }
 
-        private function iconv($field, $append = "\r\n") {
+        function price($amount) {
+            return $this->iconv(self::CURRENCY.$amount);
+        }
+
+        function iconv($text, $append = "\r\n") {
+            return iconv('UTF-8', 'windows-1252', $text).$append;
+        }
+
+        function ficonv($field, $append = "\r\n") {
             if (!empty($this->invoice[$field]) && !is_null($this->invoice[$field]))
-                return iconv('UTF-8', 'windows-1252', $this->invoice[$field]).$append;
+                return $this->iconv($this->invoice[$field], $append);
         }
     }
-?><pre><?php print_r($invoice) ?></pre><?php
+
     $pdf = new LocalPDF('P','mm','A4');
-    $pdf->setData($invoice, $paid_watermark, $paid_label);
+    $pdf->setData($invoice, $columns, $rows);
     $pdf->AliasNbPages();
     $pdf->SetAutoPageBreak(1, 20);
-
-    $page_height = 279.4;
-    $bottom_margin = 20;
+    $pdf->Body();
         
     $pdf->AddPage();
     
-    $pdf->SetDrawColor(204, 204, 204);
+    //$pdf->SetDrawColor(204, 204, 204);
     
-    $pdf->SetX(10);
-    $pdf->SetY($pdf->cur_y+7);
-    /*
-    $pdf->SetFont('Arial', '', 9);
-    $pdf->MultiCell(190, 4, iconv('UTF-8', 'windows-1252', $invoice[0]->custom['bbinv_open_content_1'][0]));
-    */
-    $cur_y = $pdf->GetY();
-    $pdf->SetFillColor(255,255,255);
-    $pdf->SetTextColor(0,0,0);
-    $pdf->SetX(10);
-    $pdf->SetY($cur_y+10);
-    //$pdf->SetFont('Arial','B',9);
-    //$pdf->SetFillColor(227,227,227);
-    
-    $col_width = 190 / count($columns);
-    /*
-    foreach ($columns as $column)
-        $pdf->Cell($col_width,5,iconv('UTF-8', 'windows-1252', $column),1,0,'C',1);
-    */
-    $pdf->Ln(5);
-    $pdf->SetFillColor(255,255,255);
-    $pdf->SetX(10);
-    $pdf->SetFont('Arial','',9);
-    
-    $r = 0;
-    foreach ($rows as $row) :
-        
-        $row_height = 0;
-        for ($c=0;$c<count($columns);$c++) :
-            $content = $row[$columns[$c]];
 
-            $total_string_width = $pdf->GetStringWidth($content);
-            $number_of_lines = ceil( $total_string_width / ($col_width + 5) );
 
-            $line_height = 5;
-            $height_of_cell = ceil( $number_of_lines * $line_height ) + ($line_height * 2); 
-
-            if ($height_of_cell > $row_height)
-                $row_height = $height_of_cell;
-        endfor;
-
-        $space_left = $page_height - $pdf->GetY();
-        $space_left -= $bottom_margin;
-
-        if ( $row_height >= $space_left) {   
-            $pdf->AddPage();
-            $pdf->SetX(10);
-            $pdf->SetY($pdf->cur_y+7);
-            //$pdf->SetFont('Arial','B',9);
-            //$pdf->SetFillColor(227,227,227);
-            /*
-            foreach ($columns as $column)
-                $pdf->Cell($col_width,5,iconv('UTF-8', 'windows-1252', $column),1,0,'C',1);
-            */
-            $pdf->Ln(5);
-            $pdf->SetFillColor(255,255,255);
-            $pdf->SetX(10);
-            $pdf->SetFont('Arial','',9);
-        }
-        /*
-        if ($r % 2) {
-            $pdf->SetFillColor(238,238,238);
-            $fill = 1;
-        } else {
-            $pdf->SetFillColor(255,255,255);
-            $fill = 0;
-        }
-        */
-        for ($c=0;$c<count($columns);$c++) :
-            $align = 'L';
-      
-            if (strtolower($columns[$c]) == 'price') {
-                $align = 'R';
-                $row[$columns[$c]] = iconv('UTF-8', 'windows-1252', $currency_symbol).iconv('UTF-8', 'windows-1252', $row[$columns[$c]]);
-            }
-            
-            $row_y = $pdf->GetY();
-            $row_x = $pdf->GetX();
-            $pdf->Rect($row_x, $row_y, $col_width, $row_height, "FD");
-            $pdf->MultiCell($col_width,5,$row[$columns[$c]],0,$align);
-            $pdf->SetY($row_y);
-            $pdf->SetX($row_x + $col_width);
-            
-        endfor;
-        $pdf->Ln($row_height); 
-        $r++;
-    endforeach;
-    
-    $pdf->SetY($pdf->GetY()+7);
-    
-    $pdf->SetFillColor(255,255,255);
-
-    for ($c=0;$c<count($columns);$c++) :
-        if ($c == count($columns)-2) :
-            $pdf->SetFont('Arial','B',9);
-            $pdf->Cell($col_width,5,$total_label,0,0,'R',0);
-        elseif ($c == count($columns)-1) :
-            $pdf->SetFont('Arial','',9);
-            $pdf->Cell($col_width,5,iconv('UTF-8', 'windows-1252', $currency_symbol).$invoice['InvoiceTotal'],0,0,'R',0);
-        else :
-            $pdf->Cell($col_width,5,'',0,0,'C',0);
-        endif;
-    endfor;
-    $pdf->Ln(6);
-    $pdf->SetX(10);
-    $pdf->SetY($pdf->GetY()+10);
-    $pdf->SetFont('Arial', '', 9);
-
-    $pdf_path = plugin_dir_path(__FILE__)."../invoices/".$invoice['FileName'].".pdf";
+    $pdf_path = bb_agency_BASEPATH.'invoices/'.$invoice['FileName'].'.pdf';
     $pdf->Output($pdf_path, "F");
 ?>
