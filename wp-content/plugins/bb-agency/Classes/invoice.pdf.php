@@ -12,6 +12,8 @@
 
         const CURRENCY = '£';
 
+        const DEBUGGING = true;
+
         function setData($invoice, $columns, $rows) {
             $this->invoice = $invoice;
             $this->columns = $columns;
@@ -19,6 +21,9 @@
         }
 
         function Header() {
+            $this->debug(__FUNCTION__);
+            $this->debug('x = '.$this->GetX().', y = '.$this->GetY());
+
             $cell_width = 95;
 
             // images
@@ -52,7 +57,7 @@
             $this->Ln(6);
 
             //$this->SetFont('Arial', '', 12);
-
+            $this->SetX(self::LEFT);
             $address = $this->ficonv('ProfileContactDisplay')."\r\n";
             foreach (array('ProfileLocationStreet', 'ProfileLocationCity', 'ProfileLocationState', 'ProfileLocationZip', 'ProfileContactPhoneWork', 'ProfileContactEmail') as $field)
                 $address .= $this->ficonv($field);
@@ -81,31 +86,39 @@
             $this->cur_y = $this->GetY();
         }
 
-        function Body() {
-            $this->SetX(self::LEFT);
-            $this->SetY($this->cur_y+7);
+        function InvoiceBody() {
 
-            $cur_y = $this->GetY();
-            $this->SetFillColor(255,255,255);
-            $this->SetTextColor(0,0,0);
-            $this->SetX(10);
-            $this->SetY($cur_y+10);
+            $this->debug(__FUNCTION__);
+
+            //$cur_y = $this->cur_y;
+            $this->SetX(self::LEFT);
             
+            $this->debug('x = '.$this->GetX().', y = '.$this->GetY());
+            
+            //$this->SetFillColor(255,255,255);
+            //$this->SetTextColor(0, 0, 0);
+            $this->SetY(50);
+            $this->debug('x = '.$this->GetX().', y = '.$this->GetY());
+
             $col_width = 190 / count($this->columns);
             /*
             foreach ($this->columns as $column)
                 $this->Cell($col_width,5,iconv('UTF-8', 'windows-1252', $column),1,0,'C',1);
             */
             $this->Ln(5);
-            $this->SetFillColor(255,255,255);
-            $this->SetX(10);
-            $this->SetFont('Arial', '', 11);
+            //$this->SetFillColor(255,255,255);
+            //$this->SetX(self::LEFT);
+            $this->SetFont('Arial', 'B', 12);
+            $this->Cell(95, 5, $this->iconv('Services'));
+
+            $this->Ln(12);
+            $this->SetFont('Arial', '', 12);    
             
             $r = 0;
             foreach ($this->rows as $row) :
-                
+                $this->debug('row = '.print_r($row, true));
                 $row_height = 0;
-                for ($c=0;$c<count($this->columns);$c++) :
+                for ($c = 0; $c < count($this->columns); $c++) :
                     $content = $row[$this->columns[$c]];
 
                     $total_string_width = $this->GetStringWidth($content);
@@ -124,15 +137,15 @@
                 if ( $row_height >= $space_left) {   
                     $this->AddPage();
                     $this->SetX(self::LEFT);
-                    $this->SetY($this->cur_y+7);
+                    $this->SetY($this->cur_y + 7);
 
                     $this->Ln(5);
-                    $this->SetFillColor(255,255,255);
-                    $this->SetX(10);
+                    //$this->SetFillColor(255,255,255);
+                    $this->SetX(self::LEFT);
                     //$this->SetFont('Arial', '', 12);
                 }
 
-                for ($c=0;$c<count($this->columns);$c++) :
+                for ($c=0; $c < count($this->columns); $c++) :
                     $align = 'L';
               
                     if (strtolower($this->columns[$c]) == 'price') {
@@ -152,14 +165,14 @@
                 $r++;
             endforeach;
             
-            $this->SetY($this->GetY()+7);
+            $this->SetY($this->GetY() + 7);
             
-            $this->SetFillColor(255,255,255);
+            //$this->SetFillColor(255,255,255);
 
             for ($c=0;$c<count($this->columns);$c++) :
                 if ($c == count($this->columns)-2) :
                     $this->SetFont('Arial', 'B', 12);
-                    $this->Cell($col_width, 5, $total_label, 0, 0, 'R', 0);
+                    $this->Cell($col_width, 5, 'TOTAL INVOICE INCLUDING AGENCY FEES', 0, 0, 'R', 0);
                 elseif ($c == count($this->columns)-1) :
                     $this->SetFont('Arial', 'B', 12);
                     $this->Cell($col_width, 5, $this->price($this->invoice['InvoiceTotal']), 0, 0, 'R', 0);
@@ -170,6 +183,25 @@
             $this->Ln(6);
             $this->SetX(10);
             $this->SetY($this->GetY()+10);            
+        }
+
+        function Footer() {
+            $this->debug(__FUNCTION__);
+            $this->debug('x = '.$this->GetX().', y = '.$this->GetY());
+
+            $this->SetFont('Arial', '', 9);
+
+            $this->SetX(self::LEFT);
+            $this->Cell(95, 5, $this->iconv('Payment terms are 30 days from invoice date'));
+            $this->Ln(8);
+            $this->SetX(self::LEFT);
+            $this->Cell(95, 5, $this->iconv('Kiddiwinks is a Beautiful Bumps Ltd company'));
+            $this->Ln(4);
+            $this->SetX(self::LEFT);
+            $this->Cell(95, 5, $this->iconv('134 Ridge Langley, South Croydon, Surrey, CR2 0AS.'));
+
+            $this->SetX(self::RIGHT);
+            $this->Cell(95, 5, $this->iconv('Beautiful Bumps Ltd Registration No. 06320457'));
         }
 
         function price($amount) {
@@ -184,19 +216,20 @@
             if (!empty($this->invoice[$field]) && !is_null($this->invoice[$field]))
                 return $this->iconv($this->invoice[$field], $append);
         }
+
+        function debug($message) {
+            if (self::DEBUGGING)
+                error_log($message);
+        }
     }
 
     $pdf = new LocalPDF('P','mm','A4');
     $pdf->setData($invoice, $columns, $rows);
     $pdf->AliasNbPages();
     $pdf->SetAutoPageBreak(1, 20);
-    $pdf->Body();
-        
-    $pdf->AddPage();
-    
-    //$pdf->SetDrawColor(204, 204, 204);
-    
+    $pdf->InvoiceBody();
 
+    //$pdf->AddPage();
 
     $pdf_path = bb_agency_BASEPATH.'invoices/'.$invoice['FileName'].'.pdf';
     $pdf->Output($pdf_path, "F");
