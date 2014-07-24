@@ -49,11 +49,11 @@
             $this->link_font();
 
             $this->SetX(self::LEFT);
-            $this->SetTextColor(255, 153, 153);
+            $this->bb_colour();
             $this->Write(5, self::BB_URL, 'http://'.self::BB_URL);
 
             $this->SetX(self::RIGHT + 5);
-            $this->SetTextColor(255, 204, 153);
+            $this->kw_colour();
             $this->Write(5, self::KW_URL, 'http://'.self::KW_URL);
 
             $this->v_space(2);
@@ -71,7 +71,7 @@
             $this->small_font(true);
             $this->SetX(self::RIGHT);
             $this->Write(self::V_SPACE, 'Please quote in all payments');
-            $this->SetTextColor(0, 0, 0);
+            $this->standard_colour();
 
             $this->v_space(3);
 
@@ -82,26 +82,26 @@
             $this->Cell(25, self::V_SPACE, 'Accounts e-mail');
 
             $this->link_font();
-            $this->SetTextColor(255, 153, 153);
+            $this->bb_colour();
             $this->SetX(self::LEFT + 26);
             $this->Write(self::V_SPACE, 'zandra@beautifulbumpsagency.co.uk', 'mailto:zandra@beautifulbumpsagency.co.uk?subject=Invoice '.$this->invoice['InvoiceNumber']);
 
             $this->v_space();
 
             $this->small_font(true);
-            $this->SetTextColor(0, 0, 0);
+            $this->standard_colour();
             $this->SetX(self::LEFT);
             $this->Cell(25, self::V_SPACE, 'Accounts e-mail');
 
             $this->link_font();
-            $this->SetTextColor(255, 204, 153);
+            $this->kw_colour();
             $this->SetX(self::LEFT + 26);
             $this->Write(self::V_SPACE, 'zandra@kiddiwinksagency.co.uk', 'mailto:zandra@kiddiwinksagency.co.uk?subject=Invoice '.$this->invoice['InvoiceNumber']);
 
             $this->v_space(2);
             
             $this->small_font();
-            $this->SetTextColor(0, 0, 0);
+            $this->standard_colour();
             $this->SetX(self::LEFT);
             $this->Cell(40, self::V_SPACE, 'Phone: 0208 651 1201');
 
@@ -156,6 +156,7 @@
             $this->MultiCell(50, self::V_SPACE, $this->ficonv('InvoiceDate'));
 
             $col_width = self::HALF_W;
+            $col_width_r = self::PAGE_WIDTH - self::RIGHT - self::LEFT;
             $this->debug("column width = $col_width");
 
             $this->v_space(7);
@@ -198,7 +199,7 @@
 
                 // price
                 $this->SetXY(self::RIGHT, $cur_y);
-                $this->Cell(30, self::V_SPACE, $this->price($row[1]), 0, 0, 'R');
+                $this->Cell($col_width_r, self::V_SPACE, $this->price($row[1]), 0, 0, 'R');
                 
                 $this->Ln($row_height); 
 
@@ -209,7 +210,7 @@
             $this->Cell($col_width, self::V_SPACE, 'TOTAL INVOICE INCLUDING AGENCY FEES');
 
             $this->SetX(self::RIGHT);
-            $this->Cell(30, self::V_SPACE, $this->price($this->invoice['InvoiceTotal']), 0, 0, 'R');
+            $this->Cell($col_width_r, self::V_SPACE, $this->price($this->invoice['InvoiceTotal']), 0, 0, 'R');
 
             $this->v_space(8);
             $this->SetX(self::LEFT);
@@ -270,6 +271,18 @@
 
         function v_space($number = 1) {
             $this->Ln(self::V_SPACE * $number);
+        }
+
+        function kw_colour() {
+            $this->SetTextColor(204, 204, 153);
+        }
+
+        function bb_colour() {
+            $this->SetTextColor(255, 153, 153);
+        }
+
+        function standard_colour() {
+            $this->SetTextColor(0, 0, 0);
         }
 
         function save() {
