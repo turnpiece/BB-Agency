@@ -415,76 +415,14 @@ EOF;
     return '<select name="'.$name.'" size="1">'.implode("\n", $option).'</select>';
 }
 
-function bb_agency_view_invoice($id)
-{
+function bb_agency_get_job($id) {
     global $wpdb;
-
-    // get the invoice
-    $t_invoice = table_agency_invoice;
-    $t_item = table_agency_invoice_item;
-    $invoice = $wpdb->get_row("SELECT * FROM `$t_invoice` WHERE `InvoiceID` = $id");
-    /*
-    $invoice[0]->custom = bbinv_return_fields($post_id);
-    if (isset($invoice[0]->custom['bbinv_column'][0])) {
-        if (!is_array($invoice[0]->custom['bbinv_column'][0]))
-            $rows = unserialize($invoice[0]->custom['bbinv_column'][0]); 
-        else $rows = $invoice[0]->custom['bbinv_column'][0];
-    }
-    
-    $columns = unserialize($invoice[0]->custom['bbinv_columns'][0]);
-    $column_types = unserialize($invoice[0]->custom['bbinv_column_types'][0]);
-    $column_widths = unserialize($invoice[0]->custom['bbinv_column_widths'][0]);
-    */
-    $rows = $wpdb->get_results("SELECT `InvoiceItemDescription` AS Description, `InvoiceItemPrice` AS Price FROM $t_item WHERE `InvoiceID` = $id");
-
-    $columns = array('Description', 'Price');
-    $currency_symbol = '£';
-    $tax_label = 'VAT';
-    $subtotal_label = 'SUBTOTAL';
-    $discount_label = 'DISCOUNT';
-    $total_label = 'TOTAL INVOICE INCLUDING AGENCY FEES';
-    $paid_label = 'P';
-    $paid_watermark = '';
-    //print_r($invoice[0]->custom);die;
-    /*
-    if ($invoice[0]->custom['bbinv_paid_invoice'][0] == 1) {
-        $paid = 'paid_';
-        $invoice_type = $paid_label;
-    } else {
-        $paid = '';
-        $invoice_type = $invoice[0]->custom['bbinv_invoice_type'][0];
-    }
-    
-    $search = array(
-        '{{invoice_type}}',
-        '{{invoice_number_label}}',
-        '{{invoice_number}}',
-        '{{invoice_date}}',
-        '{{invoice_due_date}}',
-        '{{client_company_name}}',
-        '{{client_name}}',
-        '{{invoice_total}}',
-    );
-    $replace = array(
-        $invoice_type,
-        $invoice[0]->custom['bbinv_invoice_no_label'][0],
-        $invoice[0]->custom['bbinv_invoice_no'][0],
-        $invoice[0]->custom['bbinv_date'][0],
-        $invoice[0]->custom['bbinv_due_date'][0],
-        $invoice[0]->custom['bbinv_selected_client_company'][0],
-        $invoice[0]->custom['bbinv_selected_client_attn'][0],
-        $invoice[0]->custom['bbinv_total'][0],
-    );
-    
-    $invoice[0]->custom['bbinv_open_content_1'][0] = str_replace($search, $replace, $invoice[0]->custom['bbinv_open_content_1'][0]);
-    $invoice[0]->custom['bbinv_open_content_2'][0] = str_replace($search, $replace, $invoice[0]->custom['bbinv_open_content_2'][0]);
-    
-   //do_action('bbinv_additional_pdf_invoice_data');
-    */
-    include plugin_dir_path(__FILE__)."/Classes/fpdf/fpdf.php";
-    include plugin_dir_path(__FILE__)."/Classes/invoice.pdf.php";
-    
-    header("Location: ".str_replace("includes/","",plugin_dir_url(__FILE__))."outputs/".$pdf_filename.".pdf");
-    
+    $t_job = table_agency_job;
+    $t_profile = table_agency_profile;
+    $sql = "SELECT * FROM `$t_job` j LEFT JOIN `$t_profile` p ON j.`JobClient` = p.`ProfileID` WHERE j.`JobID` = $id";
+    return $wpdb->get_row($sql, ARRAY_A);
 }
-add_action( 'admin_action_bbinvviewpdf', 'bbinvviewpdf_admin_action' );
+
+function bb_agency_get_invoice_url($file) {
+    return bb_agency_BASEDIR.'/invoices/'.$file.'.pdf';
+}

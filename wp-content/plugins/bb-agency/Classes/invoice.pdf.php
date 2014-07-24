@@ -261,7 +261,7 @@
 
         function save() {
             if (!$this->invoice['FileName'])
-                die ('no file name given');
+                wp_die('ERROR: Unable to save invoice as no file name was given');
 
             $pdf_path = $this->invoice_path();
             $this->Output($pdf_path, "F");
@@ -277,8 +277,11 @@
         }
     }
 
+    if (empty($Invoice))
+        wp_die('ERROR: invoice array empty!');
+    
     $pdf = new LocalPDF('P','mm','A4');
-    $pdf->setData($invoice);
+    $pdf->setData($Invoice);
     $pdf->AliasNbPages();
     $pdf->SetAutoPageBreak(1, 20);
     $pdf->AddPage();

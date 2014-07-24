@@ -40,10 +40,10 @@ if ($_POST) {
         // *************************************************************************************************** //
         // Add/Edit Record
         case 'edit' :
-            if (!isset($_POST['id']) || !$_POST['id']) {
+            if (!isset($_POST['JobID']) || !$_POST['JobID']) {
                 $error[] = 'No job id was passed.';
             } else {
-                $id = $_POST['id'];
+                $id = $_POST['JobID'];
             }
 
         case 'add' :
@@ -134,51 +134,80 @@ if ($_POST) {
             break;
 
         case 'invoice' :
-            // invoice generation
+            $Invoice = bb_agency_get_job($_REQUEST['JobID']);
 
-            /*
-            $t_invoice = table_agency_invoice;
-            $t_item = table_agency_invoice_item;
-            $invoice = $wpdb->get_row("SELECT * FROM `$t_invoice` WHERE `InvoiceID` = $id", ARRAY_A);
-            */
-            // get job and client details
-            $sql = "SELECT * FROM `$t_job` j LEFT JOIN `$t_profile` p ON j.`JobClient` = p.`ProfileID` WHERE j.`JobID` = ".(int)$_POST['JobID'];
+            if (empty($Invoice))
+                wp_die('Failed to get job id '.$_REQUEST['JobID']);
 
-            $invoice = $wpdb->get_row($sql, ARRAY_A);
-            $invoice['rows'] = array(
-                array(
-                    $_POST['JobDescription'],
-                    $_POST['JobPrice']
-                )
-            );
-            $currency_symbol = '£';
-            $total_label = 'TOTAL INVOICE INCLUDING AGENCY FEES';
-            $paid_label = 'P';
-            $paid_watermark = '';
-            $invoice['InvoiceNumber'] = $_POST['InvoiceNumber'];
-            $invoice['InvoiceDate'] = date('jS F Y', strtotime($_POST['InvoiceDate']));
-            $invoice['InvoiceTotal'] = $_POST['JobPrice'];
-            $invoice['FileName'] = $invoice['InvoiceNumber'];
-            $invoice['InvoicePayment'] = array(
-                'Bankers' => 'Santander',
-                'Account' => 'Beautiful Bumps',
-                'Sort Code' => '09 01 50',
-                'Account No.' => '05677807'
-            );
+            if (isset($_POST['send'])) {
 
-            include bb_agency_BASEPATH.'Classes/fpdf/fpdf.php';
-            include bb_agency_BASEPATH.'Classes/invoice.pdf.php';
+                $to = $Invoice['ProfileContactEmail'];
+                $headers = 'From: '.get_bloginfo('name').' <'.get_bloginfo('admin_email').'>' . "\r\n";
 
-            $InvoiceUrl = bb_agency_BASEDIR.'/invoices/'.$invoice['FileName'].'.pdf';
-            bb_agency_admin_message('<p>' . sprintf(__('Remember to <a href="%s">view the generated invoice</a> before sending it.', bb_agency_TEXTDOMAIN), $InvoiceUrl) . '</p>');
+                if ($_POST['EmailSubject'] && $_POST['EmailMessage'] && $_POST['EmailAttachment']) {
+                    $success = wp_mail(
+                        'paul@turnpiece.com', 
+                        $_POST['EmailSubject'],
+                        nl2br($_POST['EmailMessage']),
+                        $headers,
+                        $_POST['EmailAttachment']
+                    );
 
-            // set invoice path
-            $InvoicePath = bb_agency_BASEPATH.'invoices/'.$invoice['FileName'].'.pdf';
+                    if ($success) {
+                        bb_agency_admin_message('<p>' . sprintf(__('Invoice sent to %s', bb_agency_TEXTDOMAIN), $to) . '</p>');
+                        // update the job database record
+                        $wpdb->update(
+                            $t_job, 
+                            array(
+                                'JobInvoiceNumber' => $_POST['InvoiceNumber'], 
+                                'JobInvoiceSent' => date('Y-m-d')
+                            ), 
+                            array('JobID' => $_REQUEST['JobID'])
+                        );
+                        // go to job edit page
+                        $action = 'edit';
+                    } else {
+                        bb_agency_admin_message('<p>' . sprintf(__('ERROR: Failed to send invoice to %s', bb_agency_TEXTDOMAIN), $to) . '</p>', 'error');
+                    }
+                } else {
+                    bb_agency_admin_message('<p>' . sprintf(__('ERROR: Failed to send invoice to %s. Please check the invoice and check you filled in the subject and message fields.', bb_agency_TEXTDOMAIN), $to) . '</p>', 'error');
+                }
+            } else {
+                if (!isset($_POST['InvoiceNumber']) || !$_POST['InvoiceNumber'] ||
+                    !isset($_POST['JobDescription']) || !$_POST['JobDescription'] ||
+                    !isset($_POST['JobPrice']) || !$_POST['JobPrice']) {
+                    bb_agency_admin_message('<p>' . __('ERROR: Something was missing. All fields in this form are required.', bb_agency_TEXTDOMAIN) . '</p>', 'error');
+                } else {
+                    // invoice generation
+                    // get job and client details
+                    $Invoice['rows'] = array(
+                        array(
+                            $_POST['JobDescription'],
+                            $_POST['JobPrice']
+                        )
+                    );
+                    $Invoice['InvoiceNumber'] = $_POST['InvoiceNumber'];
+                    $Invoice['InvoiceDate'] = date('jS F Y', strtotime($_POST['InvoiceDate']));
+                    $Invoice['InvoiceTotal'] = $_POST['JobPrice'];
+                    $Invoice['FileName'] = $Invoice['InvoiceNumber'];
+                    $Invoice['InvoicePayment'] = array(
+                        'Bankers' => 'Santander',
+                        'Account' => 'Beautiful Bumps',
+                        'Sort Code' => '09 01 50',
+                        'Account No.' => '05677807'
+                    );
 
-            break;
+                    include bb_agency_BASEPATH.'Classes/fpdf/fpdf.php';
+                    include bb_agency_BASEPATH.'Classes/invoice.pdf.php';
 
-        case 'invoice_send' :
+                    $InvoiceUrl = bb_agency_BASEDIR.'/invoices/'.$Invoice['FileName'].'.pdf';
+                    bb_agency_admin_message('<p>' . sprintf(__('Remember to <a href="%s">view the generated invoice</a> before sending it.', bb_agency_TEXTDOMAIN), $InvoiceUrl) . '</p>');
 
+                    // set invoice path & invoice number
+                    $InvoiceNumber = $Invoice['InvoiceNumber'];
+                    $InvoicePath = bb_agency_BASEPATH.'invoices/'.$Invoice['FileName'].'.pdf';
+                }
+            }    
             break;
 
         default :
@@ -191,13 +220,13 @@ if ($_POST) {
 
 switch ($action) {
     case 'delete' :
-        if ($_GET['id']) {
-            $wpdb->query("DELETE FROM $t_job WHERE `JobID` = ".$_GET['id']);
+        if ($_GET['JobID']) {
+            $wpdb->query("DELETE FROM $t_job WHERE `JobID` = ".$_GET['JobID']);
             bb_agency_admin_message('<p>'. __("That job has been deleted.", bb_agency_TEXTDOMAIN) . '</p>');
         }
-        elseif (!empty($_GET['JobID'])) {
+        elseif (!empty($_GET['JobIDs'])) {
             $i = 0;
-            foreach ($_GET['JobID'] as $id) {
+            foreach ($_GET['JobIDs'] as $id) {
                 $wpdb->query("DELETE FROM $t_job WHERE `JobID` = $id");
                 $i++;
             }
@@ -293,7 +322,7 @@ switch ($action) {
 
     case 'edit' :
         // get job from database
-        $sql = "SELECT * FROM $t_job WHERE `JobID` = ".(int)$_REQUEST['id'];
+        $sql = "SELECT * FROM $t_job WHERE `JobID` = ".(int)$_REQUEST['JobID'];
         $Job = $wpdb->get_row($sql, ARRAY_A);
 
     case 'add' :
@@ -313,8 +342,10 @@ switch ($action) {
         } else {
             // invoice generation
             // get job and client from database
-            $sql = "SELECT * FROM `$t_job` j LEFT JOIN `$t_profile` p ON j.`JobClient` = p.`ProfileID` WHERE j.`JobID` = ".(int)$_REQUEST['id'];
-            $Invoice = $wpdb->get_row($sql, ARRAY_A);
+            $Invoice = bb_agency_get_job($_REQUEST['JobID']);
+
+            if (empty($Invoice))
+                wp_die('Failed to get job id '.$_REQUEST['JobID']);
             
             // load invoice creation template
             include('job/invoice_create.php');           

@@ -113,13 +113,17 @@
         </div>
     </div>
     <?php if ($action == 'edit') : ?>
-    <?php _e("Last updated on", bb_agency_TEXTDOMAIN) ?> <?php echo $Job['JobDateUpdated'] ?>
+    <?php if ($Job['JobInvoiceNumber'] && $Job['JobInvoiceSent']) : ?>
+    <p><a href="<?php echo bb_agency_get_invoice_url($Job['JobInvoiceNumber']) ?>">Invoice <?php echo $Job['JobInvoiceNumber'] ?></a> was sent on <?php echo $Job['JobInvoiceSent'] ?></p>
+    <?php endif; ?>
+    
+    <p><?php _e("Last updated on", bb_agency_TEXTDOMAIN) ?> <?php echo $Job['JobDateUpdated'] ?></p>
 
     <p class="submit">
-         <input type="hidden" name="id" value="<?php echo $_REQUEST['id'] ?>" />
+         <input type="hidden" name="JobID" value="<?php echo $_REQUEST['JobID'] ?>" />
          <input type="hidden" name="action" value="edit" />
          <input type="submit" name="submit" value="<?php _e("Update Job", bb_agency_TEXTDOMAIN) ?>" class="button-primary" />
-         <a href="<?php echo admin_url('admin.php?page=bb_agency_jobs&action=invoice&id='.$_REQUEST['id']) ?>" title="Generate an invoice for this job"><?php _e('Invoice', bb_agency_TEXTDOMAIN) ?></a>
+         <a href="<?php echo admin_url('admin.php?page=bb_agency_jobs&action=invoice&JobID='.$_REQUEST['JobID']) ?>" title="Generate an invoice for this job"><?php _e('Invoice', bb_agency_TEXTDOMAIN) ?></a>
     </p>
     <?php else : ?>
     <p class="submit">

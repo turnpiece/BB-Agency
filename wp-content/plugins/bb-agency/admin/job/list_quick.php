@@ -12,7 +12,7 @@
 
   <?php foreach ($results as $data) : $id = $data->JobID; ?>
     <tr class="<?php echo $data->JobPassed != 1 && $data->JobStatus > 0 ? 'active' : 'inactive' ?>">
-      <td><a href="<?php echo admin_url('admin.php?page=bb_agency_jobs&amp;action=edit&amp;id='.$id) ?>"><?php echo $data->JobTitle ?></a></td>
+      <td><a href="<?php echo admin_url('admin.php?page=bb_agency_jobs&amp;action=edit&amp;JobID='.$id) ?>"><?php echo $data->JobTitle ?></a></td>
       <td><a href="<?php echo admin_url('admin.php?page=bb_agency_profiles&action=editRecord&ProfileID='.$data->JobClient) ?>"><?php echo $data->ClientName ?></a></td>
       <td><?php echo $data->JobLocation ?></td>
       <td><?php echo $data->JobPONumber ?></td>
