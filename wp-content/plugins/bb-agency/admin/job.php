@@ -145,12 +145,10 @@ if ($_POST) {
             $sql = "SELECT * FROM `$t_job` j LEFT JOIN `$t_profile` p ON j.`JobClient` = p.`ProfileID` WHERE j.`JobID` = ".(int)$_POST['JobID'];
 
             $invoice = $wpdb->get_row($sql, ARRAY_A);
-
-            $columns = array('Description', 'Price');
-            $rows = array(
+            $invoice['rows'] = array(
                 array(
-                    'Description' => $_POST['JobDescription'],
-                    'Price' => $_POST['JobPrice']
+                    $_POST['JobDescription'],
+                    $_POST['JobPrice']
                 )
             );
             $currency_symbol = '£';

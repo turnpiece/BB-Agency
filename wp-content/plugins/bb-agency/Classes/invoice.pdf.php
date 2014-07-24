@@ -5,10 +5,15 @@
         const RIGHT = 145;
         const HALF_RIGHT = 110;
 
+        const PAGE_WIDTH = 210;
         const HALF_W = 85;
 
-        const FONT = 'Arial';
-        const FONT_SIZE_BODY = 12;
+        const FONT = 'Times';
+        const FONT2 = 'Arial';
+        const FONT_SIZE_MAIN = 12;
+        const FONT_SIZE_SMALL = 8;
+
+        const V_SPACE = 5;
 
         const BB_URL = 'www.beautifulbumpsagency.co.uk';
         const KW_URL = 'www.kiddiwinksagency.co.uk';
@@ -20,14 +25,11 @@
 
         const DEBUGGING = true;
 
-        public $invoice = array();
-        public $columns = array();
-        public $rows = array();
+        private $invoice = array();
+        private $cur_y;
 
-        function setData($invoice, $columns, $rows) {
+        function setData($invoice) {
             $this->invoice = $invoice;
-            $this->columns = $columns;
-            $this->rows = $rows;
         }
 
         function Header() {
@@ -38,13 +40,12 @@
             $bb = bb_agency_BASEDIR.'style/logos/bbumps.jpg';
             $kw = bb_agency_BASEDIR.'style/logos/kiddiwinks.png';
 
-            //$this->SetX(15);
             $this->Image($bb, self::LEFT, 10, 35, null, null, 'http://'.self::BB_URL);
             $this->Image($kw, self::RIGHT, 15, 50, null, null, 'http://'.self::KW_URL);
 
-            $this->SetY(30);
+            //$this->SetY(50);
 
-            $this->Ln(4);
+            $this->Ln(30);
 
             $this->SetX(self::RIGHT);
             $this->SetTextColor(204, 102, 102);
@@ -52,13 +53,66 @@
             $this->MultiCell(
                 self::HALF_W, 
                 8, 
-                $this->iconv('INVOICE NO.:') . $this->ficonv('InvoiceNumber') . $this->iconv('Please quote in all payments')
+                'INVOICE NO: ' . $this->ficonv('InvoiceNumber') . 'Please quote in all payments'
             );
             $this->SetTextColor(0, 0, 0);
 
-            $this->Ln(15);
+            $this->v_space(3);
+
+            $this->small_font(true);
+
+            $cur_y = $this->GetY();
 
             $this->SetX(self::LEFT);
+            $this->Cell(30, self::V_SPACE, 'Accounts e-mail');
+            $this->SetX(self::LEFT + 30);
+            $this->Cell(30, self::V_SPACE, 'zandra@beautifulbumpsagency.co.uk');
+
+            $this->v_space();
+
+            $this->SetX(self::LEFT);
+            $this->Cell(30, self::V_SPACE, 'Accounts e-mail');
+            $this->SetX(self::LEFT + 30);
+            $this->Cell(30, self::V_SPACE, 'zandra@kiddiwinksagency.co.uk');
+
+            $this->v_space(2);
+            
+            $this->small_font();
+            $this->SetX(self::LEFT);
+            $this->Cell(40, self::V_SPACE, 'Phone: 0208 651 1201');
+
+            //$this->v_space();
+
+            $this->small_font(true);
+            
+            $payment = '';
+            foreach ($this->invoice['InvoicePayment'] as $key => $value) {
+                $payment .= $this->iconv("$key: $value");
+            }
+            $this->SetXY(self::RIGHT, $cur_y);
+            $this->MultiCell(40, self::V_SPACE, $payment);
+
+            $this->v_space();
+
+            // draw a line
+            $this->SetDrawColor(0, 0, 0);
+            $this->Line(self::LEFT, $this->GetY(), self::PAGE_WIDTH - self::LEFT, $this->GetY());
+            $this->v_space();
+            
+            $this->cur_y = $this->GetY();
+        }
+
+        function InvoiceBody() {
+
+            $this->debug(__FUNCTION__);
+
+            if (empty($this->invoice['rows']))
+                return false;
+
+            $cur_y = $this->cur_y;
+
+            $this->standard_font();
+
             $address = $this->ficonv('ProfileContactDisplay')."\r\n";
             foreach (array(
                 'ProfileLocationStreet', 
@@ -69,118 +123,75 @@
                 'ProfileContactEmail') as $field)
                 $address .= $this->ficonv($field);
 
-            $this->MultiCell(self::HALF_W, 8, $address);
+            $this->SetXY(self::LEFT, $cur_y);
+            $this->MultiCell(self::HALF_W, self::V_SPACE, "Invoice to:-\r\n\r\n$address");
 
-            $this->SetX(self::RIGHT);
-            $this->SetFont(self::FONT, 'B', 9);
-            $payment = '';
-            foreach ($this->invoice['InvoicePayment'] as $key => $value) {
-                $payment .= $this->iconv("$key: $value");
-            }
-            $this->MultiCell(self::HALF_W, 4, $payment);
-            $this->Ln(6);
+            $this->v_space();
 
-            // draw a line
-            $this->SetDrawColor(0, 0, 0);
-            $this->Rect(10, $this->GetY(), 190, 0);
-            $this->Ln(6);
+            $this->SetXY(self::RIGHT, $cur_y);
+            $this->MultiCell(50, self::V_SPACE, $this->ficonv('InvoiceDate'));
 
-            $this->standard_font();
-            $this->SetX(self::RIGHT);
-            $this->MultiCell(self::HALF_W, 4, $this->ficonv('InvoiceDate'));
-            $this->Ln(6);
-            
-            $this->cur_y = $this->GetY();
-        }
-
-        function InvoiceBody() {
-
-            $this->debug(__FUNCTION__);
-
-            $cur_y = $this->cur_y;
-            $this->SetX(self::LEFT);
-            
-            $this->SetY($cur_y + 10);
-            $this->debug('x = '.$this->GetX().', y = '.$this->GetY());
-
-            $col_width = 180 / count($this->columns);
+            $col_width = self::HALF_W;
             $this->debug("column width = $col_width");
 
-            $this->Ln(5);
-            $this->standard_font(true);
-            $this->Cell(self::HALF_W, 5, $this->iconv('Services'));
+            $this->v_space(10);
 
-            $this->Ln(12);
-            $this->standard_font();    
+            $this->SetX(self::LEFT);
+            $this->standard_font(true);
+            $this->Cell(50, self::V_SPACE, $this->iconv('Services'));
+
+            $this->v_space(3);
+            $this->standard_font();  
             
             $r = 0;
-            foreach ($this->rows as $row) :
+            foreach ($this->invoice['rows'] as $row) :
                 
                 $row_height = 0;
-                for ($c = 0; $c < count($this->columns); $c++) :
-                    $content = $row[$this->columns[$c]];
 
-                    $total_string_width = $this->GetStringWidth($content);
-                    $number_of_lines = ceil( $total_string_width / ($col_width + 5) );
+                $content = $row[0];
 
-                    $line_height = 5;
-                    $height_of_cell = ceil( $number_of_lines * $line_height ) + ($line_height * 2); 
+                $total_string_width = $this->GetStringWidth($content);
+                $number_of_lines = ceil($total_string_width / ($col_width + 5));
 
-                    if ($height_of_cell > $row_height)
-                        $row_height = $height_of_cell;
-                endfor;
+                $line_height = self::V_SPACE;
+                $height_of_cell = ceil($number_of_lines * $line_height) + ($line_height * 2); 
 
-                $space_left = self::PAGE_HEIGHT - $this->GetY();
-                $space_left -= self::BOTTOM_MARGIN;
+                if ($height_of_cell > $row_height)
+                    $row_height = $height_of_cell;
+
+                $space_left = self::PAGE_HEIGHT - $this->GetY() - self::BOTTOM_MARGIN;
 
                 if ($row_height >= $space_left) {   
                     // start a new page
                     $this->AddPage();
-                    $this->SetX(self::LEFT);
-                    $this->SetY($this->cur_y + 7);
+                    $this->SetXY(self::LEFT, $cur_y + 7);
 
-                    $this->Ln(5);
-                    //$this->SetFillColor(255,255,255);
-                    $this->SetX(self::LEFT);
-                    //$this->SetFont(self::FONT, '', 12);
+                    //$this->v_space();
                 }
 
-                for ($c=0; $c < count($this->columns); $c++) :
-                    $align = 'L';
-              
-                    if (strtolower($this->columns[$c]) == 'price') {
-                        $align = 'R';
-                        $row[$this->columns[$c]] = $this->price($row[$this->columns[$c]]);
-                    }
-                    
-                    $row_y = $this->GetY();
-                    $row_x = $this->GetX();
-                    //$this->Rect($row_x, $row_y, $col_width, $row_height, "FD");
-                    $this->MultiCell($col_width, 5, $row[$this->columns[$c]], 0, $align);
-                    $this->SetY($row_y);
-                    $this->SetX($row_x + $col_width);
-                    
-                endfor;
+                // description
+                $this->SetX(self::LEFT);
+                $this->MultiCell($col_width, self::V_SPACE, $row[0]);
+
+                // price
+                $this->SetX(self::RIGHT);
+                $this->Cell($col_width, self::V_SPACE, $this->price($row[1]), 0, 0, 'R');
+                
                 $this->Ln($row_height);
                 $cur_y = $this->GetY(); 
 
-                $r++;
             endforeach;
             
             $this->SetY($cur_y + 7);
 
             $this->standard_font(true);
-            for ($c=0; $c<count($this->columns); $c++) :
-                if ($c == count($this->columns)-2) :
-                    $this->Cell($col_width, 5, 'TOTAL INVOICE INCLUDING AGENCY FEES', 0, 0, 'R', 0);
-                elseif ($c == count($this->columns) - 1) :
-                    $this->Cell($col_width, 5, $this->price($this->invoice['InvoiceTotal']), 0, 0, 'R', 0);
-                else :
-                    $this->Cell($col_width, 5, '', 0, 0, 'C', 0);
-                endif;
-            endfor;
+            $this->SetX(self::LEFT);
+            $this->Cell($col_width, 5, 'TOTAL INVOICE INCLUDING AGENCY FEES');
 
-            $this->Ln(40);
+            $this->SetX(self::RIGHT);
+            $this->Cell($col_width, 5, $this->price($this->invoice['InvoiceTotal']), 0, 0, 'R');
+
+            $this->v_space(5);
             $this->SetX(self::LEFT);
             $this->SetY($cur_y + 40);    
    
@@ -190,14 +201,14 @@
             $this->debug(__FUNCTION__);
             $this->debug('x = '.$this->GetX().', y = '.$this->GetY());
 
-            $this->SetFont(self::FONT, '', 9);
+            $this->small_font();
 
             $this->SetX(self::LEFT);
             $this->Cell(self::HALF_W, 5, $this->iconv('Payment terms are 30 days from invoice date'));
             $this->Ln(8);
             $this->SetX(self::LEFT);
             $this->Cell(self::HALF_W, 5, $this->iconv('Kiddiwinks is a Beautiful Bumps Ltd company'));
-            $this->Ln(4);
+            $this->v_space();
             $this->SetX(self::LEFT);
             $this->Cell(self::HALF_W, 5, $this->iconv('134 Ridge Langley, South Croydon, Surrey, CR2 0AS.'));
 
@@ -214,12 +225,20 @@
         }
 
         function ficonv($field, $append = "\r\n") {
-            if (!empty($this->invoice[$field]) && !is_null($this->invoice[$field]))
+            if (!empty($this->invoice[$field]) && !is_null($this->invoice[$field]) && $this->invoice[$field] != '')
                 return $this->iconv($this->invoice[$field], $append);
         }
 
         function standard_font($bold = false) {
-            $this->SetFont(self::FONT, $bold ? 'B' : '', self::FONT_SIZE_BODY);
+            $this->SetFont(self::FONT, $bold ? 'B' : '', self::FONT_SIZE_MAIN);
+        }
+
+        function small_font($bold = false) {
+            $this->SetFont(self::FONT2, $bold ? 'B' : '', self::FONT_SIZE_SMALL);
+        }
+
+        function v_space($number = 1) {
+            $this->Ln(self::V_SPACE * $number);
         }
 
         function save() {
@@ -237,7 +256,7 @@
     }
 
     $pdf = new LocalPDF('P','mm','A4');
-    $pdf->setData($invoice, $columns, $rows);
+    $pdf->setData($invoice);
     $pdf->AliasNbPages();
     $pdf->SetAutoPageBreak(1, 20);
     $pdf->AddPage();
