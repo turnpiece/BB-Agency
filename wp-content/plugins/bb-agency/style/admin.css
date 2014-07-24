@@ -78,7 +78,7 @@ vertical-align: top; width: 300px; margin: 10px; min-height: 150px; }
 .boxblock .description{ font-style:italic; font-size:12px;}
 .boxblock .description p{ padding:0; margin:0;}
 
-input.stubby { width: 80px; }
+input.stubby { width: 100px; }
 
 
 .boxblock table .textarea-field { display:none; }
@@ -232,3 +232,8 @@ th.column-ProfileImage {
     font-style: italic; 
     color: #777777;
 }
+
+.form-table td textarea {
+    width: 400px;
+    height: 150px;
+} 

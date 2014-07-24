@@ -263,8 +263,12 @@
             if (!$this->invoice['FileName'])
                 die ('no file name given');
 
-            $pdf_path = bb_agency_BASEPATH.'invoices/'.$this->invoice['FileName'].'.pdf';
+            $pdf_path = $this->invoice_path();
             $this->Output($pdf_path, "F");
+        }
+
+        function invoice_path() {
+            return bb_agency_BASEPATH.'invoices/'.$this->invoice['FileName'].'.pdf';
         }
 
         function debug($message) {

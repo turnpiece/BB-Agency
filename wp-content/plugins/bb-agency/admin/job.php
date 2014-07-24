@@ -166,8 +166,18 @@ if ($_POST) {
                 'Account No.' => '05677807'
             );
 
-            include plugin_dir_path(__FILE__)."../Classes/fpdf/fpdf.php";
-            include plugin_dir_path(__FILE__)."../Classes/invoice.pdf.php";
+            include bb_agency_BASEPATH.'Classes/fpdf/fpdf.php';
+            include bb_agency_BASEPATH.'Classes/invoice.pdf.php';
+
+            $InvoiceUrl = bb_agency_BASEDIR.'/invoices/'.$invoice['FileName'].'.pdf';
+            bb_agency_admin_message('<p>' . sprintf(__('Remember to <a href="%s">view the generated invoice</a> before sending it.', bb_agency_TEXTDOMAIN), $InvoiceUrl) . '</p>');
+
+            // set invoice path
+            $InvoicePath = bb_agency_BASEPATH.'invoices/'.$invoice['FileName'].'.pdf';
+
+            break;
+
+        case 'invoice_send' :
 
             break;
 
@@ -296,12 +306,20 @@ switch ($action) {
         break;
 
     case 'invoice' :
-        // invoice generation
-        // get job and client from database
-        $sql = "SELECT * FROM `$t_job` j LEFT JOIN `$t_profile` p ON j.`JobClient` = p.`ProfileID` WHERE j.`JobID` = ".(int)$_REQUEST['id'];
-        $Invoice = $wpdb->get_row($sql, ARRAY_A);
-        // load invoice creation template
-        include('job/invoice.php');
+
+        if (isset($InvoicePath) && file_exists($InvoicePath)) {
+            // load send invoice form
+            include('job/invoice_send.php');
+        } else {
+            // invoice generation
+            // get job and client from database
+            $sql = "SELECT * FROM `$t_job` j LEFT JOIN `$t_profile` p ON j.`JobClient` = p.`ProfileID` WHERE j.`JobID` = ".(int)$_REQUEST['id'];
+            $Invoice = $wpdb->get_row($sql, ARRAY_A);
+            
+            // load invoice creation template
+            include('job/invoice_create.php');           
+        }
+
         break;
 
     default :
