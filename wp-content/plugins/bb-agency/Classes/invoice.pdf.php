@@ -148,9 +148,7 @@
                 
                 $row_height = 0;
 
-                $content = $row[0];
-
-                $total_string_width = $this->GetStringWidth($content);
+                $total_string_width = $this->GetStringWidth($row[0]);
                 $number_of_lines = ceil($total_string_width / ($col_width + 5));
 
                 $line_height = self::V_SPACE;
@@ -164,9 +162,7 @@
                 if ($row_height >= $space_left) {   
                     // start a new page
                     $this->AddPage();
-                    $this->SetXY(self::LEFT, $cur_y + 7);
-
-                    //$this->v_space();
+                    $this->SetXY(self::LEFT, $cur_y + self::V_SPACE);
                 }
 
                 // description
@@ -175,26 +171,25 @@
 
                 // price
                 $this->SetX(self::RIGHT);
-                $this->Cell($col_width, self::V_SPACE, $this->price($row[1]), 0, 0, 'R');
+                $this->Cell(30, self::V_SPACE, $this->price($row[1]), 0, 0, 'R');
                 
                 $this->Ln($row_height);
                 $cur_y = $this->GetY(); 
 
             endforeach;
             
-            $this->SetY($cur_y + 7);
+            $this->SetY($cur_y + self::V_SPACE);
 
             $this->standard_font(true);
             $this->SetX(self::LEFT);
-            $this->Cell($col_width, 5, 'TOTAL INVOICE INCLUDING AGENCY FEES');
+            $this->Cell($col_width, self::V_SPACE, 'TOTAL INVOICE INCLUDING AGENCY FEES');
 
             $this->SetX(self::RIGHT);
-            $this->Cell($col_width, 5, $this->price($this->invoice['InvoiceTotal']), 0, 0, 'R');
+            $this->Cell(30, self::V_SPACE, $this->price($this->invoice['InvoiceTotal']), 0, 0, 'R');
 
-            $this->v_space(5);
+            $this->v_space(8);
             $this->SetX(self::LEFT);
-            $this->SetY($cur_y + 40);    
-   
+            $this->SetY($cur_y + self::V_SPACE * 8);    
         }
 
         function Footer() {
