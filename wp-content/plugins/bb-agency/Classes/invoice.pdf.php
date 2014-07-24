@@ -49,9 +49,11 @@
             $this->link_font();
 
             $this->SetX(self::LEFT);
+            $this->SetTextColor(255, 153, 153);
             $this->Write(5, self::BB_URL, 'http://'.self::BB_URL);
 
             $this->SetX(self::RIGHT + 5);
+            $this->SetTextColor(255, 204, 153);
             $this->Write(5, self::KW_URL, 'http://'.self::KW_URL);
 
             $this->v_space(2);
@@ -62,10 +64,13 @@
             $this->MultiCell(
                 40, 
                 self::V_SPACE, 
-                'INVOICE NO: ' . $this->ficonv('InvoiceNumber') . 'Please quote in all payments',
+                'INVOICE NO: ' . $this->ficonv('InvoiceNumber'),
                 0,
                 'L'
             );
+            $this->small_font(true);
+            $this->SetX(self::RIGHT);
+            $this->Write(self::V_SPACE, 'Please quote in all payments');
             $this->SetTextColor(0, 0, 0);
 
             $this->v_space(3);
@@ -77,22 +82,26 @@
             $this->Cell(25, self::V_SPACE, 'Accounts e-mail');
 
             $this->link_font();
+            $this->SetTextColor(255, 153, 153);
             $this->SetX(self::LEFT + 26);
-            $this->Write(self::V_SPACE, 'zandra@beautifulbumpsagency.co.uk');
+            $this->Write(self::V_SPACE, 'zandra@beautifulbumpsagency.co.uk', 'mailto:zandra@beautifulbumpsagency.co.uk?subject=Invoice '.$this->invoice['InvoiceNumber']);
 
             $this->v_space();
 
             $this->small_font(true);
+            $this->SetTextColor(0, 0, 0);
             $this->SetX(self::LEFT);
             $this->Cell(25, self::V_SPACE, 'Accounts e-mail');
 
             $this->link_font();
+            $this->SetTextColor(255, 204, 153);
             $this->SetX(self::LEFT + 26);
-            $this->Write(self::V_SPACE, 'zandra@kiddiwinksagency.co.uk');
+            $this->Write(self::V_SPACE, 'zandra@kiddiwinksagency.co.uk', 'mailto:zandra@kiddiwinksagency.co.uk?subject=Invoice '.$this->invoice['InvoiceNumber']);
 
             $this->v_space(2);
             
             $this->small_font();
+            $this->SetTextColor(0, 0, 0);
             $this->SetX(self::LEFT);
             $this->Cell(40, self::V_SPACE, 'Phone: 0208 651 1201');
 
@@ -215,9 +224,13 @@
 
             $this->SetX(self::LEFT);
             $this->Cell(self::HALF_W, 5, $this->iconv('Payment terms are 30 days from invoice date'));
-            $this->Ln(8);
-            $this->SetX(self::LEFT);
-            $this->Cell(self::HALF_W, 5, $this->iconv('Kiddiwinks is a Beautiful Bumps Ltd company'));
+            $this->v_space(2);
+            if (bb_agency_SITETYPE == 'children') {
+                $this->SetX(self::LEFT);
+                $this->Cell(self::HALF_W, 5, $this->iconv('Kiddiwinks is a Beautiful Bumps Ltd company'));         
+            } else {
+                $this->v_space();
+            }
             $this->v_space();
             $this->SetX(self::LEFT);
             $this->Cell(self::HALF_W, 5, $this->iconv('134 Ridge Langley, South Croydon, Surrey, CR2 0AS.'));
@@ -279,7 +292,7 @@
 
     if (empty($Invoice))
         wp_die('ERROR: invoice array empty!');
-    
+
     $pdf = new LocalPDF('P','mm','A4');
     $pdf->setData($Invoice);
     $pdf->AliasNbPages();

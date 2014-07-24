@@ -140,13 +140,13 @@ if ($_POST) {
                 wp_die('Failed to get job id '.$_REQUEST['JobID']);
 
             if (isset($_POST['send'])) {
-
-                $to = $Invoice['ProfileContactEmail'];
+                $email = bb_agency_TESTING ? get_bloginfo('admin_email') : $Invoice['ProfileContactEmail'];
+                $to = $invoice['ProfileContactDisplay'].' <'.$email.'>';
                 $headers = 'From: '.get_bloginfo('name').' <'.get_bloginfo('admin_email').'>' . "\r\n";
 
                 if ($_POST['EmailSubject'] && $_POST['EmailMessage'] && $_POST['EmailAttachment']) {
                     $success = wp_mail(
-                        'paul@turnpiece.com', 
+                        $to, 
                         $_POST['EmailSubject'],
                         nl2br($_POST['EmailMessage']),
                         $headers,

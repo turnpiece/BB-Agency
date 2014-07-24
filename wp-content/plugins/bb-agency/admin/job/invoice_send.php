@@ -31,7 +31,7 @@
                 <tr valign="top">
                     <th scope="row"><?php _e('Invoice', bb_agency_TEXTDOMAIN) ?></th>
                     <td>
-                        <a href="<?php echo $InvoicePath ?>"><?php echo basename($InvoicePath) ?></a>
+                        <a href="<?php echo bb_agency_get_invoice_url($InvoiceNumber) ?>"><?php echo basename($InvoicePath) ?></a>
                     </td>
                 </tr>
             </tbody>
