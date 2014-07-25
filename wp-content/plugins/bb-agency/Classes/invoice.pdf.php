@@ -143,7 +143,6 @@
                 'ProfileLocationCity', 
                 'ProfileLocationState', 
                 'ProfileLocationZip', 
-                'ProfileContactPhoneWork', 
                 'ProfileContactEmail') as $field)
                 $address .= $this->ficonv($field);
 
