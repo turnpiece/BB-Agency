@@ -396,6 +396,10 @@ if (isset($_POST['action'])) {
                                         $error .= "<b><i>Please upload jpeg or png files only</i></b><br />";
                                         $have_error = true;
                                     }
+                                } else if ($uploadMediaType == 'Private') {
+                                    // Private files can be anything
+                                    $results = $wpdb->query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL) VALUES ('" . $ProfileID . "','" . $uploadMediaType . "','" . $safeProfileMediaFilename . "','" . $safeProfileMediaFilename . "')");
+                                        move_uploaded_file($_FILES['profileMedia' . $i]['tmp_name'], bb_agency_UPLOADPATH . $ProfileGallery . "/" . $safeProfileMediaFilename);
                                 } else {
                                     // Add to database
                                     if ($_FILES['profileMedia' . $i]['type'] == "image/pjpeg" || $_FILES['profileMedia' . $i]['type'] == "image/jpeg" || $_FILES['profileMedia' . $i]['type'] == "image/gif" || $_FILES['profileMedia' . $i]['type'] == "image/png") {
@@ -1024,7 +1028,7 @@ function bb_display_manage($ProfileID) {
         echo "      <p>" . __("Upload new media using the forms below", bb_agency_TEXTDOMAIN) . ".</p>\n";
 
         for ($i = 1; $i < 10; $i++) {
-            echo "<div>Type: <select name=\"profileMedia" . $i . "Type\"><option value=\"Image\">Image</option><option value=\"Headshot\">Headshot</option><option value=\"CompCard\">Comp Card</option><option value=\"Resume\">Resume</option><option value=\"VoiceDemo\">Voice Demo</option>";
+            echo "<div>Type: <select name=\"profileMedia" . $i . "Type\"><option value=\"Image\">Image</option><option value=\"Headshot\">Headshot</option><option value=\"CompCard\">Comp Card</option><option value=\"Resume\">Resume</option><option value=\"VoiceDemo\">Voice Demo</option><option value=\"Private\">Private</option>";
             bb_agency_getMediaCategories($ProfileGender);
             echo"</select><input type='file' id='profileMedia" . $i . "' name='profileMedia" . $i . "' /></div>\n";
         }
