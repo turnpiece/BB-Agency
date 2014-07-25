@@ -237,3 +237,7 @@ th.column-ProfileImage {
     width: 400px;
     height: 150px;
 } 
+.warning {
+    font-weight: bold;
+    color: #cc6600;
+}

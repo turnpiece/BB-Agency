@@ -3,9 +3,9 @@
 <form method="post" action="<?php echo admin_url('admin.php?page=' . $_GET['page']) ?>">
     <input type="hidden" name="action" value="invoice" />
     <input type="hidden" name="JobID" value="<?php echo $_REQUEST['JobID'] ?>" />
-    <input type="hidden" name="InvoiceNumber" value="<?php echo $InvoiceNumber ?>" />
+    <input type="hidden" name="InvoiceNumber" value="<?php echo $Invoice['InvoiceNumber'] ?>" />
     <input type="hidden" name="EmailTo" value="<?php echo $Invoice['ProfileContactEmail'] ?>" />
-    <input type="hidden" name="EmailAttachment" value="<?php echo $InvoicePath ?>" />  
+    <input type="hidden" name="EmailAttachment" value="<?php echo $Invoice['FilePath'] ?>" />  
     <div class="form-container">
         <table class="form-table">
             <tbody>
@@ -25,13 +25,13 @@
                 <tr valign="top">
                     <th scope="row"><?php _e('Message', bb_agency_TEXTDOMAIN) ?></th>
                     <td>
-                        <textarea id="EmailMessage" name="EmailMessage"><?php echo isset($_POST['EmailMessage']) ? $_POST['EmailMessage'] : "Dear ".$Invoice['ProfileContactDisplay'].",\r\n\r\nPlease find attached your invoice ".$Invoice['InvoiceNumber'].". If you have any questions please reply to this email.\r\n\r\nRegards,\r\n".get_bloginfo('name')."\r\n".get_bloginfo('url') ?></textarea>
+                        <textarea id="EmailMessage" name="EmailMessage"><?php echo isset($_POST['EmailMessage']) ? $_POST['EmailMessage'] : "Dear ".$Invoice['ProfileContactDisplay'].",\r\n\r\nPlease find attached your invoice ".$Invoice['InvoiceNumber']." for &pound;".number_format($Invoice['InvoiceTotal'], 2).". If you have any questions please reply to this email.\r\n\r\nRegards,\r\n".get_bloginfo('name')."\r\n".get_bloginfo('url') ?></textarea>
                     </td>
                 </tr>
                 <tr valign="top">
                     <th scope="row"><?php _e('Invoice', bb_agency_TEXTDOMAIN) ?></th>
                     <td>
-                        <a href="<?php echo bb_agency_get_invoice_url($InvoiceNumber) ?>"><?php echo basename($InvoicePath) ?></a>
+                        <a href="<?php echo $Invoice['FileUrl'] ?>"><?php echo basename($Invoice['FilePath']) ?></a>
                     </td>
                 </tr>
             </tbody>

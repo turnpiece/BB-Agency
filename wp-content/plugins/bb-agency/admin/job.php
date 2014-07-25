@@ -154,7 +154,7 @@ if ($_POST) {
                     );
 
                     if ($success) {
-                        bb_agency_admin_message('<p>' . sprintf(__('Invoice sent to %s', bb_agency_TEXTDOMAIN), $to) . '</p>');
+                        bb_agency_admin_message('<p>' . sprintf(__('Invoice sent to %s', bb_agency_TEXTDOMAIN), htmlspecialchars($to)) . '</p>');
                         // update the job database record
                         $wpdb->update(
                             $t_job, 
@@ -167,10 +167,10 @@ if ($_POST) {
                         // go to job edit page
                         $action = 'edit';
                     } else {
-                        bb_agency_admin_message('<p>' . sprintf(__('ERROR: Failed to send invoice to %s', bb_agency_TEXTDOMAIN), $to) . '</p>', 'error');
+                        bb_agency_admin_message('<p>' . sprintf(__('ERROR: Failed to send invoice to %s', bb_agency_TEXTDOMAIN), htmlspecialchars($to)) . '</p>', 'error');
                     }
                 } else {
-                    bb_agency_admin_message('<p>' . sprintf(__('ERROR: Failed to send invoice to %s. Please check the invoice and check you filled in the subject and message fields.', bb_agency_TEXTDOMAIN), $to) . '</p>', 'error');
+                    bb_agency_admin_message('<p>' . sprintf(__('ERROR: Failed to send invoice to %s. Please check the invoice and check you filled in the subject and message fields.', bb_agency_TEXTDOMAIN), htmlspecialchars($to)) . '</p>', 'error');
                 }
             } else {
                 if (!isset($_POST['InvoiceNumber']) || !$_POST['InvoiceNumber'] ||
@@ -186,7 +186,7 @@ if ($_POST) {
                             $_POST['JobPrice']
                         )
                     );
-                    $Invoice['InvoiceNumber'] = $_POST['InvoiceNumber'];
+                    $Invoice['InvoiceNumber'] = trim($_POST['InvoiceNumber']);
                     $Invoice['InvoiceDate'] = date('jS F Y', strtotime($_POST['InvoiceDate']));
                     $Invoice['InvoiceTotal'] = $_POST['JobPrice'];
                     $Invoice['FileName'] = $Invoice['InvoiceNumber'];
@@ -200,12 +200,12 @@ if ($_POST) {
                     include bb_agency_BASEPATH.'Classes/fpdf/fpdf.php';
                     include bb_agency_BASEPATH.'Classes/invoice.pdf.php';
 
-                    $InvoiceUrl = bb_agency_BASEDIR.'/invoices/'.$Invoice['FileName'].'.pdf';
-                    bb_agency_admin_message('<p>' . sprintf(__('Remember to <a href="%s">view the generated invoice</a> before sending it.', bb_agency_TEXTDOMAIN), $InvoiceUrl) . '</p>');
+                    // get invoice url
+                    $Invoice['FileUrl'] = bb_agency_get_invoice_url($Invoice['FileName']);
+                    bb_agency_admin_message('<p>' . sprintf(__('Remember to <a href="%s">view the generated invoice</a> before sending it.', bb_agency_TEXTDOMAIN), $Invoice['FileUrl']) . '</p>');
 
-                    // set invoice path & invoice number
-                    $InvoiceNumber = $Invoice['InvoiceNumber'];
-                    $InvoicePath = bb_agency_BASEPATH.'invoices/'.$Invoice['FileName'].'.pdf';
+                    // set invoice path
+                    $Invoice['FilePath'] = bb_agency_BASEPATH.'invoices/'.$Invoice['FileName'].'.pdf';
                 }
             }    
             break;
@@ -336,7 +336,13 @@ switch ($action) {
 
     case 'invoice' :
 
-        if (isset($InvoicePath) && file_exists($InvoicePath)) {
+        if (bb_agency_TESTING) : ?>
+        <p class="warning">WARNING: The site is currently in testing mode so any invoice emails will be sent to <?php echo get_bloginfo('admin_email') ?> rather than to the client.</p>
+        <?php endif;
+
+        if (!empty($Invoice) && 
+            isset($Invoice['FilePath']) && 
+            file_exists($Invoice['FilePath'])) {
             // load send invoice form
             include('job/invoice_send.php');
         } else {

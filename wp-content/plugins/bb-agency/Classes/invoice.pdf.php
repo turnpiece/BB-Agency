@@ -240,8 +240,15 @@
             $this->Cell(self::HALF_W, 5, $this->iconv('Beautiful Bumps Ltd Registration No. 06320457'), 0, 0, 'R');
         }
 
+        /**
+         * display a price
+         *
+         * @param $amount
+         * @return string
+         *
+         */
         function price($amount) {
-            return $this->iconv(self::CURRENCY.$amount);
+            return $this->iconv(self::CURRENCY . number_format($amount, 2));
         }
 
         function iconv($text, $append = "\r\n") {
