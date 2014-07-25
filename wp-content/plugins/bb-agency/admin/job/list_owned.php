@@ -5,6 +5,7 @@
       <th><a href="<?php echo admin_url("admin.php?page=". $_GET['page'] ."&sort=JobLocation&dir=". $sortDirection) ?>">Location</a></th>
       <th><a href="<?php echo admin_url("admin.php?page=". $_GET['page'] ."&sort=JobPONumber&dir=". $sortDirection) ?>">PO Number</a></th>
       <th><a href="<?php echo admin_url("admin.php?page=". $_GET['page'] ."&sort=JobDate&dir=". $sortDirection) ?>">Date</a></th>
+      <th><a href="<?php echo admin_url("admin.php?page=". $_GET['page'] ."&sort=JobInvoiceSent&dir=". $sortDirection) ?>">Invoiced</a></th>
     </tr>
   </thead>
   <tbody>
@@ -15,6 +16,7 @@
       <td><?php echo $data->JobLocation ?></td>
       <td><?php echo $data->JobPONumber ?></td>
       <td><?php echo $data->JobDate ?></td>
+      <td><?php if ($data->JobInvoiceSent && $data->JobInvoiceNumber) : ?><a href="<?php echo bb_agency_get_invoice_url($data->JobInvoiceNumber) ?>"><?php echo $data->JobInvoiceSent ?><?php endif; ?></td>
     </tr>
   <?php endforeach; ?>
      
@@ -25,6 +27,7 @@
       <th class="column" scope="col">Location</th>
       <th class="column" scope="col">PO Number</th>
       <th class="column" scope="col">Date</th>
+      <th class="column" scope="col">Invoiced</th>
     </tr>
   </tfoot>
 </table>

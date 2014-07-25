@@ -424,5 +424,5 @@ function bb_agency_get_job($id) {
 }
 
 function bb_agency_get_invoice_url($file) {
-    return bb_agency_BASEDIR.'/invoices/'.$file.'.pdf';
+    return bb_agency_BASEDIR.'invoices/'.$file.'.pdf';
 }
