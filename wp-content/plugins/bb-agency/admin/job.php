@@ -141,7 +141,7 @@ if ($_POST) {
 
             if (isset($_POST['send'])) {
                 $email = bb_agency_TESTING ? get_bloginfo('admin_email') : $Invoice['ProfileContactEmail'];
-                $to = $invoice['ProfileContactDisplay'].' <'.$email.'>';
+                $to = $Invoice['ProfileContactDisplay'].' <'.$email.'>';
                 $headers = 'From: '.get_bloginfo('name').' <'.get_bloginfo('admin_email').'>' . "\r\n";
 
                 if ($_POST['EmailSubject'] && $_POST['EmailMessage'] && $_POST['EmailAttachment']) {

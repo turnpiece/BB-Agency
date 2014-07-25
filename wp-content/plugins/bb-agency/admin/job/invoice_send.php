@@ -25,7 +25,7 @@
                 <tr valign="top">
                     <th scope="row"><?php _e('Message', bb_agency_TEXTDOMAIN) ?></th>
                     <td>
-                        <textarea id="EmailMessage" name="EmailMessage"><?php echo isset($_POST['EmailMessage']) ? $_POST['EmailMessage'] : "Dear ".$Invoice['ProfileContactDisplay'].",\r\n\r\nPlease find attached your invoice ".$Invoice['InvoiceNumber']." for &pound;".number_format($Invoice['InvoiceTotal'], 2).". If you have any questions please reply to this email.\r\n\r\nRegards,\r\n".get_bloginfo('name')."\r\n".get_bloginfo('url') ?></textarea>
+                        <textarea id="EmailMessage" name="EmailMessage"><?php echo isset($_POST['EmailMessage']) ? $_POST['EmailMessage'] : "Dear ".trim($Invoice['ProfileContactDisplay']).",\r\n\r\nPlease find attached your invoice ".$Invoice['InvoiceNumber']." for &pound;".number_format($Invoice['InvoiceTotal'], 2).". If you have any questions please reply to this email.\r\n\r\nRegards,\r\n".get_bloginfo('name')."\r\n".get_bloginfo('url') ?></textarea>
                     </td>
                 </tr>
                 <tr valign="top">
