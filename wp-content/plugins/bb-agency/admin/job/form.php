@@ -54,7 +54,7 @@
                                     foreach (array( 
                                         1 => __("Active", bb_agency_TEXTDOMAIN),
                                         0 => __("Inactive", bb_agency_TEXTDOMAIN),
-                                        2 => __("Archived", bb_agency_TEXTDOMAIN)
+                                        2 => __("Invoiced", bb_agency_TEXTDOMAIN)
                                     ) as $key => $label) : ?>
                                 <option value="<?php echo $key ?>" <?php selected($key, $status) ?>><?php echo $label ?></option>
                                 <?php endforeach; ?>

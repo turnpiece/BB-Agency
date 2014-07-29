@@ -242,35 +242,10 @@ switch ($action) {
     case 'search' :
 
         // Sort By
-        $sort = "";
-        if (isset($_REQUEST['sort']) && !empty($_REQUEST['sort'])) {
-            $sort = $_REQUEST['sort'];
-        } else {
-            $sort = "`JobDate`";
-        }
-
-        // Limit
-        if (isset($_REQUEST['limit']) && !empty($_REQUEST['limit'])){
-            $limit = "";
-        } else {
-            if ($bb_agency_option_persearch > 1) {
-                $limit = " LIMIT 0,". $bb_agency_option_persearch;
-            }
-        }
-
-        // Sort Order
-        $dir = "";
-        if (isset($_REQUEST['dir']) && !empty($_REQUEST['dir'])){
-            $dir = $_REQUEST['dir'];
-            if ($dir == "desc" || !isset($dir) || empty($dir)){
-                $sortDirection = "asc";
-            } else {
-                $sortDirection = "desc";
-            } 
-        } else {
-            $sortDirection = "desc";
-            $dir = "asc";
-        }
+        $sort = '';
+        $dir = !empty($_REQUEST['dir']) ? $_REQUEST['dir'] : 'asc';
+        $sort = !empty($_REQUEST['sort']) ? $_REQUEST['sort'] : "`JobDate`";
+        $sortDirection = $dir == 'desc' ? 'asc' : 'desc';
 
         // generate SQL 
         $sql = "SELECT j.*, p.`ProfileContactDisplay` AS ClientName, IF(j.`JobDate` < NOW(), 1, 0) AS JobPassed FROM $t_job j LEFT JOIN $t_profile p ON j.`JobClient` = p.`ProfileID`";
@@ -295,7 +270,7 @@ switch ($action) {
             }
             
         }
-        $sql .= " ORDER BY $sort $dir $limit";
+        $sql .= " ORDER BY $sort $sortDirection $limit";
 
         $results = $wpdb->get_results($sql);
 
