@@ -243,7 +243,7 @@ switch ($action) {
 
         // Sort By
         $sort = '';
-        $dir = !empty($_REQUEST['dir']) ? $_REQUEST['dir'] : 'asc';
+        $dir = !empty($_REQUEST['dir']) ? $_REQUEST['dir'] : 'desc';
         $sort = !empty($_REQUEST['sort']) ? $_REQUEST['sort'] : "`JobDate`";
         $sortDirection = $dir == 'desc' ? 'asc' : 'desc';
 
@@ -270,7 +270,7 @@ switch ($action) {
             }
             
         }
-        $sql .= " ORDER BY $sort $sortDirection $limit";
+        $sql .= " ORDER BY $sort $dir $limit";
 
         $results = $wpdb->get_results($sql);
 

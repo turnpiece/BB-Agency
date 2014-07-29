@@ -29,7 +29,7 @@
                 <tr valign="top">
                     <th scope="row"><?php _e('Job Description', bb_agency_TEXTDOMAIN) ?></th>
                     <td>
-                        <input class="regular-text" type="text" id="JobDescription" name="JobDescription" value="<?php echo isset($_POST['JobDescription']) ? $_POST['JobDescription'] : $Invoice['JobTitle'] ?>" />
+                        <textarea id="JobDescription" name="JobDescription"><?php echo isset($_POST['JobDescription']) ? $_POST['JobDescription'] : $Invoice['JobTitle'] ?></textarea>
                     </td>
                 </tr>
                 <tr valign="top">

@@ -28,9 +28,12 @@
 
         private $invoice = array();
         private $cur_y;
+        private $accounts_email;
 
         function setData($invoice) {
             $this->invoice = $invoice;
+            $this->site_type = bb_agency_SITETYPE;
+            $this->accounts_email = 'zandra@' . ($this->site_type == 'children' ? 'beautifulbumpsagency.co.uk' : 'kiddiwinksagency.co.uk');
         }
 
         function Header() {
@@ -84,19 +87,7 @@
             $this->link_font();
             $this->bb_colour();
             $this->SetX(self::LEFT + 26);
-            $this->Write(self::V_SPACE, 'zandra@beautifulbumpsagency.co.uk', 'mailto:zandra@beautifulbumpsagency.co.uk?subject=Invoice '.$this->invoice['InvoiceNumber']);
-
-            $this->v_space();
-
-            $this->small_font(true);
-            $this->standard_colour();
-            $this->SetX(self::LEFT);
-            $this->Cell(25, self::V_SPACE, 'Accounts e-mail');
-
-            $this->link_font();
-            $this->kw_colour();
-            $this->SetX(self::LEFT + 26);
-            $this->Write(self::V_SPACE, 'zandra@kiddiwinksagency.co.uk', 'mailto:zandra@kiddiwinksagency.co.uk?subject=Invoice '.$this->invoice['InvoiceNumber']);
+            $this->Write(self::V_SPACE, $this->accounts_email, 'mailto:zandra@'.$this->accounts_email.'?subject=Invoice '.$this->invoice['InvoiceNumber']);
 
             $this->v_space(2);
             
@@ -142,8 +133,7 @@
                 'ProfileLocationStreet', 
                 'ProfileLocationCity', 
                 'ProfileLocationState', 
-                'ProfileLocationZip', 
-                'ProfileContactEmail') as $field)
+                'ProfileLocationZip') as $field)
                 $address .= $this->ficonv($field);
 
             $this->SetXY(self::LEFT, $cur_y);
@@ -171,16 +161,7 @@
 
                 $cur_y = $this->GetY();
                 
-                $row_height = 0;
-
-                $total_string_width = $this->GetStringWidth($row[0]);
-                $number_of_lines = ceil($total_string_width / ($col_width + 5));
-
-                $line_height = self::V_SPACE;
-                $height_of_cell = ceil(($number_of_lines - 1) * $line_height) + ($line_height * 2); 
-
-                if ($height_of_cell > $row_height)
-                    $row_height = $height_of_cell;
+                $row_height = $this->GetMultiCellHeight($col_width, self::V_SPACE, $row[0]);
 
                 $space_left = self::PAGE_HEIGHT - $this->GetY() - self::BOTTOM_MARGIN;
 
@@ -194,13 +175,14 @@
 
                 // description
                 $this->SetXY(self::LEFT, $cur_y);
-                $this->MultiCell($col_width, self::V_SPACE, $row[0]);
+                $this->MultiCell($col_width, self::V_SPACE, $row[0]);   
 
                 // price
                 $this->SetXY(self::RIGHT, $cur_y);
                 $this->Cell($col_width_r, self::V_SPACE, $this->price($row[1]), 0, 0, 'R');
                 
-                $this->Ln($row_height); 
+                $this->Ln($row_height);
+                $this->v_space();
 
             endforeach;
 
@@ -218,14 +200,20 @@
 
         function Footer() {
             $this->debug(__FUNCTION__);
-            $this->debug('x = '.$this->GetX().', y = '.$this->GetY());
+
+            if ($this->GetY() > 250) {
+                $this->AddPage();
+            }
 
             $this->small_font();
 
+            $this->SetY(250);
+
             $this->SetX(self::LEFT);
             $this->Cell(self::HALF_W, 5, $this->iconv('Payment terms are 30 days from invoice date'));
+
             $this->v_space(2);
-            if (bb_agency_SITETYPE == 'children') {
+            if ($this->site_type == 'children') {
                 $this->SetX(self::LEFT);
                 $this->Cell(self::HALF_W, 5, $this->iconv('Kiddiwinks is a Beautiful Bumps Ltd company'));         
             } else {
@@ -237,6 +225,98 @@
 
             $this->SetX(self::HALF_RIGHT);
             $this->Cell(self::HALF_W, 5, $this->iconv('Beautiful Bumps Ltd Registration No. 06320457'), 0, 0, 'R');
+        }
+
+        function GetMultiCellHeight($w, $h, $txt, $border=null, $align='J') {
+            // Calculate MultiCell with automatic or explicit line breaks height
+            // $border is un-used, but I kept it in the parameters to keep the call
+            //   to this function consistent with MultiCell()
+            $cw = &$this->CurrentFont['cw'];
+            if($w==0)
+                $w = $this->w-$this->rMargin-$this->x;
+            $wmax = ($w-2*$this->cMargin)*1000/$this->FontSize;
+            $s = str_replace("\r",'',$txt);
+            $nb = strlen($s);
+            if($nb>0 && $s[$nb-1]=="\n")
+                $nb--;
+            $sep = -1;
+            $i = 0;
+            $j = 0;
+            $l = 0;
+            $ns = 0;
+            $height = 0;
+            while($i<$nb)
+            {
+                // Get next character
+                $c = $s[$i];
+                if($c=="\n")
+                {
+                    // Explicit line break
+                    if($this->ws>0)
+                    {
+                        $this->ws = 0;
+                        $this->_out('0 Tw');
+                    }
+                    //Increase Height
+                    $height += $h;
+                    $i++;
+                    $sep = -1;
+                    $j = $i;
+                    $l = 0;
+                    $ns = 0;
+                    continue;
+                }
+                if($c==' ')
+                {
+                    $sep = $i;
+                    $ls = $l;
+                    $ns++;
+                }
+                $l += $cw[$c];
+                if($l>$wmax)
+                {
+                    // Automatic line break
+                    if($sep==-1)
+                    {
+                        if($i==$j)
+                            $i++;
+                        if($this->ws>0)
+                        {
+                            $this->ws = 0;
+                            $this->_out('0 Tw');
+                        }
+                        //Increase Height
+                        $height += $h;
+                    }
+                    else
+                    {
+                        if($align=='J')
+                        {
+                            $this->ws = ($ns>1) ? ($wmax-$ls)/1000*$this->FontSize/($ns-1) : 0;
+                            $this->_out(sprintf('%.3F Tw',$this->ws*$this->k));
+                        }
+                        //Increase Height
+                        $height += $h;
+                        $i = $sep+1;
+                    }
+                    $sep = -1;
+                    $j = $i;
+                    $l = 0;
+                    $ns = 0;
+                }
+                else
+                    $i++;
+            }
+            // Last chunk
+            if($this->ws>0)
+            {
+                $this->ws = 0;
+                $this->_out('0 Tw');
+            }
+            //Increase Height
+            $height += $h;
+
+            return $height;
         }
 
         /**
