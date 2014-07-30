@@ -110,7 +110,7 @@
 			$message .= get_option('home') ."\r\n";
 			if (bb_agency_TERMS) {
 				$message .= "\r\n\r\n";
-				$message .= sprintf(__('Any work undertaken is governed by our <a href="%s">Terms &amp; Conditions</a>', bb_agency_TEXTDOMAIN), bb_agency_TERMS));
+				$message .= sprintf(__('Any work undertaken is governed by our <a href="%s">Terms &amp; Conditions</a>', bb_agency_TEXTDOMAIN), bb_agency_TERMS);
 			}
 	 
 	 		$headers = 'From: '. get_option('blogname') .' <'. get_option('admin_email') .'>' . "\r\n";
