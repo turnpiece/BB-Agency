@@ -188,7 +188,7 @@
 
             $this->standard_font(true);
             $this->SetX(self::LEFT);
-            $this->Cell($col_width, self::V_SPACE, 'TOTAL INVOICE INCLUDING AGENCY FEES');
+            $this->Cell($col_width, self::V_SPACE, 'TOTAL INVOICE VALUE INCLUDING AGENCY FEE');
 
             $this->SetX(self::RIGHT);
             $this->Cell($col_width_r, self::V_SPACE, $this->price($this->invoice['InvoiceTotal']), 0, 0, 'R');
@@ -215,16 +215,16 @@
             $this->v_space(2);
             if ($this->site_type == 'children') {
                 $this->SetX(self::LEFT);
-                $this->Cell(self::HALF_W, 5, $this->iconv('Kiddiwinks is a Beautiful Bumps Ltd company'));         
+                $this->Cell(self::HALF_W, 5, $this->iconv('Kiddiwinks is a Beautiful Bumps Ltd. company'));         
             } else {
                 $this->v_space();
             }
             $this->v_space();
             $this->SetX(self::LEFT);
-            $this->Cell(self::HALF_W, 5, $this->iconv('134 Ridge Langley, South Croydon, Surrey, CR2 0AS.'));
+            $this->Cell(self::HALF_W, 5, $this->iconv('134 Ridge Langley, South Croydon, Surrey, CR2 0AS'));
 
             $this->SetX(self::HALF_RIGHT);
-            $this->Cell(self::HALF_W, 5, $this->iconv('Beautiful Bumps Ltd Registration No. 06320457'), 0, 0, 'R');
+            $this->Cell(self::HALF_W, 5, $this->iconv('Beautiful Bumps Ltd. Registration No. 06320457'), 0, 0, 'R');
         }
 
         function GetMultiCellHeight($w, $h, $txt, $border=null, $align='J') {

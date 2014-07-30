@@ -123,7 +123,10 @@
          <input type="hidden" name="JobID" value="<?php echo $_REQUEST['JobID'] ?>" />
          <input type="hidden" name="action" value="edit" />
          <input type="submit" name="submit" value="<?php _e("Update Job", bb_agency_TEXTDOMAIN) ?>" class="button-primary" />
-         <a href="<?php echo admin_url('admin.php?page=bb_agency_jobs&action=invoice&JobID='.$_REQUEST['JobID']) ?>" title="Generate an invoice for this job"><?php _e('Invoice', bb_agency_TEXTDOMAIN) ?></a>
+         &nbsp; &nbsp;
+         <a href="<?php echo admin_url('admin.php?page=bb_agency_jobs&action=casting_invoice&JobID='.$_REQUEST['JobID']) ?>" title="Generate a castng invoice"><?php _e('Casting Invoice', bb_agency_TEXTDOMAIN) ?></a>
+         &nbsp; | &nbsp;
+         <a href="<?php echo admin_url('admin.php?page=bb_agency_jobs&action=shoot_invoice&JobID='.$_REQUEST['JobID']) ?>" title="Generate a shoot invoice"><?php _e('Shoot Invoice', bb_agency_TEXTDOMAIN) ?></a>
     </p>
     <?php else : ?>
     <p class="submit">

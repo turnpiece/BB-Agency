@@ -168,44 +168,40 @@ if (isset($_POST['action'])) {
             </p>
 	    </form>
     </div>
-       <?php
+    <?php
 	 
-	              $query = "SELECT search.SearchTitle, search.SearchProfileID, search.SearchOptions, searchsent.SearchMuxHash FROM ". table_agency_searchsaved ." search LEFT JOIN ". table_agency_searchsaved_mux ." searchsent ON search.SearchID = searchsent.SearchID WHERE search.SearchID = \"". $_GET["SearchID"]."\"";
-      
-                  $qProfiles =  mysql_query($query);
-                  
-                  $data = mysql_fetch_array($qProfiles);
+        $query = "SELECT search.SearchTitle, search.SearchProfileID, search.SearchOptions, searchsent.SearchMuxHash FROM ". table_agency_searchsaved ." search LEFT JOIN ". table_agency_searchsaved_mux ." searchsent ON search.SearchID = searchsent.SearchID WHERE search.SearchID = \"". $_GET["SearchID"]."\"";
 
-                  if (empty($data) || !$data['SearchProfileID'])
-                    wp_die('Failed to find that saved search.');
-                        
-                  $query = "SELECT * FROM ". table_agency_profile ." profile, ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1 AND profile.ProfileID IN (".$data['SearchProfileID'].") ORDER BY ProfileContactNameFirst ASC";
+        $qProfiles =  mysql_query($query);
+
+        $data = mysql_fetch_array($qProfiles);
+
+        if (empty($data) || !$data['SearchProfileID'])
+        wp_die('Failed to find that saved search.');
             
-                  $results = mysql_query($query);
-            
-                  $count = mysql_num_rows($results);
+        $query = "SELECT * FROM ". table_agency_profile ." profile, ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1 AND profile.ProfileID IN (".$data['SearchProfileID'].") ORDER BY ProfileContactNameFirst ASC";
+
+        $results = mysql_query($query);
+
+        $count = mysql_num_rows($results);
                               
-	 ?>
-       <div style="padding:10px;max-width:580px;float:left;">
+	?>
+    <div style="padding:10px;max-width:580px;float:left;">
         <b>Preview: <?php echo  $count." Profile(s)"; ?></b>
-              <div style="height:550px; width:580px; overflow-y:scroll;">
-                  <?php
-                
-                
-                  while ($data2 = mysql_fetch_array($results)) {
-                        echo " <div style=\"background:black; color:white;float: left; max-width: 100px; height: 180px; margin: 2px; overflow:hidden;  \">";
+        <div style="height:550px; width:580px; overflow-y:scroll;">
+            <?php
+            while ($data2 = mysql_fetch_array($results)) {
+                echo " <div style=\"background:black; color:white;float: left; max-width: 100px; height: 180px; margin: 2px; overflow:hidden;  \">";
 				echo " <div style=\"margin:3px;max-width:250px; max-height:300px; overflow:hidden;\">";
 				echo stripslashes($data2['ProfileContactNameFirst']) ." ". stripslashes($data2['ProfileContactNameLast']);
 				echo "<br /><a href=\"". bb_agency_PROFILEDIR . $data2['ProfileGallery'] ."/\" target=\"_blank\">";
 				echo "<img style=\"max-width:130px; max-height:150px; \" src=\"". bb_agency_UPLOADDIR ."". $data2['ProfileGallery'] ."/". $data2['ProfileMediaURL'] ."\" /></a>";
 				echo "</div>\n";
 				echo "</div>\n";
-                  }
-                  
-        
-                  ?>
-             </div>
-       </div>
+            }
+        ?>
+        </div>
+    </div>
 	<?php
 
 } else {

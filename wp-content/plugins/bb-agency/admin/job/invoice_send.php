@@ -25,7 +25,7 @@
                 <tr valign="top">
                     <th scope="row"><?php _e('Message', bb_agency_TEXTDOMAIN) ?></th>
                     <td>
-                        <textarea id="EmailMessage" name="EmailMessage"><?php echo isset($_POST['EmailMessage']) ? $_POST['EmailMessage'] : "Dear ".trim(!empty($Invoice['ProfileContactNameFirst']) ? $Invoice['ProfileContactNameFirst'] : $Invoice['ProfileContactDisplay']).",\r\n\r\nI hope the shoot went well.\r\n\r\nPlease find attached our invoice ".$Invoice['InvoiceNumber']." for the recent shoot our model did for you.\r\n\r\nIf you have any queries, please do not hesitate to contact me.\r\n\r\nKind Regards\r\n\r\nZandra\r\n\r\nZandra Evans\r\nAccounts Coordinator\r\n".get_bloginfo('name')."\r\n".get_bloginfo('url')."\r\nTel: 020 71481740\r\nMob: 07740365599" ?></textarea>
+                        <textarea id="EmailMessage" name="EmailMessage"><?php echo isset($_POST['EmailMessage']) ? $_POST['EmailMessage'] : "Dear ".trim(!empty($Invoice['ProfileContactNameFirst']) ? $Invoice['ProfileContactNameFirst'] : $Invoice['ProfileContactDisplay']).",\r\n\r\nI hope the ".($_REQUEST['action'] == 'shoot_invoice' ? 'shoot' : 'casting')." went well.\r\n\r\nPlease find attached our invoice ".$Invoice['InvoiceNumber']." for the recent ".($_REQUEST['action'] == 'shoot_invoice' ? 'shoot' : 'casting')." our model did for you.\r\n\r\nIf you have any queries, please do not hesitate to contact me.\r\n\r\nKind Regards\r\n\r\nZandra\r\n\r\nZandra Evans\r\nAccounts Coordinator\r\n".get_bloginfo('name')."\r\n".get_bloginfo('url')."\r\nTel: 020 71481740\r\nMob: 07740365599" ?></textarea>
                     </td>
                 </tr>
                 <tr valign="top">

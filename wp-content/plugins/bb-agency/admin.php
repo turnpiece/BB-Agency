@@ -414,9 +414,33 @@ function bb_agency_get_job($id) {
     $t_job = table_agency_job;
     $t_profile = table_agency_profile;
     $sql = "SELECT * FROM `$t_job` j LEFT JOIN `$t_profile` p ON j.`JobClient` = p.`ProfileID` WHERE j.`JobID` = $id";
-    return $wpdb->get_row($sql, ARRAY_A);
+
+    $Job = $wpdb->get_row($sql, ARRAY_A);
+
+    if (!is_null($Job['JobModelBooked'])) {
+        $ids = $Job['JobModelBooked'];
+        $models = $wpdb->get_var("SELECT GROUP_CONCAT(`ProfileContactDisplay`) FROM `$t_profile` WHERE `ProfileID` IN($ids)");
+        if ($models) {
+            $models = str_replace(',', ', ', $models);
+            // replace last comma with and
+            $pos = strrpos($models, ',');
+
+            if ($pos !== false)
+            {
+                $models = substr_replace($models, ' and', $pos, 1);
+            }
+            $Job['ModelsBooked'] = $models;
+        }
+    }
+
+    return $Job;
 }
 
 function bb_agency_get_invoice_url($file) {
     return bb_agency_BASEDIR.'invoices/'.$file.'.pdf';
+}
+
+// convert to human readable date
+function bb_agency_human_date($date) {
+    return date('jS F Y', strtotime($date));
 }

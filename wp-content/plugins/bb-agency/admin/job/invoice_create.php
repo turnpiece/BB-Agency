@@ -3,7 +3,7 @@
 <p class="warning"><strong>WARNING: You have already sent an invoice for this job. <a href="<?php echo bb_agency_get_invoice_url($Invoice['InvoiceNumber']) ?>">Invoice <?php echo $Invoice['JobInvoiceNumber'] ?></a> was sent on <?php echo $Invoice['JobInvoiceSent'] ?>.</strong></p> 
 <?php endif; ?>
 <form method="post" action="<?php echo admin_url('admin.php?page=' . $_GET['page']) ?>">
-    <input type="hidden" name="action" value="invoice" />
+    <input type="hidden" name="action" value="<?php echo $_REQUEST['action'] ?>" />
     <input type="hidden" name="JobID" value="<?php echo $_REQUEST['JobID'] ?>" />
     <div class="form-container">
         <table class="form-table">
@@ -23,19 +23,20 @@
                 <tr valign="top">
                     <th scope="row"><?php _e('Invoice Number', bb_agency_TEXTDOMAIN) ?></th>
                     <td>
-                        <input class="regular-text" type="text" id="InvoiceNumber" name="InvoiceNumber" value="<?php echo isset($_POST['InvoiceNumber']) ? $_POST['InvoiceNumber'] : $Invoice['JobPONumber'] ?>" />
+                        <input class="stubby" type="text" id="InvoiceNumber" name="InvoiceNumber" value="<?php echo isset($_POST['InvoiceNumber']) ? $_POST['InvoiceNumber'] : $Invoice['JobPONumber'] ?>" />
                     </td>
                 </tr>
                 <tr valign="top">
                     <th scope="row"><?php _e('Job Description', bb_agency_TEXTDOMAIN) ?></th>
                     <td>
-                        <textarea id="JobDescription" name="JobDescription"><?php echo isset($_POST['JobDescription']) ? $_POST['JobDescription'] : $Invoice['JobTitle'] ?></textarea>
+                        <textarea id="JobDescription" name="JobDescription"><?php echo isset($_POST['JobDescription']) ? $_POST['JobDescription'] : 
+'For '.$Invoice['ModelsBooked'].' attending a '.($_REQUEST['action'] == 'shoot_invoice' ? 'shoot' : 'casting').' for '.$Invoice['ProfileContactDisplay'].' on '.bb_agency_human_date($Invoice['JobDate']).'.' ?></textarea>
                     </td>
                 </tr>
                 <tr valign="top">
                     <th scope="row"><?php _e('Job Price', bb_agency_TEXTDOMAIN) ?></th>
                     <td>
-                        <input class="regular-text" type="text" id="JobPrice" name="JobPrice" value="<?php echo isset($_POST['JobPrice']) ? $_POST['JobPrice'] : filter_var($_POST['JobRate'], FILTER_SANITIZE_NUMBER_FLOAT) ?>" />
+                        &pound;<input class="stubby" type="text" id="JobPrice" name="JobPrice" value="<?php echo isset($_POST['JobPrice']) ? $_POST['JobPrice'] : filter_var($Invoice['JobRate'], FILTER_SANITIZE_NUMBER_FLOAT) ?>" />
                     </td>
                 </tr>
             </tbody>

@@ -134,6 +134,8 @@ if ($_POST) {
             break;
 
         case 'invoice' :
+        case 'casting_invoice' :
+        case 'shoot_invoice' :
             $Invoice = bb_agency_get_job($_REQUEST['JobID']);
 
             if (empty($Invoice))
@@ -187,7 +189,7 @@ if ($_POST) {
                         )
                     );
                     $Invoice['InvoiceNumber'] = trim($_POST['InvoiceNumber']);
-                    $Invoice['InvoiceDate'] = date('jS F Y', strtotime($_POST['InvoiceDate']));
+                    $Invoice['InvoiceDate'] = bb_agency_human_date($_POST['InvoiceDate']);
                     $Invoice['InvoiceTotal'] = $_POST['JobPrice'];
                     $Invoice['FileName'] = $Invoice['InvoiceNumber'];
                     $Invoice['InvoicePayment'] = array(
@@ -310,6 +312,8 @@ switch ($action) {
         break;
 
     case 'invoice' :
+    case 'casting_invoice' :
+    case 'shoot_invoice' :
 
         if (!bb_agency_SEND_EMAILS) : ?>
         <p class="warning">WARNING: The site is currently in testing mode so any emails will be sent to <?php echo get_bloginfo('admin_email') ?> rather than to the client.</p>
