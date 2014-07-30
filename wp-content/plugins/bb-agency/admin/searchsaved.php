@@ -82,7 +82,7 @@ if (isset($_POST['action'])) {
 
             // add terms link
             if (bb_agency_TERMS) {
-                $SearchMuxMessage .= "\n\r\n\r\n\r" . sprintf(__('Please view our <a href="%s">Terms &amp; Conditions</a>', bb_agency_TEXTDOMAIN), bb_agency_TERMS));
+                $SearchMuxMessage .= "\n\r\n\r\n\r" . sprintf(__('Any work undertaken is governed by our <a href="%s">Terms &amp; Conditions</a>', bb_agency_TEXTDOMAIN), bb_agency_TERMS));
             }
 
 			// Create Record
