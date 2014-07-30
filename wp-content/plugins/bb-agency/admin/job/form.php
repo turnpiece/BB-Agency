@@ -113,10 +113,14 @@
         </div>
     </div>
     <?php if ($action == 'edit') : ?>
-    <?php if ($Job['JobInvoiceNumber'] && $Job['JobInvoiceSent']) : ?>
-    <p><a href="<?php echo bb_agency_get_invoice_url($Job['JobInvoiceNumber']) ?>">Invoice <?php echo $Job['JobInvoiceNumber'] ?></a> was sent on <?php echo $Job['JobInvoiceSent'] ?></p>
+    <?php if ($Job['JobCastingInvoiceNumber'] && $Job['JobCastingInvoiceSent']) : ?>
+    <p><a href="<?php echo bb_agency_get_invoice_url($Job['JobCastingInvoiceNumber']) ?>">Casting invoice <?php echo $Job['JobCastingInvoiceNumber'] ?></a> was sent on <?php echo bb_agency_human_date($Job['JobCastingInvoiceSent']) ?></p>
+    <?php endif;     
+
+    if ($Job['JobShootInvoiceNumber'] && $Job['JobShootInvoiceSent']) : ?>
+    <p><a href="<?php echo bb_agency_get_invoice_url($Job['JobShootInvoiceNumber']) ?>">Shoot invoice <?php echo $Job['JobShootInvoiceNumber'] ?></a> was sent on <?php echo bb_agency_human_date($Job['JobShootInvoiceSent']) ?></p>
     <?php endif; ?>
-    
+
     <p><?php _e("Last updated on", bb_agency_TEXTDOMAIN) ?> <?php echo $Job['JobDateUpdated'] ?></p>
 
     <p class="submit">

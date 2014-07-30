@@ -133,7 +133,6 @@ if ($_POST) {
             
             break;
 
-        case 'invoice' :
         case 'casting_invoice' :
         case 'shoot_invoice' :
             $Invoice = bb_agency_get_job($_REQUEST['JobID']);
@@ -158,11 +157,12 @@ if ($_POST) {
                     if ($success) {
                         bb_agency_admin_message('<p>' . sprintf(__('Invoice sent to %s', bb_agency_TEXTDOMAIN), htmlspecialchars($to)) . '</p>');
                         // update the job database record
+                        $prefix = $action == 'shoot_invoice' ? 'JobShootInvoice' : 'JobCastingInvoice';
                         $wpdb->update(
                             $t_job, 
                             array(
-                                'JobInvoiceNumber' => $_POST['InvoiceNumber'], 
-                                'JobInvoiceSent' => date('Y-m-d')
+                                $prefix.'Number' => $_POST['InvoiceNumber'], 
+                                $prefix.'Sent' => date('Y-m-d')
                             ), 
                             array('JobID' => $_REQUEST['JobID'])
                         );
@@ -311,7 +311,6 @@ switch ($action) {
         include('job/form.php');
         break;
 
-    case 'invoice' :
     case 'casting_invoice' :
     case 'shoot_invoice' :
 
@@ -333,7 +332,18 @@ switch ($action) {
                 wp_die('Failed to get job id '.$_REQUEST['JobID']);
             
             // load invoice creation template
-            include('job/invoice_create.php');           
+            if ($action == 'shoot_invoice') {
+                if (!empty($Invoice['ModelsBooked']))
+                    include('job/invoice_shoot_create.php');
+                else
+                    wp_die("No models have been booked for this shoot.");
+            }
+            else {
+                if (!empty($Invoice['ModelsCasted']))
+                    include('job/invoice_casting_create.php');
+                else
+                    wp_die("No models were called for this casting.");     
+            }
         }
 
         break;

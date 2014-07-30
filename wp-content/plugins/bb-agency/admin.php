@@ -418,22 +418,30 @@ function bb_agency_get_job($id) {
     $Job = $wpdb->get_row($sql, ARRAY_A);
 
     if (!is_null($Job['JobModelBooked'])) {
-        $ids = $Job['JobModelBooked'];
-        $models = $wpdb->get_var("SELECT GROUP_CONCAT(`ProfileContactDisplay`) FROM `$t_profile` WHERE `ProfileID` IN($ids)");
-        if ($models) {
-            $models = str_replace(',', ', ', $models);
-            // replace last comma with and
-            $pos = strrpos($models, ',');
+        $Job['ModelsBooked'] = bb_agency_get_models_list($Job['JobModelBooked']);
+    }
 
-            if ($pos !== false)
-            {
-                $models = substr_replace($models, ' and', $pos, 1);
-            }
-            $Job['ModelsBooked'] = $models;
-        }
+    if (!is_null($Job['JobModelCasted'])) {
+        $Job['ModelsCasted'] = bb_agency_get_models_list($Job['JobModelCasted']);
     }
 
     return $Job;
+}
+
+function bb_agency_get_models_list($ids) {
+    global $wpdb;
+    $t_profile = table_agency_profile;
+    $models = $wpdb->get_var("SELECT GROUP_CONCAT(`ProfileContactDisplay`) FROM `$t_profile` WHERE `ProfileID` IN($ids)");
+    if ($models) {
+        $models = str_replace(',', ', ', $models);
+        // replace last comma with and
+        $pos = strrpos($models, ',');
+
+        if ($pos !== false) {
+            $models = substr_replace($models, ' and', $pos, 1);
+        }
+        return $models;
+    }
 }
 
 function bb_agency_get_invoice_url($file) {

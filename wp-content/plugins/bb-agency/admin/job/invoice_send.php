@@ -1,7 +1,7 @@
 <h2 class="title"><?php echo sprintf(__("Send invoice to %s", bb_agency_TEXTDOMAIN), $Invoice['ProfileContactDisplay']) ?></h2>
 
 <form method="post" action="<?php echo admin_url('admin.php?page=' . $_GET['page']) ?>">
-    <input type="hidden" name="action" value="invoice" />
+    <input type="hidden" name="action" value="<?php echo $_REQUEST['action'] ?>" />
     <input type="hidden" name="JobID" value="<?php echo $_REQUEST['JobID'] ?>" />
     <input type="hidden" name="InvoiceNumber" value="<?php echo $Invoice['InvoiceNumber'] ?>" />
     <input type="hidden" name="EmailTo" value="<?php echo $Invoice['ProfileContactEmail'] ?>" />

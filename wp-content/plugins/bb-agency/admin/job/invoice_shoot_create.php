@@ -1,6 +1,6 @@
-<h2 class="title"><?php echo sprintf(__("Invoice for %s", bb_agency_TEXTDOMAIN), $Invoice['ProfileContactDisplay']) ?></h2>
-<?php if ($Invoice['JobInvoiceNumber'] && $Invoice['JobInvoiceSent']) : ?>
-<p class="warning"><strong>WARNING: You have already sent an invoice for this job. <a href="<?php echo bb_agency_get_invoice_url($Invoice['InvoiceNumber']) ?>">Invoice <?php echo $Invoice['JobInvoiceNumber'] ?></a> was sent on <?php echo $Invoice['JobInvoiceSent'] ?>.</strong></p> 
+<h2 class="title"><?php echo sprintf(__("Shoot invoice for %s", bb_agency_TEXTDOMAIN), $Invoice['ProfileContactDisplay']) ?></h2>
+<?php if ($Invoice['JobShootInvoiceNumber'] && $Invoice['JobShootInvoiceSent']) : ?>
+<p class="warning"><strong>WARNING: You have already sent a shoot invoice for this job. <a href="<?php echo bb_agency_get_invoice_url($Invoice['InvoiceNumber']) ?>">Invoice <?php echo $Invoice['JobShootInvoiceNumber'] ?></a> was sent on <?php echo $Invoice['JobShootInvoiceSent'] ?>.</strong></p> 
 <?php endif; ?>
 <form method="post" action="<?php echo admin_url('admin.php?page=' . $_GET['page']) ?>">
     <input type="hidden" name="action" value="<?php echo $_REQUEST['action'] ?>" />
@@ -30,7 +30,7 @@
                     <th scope="row"><?php _e('Job Description', bb_agency_TEXTDOMAIN) ?></th>
                     <td>
                         <textarea id="JobDescription" name="JobDescription"><?php echo isset($_POST['JobDescription']) ? $_POST['JobDescription'] : 
-'For '.$Invoice['ModelsBooked'].' attending a '.($_REQUEST['action'] == 'shoot_invoice' ? 'shoot' : 'casting').' for '.$Invoice['ProfileContactDisplay'].' on '.bb_agency_human_date($Invoice['JobDate']).'.' ?></textarea>
+'For '.$Invoice['ModelsBooked'].' attending a shoot for '.$Invoice['ProfileContactDisplay'].' on '.bb_agency_human_date($Invoice['JobDate']).'.' ?></textarea>
                     </td>
                 </tr>
                 <tr valign="top">
