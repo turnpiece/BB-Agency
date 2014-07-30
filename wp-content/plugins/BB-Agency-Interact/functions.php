@@ -79,25 +79,6 @@
 			global $wp_rewrite;
 			$wp_rewrite->flush_rules();
 		}
-	
-	
-	/*/
-	 *  Fix form post url for multi language.
-	/*/
-/*
-	function bb_agencyinteract_postURILanguage($request_URI){
-	     if(!in_array(substr($_SERVER['REQUEST_URI'],1,2), array("en","nl"))){
-			if (function_exists('trans_getLanguage')) {
-				 if(qtrans_getLanguage()=='nl') {
-					return "/".qtrans_getLanguage();
-				
-				} elseif(qtrans_getLanguage()=='en') {
-					return "/".qtrans_getLanguage();
-				}
-			 }
-	    }
-	}
-	*/
 
 // *************************************************************************************************** //
 // Handle Emails
@@ -126,7 +107,11 @@
 			$message .= sprintf(__('If you have any problems, please contact us at %s.'), get_option('admin_email')) . "\r\n\r\n"; 
 			$message .= __('Regards,')."\r\n";
 			$message .= get_option('blogname') . __(' Team') ."\r\n"; 
-			$message .= get_option('home') ."\r\n"; 
+			$message .= get_option('home') ."\r\n";
+			if (bb_agency_TERMS) {
+				$message .= "\r\n\r\n";
+				$message .= sprintf(__('Please view our <a href="%s">Terms &amp; Conditions</a>', bb_agency_TERMS));
+			}
 	 
 	 		$headers = 'From: '. get_option('blogname') .' <'. get_option('admin_email') .'>' . "\r\n";
 			wp_mail($user_email, sprintf(__('%s Registration Successful! Login Details'), get_option('blogname')), $message, $headers);  

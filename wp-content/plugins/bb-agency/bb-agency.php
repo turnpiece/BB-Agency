@@ -587,68 +587,30 @@ if ( is_admin() ){
 		}
 	
 	add_shortcode("profile_search", "bb_agency_shortcode_profilesearch");
-		function bb_agency_shortcode_profilesearch($atts, $content = null){
-			ob_start();
-			bb_agency_profilesearch($atts);
-			$output_string = ob_get_contents();
-			ob_end_clean();
-			return $output_string;
-		}
-  /*/
-   * ======================== BB Agency Tool Tip===============
-   * 
-  /*/
-  
-  
-	/*	
-	if (is_admin()) {
-		
-		$bb_agency_options_showtooltip = bb_agency_get_option("bb_agency_options_showtooltip");
-		 
-		if ($bb_agency_options_showtooltip == 0) {
-			// set to 1 to ensure it's not shown again
-			bb_agency_update_option("bb_agency_options_showtooltip", 1);
-			wp_enqueue_style('wp-pointer');
-			wp_enqueue_script('wp-pointer');
-			function  add_js_code(){
-				?>
-				<script type="text/javascript">
-				jQuery(document).ready( function($) {
-					
-				var options = {"content":"<h3>BB Agency Plugin</h3><p>Thanks for installing the BB Plugin. We hope you find it useful. Let's <a href=\'<?php echo admin_url("admin.php?page=bb_agency_settings&ConfigID=1"); ?>\'>check your settings</a> before we get started.</p>","position":{"edge":"left","align":"center"}};
-
-					if (!options)
-						return;
-
-					options = $.extend( options, {
-						close: function() {
-						//to do
-						}
-					});
-					<?php if (isset($_GET["page"]) != "bb_agency_menu" && isset($_GET["page"]) != "bb_agency_settings") : ?>
-					$('#toplevel_page_bb_agency_menu').pointer( options ).pointer("open");
-					<?php elseif(isset($_GET["page"])=="bb_agency_menu" && isset($_GET["page"]) !="bb_agency_settings") : ?>
-					$('#toplevel_page_bb_agency_menu li a').each(function(){
-						if ($(this).text() == "Settings") {
-						   $(this).fadeOut().pointer( options ).pointer("open").fadeIn();	
-						   $(this).css("background","#EAF2FA");
-						}
-					});
-					<?php endif; ?>
-				});
-				</script>
-				';
-				<?php
-			}
-			add_action("admin_footer","add_js_code");
-		}
+	function bb_agency_shortcode_profilesearch($atts, $content = null){
+		ob_start();
+		bb_agency_profilesearch($atts);
+		$output_string = ob_get_contents();
+		ob_end_clean();
+		return $output_string;
 	}
-	*/
 
 
+	// Emails
+	add_filter('wp_mail_content_type', 'bb_agency_set_content_type');
+	function bb_agency_set_content_type($content_type) {
+	    return 'text/html';
+	}
 
- /*/
-
+	add_filter ('wp_mail_from', 'bb_agency_set_mail_from');
+	function bb_agency_set_mail_from() {
+		return bb_agency_get_option('bb_agency_option_agencyemail');
+	}
+		
+	add_filter ('wp_mail_from_name', 'bb_agency_set_mail_from_name');
+	function bb_agency_set_mail_from_name() {
+		return bb_agency_get_option('bb_agency_option_agencyname');
+	}
 
 
 /****************************************************************/

@@ -200,12 +200,6 @@ function set_bb_agency_menu(){
     add_submenu_page("bb_agency_menu", __("Edit Settings", bb_agency_TEXTDOMAIN), __("Settings", bb_agency_TEXTDOMAIN), 7,"bb_agency_settings","bb_agency_settings");
 }
 
-// Emails
-add_filter('wp_mail_content_type', 'bb_agency_set_content_type');
-function bb_agency_set_content_type($content_type) {
-    return 'text/html';
-}
-
 function bb_agency_send_email() {
     $bb_agency_value_agencyname = bb_agency_get_option('bb_agency_option_agencyname');
     $bb_agency_value_agencyemail = bb_agency_get_option('bb_agency_option_agencyemail');

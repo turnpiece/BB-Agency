@@ -140,7 +140,7 @@ if ($_POST) {
                 wp_die('Failed to get job id '.$_REQUEST['JobID']);
 
             if (isset($_POST['send'])) {
-                $email = bb_agency_TESTING ? get_bloginfo('admin_email') : $Invoice['ProfileContactEmail'];
+                $email = bb_agency_SEND_EMAILS ? $Invoice['ProfileContactEmail'] : get_bloginfo('admin_email');
                 $to = $Invoice['ProfileContactDisplay'].' <'.$email.'>';
                 $headers = 'From: '.get_bloginfo('name').' <'.get_bloginfo('admin_email').'>' . "\r\n";
 
@@ -311,8 +311,8 @@ switch ($action) {
 
     case 'invoice' :
 
-        if (bb_agency_TESTING) : ?>
-        <p class="warning">WARNING: The site is currently in testing mode so any invoice emails will be sent to <?php echo get_bloginfo('admin_email') ?> rather than to the client.</p>
+        if (!bb_agency_SEND_EMAILS) : ?>
+        <p class="warning">WARNING: The site is currently in testing mode so any emails will be sent to <?php echo get_bloginfo('admin_email') ?> rather than to the client.</p>
         <?php endif;
 
         if (!empty($Invoice) && 

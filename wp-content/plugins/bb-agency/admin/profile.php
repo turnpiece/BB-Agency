@@ -118,7 +118,8 @@ if (isset($_POST['action'])) {
         if (email_exists($userdata['user_email'])) {
             $error .= __("Sorry, that email address is already used!<br />", bb_agencyinteract_TEXTDOMAIN);
             $have_error = true;
-        }if (!$userdata['user_password'] && count($userdata['user_password']) > 5) {
+        }
+        if (!$userdata['user_password'] && count($userdata['user_password']) > 5) {
             $error .= __("A password is required for registration and must have 6 characters.<br />", bb_agencyinteract_TEXTDOMAIN);
             $have_error = true;
         }
