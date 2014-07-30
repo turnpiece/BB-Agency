@@ -3,35 +3,25 @@
 $siteurl = get_option('siteurl');
 
 global $wpdb;
-
-
-
 $bb_options = bb_agency_get_option();
 
 	$bb_agency_option_agencyname		= bb_agency_get_option('bb_agency_option_agencyname');
 
-	$bb_agency_option_agencyemail	= bb_agency_get_option('bb_agency_option_agencyemail');
-
-	$bb_agency_option_agencyheader	= bb_agency_get_option('bb_agency_option_agencyheader');
+	$bb_agency_option_agencyemail	= bb_agency_get_option('bb_agency_option_agencyemail');	
+    $bb_agency_option_agencyheader	= bb_agency_get_option('bb_agency_option_agencyheader');
 
 	$SearchMuxHash			= $_GET["SearchMuxHash"]; // Set Hash
 
 if (isset($_POST['action'])) {
+	$SearchID			= $_POST['SearchID'];
 
+	$SearchTitle		= $_POST['SearchTitle'];
 
+	$SearchType			= $_POST['SearchType'];
 
-	$SearchID			=$_POST['SearchID'];
+	$SearchProfileID	= $_POST['SearchProfileID'];
 
-	$SearchTitle		=$_POST['SearchTitle'];
-
-	$SearchType			=$_POST['SearchType'];
-
-	$SearchProfileID		=$_POST['SearchProfileID'];
-
-	$SearchOptions		=$_POST['SearchOptions'];
-
-
-
+	$SearchOptions		= $_POST['SearchOptions'];
 	$action = $_POST['action'];
 
 	switch($action) {
@@ -41,141 +31,96 @@ if (isset($_POST['action'])) {
 	case 'addRecord':
 
 		if (!empty($SearchTitle)) {
-
-			
-
 			// Create Record
-
 			$insert = "INSERT INTO " . table_agency_searchsaved .
-
 			" (SearchTitle,SearchType,SearchProfileID,SearchOptions)" .
-
 			"VALUES ('" . $wpdb->escape($SearchTitle) . "','" . $wpdb->escape($SearchType) . "','" . $wpdb->escape($SearchProfileID) . "','" . $wpdb->escape($SearchOptions) . "')";
 
 		    $results = $wpdb->query($insert);
 
 			$lastid = $wpdb->insert_id;
-
-
-
 			echo ('<div id="message" class="updated"><p>Search saved successfully! <a href="'. admin_url("admin.php?page=". $_GET['page']) .'&action=emailCompose&amp;SearchID='. $lastid .'">Send Email</a></p></div>'); 
 
 		} else {
-       	echo ('<div id="message" class="error"><p>Error creating record, please ensure you have filled out all required fields.</p></div>'); 
-
+       	    echo ('<div id="message" class="error"><p>Error creating record, please ensure you have filled out all required fields.</p></div>'); 
 		}
 
 	break;
-
-	
 
 	// Delete bulk
 
 	case 'deleteRecord':
 
-		foreach($_POST as $SearchID) {
-
-			mysql_query("DELETE FROM " . table_agency_searchsaved . " WHERE SearchID=$SearchID");
-
+		foreach ($_POST as $SearchID) {
+			mysql_query("DELETE FROM " . table_agency_searchsaved . " WHERE SearchID= $SearchID");
 		}
 
 		echo ('<div id="message" class="updated"><p>Profile deleted successfully!</p></div>');
 
 	break;
-
-
-
 	// Email
 
 	case 'emailSend':
 
-		if (!empty($SearchID)) {
+		if (!empty($SearchID)) :
 
-		
+			$SearchID				= $_GET['SearchID'];
 
-			$SearchID				=$_GET['SearchID'];
-
-			if(trim($_GET["SearchMuxHash"])=='') {
+			if (trim($_GET["SearchMuxHash"]) == '') {
 				$SearchMuxHash			= bb_agency_random(8);
 			}
 			
-			$SearchMuxToName		=$_POST['SearchMuxToName'];
-
-			$SearchMuxToEmail		=$_POST['SearchMuxToEmail'];
-
-			$SearchMuxSubject		=$_POST['SearchMuxSubject'];
-
-			$SearchMuxMessage		=$_POST['SearchMuxMessage'];
-
-			$SearchMuxCustomValue	=$_POST['SearchMuxCustomValue'];
+			$SearchMuxToName		= $_POST['SearchMuxToName'];
+			$SearchMuxToEmail		= $_POST['SearchMuxToEmail'];
+			$SearchMuxSubject		= $_POST['SearchMuxSubject'];
+			$SearchMuxMessage		= $_POST['SearchMuxMessage'];
+			$SearchMuxCustomValue	= $_POST['SearchMuxCustomValue'];
 			
-			$link=get_bloginfo("url") ."/client-view/".$SearchMuxHash;
+			$link = get_bloginfo("url") ."/client-view/".$SearchMuxHash;
 			
-            $SearchMuxMessage	= str_ireplace("[link-place-holder]","<a href='$link'>$link</a>",$SearchMuxMessage);
+            $SearchMuxMessage	= str_ireplace("[link-place-holder]", "<a href='$link'>$link</a>", $SearchMuxMessage);
+
+            // add terms link
+            if (bb_agency_TERMS) {
+                $SearchMuxMessage .= "\n\r\n\r\n\r" . '<a href="'.bb_agency_TERMS.'">Terms and Conditions</a>';
+            }
 
 			// Create Record
 
 			$insert = "INSERT INTO " . table_agency_searchsaved_mux .
-
 			" (SearchID,SearchMuxHash,SearchMuxToName,SearchMuxToEmail,SearchMuxSubject,SearchMuxMessage,SearchMuxCustomValue)" .
-
 			"VALUES ('" . $wpdb->escape($SearchID) . "','" . $wpdb->escape($SearchMuxHash) . "','" . $wpdb->escape($SearchMuxToName) . "','" . $wpdb->escape($SearchMuxToEmail) . "','" . $wpdb->escape($SearchMuxSubject) . "','" . $wpdb->escape($SearchMuxMessage) . "','" . $wpdb->escape($SearchMuxCustomValue) . "')";
 
-		     $results = $wpdb->query($insert);
+		    $results = $wpdb->query($insert);
 
 			$lastid = $wpdb->insert_id;
-
-
-
-		
-
 			// To send HTML mail, the Content-type header must be set
-
-			//$headers .= 'To: '. $SearchMuxToName .' <'. $SearchMuxToEmail .'>' . "\r\n";
-
-			
-
-			add_filter('wp_mail_content_type','bb_agency_set_content_type');
-
-			function bb_agency_set_content_type($content_type){
-
-				return 'text/html';
-
-			}
-
-			
-
+            
 			// Mail it
 
 			$headers  = 'MIME-Version: 1.0' . "\r\n";
-
 			$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+			$headers .= 'From: '. $bb_agency_option_agencyname .' <'. $bb_agency_option_agencyemail .'>' . "\r\n";
 
-			$headers = 'From: '. $bb_agency_option_agencyname .' <'. $bb_agency_option_agencyemail .'>' . "\r\n";
+			$isSent = wp_mail(
+                bb_agency_SEND_EMAILS ? $SearchMuxToEmail : $bb_agency_option_agencyemail, 
+                $SearchMuxSubject, 
+                nl2br($SearchMuxMessage), 
+                $headers
+            );
 
-			$isSent = wp_mail($SearchMuxToEmail, $SearchMuxSubject, $SearchMuxMessage, $headers);
-
-			if($isSent){
-	
-			echo "<div style=\"margin:15px;\">";
-			echo "<div id=\"message\" class=\"updated\">";
-			echo "Email successfully sent from <strong>". $bb_agency_option_agencyemail ."</strong> to <strong>". $SearchMuxToEmail ."</strong><br />";
-			echo "Message sent: <p>". $SearchMuxMessage ."</p>";
-			echo "</div>";
-			echo "</div>";	
-	
-			}
-
-		}
-
+			if ($isSent) : ?>   			
+                <div style="margin:15px;">
+        			<div id="message" class="updated">
+        			     Email successfully sent from <strong><?php echo $bb_agency_option_agencyemail ?></strong> to <strong><?php echo (bb_agency_SEND_EMAILS ? $SearchMuxToEmail : $bb_agency_option_agencyemail.'(would have gone to: '.$SearchMuxToEmail.')') ?></strong><br />
+        			     Message sent: <p><?php echo $SearchMuxMessage ?></p>
+        			</div>
+        		</div>				
+            <?php endif;
+		endif;
 	break;
 
 	}
-
-
-
-	
-
 } elseif ($_GET['action'] == "deleteRecord") {
 
 	$SearchID = $_GET['SearchID'];
@@ -187,9 +132,6 @@ if (isset($_POST['action'])) {
 	$resultsDelete = mysql_query($queryDelete);
 
 	while ($dataDelete = mysql_fetch_array($resultsDelete)) {
-
-
-
 		// Remove Casting
 
 		$delete = "DELETE FROM " . table_agency_searchsaved . " WHERE SearchID = \"". $SearchID ."\"";
@@ -197,56 +139,49 @@ if (isset($_POST['action'])) {
 		$results = $wpdb->query($delete);
 
 		echo ('<div id="message" class="updated"><p>Record deleted successfully!</p></div>');
-
-			
-
 	}
-
-			
-
 } elseif (($_GET['action'] == "emailCompose") && isset($_GET['SearchID'])) {
 
 	$SearchID = $_GET['SearchID'];
-
-	
       $querySearch = mysql_query("SELECT * FROM " . table_agency_searchsaved_mux ." WHERE SearchID=".$SearchID." ");
 
 	 $dataSearchSavedMux = mysql_fetch_assoc($querySearch);
 
-	
-
 	?>
-   <div style="width:500px; float:left;">
-     <h2><?php echo __("Search Saved", bb_agency_TEXTDOMAIN); ?></h2>
-      <form method="post" enctype="multipart/form-data" action="<?php echo admin_url("admin.php?page=". $_GET['page'])."&SearchID=".$_GET['SearchID']."&SearchMuxHash=".$_GET["SearchMuxHash"]; ?>">
+    <div style="width:500px; float:left;">
+        <?php if (!bb_agency_SEND_EMAILS) : ?>
+        <p class="warning">WARNING: The site is currently in testing mode so any emails will be sent to <?php echo $bb_agency_option_agencyemail ?> rather than to the client.</p>
+        <?php endif; ?>
+        <h2><?php echo __("Search Saved", bb_agency_TEXTDOMAIN); ?></h2>
+        <form method="post" enctype="multipart/form-data" action="<?php echo admin_url("admin.php?page=". $_GET['page'])."&SearchID=".$_GET['SearchID']."&SearchMuxHash=".$_GET["SearchMuxHash"]; ?>">
       
-       <div><label for="SearchMuxToName"><strong>Send to Name:</strong></label><br/><input style="width:300px;" type="text" id="SearchMuxToName" name="SearchMuxToName" value="<?php echo $dataSearchSavedMux["SearchMuxToName"]; ?>" /></div>
-       <div><label for="SearchMuxToEmail"><strong>Send to Email:</strong></label><br/><input  style="width:300px;" type="text" id="SearchMuxToEmail" name="SearchMuxToEmail" value="<?php echo $dataSearchSavedMux["SearchMuxToEmail"]; ?>" /></div>
-       <div><label for="SearchMuxSubject"><strong>Subject:</strong></label><br/><input  style="width:300px;" type="text" id="SearchMuxSubject" name="SearchMuxSubject" value="<?php echo $bb_agency_option_agencyname; ?> Casting Cart" /></div>
-       <div><label for="SearchMuxMessage"><strong>Message: (copy/paste: [link-place-holder] )</strong></label><br/>
-		<textarea id="SearchMuxMessage" name="SearchMuxMessage" style="width: 500px; height: 300px; "><?php if(!isset($_GET["SearchMuxHash"])){  if(isset($dataSearchSavedMux["SearchMuxMessage"])) echo $dataSearchSavedMux["SearchMuxMessage"];else{echo "Click the following link (or copy and paste it into your browser): [link-place-holder]";}}else{echo "Click the following link (or copy and paste it into your browser): [link-place-holder]";} ?></textarea>
-        </div>
-       <p class="submit">
-           <input type="hidden" name="SearchID" value="<?php echo $SearchID; ?>" />
-           <input type="hidden" name="action" value="emailSend" />
-           <input type="submit" name="submit" value="Send Email" class="button-primary" />
-       </p>
-
-	  </form>
-      </div>
+            <div><label for="SearchMuxToName"><strong>Send to Name:</strong></label><br/><input style="width:300px;" type="text" id="SearchMuxToName" name="SearchMuxToName" value="<?php echo $dataSearchSavedMux["SearchMuxToName"]; ?>" /></div>
+            <div><label for="SearchMuxToEmail"><strong>Send to Email:</strong></label><br/><input  style="width:300px;" type="text" id="SearchMuxToEmail" name="SearchMuxToEmail" value="<?php echo $dataSearchSavedMux["SearchMuxToEmail"]; ?>" /></div>
+            <div><label for="SearchMuxSubject"><strong>Subject:</strong></label><br/><input  style="width:300px;" type="text" id="SearchMuxSubject" name="SearchMuxSubject" value="<?php echo $bb_agency_option_agencyname; ?> Casting Cart" /></div>
+            <div><label for="SearchMuxMessage"><strong>Message: (copy/paste: [link-place-holder] )</strong></label><br/>
+		        <textarea id="SearchMuxMessage" name="SearchMuxMessage" style="width: 500px; height: 300px; "><?php if (!isset($_GET["SearchMuxHash"])){  if (isset($dataSearchSavedMux["SearchMuxMessage"])) echo $dataSearchSavedMux["SearchMuxMessage"];else{echo "Click the following link (or copy and paste it into your browser): [link-place-holder]";}}else{echo "Click the following link (or copy and paste it into your browser): [link-place-holder]";} ?></textarea>
+            </div>
+            <p class="submit">
+                <input type="hidden" name="SearchID" value="<?php echo $SearchID; ?>" />
+                <input type="hidden" name="action" value="emailSend" />
+                <input type="submit" name="submit" value="Send Email" class="button-primary" />
+            </p>
+	    </form>
+    </div>
        <?php
 	 
 	              $query = "SELECT search.SearchTitle, search.SearchProfileID, search.SearchOptions, searchsent.SearchMuxHash FROM ". table_agency_searchsaved ." search LEFT JOIN ". table_agency_searchsaved_mux ." searchsent ON search.SearchID = searchsent.SearchID WHERE search.SearchID = \"". $_GET["SearchID"]."\"";
       
-/*	   $SearchMuxHash = $dataSearchSavedMux["SearchMuxHash"];
-			
-                  $query = "SELECT search.SearchTitle, search.SearchProfileID, search.SearchOptions, searchsent.SearchMuxHash FROM ". table_agency_searchsaved ." search LEFT JOIN ". table_agency_searchsaved_mux ." searchsent ON search.SearchID = searchsent.SearchID WHERE searchsent.SearchMuxHash = \"". $SearchMuxHash ."\"";
-      */
                   $qProfiles =  mysql_query($query);
                   
                   $data = mysql_fetch_array($qProfiles);
+
+                  if (empty($data) || !$data['SearchProfileID'])
+                    wp_die('Failed to find that saved search.');
                         
                   $query = "SELECT * FROM ". table_agency_profile ." profile, ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1 AND profile.ProfileID IN (".$data['SearchProfileID'].") ORDER BY ProfileContactNameFirst ASC";
+
+                  echo $query;
             
                   $results = mysql_query($query);
             
@@ -287,23 +222,15 @@ if (isset($_POST['action'])) {
 	<?php
    
    if ($_GET["action"] == "searchSave") { // Add to Cart
-
-
-
 		// Set Casting Cart Session
 
 		if (isset($_SESSION['cartArray'])) {
 
-			  
-
 			$cartArray = $_SESSION['cartArray'];
-
 			$cartString = implode(",", array_unique($cartArray));
 
 			?>
-           <h3 class="title">Save Search and Email</h3>
-
-
+           <h3 class="title">Save Search and Email</h3>           
            <form method="post" enctype="multipart/form-data" action="<?php echo admin_url("admin.php?page=". $_GET['page']); ?>">
            <table class="form-table">
            <tbody>
@@ -356,25 +283,14 @@ if (isset($_POST['action'])) {
 		}
    } // End Serach Save
 
-} // End All
-
-
-
-
-
-	?>
+} // End All	?>
   <div style="clear:both"></div>
 		<h3 class="title">Recently Saved Searches</h3>
 
 		<?php 
-
-
-
 		  $bb_options = bb_agency_get_option();
 
 			$bb_agency_option_locationtimezone 		= (int)bb_agency_get_option('bb_agency_option_locationtimezone');
-
-		
 
 		// Sort By
 
@@ -391,8 +307,6 @@ if (isset($_POST['action'])) {
 			$sort = "search.SearchDate";
 
 		}
-
-		
 
 		// Sort Order
 
@@ -420,8 +334,6 @@ if (isset($_POST['action'])) {
 
 		}
 
-	
-
 		// Filter
 
 		$filter = "WHERE search.SearchID > 0 ";
@@ -436,13 +348,11 @@ if (isset($_POST['action'])) {
 
 		}
 
-		
-
 		//Paginate
 
 		$items = mysql_num_rows(mysql_query("SELECT * FROM ". table_agency_searchsaved ." search LEFT JOIN ". table_agency_searchsaved_mux ." searchsent ON search.SearchID = search.SearchID ". $filter  ."")); // number of total rows in the database
 
-		if($items > 0) {
+		if ($items > 0) {
 
 			$p = new bb_agency_pagination;
 
@@ -459,21 +369,13 @@ if (isset($_POST['action'])) {
 			$p->parameterName('paging');
 
 			$p->adjacents(1); //No. of page away from the current page
-
-	 
-
-			if(!isset($_GET['paging'])) {
-
-				$p->page = 1;
-
+			if (!isset($_GET['paging'])) {				
+                $p->page = 1;
 			} else {
 
 				$p->page = $_GET['paging'];
 
 			}
-
-	 
-
 			//Query for limit paging
 
 			$limit = "LIMIT " . ($p->page - 1) * $p->limit  . ", " . $p->limit;
@@ -484,8 +386,6 @@ if (isset($_POST['action'])) {
 
 		}
 
-		
-
 		?>
 
 		<div class="tablenav">
@@ -494,7 +394,7 @@ if (isset($_POST['action'])) {
 
 				<?php
 
-				if($items > 0) {
+				if ($items > 0) {
 
 					echo $p->show();  // Echo out the list of paging. 
 
@@ -505,8 +405,6 @@ if (isset($_POST['action'])) {
 			</div>
 
 		</div>
-
-		
 
 		<table cellspacing="0" class="widefat fixed">
 
@@ -555,8 +453,6 @@ if (isset($_POST['action'])) {
 		</thead>
 
 		</table>
-
-		
 
 		<form method="post" action="<?php echo admin_url("admin.php?page=". $_GET['page']); ?>">	
 
@@ -611,9 +507,6 @@ if (isset($_POST['action'])) {
 		$count2 = mysql_num_rows($results2);
 
 		while ($data2 = mysql_fetch_array($results2)) {
-
-			
-
 			$SearchID = $data2['SearchID'];
 
 			$SearchTitle = stripslashes($data2['SearchTitle']);
@@ -621,9 +514,6 @@ if (isset($_POST['action'])) {
 			$SearchProfileID = stripslashes($data2['SearchProfileID']);
 
 			$SearchDate = stripslashes($data2['SearchDate']);
-
-			
-
 			$query3 = "SELECT SearchID,SearchMuxHash, SearchMuxToName, SearchMuxToEmail, SearchMuxSent FROM ". table_agency_searchsaved_mux ." WHERE SearchID = ". $SearchID;
 
 			$results3 = mysql_query($query3);
@@ -654,7 +544,7 @@ if (isset($_POST['action'])) {
 				<div class="row-actions">
                        <?php
 
-				  if($count3<=0){
+				  if ($count3<=0){
 
 				?>
 
@@ -691,7 +581,7 @@ if (isset($_POST['action'])) {
 
 				$pos++;
 
-				     if($pos == 1){
+				     if ($pos == 1){
 
 						echo "Link: <a href=\"". get_bloginfo("url") ."/client-view/". $data3["SearchMuxHash"] ."/\" target=\"_blank\">". get_bloginfo("url") ."/client-view/". $data3["SearchMuxHash"] ."/</a><br />\n";
 
@@ -781,7 +671,7 @@ if (isset($_POST['action'])) {
 
 			<?php 
 
-			if($items > 0) {
+			if ($items > 0) {
 
 				echo $p->show();  // Echo out the list of paging. 
 
@@ -793,8 +683,6 @@ if (isset($_POST['action'])) {
 
 	</div>
 
-	
-
 	<p class="submit">
 
 		<input type="hidden" value="deleteRecord" name="action" />
@@ -802,10 +690,4 @@ if (isset($_POST['action'])) {
 		<input type="submit" value="<?php echo __('Delete','bb_agency_profiles'); ?>" class="button-primary" name="submit" />		
 
 	</p>
-
 	</form>
-
-
-
-
-

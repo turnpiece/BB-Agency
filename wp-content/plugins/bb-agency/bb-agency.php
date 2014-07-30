@@ -46,7 +46,8 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 	define("bb_agency_UPLOADPATH", $bb_agency_WPUPLOADARRAY['basedir'] ."/profile-media/" ); // /home/content/99/6048999/html/domain.com/wordpress/wp-content/uploads/profile-media/
 	define("bb_agency_TEXTDOMAIN", basename(dirname( __FILE__ )) ); //   bb-agency
 	define('bb_agency_SITETYPE', 'children'); // bumps or children
-	define('bb_agency_TESTING', true);
+	//define('bb_agency_TESTING', true);
+	define('bb_agency_TERMS', get_bloginfo('url').'/terms-conditions');
 
 	// email sending
 	define("bb_agency_SEND_EMAILS", false); // whether or not to send emails
