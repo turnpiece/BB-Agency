@@ -180,8 +180,6 @@ if (isset($_POST['action'])) {
                     wp_die('Failed to find that saved search.');
                         
                   $query = "SELECT * FROM ". table_agency_profile ." profile, ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1 AND profile.ProfileID IN (".$data['SearchProfileID'].") ORDER BY ProfileContactNameFirst ASC";
-
-                  echo $query;
             
                   $results = mysql_query($query);
             
