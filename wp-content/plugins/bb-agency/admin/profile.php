@@ -203,6 +203,8 @@ if (isset($_POST['action'])) {
 
                 echo ('<div id="message" class="updated"><p>' . __("New Profile added successfully!", bb_agency_TEXTDOMAIN) . ' <a href="' . admin_url("admin.php?page=" . $_GET['page']) . '&action=editRecord&ProfileID=' . $ProfileID . '">' . __("Update and add media", bb_agency_TEXTDOMAIN) . '</a></p></div>');
 
+                bb_display_manage($ProfileID);
+
                 
             } else { ?>
                 <div id="message" class="error">
@@ -216,7 +218,7 @@ if (isset($_POST['action'])) {
                     </p>
                 </div>
                 <?php
-                bb_display_manage($ProfileID);
+                //bb_display_manage($ProfileID);
             }
 
             break;
@@ -548,6 +550,7 @@ function bb_display_manage($ProfileID) {
     $t_profile = table_agency_profile;
     $t_media = table_agency_profile_media;
     $t_data_type = table_agency_data_type;
+    $t_gender = table_agency_data_gender;
 
     $bb_agency_option_agencyimagemaxheight = bb_agency_get_option('bb_agency_option_agencyimagemaxheight');
     if (empty($bb_agency_option_agencyimagemaxheight) || $bb_agency_option_agencyimagemaxheight < 500) {
@@ -690,7 +693,7 @@ function bb_display_manage($ProfileID) {
           <th scope="row"><?php _e("Password", bb_agency_TEXTDOMAIN) ?></th>
           <td>
               <input type="text" class="regular-text" id="ProfilePassword" name="ProfilePassword" />
-              <input type="button" onclick="javascript:document.getElementById('ProfilePassword').value=Math.random().toString(36).substr(2,6);" value=\"Generate Password\"  name="GeneratePassword" />
+              <input type="button" onclick="javascript:document.getElementById('ProfilePassword').value=Math.random().toString(36).substr(2,6);" value="Generate Password"  name="GeneratePassword" />
           </td>
         </tr>
         <tr valign="top">
@@ -731,7 +734,7 @@ function bb_display_manage($ProfileID) {
       </fieldset>
       </td>
     </tr>
-    // Address
+
     <tr valign="top">
       <th scope="row"><?php _e("Street", bb_agency_TEXTDOMAIN) ?></th>
       <td>
@@ -783,43 +786,44 @@ function bb_display_manage($ProfileID) {
     // Public Information
     ?>
     <tr valign="top">
-      <th scope="row" colspan="2"><h3><?php _e("Public Information", bb_agency_TEXTDOMAIN) ?></h3>The following information may appear in profile pages.</th>
+        <th scope="row" colspan="2">
+            <h3><?php _e("Public Information", bb_agency_TEXTDOMAIN) ?></h3>
+            The following information may appear in profile pages.
+        </th>
     </tr>
-    <tr valign="top">
-      <th scope="row"><?php _e("Gender", bb_agency_TEXTDOMAIN) ?></th>
-      <td>
-    <select name="ProfileGender" id="ProfileGender">
-   
     <?php
-    $ProfileGender1 = get_user_meta($ProfileUserLinked, "bb_agency_interact_pgender", true);
-   
-	if($ProfileGender==''){
-		$ProfileGender = $_GET["ProfileGender"];
-	}elseif($ProfileGender1!=''){
-		$ProfileGender =$ProfileGender1 ;
-	}
-	
-    $query1 = "SELECT GenderID, GenderTitle FROM " . table_agency_data_gender . '';
-    $results1 = mysql_query($query1);
-    $count1 = mysql_num_rows($results1);
-    if ($count1 > 0) :
-        if (empty($GenderID) || ($GenderID < 1)) {
-            echo '<option value="0" selected>--</option>';
-        }
-        while ($data1 = mysql_fetch_array($results1)) : ?>
-             <option value="<?php echo $data1['GenderID'] ?>" <?php selected($ProfileGender, $data1["GenderID"]) ?>><?php echo $data1["GenderTitle"] ?></option>
-        <?php endwhile; ?>
-        </select>
-    <?php else :
-        _e("No items to select", bb_agency_TEXTDOMAIN);
-    endif; ?>
+        // get available genders
+        $genders = bb_agency_get_genders();
+
+        if (!empty($genders)) : ?>
+    <tr valign="top">
+        <th scope="row"><?php _e("Gender", bb_agency_TEXTDOMAIN) ?></th>
+        <td>
+            <select name="ProfileGender" id="ProfileGender">
+            <?php
+            $ProfileGender1 = get_user_meta($ProfileUserLinked, 'bb_agency_interact_pgender', true);
+           
+        	if ($ProfileGender=='') {
+        		$ProfileGender = $_GET["ProfileGender"];
+        	} elseif ($ProfileGender1 != '') {
+        		$ProfileGender = $ProfileGender1;
+        	}
+        	
+            if (empty($GenderID) || ($GenderID < 1)) {
+                echo '<option value="0" selected>--</option>';
+            }
+            foreach ($genders as $gender) : ?>
+                 <option value="<?php echo $gender['GenderID'] ?>" <?php selected($ProfileGender, $gender["GenderID"]) ?>><?php echo $gender['GenderTitle'] ?></option>
+            <?php endforeach; ?>
+            </select>
         </td>
     </tr>
+    <?php endif; // end of genders ?>
     <tr valign="top">
-      <th scope="row"><?php _e("Birth date", bb_agency_TEXTDOMAIN) ?> <em>YYYY-MM-DD</em></th>
-      <td>
-          <input class="bbdatepicker" type="text" id="ProfileDateBirth" name="ProfileDateBirth" value="<?php echo $ProfileDateBirth ?>" />
-      </td>
+        <th scope="row"><?php _e("Birth date", bb_agency_TEXTDOMAIN) ?> <em>YYYY-MM-DD</em></th>
+        <td>
+            <input class="bbdatepicker" type="text" id="ProfileDateBirth" name="ProfileDateBirth" value="<?php echo $ProfileDateBirth ?>" />
+        </td>
     </tr>
     <?php if (bb_agency_SITETYPE == 'bumps') : ?>
         <tr valign="top">
@@ -1060,101 +1064,96 @@ function bb_display_manage($ProfileID) {
     <div style="clear: both; "></div>
 
     <table class="form-table">
-    <tbody>
+        <tbody>
+            <tr valign="top">
+              <th scope="row" colspan="2"><h3><?php _e("Classification", bb_agency_TEXTDOMAIN) ?></h3></th>
+            </tr>
+            <tr valign="top">
+                <th scope="row"><?php _e("Classification", bb_agency_TEXTDOMAIN) ?></th>
+                <td>
+                    <fieldset><?php
+                    $ProfileTypeArray = explode(",", $ProfileTypeArray);
+                	
+                	$query3 = "SELECT * FROM `$t_data_type` ORDER BY `DataTypeTitle`";
+                    $results3 = mysql_query($query3);
+                    $count3 = mysql_num_rows($results3);
+                    $action = @$_GET["action"];
+                    while ($data3 = mysql_fetch_array($results3)) :
+                        if ($action == "add") : ?>
+                            <input type="checkbox" name="ProfileType[]" value="<?php echo $data3['DataTypeID'] ?>" id="ProfileType[]" /><?php echo $data3['DataTypeTitle'] ?><br />
+                        <?php endif;
+                        if ($action == "editRecord") : ?>
+                            <input type="checkbox" name="ProfileType[]" id="ProfileType[]" value="<?php echo  $data3['DataTypeID'] ?>" <?php echo (in_array($data3['DataTypeID'], $ProfileTypeArray) && isset($_GET["action"]) == "editRecord") ? ' checked="checked"' : '' ?> /><?php echo $data3['DataTypeTitle'] ?><br />
+                        <?php endif; ?>
+                    <?php endwhile; ?>
+                    </fieldset>
+                    <?php if ($count3 < 1) : ?>
+                        <?php _e("No items to select", bb_agency_TEXTDOMAIN) ?> <a href="<?php echo admin_url("admin.php?page=bb_agency_settings&ConfigID=5") ?>"><?php _e("Setup Options", bb_agency_TEXTDOMAIN) ?></a>
+                    <?php endif; ?>
 
+                </td>
+            </tr>
+            <tr valign="top">
+                <th scope="row"><?php _e("Status", bb_agency_TEXTDOMAIN) ?>:</th>
+                <td>
+                    <select id="ProfileIsActive" name="ProfileIsActive">
+                        <option value="1" <?php selected(1, $ProfileIsActive) ?>><?php _e("Active", bb_agency_TEXTDOMAIN) ?></option>
+                        <option value="4" <?php selected(4, $ProfileIsActive) ?>><?php _e("Active - Not Visible On Website", bb_agency_TEXTDOMAIN) ?></option>
+                        <option value="0" <?php selected(0, $ProfileIsActive) ?>><?php _e("Inactive", bb_agency_TEXTDOMAIN) ?></option>
+                        <option value="2" <?php selected(2, $ProfileIsActive) ?>><?php _e("Archived", bb_agency_TEXTDOMAIN) ?></option>
+                        <option value="3" <?php selected(3, $ProfileIsActive) ?>><?php _e("Pending Approval", bb_agency_TEXTDOMAIN) ?></option>
+                    </select>
+                </td>
+            </tr>
+            <tr valign="top">
+                <th scope="row"><?php _e("Promotion", bb_agency_TEXTDOMAIN) ?>:</th>
+                <td>
+                    <input type="checkbox" name="ProfileIsFeatured" id="ProfileIsFeatured" value="1" <?php checked($ProfileIsFeatured, 1, false) ?> /> Featured<br />
+                </td>
+            </tr>
+            <?php if (isset($ProfileUserLinked) && $ProfileUserLinked > 0) : ?>
+            <tr valign="top">
+                <th scope="row"><?php _e("WordPress User", bb_agency_TEXTDOMAIN) ?></th>
+                <td>
+                    <a href="<?php echo admin_url("user-edit.php") ?>?user_id=<?php echo $ProfileUserLinked ?>&wp_http_referer=%2Fwp-admin%2Fadmin.php%3Fpage%3Dbb_agency_profiles">ID# <?php echo $ProfileUserLinked ?></a>
+    		      <input type='hidden' name='wpuserid' value="<?php echo $ProfileUserLinked ?>" />
+                </td>
+            </tr>
+            <?php endif;
 
-    // Account Information  
-    <tr valign="top">
-      <th scope="row" colspan="2"><h3><?php _e("Classification", bb_agency_TEXTDOMAIN) ?></h3></th>
-    </tr>
-    <tr valign="top">
-      <th scope="row"><?php _e("Classification", bb_agency_TEXTDOMAIN) ?></th>
-      <td>
-      <fieldset><?php
-    $ProfileTypeArray = explode(",", $ProfileTypeArray);
-	
-	$query3 = "SELECT * FROM `$t_data_type` ORDER BY `DataTypeTitle`";
-    $results3 = mysql_query($query3);
-    $count3 = mysql_num_rows($results3);
-    $action = @$_GET["action"];
-    while ($data3 = mysql_fetch_array($results3)) :
-        if ($action == "add") : ?>
-            <input type="checkbox" name="ProfileType[]" value="<?php echo $data3['DataTypeID'] ?>" id="ProfileType[]" /><?php echo $data3['DataTypeTitle'] ?><br />
-        <?php endif;
-        if ($action == "editRecord") : ?>
-            <input type="checkbox" name="ProfileType[]" id="ProfileType[]" value="<?php echo  $data3['DataTypeID'] ?>" <?php echo (in_array($data3['DataTypeID'], $ProfileTypeArray) && isset($_GET["action"]) == "editRecord") ? ' checked="checked"' : '' ?> /><?php echo $data3['DataTypeTitle'] ?><br />
-        <?php endif; ?>
-    <?php endwhile; ?>
-    </fieldset>
-    <?php if ($count3 < 1) : ?>
-        <?php _e("No items to select", bb_agency_TEXTDOMAIN) ?> <a href="<?php echo admin_url("admin.php?page=bb_agency_settings&ConfigID=5") ?>"><?php _e("Setup Options", bb_agency_TEXTDOMAIN) ?></a>
-    <?php endif; ?>
-
-      </td>
-    </tr>
-    <tr valign="top">
-        <th scope="row"><?php _e("Status", bb_agency_TEXTDOMAIN) ?>:</th>
-        <td><select id="ProfileIsActive" name="ProfileIsActive">
-            <option value="1" <?php selected(1, $ProfileIsActive) ?>><?php _e("Active", bb_agency_TEXTDOMAIN) ?></option>
-            <option value="4" <?php selected(4, $ProfileIsActive) ?>><?php _e("Active - Not Visible On Website", bb_agency_TEXTDOMAIN) ?></option>
-            <option value="0" <?php selected(0, $ProfileIsActive) ?>><?php _e("Inactive", bb_agency_TEXTDOMAIN) ?></option>
-            <option value="2" <?php selected(2, $ProfileIsActive) ?>><?php _e("Archived", bb_agency_TEXTDOMAIN) ?></option>
-            <option value="3" <?php selected(3, $ProfileIsActive) ?>><?php _e("Pending Approval", bb_agency_TEXTDOMAIN) ?></option>
-          </select></td>
-    </tr>
-    <tr valign="top">
-        <th scope="row"><?php _e("Promotion", bb_agency_TEXTDOMAIN) ?>:</th>
-        <td>
-          <input type="checkbox" name="ProfileIsFeatured" id="ProfileIsFeatured" value="1''. checked($ProfileIsFeatured, 1, false) . " /> Featured<br />
-        </td>
-    </tr>
-    <?php
-
-    if (isset($ProfileUserLinked) && $ProfileUserLinked > 0) : ?>
-        <tr valign="top">
-          <th scope="row"><?php _e("WordPress User", bb_agency_TEXTDOMAIN) ?></th>
-          <td>
-            <a href="<?php echo admin_url("user-edit.php") ?>?user_id=<?php echo $ProfileUserLinked ?>&wp_http_referer=%2Fwp-admin%2Fadmin.php%3Fpage%3Dbb_agency_profiles">ID# <?php echo $ProfileUserLinked ?></a>
-		    <input type='hidden' name='wpuserid' value="<?php echo $ProfileUserLinked ?>" />
-          </td>
-        </tr>
-    <?php endif;
-
-
-    // Hidden Settings
-    if ($_GET["mode"] == "override") : ?>
-        <tr valign="top">
-          <th scope="row"><?php _e("Date Updated", bb_agency_TEXTDOMAIN) ?></th>
-          <td>
-              <input type="text" id="ProfileDateUpdated" name="ProfileDateUpdated" value="<?php echo $ProfileDateUpdated ?>" />
-          </td>
-        </tr>
-        <tr valign="top">
-          <th scope="row"><?php _e("Profile Views", bb_agency_TEXTDOMAIN) ?></th>
-          <td>
-              <input type="text" id="ProfileStatHits" name="ProfileStatHits" value="<?php echo $ProfileStatHits ?>" />
-          </td>
-        </tr>
-        <tr valign="top">
-          <th scope="row"><?php _e("Profile Viewed Last", bb_agency_TEXTDOMAIN) ?></th>
-          <td>
-              <input type="text" id="ProfileDateViewLast" name="ProfileDateViewLast" value="<?php echo $ProfileDateViewLast ?>" />
-          </td>
-        </tr>
-    <?php else : ?>
-        <tr valign="top">
-          <th scope="row"></th>
-          <td>
-              <input type="hidden" id="ProfileDateUpdated" name="ProfileDateUpdated" value="<?php echo $ProfileDateUpdated ?>" />
-              <input type="hidden" id="ProfileStatHits" name="ProfileStatHits" value="<?php echo $ProfileStatHits ?>" />
-              <input type="hidden" id="ProfileDateViewLast" name="ProfileDateViewLast" value="<?php echo $ProfileDateViewLast ?>" />
-          </td>
-        </tr>
-    <?php endif; ?>
-    </tbody>
+            // Hidden Settings
+            if ($_GET["mode"] == "override") : ?>
+            <tr valign="top">
+                <th scope="row"><?php _e("Date Updated", bb_agency_TEXTDOMAIN) ?></th>
+                <td>
+                    <input type="text" id="ProfileDateUpdated" name="ProfileDateUpdated" value="<?php echo $ProfileDateUpdated ?>" />
+                </td>
+            </tr>
+            <tr valign="top">
+                <th scope="row"><?php _e("Profile Views", bb_agency_TEXTDOMAIN) ?></th>
+                <td>
+                    <input type="text" id="ProfileStatHits" name="ProfileStatHits" value="<?php echo $ProfileStatHits ?>" />
+                </td>
+            </tr>
+            <tr valign="top">
+                <th scope="row"><?php _e("Profile Viewed Last", bb_agency_TEXTDOMAIN) ?></th>
+                <td>
+                    <input type="text" id="ProfileDateViewLast" name="ProfileDateViewLast" value="<?php echo $ProfileDateViewLast ?>" />
+                </td>
+            </tr>
+            <?php else : ?>
+            <tr valign="top">
+                <th scope="row"></th>
+                <td>
+                    <input type="hidden" id="ProfileDateUpdated" name="ProfileDateUpdated" value="<?php echo $ProfileDateUpdated ?>" />
+                    <input type="hidden" id="ProfileStatHits" name="ProfileStatHits" value="<?php echo $ProfileStatHits ?>" />
+                    <input type="hidden" id="ProfileDateViewLast" name="ProfileDateViewLast" value="<?php echo $ProfileDateViewLast ?>" />
+                </td>
+            </tr>
+            <?php endif; ?>
+        </tbody>
     </table>
-    <?php
-    // display jobs
+    <?php if (!empty($ProfileID) && ($ProfileID > 0)) :
     $t_job = table_agency_job;
     ?>
     <h3>Jobs</h3>
@@ -1189,21 +1188,19 @@ function bb_display_manage($ProfileID) {
         include('job/list_quick.php');
     else : ?>
     <p>No casting calls yet.</p>
-    <?php endif;
-
-    if (!empty($ProfileID) && ($ProfileID > 0)) : ?>
-        <?php _e('Last updated on', bb_agency_TEXTDOMAIN) ?> <?php echo bb_agency_human_date($ProfileDateUpdated) ?>
-
-        <p class="submit">
-            <input type="hidden" name="ProfileID" value="<?php echo $ProfileID ?>" />
-            <input type="hidden" name="action" value="editRecord" />
-            <input type="submit" name="submit" value="<?php _e("Update Record", bb_agency_TEXTDOMAIN) ?>" class="button-primary" />
-        </p>
+    <?php endif; ?>
+    
+    <?php _e('Last updated on', bb_agency_TEXTDOMAIN) ?> <?php echo bb_agency_human_date($ProfileDateUpdated) ?>
+    <p class="submit">
+        <input type="hidden" name="ProfileID" value="<?php echo $ProfileID ?>" />
+        <input type="hidden" name="action" value="editRecord" />
+        <input type="submit" name="submit" value="<?php _e("Update Record", bb_agency_TEXTDOMAIN) ?>" class="button-primary" />
+    </p>
     <?php else : ?>
-        <p class="submit">
-            <input type="hidden" name="action" value="addRecord" />
-            <input type="submit" name="submit" value="<?php _e("Create Record", bb_agency_TEXTDOMAIN) ?>" class="button-primary" />
-        </p>
+    <p class="submit">
+        <input type="hidden" name="action" value="addRecord" />
+        <input type="submit" name="submit" value="<?php _e("Create Record", bb_agency_TEXTDOMAIN) ?>" class="button-primary" />
+    </p>
     <?php endif; ?>
     </form>
     <?php
@@ -1358,7 +1355,6 @@ function bb_display_list() {
                     <div class="inside-x" style="padding: 10px 10px 0px 10px; ">
                         <?php echo sprintf(__("Currently %d Profiles", bb_agency_TEXTDOMAIN), $items) ?><br />
                         <?php
-
                             $queryGenderResult = mysql_query("SELECT GenderID, GenderTitle FROM " . table_agency_data_gender);
                             $queryGenderCount = mysql_num_rows($queryGenderResult);
                             ?>

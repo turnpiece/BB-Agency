@@ -452,3 +452,9 @@ function bb_agency_get_invoice_url($file) {
 function bb_agency_human_date($date) {
     return date('jS F Y', strtotime($date));
 }
+
+function bb_agency_get_genders() {
+    global $wpdb;
+    $query = 'SELECT `GenderID`, `GenderTitle` FROM `' .  table_agency_data_gender . '` GROUP BY `GenderTitle`';
+    return $wpdb->get_results($query, ARRAY_A);
+}
