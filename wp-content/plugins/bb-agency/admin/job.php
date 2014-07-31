@@ -89,7 +89,7 @@ if ($_POST) {
                         $sqlData[] = '`JobLocationLatitude` = "'.$location['lat'].'"';
                         $sqlData[] = '`JobLocationLongitude` = "'.$location['lng'].'"';
                     } else {
-                        echo '<div id="message" class="error"><p>' . sprintf(__("Failed to get location of '%s'", bb_agencyinteract_TEXTDOMAIN), $_POST['JobLocation']) . '</p></div>';
+                        echo '<div id="message" class="error"><p>' . sprintf(__("Failed to get location of '%s'", bb_agency_TEXTDOMAIN), $_POST['JobLocation']) . '</p></div>';
                     }
                 }
 
