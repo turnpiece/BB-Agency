@@ -1189,7 +1189,7 @@ function bb_display_manage($ProfileID) {
     <?php endif;
 
     if (!empty($ProfileID) && ($ProfileID > 0)) {
-        echo "" . __("Last updated on", bb_agency_TEXTDOMAIN) . ": " . $ProfileDateUpdated . "\n";
+        echo __('Last updated on', bb_agency_TEXTDOMAIN) . ' ' . bb_agency_human_date($ProfileDateUpdated) . "\n";
 
         echo "<p class=\"submit\">\n";
         echo "     <input type=\"hidden\" name=\"ProfileID\" value=\"" . $ProfileID . "\" />\n";
