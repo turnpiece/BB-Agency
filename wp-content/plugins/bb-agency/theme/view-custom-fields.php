@@ -22,7 +22,6 @@ if($ProfileCustomType!=4)	{
 			
 			// SET Label for Measurements
 			// Imperial(in/lb), Metrics(ft/kg)
-			$bb_options = bb_agency_get_option();
 			$bb_agency_option_unittype  = bb_agency_get_option('bb_agency_option_unittype');
 			$measurements_label = "";
 			/*

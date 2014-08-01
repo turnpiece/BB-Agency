@@ -12,7 +12,6 @@
 
     $cusFields = array("Suit","Bust","Shirt","Dress","Height");  //for custom fields min and max
 
-    $bb_options = bb_agency_get_option();
     $bb_agency_option_unittype =  bb_agency_get_option('bb_agency_option_unittype');
     $bb_agency_option_persearch = (int)bb_agency_get_option('bb_agency_option_persearch');
     $bb_agency_option_agencyemail = (int)bb_agency_get_option('bb_agency_option_agencyemail');
@@ -565,7 +564,7 @@ if ($action) {
                         $resultsCustom = $wpdb->get_results("SELECT c.`ProfileCustomID`, c.`ProfileCustomTitle`, c.`ProfileCustomOrder`, c.`ProfileCustomView`, cx.`ProfileCustomValue` FROM ". table_agency_customfield_mux ." cx LEFT JOIN ". table_agency_customfields ." c ON c.`ProfileCustomID` = cx.`ProfileCustomID` WHERE c.`ProfileCustomView` = 0 AND cx.`ProfileID` = ". $ProfileID ." GROUP BY cx.`ProfileCustomID` ORDER BY c.`ProfileCustomOrder` ASC");
                         foreach  ($resultsCustom as $resultCustom) : if (!empty($resultCustom->ProfileCustomValue)) : ?>
                             <div>
-                                <strong><?php echo $resultCustom->ProfileCustomTitle ?><span class="divider">:</span></strong> <?php echo $resultCustom->ProfileCustomID == 5 ? display_height($resultCustom->ProfileCustomValue) : $resultCustom->ProfileCustomValue ?>
+                                <strong><?php echo $resultCustom->ProfileCustomTitle ?><span class="divider">:</span></strong> <?php echo $resultCustom->ProfileCustomID == 5 ? bb_agency_display_height($resultCustom->ProfileCustomValue) : $resultCustom->ProfileCustomValue ?>
                             </div>
                         <?php endif; endforeach; ?>
 
@@ -909,8 +908,6 @@ EOF;
                         <?php
                             // SET Label for Measurements
                             // Imperial(in/lb), Metrics(ft/kg)
-                            $bb_options = bb_agency_get_option();
-                            $bb_agency_option_unittype  = bb_agency_get_option('bb_agency_option_unittype');
                             //$measurements_label = "";
                             /*
                             0- metric
@@ -922,7 +919,7 @@ EOF;
                             2 - pounds
                             3 - inches/feet
                             */
-                            /*
+                            
                             if ($type == 7) { //measurements field type
                                 switch ($bb_agency_option_unittype) {
                                     case 0:
@@ -958,7 +955,7 @@ EOF;
                                     break;
                                 }
                             }
-                            */
+                            
                             ?>    
                             <th scope="row">
                                 <?php if ($type == 7) : ?>
@@ -975,14 +972,14 @@ EOF;
                             <?php    
                             if (in_array($title, $cusFields)) : // use alternative inputs for custom fields defined at top of this page
 
-                                if ($title == 'Height') : ?>
+                                if ($title == 'Height') : $limit = (bb_agency_SITETYPE == 'children' ? 60 : 90); ?>
                                     <fieldset class="bbselect">
                                         <div>
                                             <label>Min</label>
                                             <select name="<?php echo $field ?>_min">
                                                 <option value="">--</option>
-                                            <?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
-                                                <option value="<?php echo $i ?>" <?php selected(isset($_GET[$field.'_min']) ? $_GET[$field.'_min'] : false, $i) ?>><?php echo display_height($i) ?></option>
+                                            <?php for ($i = 12; $i <= $limit; $i++) : // display height options ?>
+                                                <option value="<?php echo $i ?>" <?php selected(isset($_GET[$field.'_min']) ? $_GET[$field.'_min'] : false, $i) ?>><?php echo bb_agency_display_height($i) ?></option>
                                             <?php endfor; ?>
                                             </select>
                                         </div>
@@ -990,8 +987,8 @@ EOF;
                                             <label>Max</label>
                                             <select name="<?php echo $field ?>_max">
                                                 <option value="">--</option>
-                                            <?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
-                                                <option value="<?php echo $i ?>" <?php selected(isset($_GET[$field.'_max']) ? $_GET[$field.'_max'] : false, $i) ?>><?php echo display_height($i) ?></option>
+                                            <?php for ($i = 12; $i <= $limit; $i++) : // display height options ?>
+                                                <option value="<?php echo $i ?>" <?php selected(isset($_GET[$field.'_max']) ? $_GET[$field.'_max'] : false, $i) ?>><?php echo bb_agency_display_height($i) ?></option>
                                             <?php endfor; ?>
                                             </select>
                                         </div>
@@ -1157,7 +1154,7 @@ EOF;
                                                     <option value="">--</option>
                                         
                                                 <?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
-                                                    <option value="<?php echo $i ?>" <?php echo selected($min_val, $i) ?>><?php echo display_height($i) ?></option>
+                                                    <option value="<?php echo $i ?>" <?php echo selected($min_val, $i) ?>><?php echo bb_agency_display_height($i) ?></option>
                                                 <?php endfor; ?>
                                                 </select>
                                             </div>
@@ -1167,7 +1164,7 @@ EOF;
                                                 <select name="<?php echo $field ?>_max">
                                                     <option value="">--</option>
                                                 <?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
-                                                    <option value="<?php echo $i ?>" <?php echo selected($max_val, $i) ?>><?php echo display_height($i) ?></option>
+                                                    <option value="<?php echo $i ?>" <?php echo selected($max_val, $i) ?>><?php echo bb_agency_display_height($i) ?></option>
                                                 <?php endfor; ?>
                                                 </select>
                                             </div>

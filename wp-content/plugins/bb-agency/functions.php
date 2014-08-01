@@ -2038,7 +2038,7 @@ function bb_custom_fields($visibility = 0, $ProfileID, $ProfileGender, $ProfileG
 				bb_custom_fields_template($visibility, $ProfileID, $data3);
 			}
 		 } else {
-					 bb_custom_fields_template($visibility, $ProfileID, $data3);
+			bb_custom_fields_template($visibility, $ProfileID, $data3);
 		 }
 			// END Query2
 		echo "    </td>\n";
@@ -2068,151 +2068,135 @@ function bb_custom_fields_template($visibility = 0, $ProfileID, $data3) {
 		$ProfileCustomValue = $row["ProfileCustomValue"];
 		$ProfileCustomTitle = $data3['ProfileCustomTitle'];
 		$ProfileCustomType  = $data3['ProfileCustomType'];
+
+		echo $ProfileCustomType;
 	
-			// SET Label for Measurements
-			// Imperial(in/lb), Metrics(ft/kg)
-			
-			 $bb_agency_option_unittype  = bb_agency_get_option('bb_agency_option_unittype');
-			 $measurements_label = '';
-			if ($ProfileCustomType == 7) { //measurements field type
-				if ($bb_agency_option_unittype ==0) { // 0 = Metrics(ft/kg)
-					if ($data3['ProfileCustomOptions'] == 1) {
-						$measurements_label  ="<em>(cm)</em>";
-					} elseif ($data3['ProfileCustomOptions'] == 2) {
-						$measurements_label  ="<em>(kg)</em>";
-					} elseif ($data3['ProfileCustomOptions'] == 3) {
-					  	$measurements_label  ="<em>(In Feet/Inches)</em>";
-					}
-				} elseif ($bb_agency_option_unittype ==1) { //1 = Imperial(in/lb)
-					if ($data3['ProfileCustomOptions'] == 1) {
-						$measurements_label  ="<em>(In Inches)</em>";
-					} elseif ($data3['ProfileCustomOptions'] == 2) {
-					  	$measurements_label  ="<em>(In Pounds)</em>";
-					} elseif ($data3['ProfileCustomOptions'] == 3) {
-					  	$measurements_label  ="<em>(In Feet/Inches)</em>";
-					}
+		// SET Label for Measurements
+		// Imperial(in/lb), Metrics(ft/kg)
+		
+		$bb_agency_option_unittype  = bb_agency_get_option('bb_agency_option_unittype');
+		$measurements_label = '';
+		if ($ProfileCustomType == 7) { //measurements field type
+			if ($bb_agency_option_unittype == 0) { // 0 = Metrics(ft/kg)
+				if ($data3['ProfileCustomOptions'] == 1) {
+					$measurements_label  ="<em>(cm)</em>";
+				} elseif ($data3['ProfileCustomOptions'] == 2) {
+					$measurements_label  ="<em>(kg)</em>";
+				} elseif ($data3['ProfileCustomOptions'] == 3) {
+				  	$measurements_label  ="<em>(In Feet/Inches)</em>";
 				}
-			}  
-			$isTextArea = '';
-			if ($ProfileCustomType == 4) {
-				$isTextArea ="textarea-field"; 
+			} elseif ($bb_agency_option_unittype ==1) { //1 = Imperial(in/lb)
+				if ($data3['ProfileCustomOptions'] == 1) {
+					$measurements_label  ="<em>(In Inches)</em>";
+				} elseif ($data3['ProfileCustomOptions'] == 2) {
+				  	$measurements_label  ="<em>(In Pounds)</em>";
+				} elseif ($data3['ProfileCustomOptions'] == 3) {
+				  	$measurements_label  ="<em>(In Feet/Inches)</em>";
+				}
 			}
+		}  
+		$isTextArea = '';
+		if ($ProfileCustomType == 4) {
+			$isTextArea ="textarea-field"; 
+		}
 		echo "  <tr valign=\"top\" class=\"".$isTextArea."\">\n";
 		echo "    <th scope=\"row\"><div class=\"box\">". $data3['ProfileCustomTitle'].$measurements_label."</div></th>\n"; 
 		echo "    <td>\n";		  
 		  
-			if ($ProfileCustomType == 1) { //TEXT
-						echo "<input type=\"text\" name=\"ProfileCustomID". $data3['ProfileCustomID'] ."\" value=\"". $ProfileCustomValue ."\" /><br />\n";						
-			} elseif ($ProfileCustomType == 2) { // Min Max
+		if ($ProfileCustomType == 1) { //TEXT
+			echo "<input type=\"text\" name=\"ProfileCustomID". $data3['ProfileCustomID'] ."\" value=\"". $ProfileCustomValue ."\" /><br />\n";						
+		} elseif ($ProfileCustomType == 2) { // Min Max
+		
+			$ProfileCustomOptions_String = str_replace(",",":",strtok(strtok($data3['ProfileCustomOptions'],"}"),"{"));
+			list($ProfileCustomOptions_Min_label,$ProfileCustomOptions_Min_value,$ProfileCustomOptions_Max_label,$ProfileCustomOptions_Max_value) = explode(":",$ProfileCustomOptions_String);
+		 
+			if (!empty($ProfileCustomOptions_Min_value) && !empty($ProfileCustomOptions_Max_value)) {
+				echo "<br /><br /> <label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Min", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+				echo "<input type=\"text\" name=\"ProfileCustomID". $data3['ProfileCustomID'] ."\" value=\"". $ProfileCustomOptions_Min_value ."\" />\n";
+				echo "<br /><br /><br /><label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Max", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+				echo "<input type=\"text\" name=\"ProfileCustomID". $data3['ProfileCustomID'] ."\" value=\"". $ProfileCustomOptions_Max_value ."\" /><br />\n";
+			} else {
+				echo "<br /><br />  <label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Min", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+				echo "<input type=\"text\" name=\"ProfileCustomID". $data3['ProfileCustomID'] ."\" value=\"".$_SESSION["ProfileCustomID". $data3['ProfileCustomID']]."\" />\n";
+				echo "<br /><br /><br /><label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Max", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+				echo "<input type=\"text\" name=\"ProfileCustomID". $data3['ProfileCustomID'] ."\" value=\"".$_SESSION["ProfileCustomID". $data3['ProfileCustomID']]."\" /><br />\n";
+			}
+		 
+		} elseif ($ProfileCustomType == 3) {  // Drop Down
 			
-				$ProfileCustomOptions_String = str_replace(",",":",strtok(strtok($data3['ProfileCustomOptions'],"}"),"{"));
-				list($ProfileCustomOptions_Min_label,$ProfileCustomOptions_Min_value,$ProfileCustomOptions_Max_label,$ProfileCustomOptions_Max_value) = explode(":",$ProfileCustomOptions_String);
-			 
-				if (!empty($ProfileCustomOptions_Min_value) && !empty($ProfileCustomOptions_Max_value)) {
-					echo "<br /><br /> <label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Min", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
-					echo "<input type=\"text\" name=\"ProfileCustomID". $data3['ProfileCustomID'] ."\" value=\"". $ProfileCustomOptions_Min_value ."\" />\n";
-					echo "<br /><br /><br /><label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Max", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
-					echo "<input type=\"text\" name=\"ProfileCustomID". $data3['ProfileCustomID'] ."\" value=\"". $ProfileCustomOptions_Max_value ."\" /><br />\n";
-				} else {
-					echo "<br /><br />  <label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Min", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
-					echo "<input type=\"text\" name=\"ProfileCustomID". $data3['ProfileCustomID'] ."\" value=\"".$_SESSION["ProfileCustomID". $data3['ProfileCustomID']]."\" />\n";
-					echo "<br /><br /><br /><label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">". __("Max", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
-					echo "<input type=\"text\" name=\"ProfileCustomID". $data3['ProfileCustomID'] ."\" value=\"".$_SESSION["ProfileCustomID". $data3['ProfileCustomID']]."\" /><br />\n";
-				}
-			 
-			} elseif ($ProfileCustomType == 3) {  // Drop Down
+			list($option1,$option2) = explode(":",$data3['ProfileCustomOptions']);	
 				
-				list($option1,$option2) = explode(":",$data3['ProfileCustomOptions']);	
+			$data = explode("|",$option1);
+			$data2 = explode("|",$option2);
+			
+			echo "<label class=\"dropdown\">".$data[0]."</label>";
+			echo "<select name=\"ProfileCustomID". $data3['ProfileCustomID'] ."[]\">\n";
+			echo "<option value=\"\">--</option>";
+				$pos = 0;
+				foreach ($data as $val1) {
 					
-				$data = explode("|",$option1);
-				$data2 = explode("|",$option2);
-				
-				echo "<label class=\"dropdown\">".$data[0]."</label>";
-				echo "<select name=\"ProfileCustomID". $data3['ProfileCustomID'] ."[]\">\n";
-				echo "<option value=\"\">--</option>";
-					$pos = 0;
-					foreach ($data as $val1) {
-						
-						if ($val1 != end($data) && $val1 != $data[0]) {
-						
-							if ($val1 == $ProfileCustomValue ) {
-								$isSelected = "selected=\"selected\"";
-								echo "<option value=\"".$val1."\" ".$isSelected .">".$val1."</option>";
-							} else {
-								echo "<option value=\"".$val1."\" >".$val1."</option>";
-							}					
-						}
+					if ($val1 != end($data) && $val1 != $data[0]) {
+					
+						if ($val1 == $ProfileCustomValue ) {
+							$isSelected = "selected=\"selected\"";
+							echo "<option value=\"".$val1."\" ".$isSelected .">".$val1."</option>";
+						} else {
+							echo "<option value=\"".$val1."\" >".$val1."</option>";
+						}					
 					}
-				echo "</select>\n";
-					
-					
-				if (!empty($data2) && !empty($option2)) {
-					echo "<label class=\"dropdown\">".$data2[0]."</label>";
+				}
+			echo "</select>\n";
 				
-						$pos2 = 0;
-						echo "11<select name=\"ProfileCustomID". $data3['ProfileCustomID'] ."[]\">\n";
-						echo "<option value=\"\">--</option>";
-						foreach ($data2 as $val2) {
-								if ($val2 != end($data2) && $val2 !=  $data2[0]) {
-									echo "<option value=\"".$val2."\" ". selected($val2, $ProfileCustomValue) ." >".$val2."</option>";
-								}
+				
+			if (!empty($data2) && !empty($option2)) {
+				echo "<label class=\"dropdown\">".$data2[0]."</label>";
+			
+					$pos2 = 0;
+					echo "11<select name=\"ProfileCustomID". $data3['ProfileCustomID'] ."[]\">\n";
+					echo "<option value=\"\">--</option>";
+					foreach ($data2 as $val2) {
+							if ($val2 != end($data2) && $val2 !=  $data2[0]) {
+								echo "<option value=\"".$val2."\" ". selected($val2, $ProfileCustomValue) ." >".$val2."</option>";
 							}
-						echo "</select>\n";
-				}
-			} elseif ($ProfileCustomType == 4) {
-					echo "<textarea style=\"width: 100%; min-height: 300px;\" name=\"ProfileCustomID". $data3['ProfileCustomID'] ."\">". $ProfileCustomValue ."</textarea>";
-			} elseif ($ProfileCustomType == 5) {
-				echo "<fieldset>";
-				$array_customOptions_values = explode("|",$data3['ProfileCustomOptions']);
-
-				foreach ($array_customOptions_values as $val) {
-					$xplode = explode(",",$ProfileCustomValue);
-					if (!empty($val)) {
-						echo "<label class=\"checkbox\"><input type=\"checkbox\" value=\"". $val."\"   "; if (in_array($val,$xplode)) { echo "checked=\"checked\""; } echo" name=\"ProfileCustomID". $data3['ProfileCustomID'] ."[]\" /> ";
-						echo "". $val."</label><br />";                               
-					}
-				}
-				echo "</fieldset>";
-
-			} elseif ($ProfileCustomType == 6) {
-				
-				$array_customOptions_values = explode("|",$data3['ProfileCustomOptions']);
-				
-				foreach ($array_customOptions_values as $val) {
-					echo "<fieldset>";
-						echo "<label><input type=\"radio\" value=\"". $val."\" "; checked($val, $ProfileCustomValue); echo" name=\"ProfileCustomID". $data3['ProfileCustomID'] ."[]\" />";
-						echo "". $val."</label><br/>";
-					echo "</fieldset>";
-				}
-			} elseif ($ProfileCustomType == 7) { //Imperial/Metrics
-			
-				if ($data3['ProfileCustomOptions']==3) {
-					if ($bb_agency_option_unittype == 1) {
-						// 
-						echo "<select name=\"ProfileCustomID". $data3['ProfileCustomID'] ."\">\n";
-						echo "  <option value=\"\">--</option>\n";
-						
-						// 
-						$i=12;
-						$heightraw = 0;
-						$heightfeet = 0;
-						$heightinch = 0;
-						while($i<=90)  { 
-							$heightraw = $i;
-							$heightfeet = floor($heightraw/12);
-							$heightinch = $heightraw - floor($heightfeet*12);
-							echo " <option value=\"". $i ."\" ". selected($ProfileCustomValue, $i) .">". $heightfeet ." ft ". $heightinch ." in</option>\n";
-							$i++;
 						}
-						echo " </select>\n";
-					} else {
-					// 
-					echo "  <input type=\"text\" id=\"ProfileCustomID". $data3['ProfileCustomID'] ."\" name=\"ProfileCustomID". $data3['ProfileCustomID'] ."\" value=\"". $ProfileCustomValue ."\" />\n";
-					}
-				} else {
-				echo "<input type=\"text\" name=\"ProfileCustomID". $data3['ProfileCustomID'] ."\" value=\"". $ProfileCustomValue ."\" /><br />\n";
-				}						
-			}									
+					echo "</select>\n";
+			}
+		} elseif ($ProfileCustomType == 4) {
+			echo "<textarea style=\"width: 100%; min-height: 300px;\" name=\"ProfileCustomID". $data3['ProfileCustomID'] ."\">". $ProfileCustomValue ."</textarea>";
+		} elseif ($ProfileCustomType == 5) {
+			echo "<fieldset>";
+			$array_customOptions_values = explode("|",$data3['ProfileCustomOptions']);
+
+			foreach ($array_customOptions_values as $val) {
+				$xplode = explode(",",$ProfileCustomValue);
+				if (!empty($val)) {
+					echo "<label class=\"checkbox\"><input type=\"checkbox\" value=\"". $val."\"   "; if (in_array($val,$xplode)) { echo "checked=\"checked\""; } echo" name=\"ProfileCustomID". $data3['ProfileCustomID'] ."[]\" /> ";
+					echo "". $val."</label><br />";                               
+				}
+			}
+			echo "</fieldset>";
+
+		} elseif ($ProfileCustomType == 6) {
+			
+			$array_customOptions_values = explode("|",$data3['ProfileCustomOptions']);
+			
+			foreach ($array_customOptions_values as $val) {
+				echo "<fieldset>";
+					echo "<label><input type=\"radio\" value=\"". $val."\" "; checked($val, $ProfileCustomValue); echo" name=\"ProfileCustomID". $data3['ProfileCustomID'] ."[]\" />";
+					echo "". $val."</label><br/>";
+				echo "</fieldset>";
+			}
+		} elseif ($ProfileCustomType == 7) { //Imperial/Metrics 
+			$limit = (bb_agency_SITETYPE == 'children' ? 60 : 90);
+			?>
+            <select name="ProfileCustomID<?php echo $data3['ProfileCustomID'] ?>">
+                <option value="">--</option>
+            	<?php for ($i = 12; $i <= $limit; $i++) : // display height options ?>
+                <option value="<?php echo $i ?>" <?php selected($ProfileCustomValue, $i) ?>><?php echo bb_agency_display_height($i) ?></option>
+            	<?php endfor; ?>
+            </select>
+			<?php					
+		}									
 	} // End if Empty ProfileCustomID
 }
 
@@ -2442,7 +2426,7 @@ function bb_agency_getProfileCustomFields($ProfileID, $ProfileGender) {
 	global $wpdb;
 	global $bb_agency_option_unittype;
 	
-	$resultsCustom = $wpdb->get_results("SELECT c.ProfileCustomID,c.ProfileCustomTitle,c.ProfileCustomType,c.ProfileCustomOptions, c.ProfileCustomOrder, cx.ProfileCustomValue FROM ". table_agency_customfield_mux ." cx LEFT JOIN ". table_agency_customfields ." c ON c.ProfileCustomID = cx.ProfileCustomID WHERE c.ProfileCustomView = 0 AND cx.ProfileID = ". $ProfileID ." GROUP BY cx.ProfileCustomID ORDER BY c.ProfileCustomOrder ASC");
+	$resultsCustom = $wpdb->get_results("SELECT c.`ProfileCustomID`,c.`ProfileCustomTitle`,c.`ProfileCustomType`,c.`ProfileCustomOptions`, c.`ProfileCustomOrder`, cx.`ProfileCustomValue` FROM `". table_agency_customfield_mux ."` cx LEFT JOIN `". table_agency_customfields ."` c ON c.`ProfileCustomID` = cx.`ProfileCustomID` WHERE c.`ProfileCustomView` = 0 AND cx.`ProfileID` = $ProfileID GROUP BY cx.`ProfileCustomID` ORDER BY c.`ProfileCustomOrder` ASC");
 	foreach ($resultsCustom as $resultCustom) {
 		if (!empty($resultCustom->ProfileCustomValue )) {
 			if ($resultCustom->ProfileCustomType == 7) { //measurements field type
@@ -2454,14 +2438,14 @@ function bb_agency_getProfileCustomFields($ProfileID, $ProfileGender) {
 					}
 			 	} elseif ($bb_agency_option_unittype ==1) { //1 = Imperial(in/lb)
 					if ($resultCustom->ProfileCustomOptions == 1) {
-					$label = "(in)";
+						$label = "(in)";
 					} elseif ($resultCustom->ProfileCustomOptions == 2) {
 						$label = "(lbs)";
 					} elseif ($resultCustom->ProfileCustomOptions == 3) {
 						$label = "(ft/in)";
 					}
 			 	}
-				$measurements_label = "<span class=\"label\">". $label ."</span>";
+				$measurements_label = " <span class=\"label\">". $label ."</span>";
 			} else {
 				$measurements_label = '';
 			}
@@ -2471,7 +2455,9 @@ function bb_agency_getProfileCustomFields($ProfileID, $ProfileGender) {
 		 
 			if (bb_agency_filterfieldGender($resultCustom->ProfileCustomID, $ProfileGender)) {
 				if ($resultCustom->ProfileCustomType == 7) {
-					if ($resultCustom->ProfileCustomOptions == 3) {
+					if ($resultCustom->ProfileCustomOptions == 1) {
+						echo "<li><strong>". $resultCustom->ProfileCustomTitle.":</strong> ".bb_agency_display_height($resultCustom->ProfileCustomValue);
+					} elseif ($resultCustom->ProfileCustomOptions == 3) {
 					   	$heightraw = $resultCustom->ProfileCustomValue; $heightfeet = floor($heightraw/12); $heightinch = $heightraw - floor($heightfeet*12);
 					   	echo "<li><strong>". $resultCustom->ProfileCustomTitle .$measurements_label.":</strong> ".$heightfeet."ft ".$heightinch." in</li>\n";
 					} else {
@@ -3602,16 +3588,24 @@ function is_client_profiletype() {
 
 /**
  *
- * convert inches to feet and inches
+ * convert inches to feet and inches or inches to cms
  *
- * @param int $inches
+ * @param int $i
  * @return string
  *
  */
-function display_height($inches) {
-	$feet = floor($inches/12);
-	$inches = $inches % 12;
-	return "$feet ft $inches in";
+function bb_agency_display_height($i) {
+	$units =  bb_agency_get_option('bb_agency_option_unittype');
+	switch ($units) {
+		case 1 :
+			$feet = floor($i/12);
+			$inches = $i % 12;
+			return "$feet ft $inches in";
+
+		case 0 :
+			$cms = intval(2.54 * $i);
+			return "$cms cm";
+	}
 }
 
 /*

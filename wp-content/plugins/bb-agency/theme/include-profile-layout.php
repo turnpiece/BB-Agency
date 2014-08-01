@@ -127,7 +127,7 @@ Profile View with Scrolling Thumbnails and Primary Image
 
 
 
-	if (bb_agency_ismumtobe($ProfileType) && !empty($ProfileDateDue)) {
+	if (bb_agency_SITE_TYPE == 'bumps' && bb_agency_ismumtobe($ProfileType) && !empty($ProfileDateDue)) {
 
 		// if pregnant display due date
 
@@ -135,7 +135,7 @@ Profile View with Scrolling Thumbnails and Primary Image
 
 	}
 
-	if (bb_agency_isbaby($ProfileType) && !empty($ProfileDateBirth)) {
+	if (bb_agency_SITE_TYPE == 'bumps' && bb_agency_isbaby($ProfileType) && !empty($ProfileDateBirth)) {
 
 		// if a family display the baby's date of birth
 
