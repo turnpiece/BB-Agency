@@ -1,7 +1,6 @@
 <table cellspacing="0" class="wp-list-table widefat fixed">
   <thead>
     <tr class="thead">
-      <th class="manage-column column-cb check-column" id="cb" scope="col"><input type="checkbox"/></th>
       <th><a href="<?php echo admin_url("admin.php?page=". $_GET['page'] ."&sort=JobTitle&dir=". $sortDirection) ?>">Job</a></th>
       <th><a href="<?php echo admin_url("admin.php?page=". $_GET['page'] ."&sort=JobClient&dir=". $sortDirection) ?>">Client</a></th>
       <th><a href="<?php echo admin_url("admin.php?page=". $_GET['page'] ."&sort=JobLocation&dir=". $sortDirection) ?>">Location</a></th>
@@ -14,8 +13,7 @@
   <tbody>
 
   <?php foreach ($results as $data) : $id = $data->JobID; ?>
-    <tr class="<?php echo $data->JobPassed != 1 && $data->JobStatus > 0 ? 'active' : ($data->JobCastingInvoiceSent && $data->JobCastingInvoiceNumber && $data->JobShootInvoiceSent && $data->JobShootInvoiceNumber ? 'invoiced inactive' : 'inactive') ?>">
-      <th class="check-column" scope="row"><input type="checkbox" name="JobIDs[]" value="<?php echo $id ?>" id="<?php echo $id ?>" class="administrator" /></th>
+    <tr class="<?php echo $data->JobPassed == 1 ? 'passed' : '' ?> <?php switch ($data->JobStatus) { case 1 : echo 'active'; break; case 2 : echo 'invoiced'; break; case 0: echo 'incative'; break; } ?>">
       <td><a href="<?php echo admin_url('admin.php?page=bb_agency_jobs&amp;action=edit&amp;JobID='.$id) ?>"><?php echo $data->JobTitle ?></a>
         <div class="row-actions">
             <span class="edit">
@@ -38,7 +36,6 @@
   </tbody>
   <tfoot>
     <tr class="thead">
-      <th class="manage-column column-cb check-column" id="cb" scope="col"><input type="checkbox" /></th>
       <th class="column" scope="col">Job</th>
       <th class="column" scope="col">Client</th>
       <th class="column" scope="col">Location</th>
@@ -49,7 +46,3 @@
     </tr>
   </tfoot>
 </table>
-<p class="submit">
-  <input type="hidden" value="delete" name="action" />
-  <input type="submit" value="<?php _e('Delete Jobs') ?>" class="button-primary" name="submit" />
-</p>

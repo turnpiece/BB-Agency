@@ -4,7 +4,6 @@ global $wpdb;
 define("LabelPlural", "jobs");
 define("LabelSingular", "job");
 
-$bb_options = bb_agency_get_option();
 $bb_agency_option_persearch = (int)bb_agency_get_option('bb_agency_option_persearch');
 
 // database tables
@@ -252,9 +251,9 @@ switch ($action) {
         // generate SQL 
         $sql = "SELECT j.*, p.`ProfileContactDisplay` AS ClientName, IF(j.`JobDate` < NOW(), 1, 0) AS JobPassed FROM $t_job j LEFT JOIN $t_profile p ON j.`JobClient` = p.`ProfileID`";
 
-        if (isset($_REQUEST['state'])) {
+        if (!empty($_REQUEST['s'])) {
             // quick filter search
-            $value = $_REQUEST['state'];
+            $value = $_REQUEST['s'];
 
             // Standard fields
             $fields = array(
@@ -264,28 +263,39 @@ switch ($action) {
             );
 
             foreach ($fields as $field) {
-                $where[] = "`$field` LIKE '%$value%'"; 
+                $swhere[] = "`$field` LIKE '%$value%'"; 
             }
 
-            if (!empty($where)) {
-                $sql .= ' WHERE '.implode(' OR ', $where);
+            if (!empty($swhere)) {
+                $where[] = '('.implode(' OR ', $swhere).')';
             }
-            
         }
+
+        if (isset($_REQUEST['JobStatus']) && is_numeric($_REQUEST['JobStatus'])) {
+            $where[] = '`JobStatus` = '.$_REQUEST['JobStatus'];
+        }
+
+        if (!empty($where)) {
+            $sql .= ' WHERE '.implode(' AND ', $where);
+        }
+            
         $sql .= " ORDER BY $sort $dir $limit";
 
         $results = $wpdb->get_results($sql);
 
-        if (count($results)) : ?>
-        <form action="<?php echo admin_url('admin.php?page=' . $_REQUEST['page']) ?>" method="GET">
+        if (count($results) || !empty($where)) : ?>
+        <form action="<?php echo admin_url('admin.php') ?>" method="GET">
+            <input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>" />
         <?php
-            if (count($results) > 0) {
-                // display filter form
-                include('job/filter.php');
-            }
+            // display filter form
+            include('job/filter.php');
+            
             include('job/dashboard_widgets.php');
 
-            include('job/list_full.php'); 
+            if (count($results))
+                include('job/list_full.php');
+            else
+                echo '<div id="message" class="error"><p>No jobs found.</p></div>';
         ?>
         </form>
         <?php

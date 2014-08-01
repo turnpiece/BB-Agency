@@ -48,13 +48,13 @@
                     <tr valign="top">
                         <th scope="row"><?php _e("Status", bb_agency_TEXTDOMAIN) ?>*</th>
                         <td>
-                            <select id="ProfileIsActive" name="JobStatus">
+                            <select id="JobStatus" name="JobStatus">
                                 <?php
                                     $status = bb_agency_get_posted_value('JobStatus', isset($Job) ? $Job : null);
                                     foreach (array( 
                                         1 => __("Active", bb_agency_TEXTDOMAIN),
+                                        2 => __("Invoiced", bb_agency_TEXTDOMAIN),
                                         0 => __("Inactive", bb_agency_TEXTDOMAIN),
-                                        2 => __("Invoiced", bb_agency_TEXTDOMAIN)
                                     ) as $key => $label) : ?>
                                 <option value="<?php echo $key ?>" <?php selected($key, $status) ?>><?php echo $label ?></option>
                                 <?php endforeach; ?>

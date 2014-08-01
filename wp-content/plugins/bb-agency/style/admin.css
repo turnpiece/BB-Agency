@@ -161,9 +161,12 @@ input.stubby { width: 100px; }
 .tablenav .tablenav-pages .current {
     margin-right: 1px;
 }
+tr.passed {
+    background: #EEEEDD;
+}
 
 tr.inactive {
-    background: #FFEBE8;
+    background: #DDDDDD;
 }
 tr.invoiced {
     background: #EEDAD7;
@@ -176,6 +179,12 @@ th.column-ProfileImage {
 }
 #bb_filter.search-box {
     margin: 1em 0;
+}
+
+a.primary-link {
+    display: block;
+    padding: 1em;
+    font-weight: bold;
 }
 
 /* casting cart */
