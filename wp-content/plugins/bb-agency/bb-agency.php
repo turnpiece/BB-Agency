@@ -35,29 +35,29 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 	}
 
 // Plugin Definitions
-	define("bb_agency_BASENAME", plugin_basename(__FILE__) );  // bb-agency/bb-agency.php
-	$bb_agency_WPURL = get_bloginfo("wpurl"); // http://domain.com/wordpress
+	define('bb_agency_BASENAME', plugin_basename(__FILE__) );  // bb-agency/bb-agency.php
+	$bb_agency_WPURL = get_bloginfo('wpurl'); // http://domain.com/wordpress
 	$bb_agency_WPUPLOADARRAY = wp_upload_dir(); // Array  $bb_agency_WPUPLOADARRAY['baseurl'] $bb_agency_WPUPLOADARRAY['basedir']
-	define("bb_agency_BASEDIR", get_bloginfo("wpurl") ."/". PLUGINDIR ."/". dirname( plugin_basename(__FILE__) ) ."/" );  // http://domain.com/wordpress/wp-content/plugins/bb-agency/
-	define("bb_agency_BASEREL", str_replace(get_bloginfo('url'), '', bb_agency_BASEDIR));  // /wordpress/wp-content/uploads/profile-media/
-	define("bb_agency_BASEPATH", plugin_dir_path(__FILE__) );  // wordpress/wp-content/plugins/bb-agency/
-	define("bb_agency_UPLOADREL", str_replace(get_bloginfo('url'), '', $bb_agency_WPUPLOADARRAY['baseurl']) ."/profile-media/" );  // /wordpress/wp-content/uploads/profile-media/
-	define("bb_agency_UPLOADDIR", $bb_agency_WPUPLOADARRAY['baseurl'] ."/profile-media/" );  // http://domain.com/wordpress/wp-content/uploads/profile-media/
-	define("bb_agency_UPLOADPATH", $bb_agency_WPUPLOADARRAY['basedir'] ."/profile-media/" ); // /home/content/99/6048999/html/domain.com/wordpress/wp-content/uploads/profile-media/
-	define("bb_agency_TEXTDOMAIN", basename(dirname( __FILE__ )) ); //   bb-agency
+	define('bb_agency_BASEDIR', get_bloginfo('wpurl') .'/'. PLUGINDIR .'/'. dirname( plugin_basename(__FILE__) ) ."/" );  // http://domain.com/wordpress/wp-content/plugins/bb-agency/
+	define('bb_agency_BASEREL', str_replace(get_bloginfo('url'), '', bb_agency_BASEDIR));  // /wordpress/wp-content/uploads/profile-media/
+	define('bb_agency_BASEPATH', plugin_dir_path(__FILE__) );  // wordpress/wp-content/plugins/bb-agency/
+	define('bb_agency_UPLOADREL', str_replace(get_bloginfo('url'), '', $bb_agency_WPUPLOADARRAY['baseurl']) .'/profile-media/' );  // /wordpress/wp-content/uploads/profile-media/
+	define('bb_agency_UPLOADDIR', $bb_agency_WPUPLOADARRAY['baseurl'] .'/profile-media/' );  // http://domain.com/wordpress/wp-content/uploads/profile-media/
+	define('bb_agency_UPLOADPATH', $bb_agency_WPUPLOADARRAY['basedir'] .'/profile-media/' ); // /home/content/99/6048999/html/domain.com/wordpress/wp-content/uploads/profile-media/
+	define('bb_agency_TEXTDOMAIN', basename(dirname( __FILE__ )) ); //   bb-agency
 	define('bb_agency_SITETYPE', 'children'); // bumps or children
 	//define('bb_agency_TESTING', true);
 	define('bb_agency_TERMS', get_bloginfo('url').'/clients-standard-terms-conditions');
 
 	// email sending
-	define("bb_agency_SEND_EMAILS", false); // whether or not to send emails
+	define('bb_agency_SEND_EMAILS', false); // whether or not to send emails
 	$bb_agency_CURRENT_TYPE_ID = 0; // will contain current type
 	// Clean Up:
 	$pageURL = '';
- 	if ($_SERVER["SERVER_PORT"] != "80") {
-  		$pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+ 	if ($_SERVER['SERVER_PORT'] != "80") {
+  		$pageURL .= $_SERVER['SERVER_NAME'].":".$_SERVER['SERVER_PORT'].$_SERVER['REQUEST_URI'];
  	} else {
-  		$pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+  		$pageURL .= $_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
  	}
 
 // Call Language Options
@@ -79,47 +79,47 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 
 // Set Table Names
 	if (!defined("table_agency_casting"))
-		define("table_agency_casting", "bb_agency_casting");
+		define('table_agency_casting', "bb_agency_casting");
 	if (!defined("table_agency_profile"))
-		define("table_agency_profile", "bb_agency_profile");
+		define('table_agency_profile', "bb_agency_profile");
 	if (!defined("table_agency_job"))
-		define("table_agency_job", "bb_agency_job");
+		define('table_agency_job', "bb_agency_job");
 	if (!defined("table_agency_invoice"))
-		define("table_agency_job", "bb_agency_invoice");
+		define('table_agency_job', "bb_agency_invoice");
 	if (!defined("table_agency_invoice_item"))
-		define("table_agency_job", "bb_agency_invoice_item");
+		define('table_agency_job', "bb_agency_invoice_item");
 	if (!defined("table_agency_profile_media"))
-		define("table_agency_profile_media", "bb_agency_profile_media");
+		define('table_agency_profile_media', "bb_agency_profile_media");
 	if (!defined("table_agency_data_ethnicity"))
-		define("table_agency_data_ethnicity", "bb_agency_data_ethnicity");
+		define('table_agency_data_ethnicity', "bb_agency_data_ethnicity");
 	if (!defined("table_agency_data_colorskin"))
-		define("table_agency_data_colorskin", "bb_agency_data_colorskin");
+		define('table_agency_data_colorskin', "bb_agency_data_colorskin");
 	if (!defined("table_agency_data_coloreye"))
-		define("table_agency_data_coloreye", "bb_agency_data_coloreye");
+		define('table_agency_data_coloreye', "bb_agency_data_coloreye");
 	if (!defined("table_agency_data_colorhair"))
-		define("table_agency_data_colorhair", "bb_agency_data_colorhair");
+		define('table_agency_data_colorhair', "bb_agency_data_colorhair");
 	if (!defined("table_agency_data_gender"))
-		define("table_agency_data_gender", "bb_agency_data_gender");
+		define('table_agency_data_gender', "bb_agency_data_gender");
 	if (!defined("table_agency_rel_taxonomy"))
-		define("table_agency_rel_taxonomy", "bb_agency_rel_taxonomy");
+		define('table_agency_rel_taxonomy', "bb_agency_rel_taxonomy");
 	if (!defined("table_agency_data_type"))
-		define("table_agency_data_type", "bb_agency_data_type");
+		define('table_agency_data_type', "bb_agency_data_type");
 	if (!defined("table_agency_customfields"))
-		define("table_agency_customfields", "bb_agency_customfields");
+		define('table_agency_customfields', "bb_agency_customfields");
 	if (!defined("table_agency_customfield_mux"))
-		define("table_agency_customfield_mux", "bb_agency_customfield_mux");
+		define('table_agency_customfield_mux', "bb_agency_customfield_mux");
 	if (!defined("table_agency_searchsaved"))
-		define("table_agency_searchsaved", "bb_agency_searchsaved");
+		define('table_agency_searchsaved', "bb_agency_searchsaved");
 	if (!defined("table_agency_searchsaved_mux"))
-		define("table_agency_searchsaved_mux", "bb_agency_searchsaved_mux");
+		define('table_agency_searchsaved_mux', "bb_agency_searchsaved_mux");
 	if (!defined("table_agency_savedfavorite"))
-		define("table_agency_savedfavorite", "bb_agency_savedfavorite");	
+		define('table_agency_savedfavorite', "bb_agency_savedfavorite");	
 	if (!defined("table_agency_castingcart"))
-		define("table_agency_castingcart", "bb_agency_castingcart");
+		define('table_agency_castingcart', "bb_agency_castingcart");
 	if (!defined("table_agency_mediacategory"))
-		define("table_agency_mediacategory", "bb_agency_mediacategory");
+		define('table_agency_mediacategory', "bb_agency_mediacategory");
 	if (!defined("table_agency_customfields_types"))
-	define("table_agency_customfields_types", "bb_agency_customfields_types");				
+	define('table_agency_customfields_types', "bb_agency_customfields_types");				
 
 
 // Declare Global WordPress Database Access
@@ -136,7 +136,7 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 // Declare Version
 	$bb_agency_storedversion = get_option("bb_agency_version");
 	$bb_agency_VERSION = get_option("bb_agency_version");	
-	define("bb_agency_VERSION", $bb_agency_VERSION); // e.g. 1.0
+	define('bb_agency_VERSION', $bb_agency_VERSION); // e.g. 1.0
 
 
 // Call default functions
@@ -144,7 +144,7 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 
 
 // Now Call the Lanuage
-	define("bb_agency_PROFILEDIR", get_bloginfo('wpurl') . bb_agency_getActiveLanguage() ."/profile/" ); // http://domain.com/wordpress/de/profile/
+	define('bb_agency_PROFILEDIR', get_bloginfo('wpurl') . bb_agency_getActiveLanguage() ."/profile/" ); // http://domain.com/wordpress/de/profile/
 
 // Load options from database
 	global $bb_options;
@@ -155,11 +155,11 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 // Settings for Beautiful Bumps & Kiddiwinks
 
 	if (bb_agency_get_option('bb_agency_option_pregnant')) {
-		define("bb_agency_MUMSTOBE_ID", 1); // id of mums to be data type
-		define("bb_agency_AFTERBIRTH_ID", 2); // id of data type to move mums to be to once they've given birth
+		define('bb_agency_MUMSTOBE_ID', 1); // id of mums to be data type
+		define('bb_agency_AFTERBIRTH_ID', 2); // id of data type to move mums to be to once they've given birth
 	}
-	define("bb_agency_CLIENTS_ID", 7); // id of clients
-	//define("bb_agency_BABIES_ID", 8); // id of babies
+	define('bb_agency_CLIENTS_ID', 7); // id of clients
+	//define('bb_agency_BABIES_ID', 8); // id of babies
 
 
 // *************************************************************************************************** //

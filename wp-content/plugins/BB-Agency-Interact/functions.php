@@ -114,7 +114,7 @@
 			}
 	 
 	 		$headers = 'From: '. get_option('blogname') .' <'. get_option('admin_email') .'>' . "\r\n";
-			wp_mail($user_email, sprintf(__('%s Registration Successful! Login Details'), get_option('blogname')), $message, $headers);  
+			wp_mail($user_email, sprintf(__('%s Registration Successful! Login Details'), get_option('blogname')), nl2br($message), $headers);  
 	  
 		}  
 	}  
