@@ -33,7 +33,7 @@
         function setData($invoice) {
             $this->invoice = $invoice;
             $this->site_type = bb_agency_SITETYPE;
-            $this->accounts_email = 'zandra@' . ($this->site_type == 'children' ? 'kiddiwinksagency.co.uk' : 'beautifulbumpsagency.co.uk');
+            $this->accounts_email = bb_agency_accounts_email();
         }
 
         function Header() {

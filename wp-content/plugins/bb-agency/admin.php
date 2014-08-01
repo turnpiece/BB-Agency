@@ -458,3 +458,7 @@ function bb_agency_get_genders() {
     $query = 'SELECT `GenderID`, `GenderTitle` FROM `' .  table_agency_data_gender . '` GROUP BY `GenderTitle`';
     return $wpdb->get_results($query, ARRAY_A);
 }
+
+function bb_agency_accounts_email() {
+    return 'zandra@' . (bb_agency_SITETYPE == 'children' ? 'kiddiwinksagency.co.uk' : 'beautifulbumpsagency.co.uk');
+}

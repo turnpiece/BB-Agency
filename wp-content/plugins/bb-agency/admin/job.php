@@ -143,6 +143,7 @@ if ($_POST) {
                 $email = bb_agency_SEND_EMAILS ? $Invoice['ProfileContactEmail'] : get_bloginfo('admin_email');
                 $to = $Invoice['ProfileContactDisplay'].' <'.$email.'>';
                 $headers = 'From: '.get_bloginfo('name').' <'.get_bloginfo('admin_email').'>' . "\r\n";
+                $headers .= 'Bcc: '.bb_agency_accounts_email(). "\r\n";
 
                 if ($_POST['EmailSubject'] && $_POST['EmailMessage'] && $_POST['EmailAttachment']) {
                     $success = wp_mail(
@@ -235,7 +236,7 @@ switch ($action) {
             bb_agency_admin_message('<p>'. sprintf(__("Those %d jobs have been deleted.", bb_agency_TEXTDOMAIN), $i) . '</p>');
         }
         else {
-            bb_agency_admin_message('<p>Unable to delete as no job id was received.</p>');
+            bb_agency_admin_message('<p>Unable to delete as no job id was received.</p>', 'error');
         }
         $action = 'list';
 
@@ -295,7 +296,7 @@ switch ($action) {
             if (count($results))
                 include('job/list_full.php');
             else
-                echo '<div id="message" class="error"><p>No jobs found.</p></div>';
+                bb_agency_admin_message('<p>No jobs found.</p>', 'error');
         ?>
         </form>
         <?php
