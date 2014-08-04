@@ -934,7 +934,7 @@ function bb_display_manage($ProfileID) {
                     $isChecked = " checked";
                     $isCheckedText = " Primary";
                     if ($countImg == 1) {
-                        $toDelete = '<div class="delete"><a href="javascript:confirmDelete("' . $dataImg['ProfileMediaID'] . '","' . $dataImg['ProfileMediaType'] . '")"><span>Delete</span> &raquo;</a></div>';
+                        $toDelete = '<div class="delete"><a href="javascript:confirmDelete(\'' . $dataImg['ProfileMediaID'] . '\',\'' . $dataImg['ProfileMediaType'] . '\')"><span>Delete</span> &raquo;</a></div>';
                     } else {
                         $toDelete = '';
                         $massDelete = '';
@@ -943,7 +943,7 @@ function bb_display_manage($ProfileID) {
                     $styleBackground = "#000000";
                     $isChecked = '';
                     $isCheckedText = " Select";
-                    $toDelete = '<div class="delete"><a href="javascript:confirmDelete("' . $dataImg['ProfileMediaID'] . '","' . $dataImg['ProfileMediaType'] . '")"><span>Delete</span> &raquo;</a></div>';
+                    $toDelete = '<div class="delete"><a href="javascript:confirmDelete(\'' . $dataImg['ProfileMediaID'] . '\',\'' . $dataImg['ProfileMediaType'] . '\')"><span>Delete</span> &raquo;</a></div>';
                     $massDelete = '<input type="checkbox" name="massgaldel" value="' . $dataImg['ProfileMediaID'] . '"> <span style="color:#FFFFFF">Delete</span>';
                 }
                 ?>
@@ -995,39 +995,23 @@ function bb_display_manage($ProfileID) {
             $resultsMedia = mysql_query($queryMedia);
             $countMedia = mysql_num_rows($resultsMedia);
             while ($dataMedia = mysql_fetch_array($resultsMedia)) :
+                $deleteLink = '<a href="javascript:confirmDelete(\'' . $dataMedia['ProfileMediaID'] . '\',\'' . ($dataMedia['ProfileMediaType'] == 'Private' ? 'private file' : strtolower($dataMedia['ProfileMediaType'])) . '\')">DELETE</a>';
+                $galleryDir = bb_agency_UPLOADDIR . $ProfileGallery . '/' . $dataMedia['ProfileMediaURL'];
                 if ($dataMedia['ProfileMediaType'] == "Demo Reel" || 
                     $dataMedia['ProfileMediaType'] == "Video Monologue" || 
-                    $dataMedia['ProfileMediaType'] == "Video Slate") {
-                    $outVideoMedia .= '<div style="float: left; width: 120px; text-align: center; padding: 10px;">' . $dataMedia['ProfileMediaType'] . '<br />' . bb_agency_get_videothumbnail($dataMedia['ProfileMediaURL']) . '<br /><a href=\"http://www.youtube.com/watch?v=' . $dataMedia['ProfileMediaURL'] . '" target="_blank">Link to Video</a><br />[<a href=\"javascript:confirmDelete("' . $dataMedia['ProfileMediaID'] . '","' . $dataMedia['ProfileMediaType'] . '")\">DELETE</a>]</div>';
-                } elseif ($dataMedia['ProfileMediaType'] == "VoiceDemo") {
-                    $outLinkVoiceDemo .= '<div>' . $dataMedia['ProfileMediaType'] . ': <a href="' . bb_agency_UPLOADDIR . $ProfileGallery . '/' . $dataMedia['ProfileMediaURL'] . '" target="_blank">' . $dataMedia['ProfileMediaTitle'] . '</a> [<a href=\"javascript:confirmDelete("' . $dataMedia['ProfileMediaID'] . '","' . $dataMedia['ProfileMediaType'] . '")">DELETE</a>]</div>';
-                } elseif ($dataMedia['ProfileMediaType'] == "Resume") {
-                    $outLinkResume .= '<div>' . $dataMedia['ProfileMediaType'] . ': <a href="' . bb_agency_UPLOADDIR . $ProfileGallery . '/' . $dataMedia['ProfileMediaURL'] . '" target="_blank">' . $dataMedia['ProfileMediaTitle'] . '</a> [<a href=\"javascript:confirmDelete("' . $dataMedia['ProfileMediaID'] . '","' . $dataMedia['ProfileMediaType'] . '")">DELETE</a>]</div>';
-                } elseif ($dataMedia['ProfileMediaType'] == "Headshot") {
-                    $outLinkHeadShot .= '<div>' . $dataMedia['ProfileMediaType'] . ': <a href="' . bb_agency_UPLOADDIR . $ProfileGallery . '/' . $dataMedia['ProfileMediaURL'] . '" target="_blank">' . $dataMedia['ProfileMediaTitle'] . '</a> [<a href="javascript:confirmDelete("' . $dataMedia['ProfileMediaID'] . '","' . $dataMedia['ProfileMediaType'] . '")">DELETE</a>]</div>';
-                } elseif ($dataMedia['ProfileMediaType'] == "CompCard") {
-                    $outLinkComCard .= '<div>' . $dataMedia['ProfileMediaType'] . ': <a href="' . bb_agency_UPLOADDIR . $ProfileGallery . '/' . $dataMedia['ProfileMediaURL'] . '" target="_blank">' . $dataMedia['ProfileMediaTitle'] . '</a> [<a href="javascript:confirmDelete("' . $dataMedia['ProfileMediaID'] . '","' . $dataMedia['ProfileMediaType'] . '")">DELETE</a>]</div>';
-                } else {
-                    $outCustomMediaLink .= '<div>' . $dataMedia['ProfileMediaType'] . ': <a href="' . bb_agency_UPLOADDIR . $ProfileGallery . '/' . $dataMedia['ProfileMediaURL'] . '" target="_blank">' . $dataMedia['ProfileMediaTitle'] . '</a> [<a href="javascript:confirmDelete("' . $dataMedia['ProfileMediaID'] . '","' . $dataMedia['ProfileMediaType'] . '")">DELETE</a>]</div>';
-                }
+                    $dataMedia['ProfileMediaType'] == "Video Slate") : ?>
+                    <div style="float: left; width: 120px; text-align: center; padding: 10px;">
+                        <?php echo $dataMedia['ProfileMediaType'] ?><br />
+                        <?php echo bb_agency_get_videothumbnail($dataMedia['ProfileMediaURL']) ?><br />
+                        <a href="http://www.youtube.com/watch?v=<?php echo $dataMedia['ProfileMediaURL'] ?>" target="_blank">Link to Video</a><br />
+                        [<?php echo $deleteLink ?>]
+                    </div>
+                <?php else : ?>
+                    <div>
+                        <?php echo $dataMedia['ProfileMediaType'] ?>: <a href="<?php echo $galleryDir ?>" target="_blank"><?php echo $dataMedia['ProfileMediaTitle'] ?></a> [<?php echo $deleteLink ?>]
+                    </div>
+                <?php endif;
             endwhile;
-
-        echo '<div style="width:500px;">';
-        echo $outLinkVoiceDemo;
-        echo '</div>';
-        echo '<div style="width:500px;">';
-        echo $outLinkResume;
-        echo '</div>';
-        echo '<div style="width:500px;">';
-        echo $outLinkHeadShot;
-        echo '</div>';
-        echo '<div style="width:500px;">';
-        echo $outLinkComCard;
-        echo '</div>';
-        echo '<div style="width:500px;">';
-        echo $outCustomMediaLink;
-        echo '</div>';
-        echo $outVideoMedia;
 
         if ($countMedia < 1) : ?>
             <div>
