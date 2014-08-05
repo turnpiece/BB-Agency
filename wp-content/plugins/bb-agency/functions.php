@@ -2068,8 +2068,6 @@ function bb_custom_fields_template($visibility = 0, $ProfileID, $data3) {
 		$ProfileCustomValue = $row["ProfileCustomValue"];
 		$ProfileCustomTitle = $data3['ProfileCustomTitle'];
 		$ProfileCustomType  = $data3['ProfileCustomType'];
-
-		echo $ProfileCustomType;
 	
 		// SET Label for Measurements
 		// Imperial(in/lb), Metrics(ft/kg)

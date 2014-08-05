@@ -597,7 +597,6 @@ if ( is_admin() ){
 
 
 	// Emails
-	add_filter('wp_mail_content_type', 'bb_agency_set_content_type');
 	function bb_agency_set_content_type($content_type) {
 	    return 'text/html';
 	}

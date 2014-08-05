@@ -21,20 +21,9 @@ add_action('admin_init', 'bb_agency_register_settings');
 
 // Register our Array of settings
 function bb_agency_register_settings() {
-    register_setting( 'bb-agency-settings-group', 'bb_agency_options' ); //, 'bb_agency_options_validate'
+    register_setting( 'bb-agency-settings-group', 'bb_agency_options' );
     register_setting( 'bb-agency-dummy-settings-group', 'bb_agency_dummy_options' ); //, setup dummy profile options
-}
-// Validate/Sanitize Data
-function bb_agency_options_validate($input) {
-    // Our first value is either 0 or 1
-    //$input['option1'] = ( $input['option1'] == 1 ? 1 : 0 );
-    
-    // Say our second option must be safe text with no HTML tags
-    //$input['sometext'] =  wp_filter_nohtml_kses($input['sometext']);
-    
-    //return $input;
 }   
-
 
 /****************  Settings in Plugin Page ***********************/
 
@@ -259,6 +248,9 @@ EOF;
             $headers[] = 'Bcc: '.$bccEmail;
         }
     }
+
+    // send as html
+    add_filter('wp_mail_content_type', 'bb_agency_set_content_type');
     
     // Mail it
     $headers[] = 'MIME-Version: 1.0';

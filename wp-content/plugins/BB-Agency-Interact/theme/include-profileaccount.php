@@ -74,6 +74,7 @@
 		echo "		<td>\n";
 		echo "			<input type=\"text\" id=\"ProfileContactNameFirst\" name=\"ProfileContactNameFirst\" value=\"". $ProfileContactNameFirst ."\" />\n";
 		echo "		</td>\n";
+		/*
 		echo "	  </tr>\n";
 		echo "    <tr valign=\"top\">\n";
 		echo "		<td scope=\"row\">". __("Last Name", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
@@ -81,6 +82,9 @@
 		echo "			<input type=\"text\" id=\"ProfileContactNameLast\" name=\"ProfileContactNameLast\" value=\"". $ProfileContactNameLast ."\" />\n";
 		echo "		</td>\n";
 		echo "	  </tr>\n";
+		*/
+		// disable editing of last name
+		echo "<input type=\"hidden\" name=\"ProfileContactNameLast\" value=\"". $ProfileContactNameLast ."\" />\n";
 		echo "    <tr valign=\"top\">\n";
 		echo "		<td scope=\"row\">". __("Gender", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 		echo "		<td>";
@@ -113,12 +117,14 @@
 		echo "			<input class=\"bbdatepicker\" type=\"text\" id=\"ProfileDateBirth\" name=\"ProfileDateBirth\" value=\"". $ProfileDateBirth ."\" />\n";
 		echo "		</td>\n";
 		echo "	  </tr>\n";
+		if (defined('bb_agency_SITETYPE') && bb_agency_SITETYPE == 'bumps') :
 		echo "    <tr valign=\"top\">\n";
 		echo "		<td scope=\"row\">". __("Due date", bb_agencyinteract_TEXTDOMAIN) ." <em>YYYY-MM-DD</em></th>\n";
 		echo "		<td>\n";
 		echo "			<input class=\"bbdatepicker\" type=\"text\" id=\"ProfileDateDue\" name=\"ProfileDateDue\" value=\"". $ProfileDateDue ."\" />\n";
 		echo "		</td>\n";
 		echo "	  </tr>\n";
+		endif;
 		// Address
 		echo "    <tr valign=\"top\">\n";
 		echo "		<td scope=\"row\">". __("Street", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";

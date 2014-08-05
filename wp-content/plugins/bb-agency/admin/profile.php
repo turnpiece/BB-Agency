@@ -1,8 +1,10 @@
 <?php
 
+echo network_site_url();
+
 global $wpdb;
-define("LabelPlural", "Profile");
-define("LabelSingular", "Profiles");
+define("LabelPlural", "Profiles");
+define("LabelSingular", "Profile");
 
 $bb_agency_option_agencyimagemaxheight = bb_agency_get_option('bb_agency_option_agencyimagemaxheight');
 if (empty($bb_agency_option_agencyimagemaxheight) || $bb_agency_option_agencyimagemaxheight < 500) {
@@ -611,7 +613,7 @@ function bb_display_manage($ProfileID) {
             ?>    
             <h2 class="title"><?php _e("Edit", bb_agency_TEXTDOMAIN) ?> <?php echo LabelSingular ?> <a class="button-secondary" href="<?php echo admin_url("admin.php?page=" . $_GET['page']) ?>"><?php _e("Back to " . LabelSingular . " List", bb_agency_TEXTDOMAIN) ?></a> <a class="button-primary" href="<?php echo bb_agency_PROFILEDIR . $bb_agency_UPLOADDIR . $ProfileGallery . '/' ?>" target="_blank">Preview Profile</a></h2>
             <p>
-                <?php _e("Make changes in the form below to edit a", bb_agency_TEXTDOMAIN) ?> <?php echo LabelSingular ?> <strong><?php _e("Required fields are marked", bb_agency_TEXTDOMAIN) ?> *</strong>
+                <?php _e("Make changes in the form below to edit a", bb_agency_TEXTDOMAIN) ?> <?php echo strtolower(LabelSingular) ?>.<br /><strong><?php _e("Required fields are marked", bb_agency_TEXTDOMAIN) ?> *</strong>
             </p>
         <?php
         }
@@ -635,216 +637,216 @@ function bb_display_manage($ProfileID) {
     <?php endif; ?>
     <div style="float: left; width: 50%;">
         <table class="form-table">
-    <tbody>
-    <tr colspan="2">
-      <th scope="row"><h3><?php _e("Contact Information", bb_agency_TEXTDOMAIN) ?></h3></th>
-    </tr>
-    <?php if ((!empty($ProfileID) && ($ProfileID > 0)) || ($bb_agency_option_profilenaming == 2)) : // Editing Record ?>
-        <tr valign="top">
-          <th scope="row"><?php _e("Display Name", bb_agency_TEXTDOMAIN) ?></th>
-          <td>
-              <input class="regular-text" type="text" id="ProfileContactDisplay" name="ProfileContactDisplay" value="<?php echo $ProfileContactDisplay ?>" />
-          </td>
-        </tr>
-    <?php endif;
+            <tbody>
+            <tr colspan="2">
+              <th scope="row"><h3><?php _e("Contact Information", bb_agency_TEXTDOMAIN) ?></h3></th>
+            </tr>
+            <?php if ((!empty($ProfileID) && ($ProfileID > 0)) || ($bb_agency_option_profilenaming == 2)) : // Editing Record ?>
+                <tr valign="top">
+                  <th scope="row"><?php _e("Display Name", bb_agency_TEXTDOMAIN) ?></th>
+                  <td>
+                      <input class="regular-text" type="text" id="ProfileContactDisplay" name="ProfileContactDisplay" value="<?php echo $ProfileContactDisplay ? $ProfileContactDisplay : $ProfileContactNameFirst ?>" />
+                  </td>
+                </tr>
+            <?php endif;
 
-    if (!empty($ProfileID) && ($ProfileID > 0)) : // Editing Record ?>
-        <tr valign="top">
-          <th scope="row"><?php _e("Gallery Folder", bb_agency_TEXTDOMAIN) ?></th>
-          <td>
-            <?php if (!empty($ProfileGallery) && is_dir(bb_agency_UPLOADPATH . $ProfileGallery)) : ?>
-            <div>
-                <span class="updated"><?php _e("Folder", bb_agency_TEXTDOMAIN) ?> <strong><?php echo $ProfileGallery ?></strong> <?php _e("Exists", bb_agency_TEXTDOMAIN) ?></span>
-            </div>
-            <input type="hidden" id="ProfileGallery" name="ProfileGallery" value="<?php echo $ProfileGallery ?>" />
-            <?php else : ?>
-            <input type="text" id="ProfileGallery" name="ProfileGallery" value="<?php echo $ProfileGallery ?>" />
-            <div id="message">
-                <span class="error"><?php _e("No Folder Exists", bb_agency_TEXTDOMAIN) ?></span>
+            if (!empty($ProfileID) && ($ProfileID > 0)) : // Editing Record ?>
+                <tr valign="top">
+                  <th scope="row"><?php _e("Gallery Folder", bb_agency_TEXTDOMAIN) ?></th>
+                  <td>
+                    <?php if (!empty($ProfileGallery) && is_dir(bb_agency_UPLOADPATH . $ProfileGallery)) : ?>
+                    <div>
+                        <span class="updated"><?php _e("Folder", bb_agency_TEXTDOMAIN) ?> <strong><?php echo $ProfileGallery ?></strong> <?php _e("Exists", bb_agency_TEXTDOMAIN) ?></span>
+                    </div>
+                    <input type="hidden" id="ProfileGallery" name="ProfileGallery" value="<?php echo $ProfileGallery ?>" />
+                    <?php else : ?>
+                    <input type="text" id="ProfileGallery" name="ProfileGallery" value="<?php echo $ProfileGallery ?>" />
+                    <div id="message">
+                        <span class="error"><?php _e("No Folder Exists", bb_agency_TEXTDOMAIN) ?></span>
+                    <?php endif; ?>
+                    </div>
+                  </td>
+                </tr>
             <?php endif; ?>
-            </div>
-          </td>
-        </tr>
-    <?php endif; ?>
 
-    <tr valign="top" class="required">
-      <th scope="row"><?php _e("First Name", bb_agency_TEXTDOMAIN) ?>*</th>
-      <td>
-          <input type="text" class="regular-text" id="ProfileContactNameFirst" name="ProfileContactNameFirst" value="<?php echo $ProfileContactNameFirst ?>" />
-      </td>
-    </tr>
-    <tr valign="top" class="required">
-      <th scope="row"><?php _e("Last Name", bb_agency_TEXTDOMAIN) ?>*</th>
-      <td>
-          <input type="text" class="regular-text" id="ProfileContactNameLast" name="ProfileContactNameLast" value="<?php echo $ProfileContactNameLast ?>" />
-      </td>
-    </tr>
+            <tr valign="top" class="required">
+              <th scope="row"><?php _e("First Name", bb_agency_TEXTDOMAIN) ?>*</th>
+              <td>
+                  <input type="text" class="regular-text" id="ProfileContactNameFirst" name="ProfileContactNameFirst" value="<?php echo $ProfileContactNameFirst ?>" />
+              </td>
+            </tr>
+            <tr valign="top" class="required">
+              <th scope="row"><?php _e("Last Name", bb_agency_TEXTDOMAIN) ?>*</th>
+              <td>
+                  <input type="text" class="regular-text" id="ProfileContactNameLast" name="ProfileContactNameLast" value="<?php echo $ProfileContactNameLast ?>" />
+              </td>
+            </tr>
 
-    <?php
-    // password
-    if ((isset($_GET["action"]) && $_GET["action"] == "add") && function_exists('bb_agencyinteract_approvemembers')) : ?>
-        <tr valign="top">
-          <th scope="row"><?php _e("Username", bb_agency_TEXTDOMAIN) ?></th>
-          <td>
-              <input type="text" class="regular-text" id="ProfileUsername" name="ProfileUsername" />
-          </td>
-        </tr>
-        <tr valign="top">
-          <th scope="row"><?php _e("Password", bb_agency_TEXTDOMAIN) ?></th>
-          <td>
-              <input type="text" class="regular-text" id="ProfilePassword" name="ProfilePassword" />
-              <input type="button" onclick="javascript:document.getElementById('ProfilePassword').value=Math.random().toString(36).substr(2,6);" value="Generate Password"  name="GeneratePassword" />
-          </td>
-        </tr>
-        <tr valign="top">
-          <th scope="row"><?php _e("Send Login details?", bb_agency_TEXTDOMAIN) ?></th>
-          <td>
-              <input type="checkbox"  name="ProfileNotifyUser" /> Send login details to the new user and admin by email.
-          </td>
-        </tr>
-    <?php endif;
-
-    // Private Information
-    ?>
-    <tr valign="top">
-      <th scope="row" colspan="2"><h3><?php _e("Private Information", bb_agency_TEXTDOMAIN) ?></h3><?php _e("The following information will NOT appear in public areas and is for administrative use only.", bb_agency_TEXTDOMAIN) ?></th>
-    </tr>
-    <tr valign="top" class="required">
-      <th scope="row"><?php _e("Email Address", bb_agency_TEXTDOMAIN) ?>*</th>
-      <td>
-          <input type="text" class="regular-text" id="ProfileContactEmail" name="ProfileContactEmail" value="<?php echo $ProfileContactEmail ?>" />
-      </td>
-    </tr>
-    <tr valign="top">
-      <th scope="row"><?php _e("Website", bb_agency_TEXTDOMAIN) ?></th>
-      <td>
-          <input type="text" class="regular-text" id="ProfileContactWebsite" name="ProfileContactWebsite" value="<?php echo $ProfileContactWebsite ?>" />
-      </td>
-    </tr>
-    <tr valign="top">
-      <th scope="row"><?php _e("Phone", bb_agency_TEXTDOMAIN) ?></th>
-      <td>
-      <fieldset>
-          <label>Home:</label><br />
-          <input type="text" id="ProfileContactPhoneHome" name="ProfileContactPhoneHome" value="<?php echo $ProfileContactPhoneHome ?>" /><br />
-          <label>Mobile:</label><br />
-          <input type="text" id="ProfileContactPhoneCell" name="ProfileContactPhoneCell" value="<?php echo $ProfileContactPhoneCell ?>" /><br />
-          <label>Work:</label><br />
-          <input type="text" id="ProfileContactPhoneWork" name="ProfileContactPhoneWork" value="<?php echo $ProfileContactPhoneWork ?>" /><br />
-      </fieldset>
-      </td>
-    </tr>
-
-    <tr valign="top">
-      <th scope="row"><?php _e("Street", bb_agency_TEXTDOMAIN) ?></th>
-      <td>
-          <input type="text" class="regular-text" id="ProfileLocationStreet" name="ProfileLocationStreet" value="<?php echo $ProfileLocationStreet ?>" />
-      </td>
-    </tr>
-    <tr valign="top">
-      <th scope="row"><?php _e("Town", bb_agency_TEXTDOMAIN) ?></th>
-      <td>
-          <input type="text" class="regular-text" id="ProfileLocationCity" name="ProfileLocationCity" value="<?php echo $ProfileLocationCity ?>" />
-      </td>
-    </tr>
-    <tr valign="top">
-      <th scope="row"><?php _e("County", bb_agency_TEXTDOMAIN) ?></th>
-      <td>
-          <input type="text" class="regular-text" id="ProfileLocationState" name="ProfileLocationState" value="<?php echo $ProfileLocationState ?>" />
-      </td>
-    </tr>
-    <tr valign="top">
-      <th scope="row"><?php _e("Post code", bb_agency_TEXTDOMAIN) ?></th>
-      <td>
-          <input type="text" id="ProfileLocationZip" name="ProfileLocationZip" value="<?php echo $ProfileLocationZip ?>" />
-      </td>
-    </tr>
-    <tr valign="top">
-      <th scope="row"><?php _e("Country", bb_agency_TEXTDOMAIN) ?></th>
-      <td>
-          <input type="text" class="regular-text" id="ProfileLocationCountry" name="ProfileLocationCountry" value="<?php echo $ProfileLocationCountry ?>" />
-      </td>
-    </tr>
-    <?php
-    // display location map
-    if ($ProfileLocationLatitude != '' && $ProfileLocationLongitude != '') : ?>
-        <tr valign="top">
-            <td scope="row"><?php _e('Location', bb_agency_TEXTDOMAIN) ?></td>
-            <td><?php bb_agency_map($ProfileLocationLatitude, $ProfileLocationLongitude, $ProfileContactDisplay) ?></td>
-        </tr>
-    <?php endif;
-
-    // Custom Admin Fields
-    // ProfileCustomView = 1 , Private
-    if (isset($_GET["ProfileGender"])) {
-        $ProfileGender = $_GET["ProfileGender"];
-        bb_custom_fields(1, 0, $ProfileGender, true);
-    } else {
-        bb_custom_fields(1, $ProfileID, $ProfileGender, true);
-    }
-
-    // Public Information
-    ?>
-    <tr valign="top">
-        <th scope="row" colspan="2">
-            <h3><?php _e("Public Information", bb_agency_TEXTDOMAIN) ?></h3>
-            The following information may appear in profile pages.
-        </th>
-    </tr>
-    <?php
-        // get available genders
-        $genders = bb_agency_get_genders();
-
-        if (!empty($genders)) : ?>
-    <tr valign="top">
-        <th scope="row"><?php _e("Gender", bb_agency_TEXTDOMAIN) ?></th>
-        <td>
-            <select name="ProfileGender" id="ProfileGender">
             <?php
-            $ProfileGender1 = get_user_meta($ProfileUserLinked, 'bb_agency_interact_pgender', true);
-           
-        	if ($ProfileGender=='') {
-        		$ProfileGender = $_GET["ProfileGender"];
-        	} elseif ($ProfileGender1 != '') {
-        		$ProfileGender = $ProfileGender1;
-        	}
-        	
-            if (empty($GenderID) || ($GenderID < 1)) {
-                echo '<option value="0" selected>--</option>';
-            }
-            foreach ($genders as $gender) : ?>
-                 <option value="<?php echo $gender['GenderID'] ?>" <?php selected($ProfileGender, $gender["GenderID"]) ?>><?php echo $gender['GenderTitle'] ?></option>
-            <?php endforeach; ?>
-            </select>
-        </td>
-    </tr>
-    <?php endif; // end of genders ?>
-    <tr valign="top">
-        <th scope="row"><?php _e("Birth date", bb_agency_TEXTDOMAIN) ?> <em>YYYY-MM-DD</em></th>
-        <td>
-            <input class="bbdatepicker" type="text" id="ProfileDateBirth" name="ProfileDateBirth" value="<?php echo $ProfileDateBirth ?>" />
-        </td>
-    </tr>
-    <?php if (bb_agency_SITETYPE == 'bumps') : ?>
-        <tr valign="top">
-            <th scope="row"><?php _e("Due date", bb_agency_TEXTDOMAIN) ?><em>YYYY-MM-DD</em></th>
-            <td>
-                <input class="bbdatepicker" type="text" id="ProfileDateDue" name="ProfileDateDue" value="<?php echo $ProfileDateDue ?>" />
-            </td>
-        </tr>
-    <?php endif;
+            // password
+            if ((isset($_GET["action"]) && $_GET["action"] == "add") && function_exists('bb_agencyinteract_approvemembers')) : ?>
+                <tr valign="top">
+                  <th scope="row"><?php _e("Username", bb_agency_TEXTDOMAIN) ?></th>
+                  <td>
+                      <input type="text" class="regular-text" id="ProfileUsername" name="ProfileUsername" />
+                  </td>
+                </tr>
+                <tr valign="top">
+                  <th scope="row"><?php _e("Password", bb_agency_TEXTDOMAIN) ?></th>
+                  <td>
+                      <input type="text" class="regular-text" id="ProfilePassword" name="ProfilePassword" />
+                      <input type="button" onclick="javascript:document.getElementById('ProfilePassword').value=Math.random().toString(36).substr(2,6);" value="Generate Password"  name="GeneratePassword" />
+                  </td>
+                </tr>
+                <tr valign="top">
+                  <th scope="row"><?php _e("Send Login details?", bb_agency_TEXTDOMAIN) ?></th>
+                  <td>
+                      <input type="checkbox"  name="ProfileNotifyUser" /> Send login details to the new user and admin by email.
+                  </td>
+                </tr>
+            <?php endif;
 
-    // Load custom fields , Public  = 0, ProfileCustomGender = true
-    // ProfileCustomView = 1 , Private
-    if (isset($_GET["ProfileGender"])) {
-        $ProfileGender = $_GET["ProfileGender"];
-        bb_custom_fields(0, 0, $ProfileGender, true);
-    } else {
-        bb_custom_fields(0, $ProfileID, $ProfileGender, true);
-    }
-    ?>
-    </tbody>
-    </table>
+            // Private Information
+            ?>
+            <tr valign="top">
+              <th scope="row" colspan="2"><h3><?php _e("Private Information", bb_agency_TEXTDOMAIN) ?></h3><?php _e("The following information will NOT appear in public areas and is for administrative use only.", bb_agency_TEXTDOMAIN) ?></th>
+            </tr>
+            <tr valign="top" class="required">
+              <th scope="row"><?php _e("Email Address", bb_agency_TEXTDOMAIN) ?>*</th>
+              <td>
+                  <input type="text" class="regular-text" id="ProfileContactEmail" name="ProfileContactEmail" value="<?php echo $ProfileContactEmail ?>" />
+              </td>
+            </tr>
+            <tr valign="top">
+              <th scope="row"><?php _e("Website", bb_agency_TEXTDOMAIN) ?></th>
+              <td>
+                  <input type="text" class="regular-text" id="ProfileContactWebsite" name="ProfileContactWebsite" value="<?php echo $ProfileContactWebsite ?>" />
+              </td>
+            </tr>
+            <tr valign="top">
+              <th scope="row"><?php _e("Phone", bb_agency_TEXTDOMAIN) ?></th>
+              <td>
+              <fieldset>
+                  <label>Home:</label><br />
+                  <input type="text" id="ProfileContactPhoneHome" name="ProfileContactPhoneHome" value="<?php echo $ProfileContactPhoneHome ?>" /><br />
+                  <label>Mobile:</label><br />
+                  <input type="text" id="ProfileContactPhoneCell" name="ProfileContactPhoneCell" value="<?php echo $ProfileContactPhoneCell ?>" /><br />
+                  <label>Work:</label><br />
+                  <input type="text" id="ProfileContactPhoneWork" name="ProfileContactPhoneWork" value="<?php echo $ProfileContactPhoneWork ?>" /><br />
+              </fieldset>
+              </td>
+            </tr>
+
+            <tr valign="top">
+              <th scope="row"><?php _e("Street", bb_agency_TEXTDOMAIN) ?></th>
+              <td>
+                  <input type="text" class="regular-text" id="ProfileLocationStreet" name="ProfileLocationStreet" value="<?php echo $ProfileLocationStreet ?>" />
+              </td>
+            </tr>
+            <tr valign="top">
+              <th scope="row"><?php _e("Town", bb_agency_TEXTDOMAIN) ?></th>
+              <td>
+                  <input type="text" class="regular-text" id="ProfileLocationCity" name="ProfileLocationCity" value="<?php echo $ProfileLocationCity ?>" />
+              </td>
+            </tr>
+            <tr valign="top">
+              <th scope="row"><?php _e("County", bb_agency_TEXTDOMAIN) ?></th>
+              <td>
+                  <input type="text" class="regular-text" id="ProfileLocationState" name="ProfileLocationState" value="<?php echo $ProfileLocationState ?>" />
+              </td>
+            </tr>
+            <tr valign="top">
+              <th scope="row"><?php _e("Post code", bb_agency_TEXTDOMAIN) ?></th>
+              <td>
+                  <input type="text" id="ProfileLocationZip" name="ProfileLocationZip" value="<?php echo $ProfileLocationZip ?>" />
+              </td>
+            </tr>
+            <tr valign="top">
+              <th scope="row"><?php _e("Country", bb_agency_TEXTDOMAIN) ?></th>
+              <td>
+                  <input type="text" class="regular-text" id="ProfileLocationCountry" name="ProfileLocationCountry" value="<?php echo $ProfileLocationCountry ?>" />
+              </td>
+            </tr>
+            <?php
+            // display location map
+            if ($ProfileLocationLatitude != '' && $ProfileLocationLongitude != '') : ?>
+                <tr valign="top">
+                    <td scope="row"><?php _e('Location', bb_agency_TEXTDOMAIN) ?></td>
+                    <td><?php bb_agency_map($ProfileLocationLatitude, $ProfileLocationLongitude, $ProfileContactDisplay) ?></td>
+                </tr>
+            <?php endif;
+
+            // Custom Admin Fields
+            // ProfileCustomView = 1 , Private
+            if (isset($_GET["ProfileGender"])) {
+                $ProfileGender = $_GET["ProfileGender"];
+                bb_custom_fields(1, 0, $ProfileGender, true);
+            } else {
+                bb_custom_fields(1, $ProfileID, $ProfileGender, true);
+            }
+
+            // Public Information
+            ?>
+            <tr valign="top">
+                <th scope="row" colspan="2">
+                    <h3><?php _e("Public Information", bb_agency_TEXTDOMAIN) ?></h3>
+                    The following information may appear in profile pages.
+                </th>
+            </tr>
+            <?php
+                // get available genders
+                $genders = bb_agency_get_genders();
+
+                if (!empty($genders)) : ?>
+            <tr valign="top">
+                <th scope="row"><?php _e("Gender", bb_agency_TEXTDOMAIN) ?></th>
+                <td>
+                    <select name="ProfileGender" id="ProfileGender">
+                    <?php
+                    $ProfileGender1 = get_user_meta($ProfileUserLinked, 'bb_agency_interact_pgender', true);
+                   
+                	if ($ProfileGender=='') {
+                		$ProfileGender = $_GET["ProfileGender"];
+                	} elseif ($ProfileGender1 != '') {
+                		$ProfileGender = $ProfileGender1;
+                	}
+                	
+                    if (empty($GenderID) || ($GenderID < 1)) {
+                        echo '<option value="0" selected>--</option>';
+                    }
+                    foreach ($genders as $gender) : ?>
+                         <option value="<?php echo $gender['GenderID'] ?>" <?php selected($ProfileGender, $gender["GenderID"]) ?>><?php echo $gender['GenderTitle'] ?></option>
+                    <?php endforeach; ?>
+                    </select>
+                </td>
+            </tr>
+            <?php endif; // end of genders ?>
+            <tr valign="top">
+                <th scope="row"><?php _e("Birth date", bb_agency_TEXTDOMAIN) ?> <em>YYYY-MM-DD</em></th>
+                <td>
+                    <input class="bbdatepicker" type="text" id="ProfileDateBirth" name="ProfileDateBirth" value="<?php echo $ProfileDateBirth ?>" />
+                </td>
+            </tr>
+            <?php if (bb_agency_SITETYPE == 'bumps') : ?>
+                <tr valign="top">
+                    <th scope="row"><?php _e("Due date", bb_agency_TEXTDOMAIN) ?><em>YYYY-MM-DD</em></th>
+                    <td>
+                        <input class="bbdatepicker" type="text" id="ProfileDateDue" name="ProfileDateDue" value="<?php echo $ProfileDateDue ?>" />
+                    </td>
+                </tr>
+            <?php endif;
+
+            // Load custom fields , Public  = 0, ProfileCustomGender = true
+            // ProfileCustomView = 1 , Private
+            if (isset($_GET["ProfileGender"])) {
+                $ProfileGender = $_GET["ProfileGender"];
+                bb_custom_fields(0, 0, $ProfileGender, true);
+            } else {
+                bb_custom_fields(0, $ProfileID, $ProfileGender, true);
+            }
+            ?>
+            </tbody>
+        </table>
     </div>
 
     <div id="profile-manage-media" style="float: left; width: 50%; ">
