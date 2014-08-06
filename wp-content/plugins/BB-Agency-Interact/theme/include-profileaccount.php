@@ -163,7 +163,7 @@
 		echo "		<td scope=\"row\">". __("Phone", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 		echo "		<td>\n";
 		echo "			<label style=\"width: 50px;float:left;line-height: 24px;\">Home:</label> <input type=\"text\" style=\"width: 144px;\" id=\"ProfileContactPhoneHome\" name=\"ProfileContactPhoneHome\" value=\"". $ProfileContactPhoneHome ."\" /><br />\n";
-		echo "			<label style=\"width: 50px;float:left;line-height: 24px;\">Cell:</label> <input type=\"text\" style=\"width: 144px;\" id=\"ProfileContactPhoneCell\" name=\"ProfileContactPhoneCell\" value=\"". $ProfileContactPhoneCell ."\" /><br />\n";
+		echo "			<label style=\"width: 50px;float:left;line-height: 24px;\">Mobile:</label> <input type=\"text\" style=\"width: 144px;\" id=\"ProfileContactPhoneCell\" name=\"ProfileContactPhoneCell\" value=\"". $ProfileContactPhoneCell ."\" /><br />\n";
 		echo "			<label style=\"width: 50px;float:left;line-height: 24px;\">Work:</label> <input type=\"text\" style=\"width: 144px;\" id=\"ProfileContactPhoneWork\" name=\"ProfileContactPhoneWork\" value=\"". $ProfileContactPhoneWork ."\" /><br />\n";
 		echo "		</td>\n";
 		echo "	  </tr>\n";
