@@ -3347,9 +3347,9 @@ function send_email_lp($login, $password, $email) {
     
     $message = nl2br($message);
 
-    add_filter('wp_mail_content_type', create_function('', 'return "text/html"; '));
+    add_filter( 'wp_mail_content_type', 'bb_agency_set_content_type' );
     wp_mail($email, $subject, $message, $headers);
-    remove_filter( 'wp_mail_content_type', 'set_html_content_type' );
+    remove_filter( 'wp_mail_content_type', 'bb_agency_set_content_type' );
     
 }
 

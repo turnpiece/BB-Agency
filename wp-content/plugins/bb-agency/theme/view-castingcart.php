@@ -76,10 +76,7 @@ if(isset($_POST["action"]) && $_POST["action"] == "sendEmailCastingCart"){
 			
 	$SearchMuxMessage = str_replace("[casting-link-placeholder]",network_site_url()."/client-view/".$SearchMuxHash,$SearchMuxMessage);
 
-	add_filter('wp_mail_content_type','bb_agency_set_content_type');
-	function bb_agency_set_content_type($content_type){
-		return 'text/html';
-	}
+	add_filter('wp_mail_content_type', 'bb_agency_set_content_type');
 			
 	// Mail it
 	$headers  = 'MIME-Version: 1.0' . "\r\n";
@@ -94,7 +91,9 @@ if(isset($_POST["action"]) && $_POST["action"] == "sendEmailCastingCart"){
 	}
  
   	$isSent = wp_mail($SearchMuxToEmail, $SearchMuxSubject, $SearchMuxMessage, $headers);
-    if($isSent){
+  	remove_filter( 'wp_mail_content_type', 'bb_agency_set_content_type' );
+
+    if ($isSent) {
 		wp_redirect(network_site_url()."/profile-casting-cart/?emailSent");  exit;	
 	}	
 }

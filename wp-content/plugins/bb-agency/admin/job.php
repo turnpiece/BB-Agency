@@ -146,6 +146,10 @@ if ($_POST) {
                 $headers .= 'Bcc: '.bb_agency_accounts_email(). "\r\n";
 
                 if ($_POST['EmailSubject'] && $_POST['EmailMessage'] && $_POST['EmailAttachment']) {
+                    // set email to html
+                    add_filter( 'wp_mail_content_type', 'bb_agency_set_content_type' );
+
+                    // send the email
                     $success = wp_mail(
                         $to, 
                         $_POST['EmailSubject'],
@@ -153,6 +157,8 @@ if ($_POST) {
                         $headers,
                         $_POST['EmailAttachment']
                     );
+
+                    remove_filter( 'wp_mail_content_type', 'bb_agency_set_content_type' );
 
                     if ($success) {
                         bb_agency_admin_message('<p>' . sprintf(__('Invoice sent to %s', bb_agency_TEXTDOMAIN), htmlspecialchars($to)) . '</p>');
