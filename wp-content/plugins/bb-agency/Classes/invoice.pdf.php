@@ -128,7 +128,7 @@
 
             $this->standard_font();
 
-            $address = $this->ficonv('ProfileContactDisplay')."\r\n";
+            $address = $this->ficonv('ProfileContactDisplay');
             foreach (array(
                 'ProfileLocationStreet', 
                 'ProfileLocationCity', 
@@ -148,7 +148,7 @@
             $col_width_r = self::PAGE_WIDTH - self::RIGHT - self::LEFT;
             $this->debug("column width = $col_width");
 
-            $this->v_space(7);
+            $this->v_space(9);
 
             $this->SetX(self::LEFT);
             $this->standard_font(true);
