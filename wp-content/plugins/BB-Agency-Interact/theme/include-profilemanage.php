@@ -1,4 +1,5 @@
 <?php
+	global $wpdb;
 	global $user_ID; 
 	global $current_user;
 	get_currentuserinfo();
@@ -9,49 +10,52 @@
 		$bb_agency_option_locationtimezone 		= (int)$bb_agency_options_arr['bb_agency_option_locationtimezone'];
 	// Get Values
 	$query = "SELECT * FROM " . table_agency_profile . " WHERE ProfileUserLinked='$ProfileUserLinked'";
-	$results = mysql_query($query) or die ( __("Error, query failed", bb_agencyinteract_TEXTDOMAIN ));
-	$count = mysql_num_rows($results);
-        /*
-         * Get profile type and Gender
-         */
-        $ptype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
+	$data = $wpdb->get_row($query, ARRAY_A);
+
+    /*
+     * Get profile type and Gender
+     */
+    $ptype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
 	$ptype = retrieve_title($ptype);
-        $ProfileGender = get_user_meta($current_user->id, "bb_agency_interact_pgender", true);
-        $ProfileTypeArray = array();
-        $profileType = ""; 
-        $ptype1 = get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
-        $ProfileTypeArray = explode(",", $ptype1);
-        $query3 = "SELECT * FROM " . table_agency_data_type . " ORDER BY DataTypeTitle";
-        $results3 = mysql_query($query3);
-        $count3 = mysql_num_rows($results3);
-		$i=1; 
-        while ($data3 = mysql_fetch_array($results3)) {
-
-            if (in_array($data3['DataTypeID'], $ProfileTypeArray)){
-                 $profileType .=  $data3['DataTypeTitle'] ;
-		
-		 if($i<$count3){
-			
-				$profileType .=  "&nbsp;,&nbsp;";
-				  }
-               }
-			$i++; 
+    $ProfileGender = get_user_meta($current_user->id, "bb_agency_interact_pgender", true);
+    if (empty($ProfileGender)) {
+    	update_usermeta($current_user->id, 'bb_agency_interact_pgender', $data['ProfileGender']);
+    	$ProfileGender = $data['ProfileGender'];
+    }
+    $ProfileTypeArray = array();
+    $profileType = ""; 
+    $ptype1 = get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
+    if (empty($ptype)) {
+    	// Model or Client
+		update_usermeta($current_user->id, 'bb_agency_interact_profiletype', $data['ProfileType']);
+		$ptype = $data['ProfileType'];
+    }
+    $ProfileTypeArray = explode(",", $ptype1);
+    $query3 = "SELECT * FROM " . table_agency_data_type . " ORDER BY DataTypeTitle";
+    $results3 = mysql_query($query3);
+    $count3 = mysql_num_rows($results3);
+	$i=1;
+	$ptypes = array();
+    while ($data3 = mysql_fetch_array($results3)) {
+        if (in_array($data3['DataTypeID'], $ProfileTypeArray)) {
+             $ptypes[] =  $data3['DataTypeTitle'];
         }
+    }
+    $profileType = implode(', ', $ptypes);
                 
-	while ($data = mysql_fetch_array($results)) {
-		$ProfileID					=$data['ProfileID'];
-		$ProfileUserLinked			=$data['ProfileUserLinked'];
-		$ProfileDateUpdated			=stripslashes($data['ProfileDateUpdated']);
-		$ProfileType				=stripslashes($data['ProfileType']);
-		echo "<form method=\"post\" enctype=\"multipart/form-data\" action=\"". get_bloginfo("wpurl") ."/profile-member/manage/\">\n";
-		echo "     <input type=\"hidden\" name=\"ProfileID\" value=\"". $ProfileID ."\" />\n";
-		echo "     <input type=\"hidden\" name=\"ProfileType\" value=\"". $ptype1 ."\" />\n";
-		
+	$ProfileID					=$data['ProfileID'];
+	$ProfileUserLinked			=$data['ProfileUserLinked'];
+	$ProfileDateUpdated			=stripslashes($data['ProfileDateUpdated']);
+	$ProfileType				=stripslashes($data['ProfileType']);
+	echo "<form method=\"post\" enctype=\"multipart/form-data\" action=\"". get_bloginfo("wpurl") ."/profile-member/manage/\">\n";
+	echo "     <input type=\"hidden\" name=\"ProfileID\" value=\"". $ProfileID ."\" />\n";
+	echo "     <input type=\"hidden\" name=\"ProfileType\" value=\"". $ptype1 ."\" />\n";
+	
 
-		echo "<p>";
-		echo "<label style=\"width:200px; float:left;\" for=\"classification\">". __("Classification:", bb_agencyinteract_TEXTDOMAIN) ."</label>";
-		echo "		".$profileType;
-		echo "</p>";
+	echo "<p>";
+	echo "<label style=\"width:200px; float:left;\" for=\"classification\">". __("Classification:", bb_agencyinteract_TEXTDOMAIN) ."</label>";
+	echo "		".$profileType;
+	echo "</p>";
 
 	/*
 	 *   added this new custom field display 
@@ -78,14 +82,15 @@
 						
 		$result = mysql_query($get_types);
 		$types = "";				
-		while ( $p = mysql_fetch_array($result)){
-		// 	$types = $p['ProfileCustomTypes'];		
-		$types = str_replace("_", " ", $p['ProfileCustomTypes']);	    
+		while ( $p = mysql_fetch_array($result)){	
+			$types = str_replace("_", " ", $p['ProfileCustomTypes']);	    
 		}
 		
-		if($types != "" || $types != NULL){
-		   $types = explode(",",$types); 
-		   if(in_array($ptype,$types)){ $permit_type=true; } 
+		if ($types != "" || $types != NULL) {
+		   	$types = explode(",",$types); 
+		   	if(in_array($ptype,$types)){ 
+		   		$permit_type=true; 
+		   	} 
 		} 
 		
 		echo'<input type="hidden" name="aps12" value="'.$data3["ProfileCustomShowGender"].'" >';
@@ -96,35 +101,31 @@
 		$ProfileCustomTitle = $data3['ProfileCustomTitle'];
 		$ProfileCustomType  = $data3['ProfileCustomType'];
 	       
-			 //  SET Label for Measurements
-			 //  Imperial(in/lb), Metrics(ft/kg)
-			 $bb_agency_options_arr = get_option('bb_agency_options');
-			 $bb_agency_option_unittype  = $bb_agency_options_arr['bb_agency_option_unittype'];
-			 $measurements_label = "";
+		 //  SET Label for Measurements
+		 //  Imperial(in/lb), Metrics(ft/kg)
+		 $bb_agency_options_arr = get_option('bb_agency_options');
+		 $bb_agency_option_unittype  = $bb_agency_options_arr['bb_agency_option_unittype'];
+		 $measurements_label = "";
 
-			 if ($ProfileCustomType == 7) { //measurements field type
-
-			            if($bb_agency_option_unittype ==0){ // 0 = Metrics(ft/kg)
-						
-								if($data3['ProfileCustomOptions'] == 1){
-									 $measurements_label  ="<em> (cm)</em>";
-								}elseif($data3['ProfileCustomOptions'] == 2){
-									 $measurements_label  ="<em> (kg)</em>";
-								}elseif($data3['ProfileCustomOptions'] == 3){
-								  $measurements_label  ="<em> (In Inches/Feet)</em>";
-								}
-					    }elseif($bb_agency_option_unittype ==1){ //1 = Imperial(in/lb)
-								if($data3['ProfileCustomOptions'] == 1){
-									 $measurements_label  ="<em> (In Inches)</em>";
-								}elseif($data3['ProfileCustomOptions'] == 2){
-								  $measurements_label  ="<em> (In Pounds)</em>";
-								}elseif($data3['ProfileCustomOptions'] == 3){
-								  $measurements_label  ="<em> (In Inches/Feet)</em>";
-								}
-						}
-
-					
-			 }  
+		 if ($ProfileCustomType == 7) { //measurements field type
+	        if($bb_agency_option_unittype ==0){ // 0 = Metrics(ft/kg)	
+				if($data3['ProfileCustomOptions'] == 1){
+					 $measurements_label  ="<em> (cm)</em>";
+				}elseif($data3['ProfileCustomOptions'] == 2){
+					 $measurements_label  ="<em> (kg)</em>";
+				}elseif($data3['ProfileCustomOptions'] == 3){
+				  $measurements_label  ="<em> (In Inches/Feet)</em>";
+				}
+		    }elseif($bb_agency_option_unittype ==1){ //1 = Imperial(in/lb)
+				if($data3['ProfileCustomOptions'] == 1){
+					 $measurements_label  ="<em> (In Inches)</em>";
+				}elseif($data3['ProfileCustomOptions'] == 2){
+				  $measurements_label  ="<em> (In Pounds)</em>";
+				}elseif($data3['ProfileCustomOptions'] == 3){
+				  $measurements_label  ="<em> (In Inches/Feet)</em>";
+				}
+			}			
+		 }  
 		 
 		 	 
 		 echo "<p class=\"form-".strtolower(trim($data3['ProfileCustomTitle']))." "
@@ -144,41 +145,40 @@
 			
 		elseif ($ProfileCustomType == 2) { // Min Max
 			
-				$ProfileCustomOptions_String = str_replace(",",":",
-				                               strtok(strtok($data3['ProfileCustomOptions'],"}"),"{"));
-				
-				list($ProfileCustomOptions_Min_label,$ProfileCustomOptions_Min_value,
-				$ProfileCustomOptions_Max_label,$ProfileCustomOptions_Max_value) 
-				= explode(":", $ProfileCustomOptions_String);
-			 
-				if (!empty($ProfileCustomOptions_Min_value) && !empty($ProfileCustomOptions_Max_value)) {
-						
-					   echo "<br /><br /> <label style='width:200px; float:left;' for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">"
-						     . __("Min", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
-					   echo "<input type=\"text\" name=\"ProfileCustomID". $data3['ProfileCustomID'] 
-						     ."\" value=\"". 
-							 retrieve_datavalue($ProfileCustomOptions_Min_value,
-				 								$data3['ProfileCustomID'],$ProfileID,"textbox")
-							  ."\" />\n";
-					   echo "<br /><br /><br /><label style='width:200px; float:left;' for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">"
-						    . __("Max", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
-					   echo "<input type=\"text\" name=\"ProfileCustomID". $data3['ProfileCustomID'] ."\" value=\""
-					        .  retrieve_datavalue($ProfileCustomOptions_Max_value,
-				 								  $data3['ProfileCustomID'],$ProfileID,"textbox") ."\" /><br />\n";
-				
-				} else {
-						echo "<br /><br />  <label style='width:200px; float:left;' for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">"
-						     . __("Min", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
-						echo "<input type=\"text\" name=\"ProfileCustomID". $data3['ProfileCustomID'] ."\" value=\""
-						     .retrieve_datavalue($_REQUEST["ProfileCustomID". $data3['ProfileCustomID']],
-				 									$data3['ProfileCustomID'],$ProfileID,"textbox") ."\" />\n";
-						echo "<br /><br /><br /><label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">"
-						     . __("Max", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
-						echo "<input type=\"text\" name=\"ProfileCustomID". $data3['ProfileCustomID'] ."\" value=\""
-						     .retrieve_datavalue($_REQUEST["ProfileCustomID". $data3['ProfileCustomID']],
-				 									$data3['ProfileCustomID'],$ProfileID,"textbox") ."\" /><br />\n";
-				}
-			 
+			$ProfileCustomOptions_String = str_replace(",",":",
+			                               strtok(strtok($data3['ProfileCustomOptions'],"}"),"{"));
+			
+			list($ProfileCustomOptions_Min_label,$ProfileCustomOptions_Min_value,
+			$ProfileCustomOptions_Max_label,$ProfileCustomOptions_Max_value) 
+			= explode(":", $ProfileCustomOptions_String);
+		 
+			if (!empty($ProfileCustomOptions_Min_value) && !empty($ProfileCustomOptions_Max_value)) {
+					
+				echo "<br /><br /> <label style='width:200px; float:left;' for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">"
+				     . __("Min", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+				echo "<input type=\"text\" name=\"ProfileCustomID". $data3['ProfileCustomID'] 
+				     ."\" value=\"". 
+					 retrieve_datavalue($ProfileCustomOptions_Min_value,
+											$data3['ProfileCustomID'],$ProfileID,"textbox")
+					  ."\" />\n";
+				echo "<br /><br /><br /><label style='width:200px; float:left;' for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">"
+				    . __("Max", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+				echo "<input type=\"text\" name=\"ProfileCustomID". $data3['ProfileCustomID'] ."\" value=\""
+				    .  retrieve_datavalue($ProfileCustomOptions_Max_value,
+											  $data3['ProfileCustomID'],$ProfileID,"textbox") ."\" /><br />\n";
+			
+			} else {
+				echo "<br /><br />  <label style='width:200px; float:left;' for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">"
+				     . __("Min", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+				echo "<input type=\"text\" name=\"ProfileCustomID". $data3['ProfileCustomID'] ."\" value=\""
+				     .retrieve_datavalue($_REQUEST["ProfileCustomID". $data3['ProfileCustomID']],
+												$data3['ProfileCustomID'],$ProfileID,"textbox") ."\" />\n";
+				echo "<br /><br /><br /><label for=\"ProfileCustomLabel_min\" style=\"text-align:right;\">"
+				     . __("Max", bb_agency_TEXTDOMAIN) . "&nbsp;&nbsp;</label>\n";
+				echo "<input type=\"text\" name=\"ProfileCustomID". $data3['ProfileCustomID'] ."\" value=\""
+				     .retrieve_datavalue($_REQUEST["ProfileCustomID". $data3['ProfileCustomID']],
+												$data3['ProfileCustomID'],$ProfileID,"textbox") ."\" /><br />\n";
+			} 
 		} 
 			
 		elseif ($ProfileCustomType == 3) {  // Drop Down
@@ -294,24 +294,24 @@
 				 .'" /><br />';
 			   }
 			}
-									
+										
 	    echo "</p>\n";
-		   
-		   } // end if
-		   	
-        }// End while
+	   
+	   } // end if
+	   	
+    }// End while
 
-		echo " <table class=\"form-table\">\n";
-		echo "	<tbody>\n";
-		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\"><span style=\"width:185px;float:left;\">". __("Last updated ", bb_agencyinteract_TEXTDOMAIN) ." ". bb_agency_makeago(bb_agency_convertdatetime($ProfileDateUpdated), $bb_agency_option_locationtimezone) ."</span></th>\n";
-		echo "		<td>\n";
-		echo "			<input type=\"hidden\" name=\"action\" value=\"editRecord\" />\n";
-		echo "			<input type=\"submit\" name=\"submit\" value=\"". __("Save and Continue", bb_restaurant_TEXTDOMAIN) ."\" class=\"button-primary\" />\n";
-		echo "		</td>\n";
-		echo "	  </tr>\n";
-		echo "	</tbody>\n";
-		echo " </table>\n";
-		echo "</form>\n";
-	}
+	echo " <table class=\"form-table\">\n";
+	echo "	<tbody>\n";
+	echo "    <tr valign=\"top\">\n";
+	echo "		<td scope=\"row\"><span style=\"width:185px;float:left;\">". __("Last updated ", bb_agencyinteract_TEXTDOMAIN) ." ". bb_agency_makeago(bb_agency_convertdatetime($ProfileDateUpdated), $bb_agency_option_locationtimezone) ."</span></th>\n";
+	echo "		<td>\n";
+	echo "			<input type=\"hidden\" name=\"action\" value=\"editRecord\" />\n";
+	echo "			<input type=\"submit\" name=\"submit\" value=\"". __("Save and Continue", bb_restaurant_TEXTDOMAIN) ."\" class=\"button-primary\" />\n";
+	echo "		</td>\n";
+	echo "	  </tr>\n";
+	echo "	</tbody>\n";
+	echo " </table>\n";
+	echo "</form>\n";
+
 ?>
