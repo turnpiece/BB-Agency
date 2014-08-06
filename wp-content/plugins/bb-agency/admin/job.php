@@ -142,7 +142,7 @@ if ($_POST) {
             if (isset($_POST['send'])) {
                 $email = bb_agency_SEND_EMAILS ? $Invoice['ProfileContactEmail'] : get_bloginfo('admin_email');
                 $to = $Invoice['ProfileContactDisplay'].' <'.$email.'>';
-                $headers = 'From: '.get_bloginfo('name').' <'.get_bloginfo('admin_email').'>' . "\r\n";
+                $headers = 'From: '.get_bloginfo('name').' <'.bb_agency_accounts_email().'>' . "\r\n";
                 $headers .= 'Bcc: '.bb_agency_accounts_email(). "\r\n";
 
                 if ($_POST['EmailSubject'] && $_POST['EmailMessage'] && $_POST['EmailAttachment']) {
