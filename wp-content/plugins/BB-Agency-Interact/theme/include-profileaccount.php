@@ -56,6 +56,7 @@
 		echo "    <tr>\n";
 		echo "		<td colspan=\"2\" scope=\"row\"><h3>". __("Contact Information", bb_agencyinteract_TEXTDOMAIN) ."</h3></th>\n";
 		echo "	  </tr>\n";
+		/*
 		echo "    <tr valign=\"top\">\n";
 		echo "		<td scope=\"row\">". __("Gallery Folder", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 		echo "		<td>\n";
@@ -69,6 +70,8 @@
 		echo "             	</div>\n";
 		echo "		</td>\n";
 		echo "	</tr>\n";
+		*/
+		echo "<input type=\"hidden\" id=\"ProfileGallery\" name=\"ProfileGallery\" value=\"". $ProfileGallery ."\" />\n";
 		echo "    <tr valign=\"top\">\n";
 		echo "		<td scope=\"row\">". __("First Name", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 		echo "		<td>\n";
@@ -91,7 +94,7 @@
 		
 					$query= "SELECT GenderID, GenderTitle FROM " .  table_agency_data_gender . " GROUP BY GenderTitle ";
 					echo "<select name=\"ProfileGender\">";
-					echo "<option value=\"\">All Gender</option>";
+					echo "<option value=\"\">---</option>";
 					$queryShowGender = mysql_query($query);
 					while($dataShowGender = mysql_fetch_assoc($queryShowGender)){
 															
