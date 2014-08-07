@@ -50,7 +50,7 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 	define('bb_agency_TERMS', get_bloginfo('url').'/clients-standard-terms-conditions');
 
 	// email sending
-	define('bb_agency_SEND_EMAILS', false); // whether or not to send emails
+	define('bb_agency_SEND_EMAILS', true); // whether or not to send emails
 	$bb_agency_CURRENT_TYPE_ID = 0; // will contain current type
 	// Clean Up:
 	$pageURL = '';
