@@ -38,7 +38,7 @@
         </table>
         <p class="submit">
             <input class="button-primary" type="submit" name="send" value="Send" />
-            <a href="<?php echo admin_url('admin.php?page='.$_GET['page'].'&action=invoice&JobID='.$_REQUEST['JobID']) ?>" title="Edit the invoice"><?php _e('Cancel', bb_agency_TEXTDOMAIN) ?></a>
+            <a href="<?php echo admin_url('admin.php?page='.$_GET['page'].'&action=edit&JobID='.$_REQUEST['JobID']) ?>" title="Edit the invoice"><?php _e('Cancel', bb_agency_TEXTDOMAIN) ?></a>
         </p>
     </div>
 </form>
