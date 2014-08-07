@@ -405,7 +405,19 @@ function bb_agency_get_job($id) {
     global $wpdb;
     $t_job = table_agency_job;
     $t_profile = table_agency_profile;
-    $sql = "SELECT * FROM `$t_job` j LEFT JOIN `$t_profile` p ON j.`JobClient` = p.`ProfileID` WHERE j.`JobID` = $id";
+    $t_custom_mux = table_agency_customfield_mux;
+    $t_custom_type = table_agency_customfields_types;
+    
+    $sql = <<<EOF
+SELECT j.*, p.*, IF(ISNULL(cm.`ProfileCustomValue`), p.`ProfileContactEmail`, cm.`ProfileCustomValue`) AS AccountsEmail
+FROM `$t_job` j 
+LEFT JOIN `$t_profile` p 
+ON j.`JobClient` = p.`ProfileID` 
+LEFT JOIN `$t_custom_mux` AS cm 
+ON p.`ProfileID` = cm.`ProfileID` 
+AND cm.`ProfileCustomID` = (SELECT `ProfileCustomID` FROM `$t_custom_type` WHERE LOWER(`ProfileCustomTitle`) = 'accounts email')
+WHERE j.`JobID` = $id
+EOF;
 
     $Job = $wpdb->get_row($sql, ARRAY_A);
 

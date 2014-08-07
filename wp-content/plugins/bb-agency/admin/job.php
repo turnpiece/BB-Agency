@@ -140,7 +140,7 @@ if ($_POST) {
                 wp_die('Failed to get job id '.$_REQUEST['JobID']);
 
             if (isset($_POST['send'])) {
-                $email = bb_agency_SEND_EMAILS ? $Invoice['ProfileContactEmail'] : get_bloginfo('admin_email');
+                $email = bb_agency_SEND_EMAILS ? $Invoice['AccountsEmail'] : get_bloginfo('admin_email');
                 $to = $Invoice['ProfileContactDisplay'].' <'.$email.'>';
                 $headers = 'From: '.get_bloginfo('name').' <'.bb_agency_accounts_email().'>' . "\r\n";
                 $headers .= 'Bcc: '.bb_agency_accounts_email(). "\r\n";
