@@ -8,8 +8,6 @@
   Author URI: http://turnpiece.com/
   Version: 0.0.4
 */
-error_reporting(E_ALL ^ E_NOTICE);
-ini_set('display_errors', 1);
 
 $bb_agency_VERSION = "2.0.0"; // starter
 
