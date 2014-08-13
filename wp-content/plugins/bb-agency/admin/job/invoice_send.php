@@ -12,7 +12,7 @@
                 <tr valign="top">
                     <th scope="row"><?php _e('Email', bb_agency_TEXTDOMAIN) ?></th>
                     <td>
-                        <?php echo $Invoice['ProfileContactEmail'] ?>
+                        <?php echo $Invoice['AccountsEmail'] ?>
                     </td>
                 </tr>
                 <tr valign="top">

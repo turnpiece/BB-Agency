@@ -1,5 +1,5 @@
     <div id="bb-overview-icon" class="icon32"></div>  
-    <h2><?php echo PLUGIN_TITLE ?></h2> 
+    <h2><?php echo bb_agency_PLUGIN_TITLE ?></h2> 
     <?php settings_errors(); ?>  
 
 	<?php  
