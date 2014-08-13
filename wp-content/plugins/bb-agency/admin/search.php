@@ -524,8 +524,10 @@ if ($action) {
                                 <strong><?php _e('Distance', bb_agency_TEXTDOMAIN) ?>:</strong> <?php echo number_format((float)$data['distance'], 1, '.', '') ?> miles
                             </div>
                         <?php endif; ?>
-
-                        <?php if (defined('bb_agency_MUMSTOBE_ID') && bb_agency_MUMSTOBE_ID && bb_agency_ismumtobe($data['ProfileType']) && !empty($data['ProfileDateDue'])) : ?>                             
+                        <?php echo bb_agency_SITETYPE; ?><br />
+                        <?php echo bb_agency_MUMSTOBE_ID; ?><br />
+                        <?php echo $data['ProfileType'] .' => '. bb_agency_ismumtobe($data['ProfileType']); ?>
+                        <?php if (bb_agency_SITETYPE == 'bumps' && defined('bb_agency_MUMSTOBE_ID') && bb_agency_MUMSTOBE_ID && bb_agency_ismumtobe($data['ProfileType']) && !empty($data['ProfileDateDue'])) : ?>                             
                         <div>
                             <strong><?php _e('Due date', bb_agency_TEXTDOMAIN) ?>:</strong> <?php echo $data['ProfileDateDue'] ?></div>
                         </div>

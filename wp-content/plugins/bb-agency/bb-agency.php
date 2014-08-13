@@ -2,7 +2,6 @@
 /*
   Plugin Name: BB Agency
   Text Domain: bb-agency
-  Plugin URI: http://rbplugin.com/wordpress/model-talent-agency-software/
   Description: Forked from RB Agency plugin and adapted for the Beautiful Bumps agency. With this plugin you can easily manage models' profiles and information.
   Author: Paul Jenkins
   Author URI: http://turnpiece.com/
@@ -36,6 +35,7 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 	define('bb_agency_BASENAME', plugin_basename(__FILE__) );  // bb-agency/bb-agency.php
 	$bb_agency_WPURL = get_bloginfo('wpurl'); // http://domain.com/wordpress
 	$bb_agency_WPUPLOADARRAY = wp_upload_dir(); // Array  $bb_agency_WPUPLOADARRAY['baseurl'] $bb_agency_WPUPLOADARRAY['basedir']
+
 	define('bb_agency_BASEDIR', get_bloginfo('wpurl') .'/'. PLUGINDIR .'/'. dirname( plugin_basename(__FILE__) ) ."/" );  // http://domain.com/wordpress/wp-content/plugins/bb-agency/
 	define('bb_agency_BASEREL', str_replace(get_bloginfo('url'), '', bb_agency_BASEDIR));  // /wordpress/wp-content/uploads/profile-media/
 	define('bb_agency_BASEPATH', plugin_dir_path(__FILE__) );  // wordpress/wp-content/plugins/bb-agency/
@@ -44,6 +44,7 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 	define('bb_agency_UPLOADPATH', $bb_agency_WPUPLOADARRAY['basedir'] .'/profile-media/' ); // /home/content/99/6048999/html/domain.com/wordpress/wp-content/uploads/profile-media/
 	define('bb_agency_TEXTDOMAIN', basename(dirname( __FILE__ )) ); //   bb-agency
 	define('bb_agency_SITETYPE', 'children'); // bumps or children
+	define('bb_agency_PLUGIN_TITLE', (bb_agency_SITETYPE == 'children' ? 'KW' : 'BB') . ' Agnecy');
 	//define('bb_agency_TESTING', true);
 	define('bb_agency_TERMS', get_bloginfo('url').'/clients-standard-terms-conditions');
 
@@ -152,7 +153,7 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 // *************************************************************************************************** //
 // Settings for Beautiful Bumps & Kiddiwinks
 
-	if (bb_agency_get_option('bb_agency_option_pregnant')) {
+	if (bb_agency_SITETYPE == 'bumps') {
 		define('bb_agency_MUMSTOBE_ID', 1); // id of mums to be data type
 		define('bb_agency_AFTERBIRTH_ID', 2); // id of data type to move mums to be to once they've given birth
 	}

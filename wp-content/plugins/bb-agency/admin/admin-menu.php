@@ -1,7 +1,5 @@
     <div id="bb-overview-icon" class="icon32"></div>  
-    <h2>
-    	BB Agency
-    </h2> 
+    <h2><?php echo PLUGIN_TITLE ?></h2> 
     <?php settings_errors(); ?>  
 
 	<?php  
