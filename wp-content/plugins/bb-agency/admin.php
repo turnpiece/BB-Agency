@@ -466,3 +466,11 @@ function bb_agency_get_genders() {
 function bb_agency_accounts_email() {
     return 'zandra@' . (bb_agency_SITETYPE == 'children' ? 'kiddiwinksagency.co.uk' : 'beautifulbumpsagency.co.uk');
 }
+
+function bb_agency_invoice_fromemail($email) {
+    return bb_agency_accounts_email();
+}
+ 
+function bb_agency_invoice_fromname($email){
+    return 'Zandra @ '.get_bloginfo('name');
+}

@@ -142,12 +142,13 @@ if ($_POST) {
             if (isset($_POST['send'])) {
                 $email = bb_agency_SEND_EMAILS ? $Invoice['AccountsEmail'] : get_bloginfo('admin_email');
                 $to = $Invoice['ProfileContactDisplay'].' <'.$email.'>';
-                $headers = 'From: '.get_bloginfo('name').' <'.bb_agency_accounts_email().'>' . "\r\n";
                 $headers .= 'Bcc: '.bb_agency_accounts_email(). "\r\n";
 
                 if ($_POST['EmailSubject'] && $_POST['EmailMessage'] && $_POST['EmailAttachment']) {
                     // set email to html
                     add_filter( 'wp_mail_content_type', 'bb_agency_set_content_type' );
+                    add_filter( 'wp_mail_from', 'bb_agency_invoice_fromemail' );
+                    add_filter( 'wp_mail_from_name', 'bb_agency_invoice_fromname' );
 
                     // send the email
                     $success = wp_mail(
@@ -159,6 +160,8 @@ if ($_POST) {
                     );
 
                     remove_filter( 'wp_mail_content_type', 'bb_agency_set_content_type' );
+                    remove_filter( 'wp_mail_from', 'bb_agency_invoice_fromemail' );
+                    remove_filter( 'wp_mail_from_name', 'bb_agency_invoice_fromname' );
 
                     if ($success) {
                         bb_agency_admin_message('<p>' . sprintf(__('Invoice sent to %s', bb_agency_TEXTDOMAIN), htmlspecialchars($to)) . '</p>');

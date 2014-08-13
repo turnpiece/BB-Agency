@@ -57,30 +57,23 @@
 	echo "		".$profileType;
 	echo "</p>";
 
-	/*
-	 *   added this new custom field display 
-	 */
-	$bb_agency_option_profilenaming 		= (int)$bb_agency_options_arr['bb_agency_option_profilenaming'];
+	// custom field display 
 		
-	$query3 = "SELECT * FROM ". table_agency_customfields ." 
-			   WHERE ProfileCustomView = 0 AND ProfileCustomShowRegistration = 1 ORDER BY ProfileCustomOrder";
+	$query3 = "SELECT * FROM ". table_agency_customfields ." WHERE `ProfileCustomView` = 0 AND `ProfileCustomShowRegistration` = 1 ORDER BY `ProfileCustomOrder`";
 
 	$results3 = mysql_query($query3) or die(mysql_error());
 	$count3 = mysql_num_rows($results3);
 	
 	while ($data3 = mysql_fetch_assoc($results3)) {
-		/*
-                 * Get Profile Types to
-                 * filter models from clients
-                 */
-                $permit_type = false;
+		// Get Profile Types to filter models from clients
+        $permit_type = false;
 		
 		$PID = $data3['ProfileCustomID'];
 		
 		$get_types = "SELECT ProfileCustomTypes FROM ". table_agency_customfields_types .
 		             " WHERE ProfileCustomID = " . $PID;
-						
-		$result = mysql_query($get_types);
+
+		$result = mysql_query($get_types) or die(mysql_error());
 		$types = "";				
 		while ( $p = mysql_fetch_array($result)){	
 			$types = str_replace("_", " ", $p['ProfileCustomTypes']);	    
@@ -93,7 +86,7 @@
 		   	} 
 		} 
 		
-		echo'<input type="hidden" name="aps12" value="'.$data3["ProfileCustomShowGender"].'" >';
+		echo '<input type="hidden" name="aps12" value="'.$data3["ProfileCustomShowGender"].'" >';
 		
 		if (($data3["ProfileCustomShowGender"] == $ProfileGender) || ($data3["ProfileCustomShowGender"] == 0) 
 		    && $permit_type == true ) {
