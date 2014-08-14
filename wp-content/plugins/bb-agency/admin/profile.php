@@ -35,6 +35,8 @@ if (isset($_POST['action'])) {
     $ProfileContactNameLast = trim($_POST['ProfileContactNameLast']);
     $ProfileContactDisplay = trim($_POST['ProfileContactDisplay']);
     if (empty($ProfileContactDisplay)) {  // Probably a new record... 
+        $ProfileContactDisplay = $ProfileContactNameFirst . " " . substr($ProfileContactNameLast, 0, 1);
+        /*
         if ($bb_agency_option_profilenaming == 0) {
             $ProfileContactDisplay = $ProfileContactNameFirst . " " . $ProfileContactNameLast;
         } elseif ($bb_agency_option_profilenaming == 1) {
@@ -49,11 +51,13 @@ if (isset($_POST['action'])) {
         } elseif ($bb_agency_option_profilenaming == 5) {
             $ProfileContactDisplay = $ProfileContactNameLast;
         }
+        */
     }
-    $ProfileGallery = $_POST['ProfileGallery'];
-    if (empty($ProfileGallery)) {  // Probably a new record... 
+
+    if (empty($ProfileGallery)) {  // Probably a new record...
         $ProfileGallery = bb_agency_safenames($ProfileContactDisplay);
     }
+
     $ProfileGender = $_POST['ProfileGender'];
     $ProfileDateBirth = $_POST['ProfileDateBirth'];
     if (bb_agency_SITETYPE == 'bumps') {
@@ -97,7 +101,7 @@ if (isset($_POST['action'])) {
         $error .= "<b><i>The " . LabelSingular . " must have a name.</i></b><br>";
         $have_error = true;
     }
-    if ((isset($_GET["action"]) == "add") && function_exists('bb_agencyinteract_approvemembers')) {
+    if ((isset($_GET["action"]) == "addRecord") && function_exists('bb_agencyinteract_approvemembers')) {
         $userdata = array(
             'user_pass' => esc_attr($ProfilePassword),
             'user_login' => esc_attr($ProfileUsername),
@@ -531,7 +535,7 @@ elseif ($_GET['action'] == "deleteRecord") {
 }
 // *************************************************************************************************** //
 // Show Edit Record
-elseif ($_GET['action'] == "editRecord" || $_GET['action'] == "add") {
+elseif ($_GET['action'] == "editRecord" || $_GET['action'] == "addRecord") {
 
     $action = $_GET['action'];
     $ProfileID = $_GET['ProfileID'];
@@ -579,6 +583,7 @@ function bb_display_manage($ProfileID) {
             $ProfileContactDisplay = stripslashes($data['ProfileContactDisplay']);
             $ProfileContactNameFirst = stripslashes($data['ProfileContactNameFirst']);
             $ProfileContactNameLast = stripslashes($data['ProfileContactNameLast']);
+            $ProfileUsername = stripslashes($data['ProfileUsername']);
             $ProfileContactEmail = stripslashes($data['ProfileContactEmail']);
             $ProfileContactWebsite = stripslashes($data['ProfileContactWebsite']);
             $ProfileContactLinkFacebook = stripslashes($data['ProfileContactLinkFacebook']);
@@ -630,8 +635,8 @@ function bb_display_manage($ProfileID) {
         <?php
     }
 
-    if ($_GET["action"] == "add") : ?>
-        <form method="post" enctype="multipart/form-data" action="<?php echo admin_url("admin.php?page=" . $_GET['page']) ?>&action=add&ProfileGender=<?php echo $_GET["ProfileGender"] ?>">
+    if ($_GET["action"] == "addRecord") : ?>
+        <form method="post" enctype="multipart/form-data" action="<?php echo admin_url("admin.php?page=" . $_GET['page']) ?>&action=addRecord&ProfileGender=<?php echo $_GET["ProfileGender"] ?>">
     <?php else : ?>
         <form method="post" enctype="multipart/form-data" action="<?php echo admin_url("admin.php?page=" . $_GET['page']) ?>">
     <?php endif; ?>
@@ -684,15 +689,15 @@ function bb_display_manage($ProfileID) {
 
             <?php
             // password
-            if ((isset($_GET["action"]) && $_GET["action"] == "add") && function_exists('bb_agencyinteract_approvemembers')) : ?>
+            if ((isset($_GET["action"]) && $_GET["action"] == "addRecord") && function_exists('bb_agencyinteract_approvemembers')) : ?>
                 <tr valign="top">
-                  <th scope="row"><?php _e("Username", bb_agency_TEXTDOMAIN) ?></th>
+                  <th scope="row"><?php _e("Username", bb_agency_TEXTDOMAIN) ?>*</th>
                   <td>
                       <input type="text" class="regular-text" id="ProfileUsername" name="ProfileUsername" />
                   </td>
                 </tr>
                 <tr valign="top">
-                  <th scope="row"><?php _e("Password", bb_agency_TEXTDOMAIN) ?></th>
+                  <th scope="row"><?php _e("Password", bb_agency_TEXTDOMAIN) ?>*</th>
                   <td>
                       <input type="text" class="regular-text" id="ProfilePassword" name="ProfilePassword" />
                       <input type="button" onclick="javascript:document.getElementById('ProfilePassword').value=Math.random().toString(36).substr(2,6);" value="Generate Password"  name="GeneratePassword" />
@@ -1059,18 +1064,13 @@ function bb_display_manage($ProfileID) {
                 <td>
                     <fieldset><?php
                     $ProfileTypeArray = explode(",", $ProfileTypeArray);
-                	
+
                 	$query3 = "SELECT * FROM `$t_data_type` ORDER BY `DataTypeTitle`";
                     $results3 = mysql_query($query3);
                     $count3 = mysql_num_rows($results3);
                     $action = @$_GET["action"];
-                    while ($data3 = mysql_fetch_array($results3)) :
-                        if ($action == "add") : ?>
-                            <input type="checkbox" name="ProfileType[]" value="<?php echo $data3['DataTypeID'] ?>" id="ProfileType[]" /><?php echo $data3['DataTypeTitle'] ?><br />
-                        <?php endif;
-                        if ($action == "editRecord") : ?>
-                            <input type="checkbox" name="ProfileType[]" id="ProfileType[]" value="<?php echo  $data3['DataTypeID'] ?>" <?php echo (in_array($data3['DataTypeID'], $ProfileTypeArray) && isset($_GET["action"]) == "editRecord") ? ' checked="checked"' : '' ?> /><?php echo $data3['DataTypeTitle'] ?><br />
-                        <?php endif; ?>
+                    while ($data3 = mysql_fetch_array($results3)) : ?>
+                        <input type="checkbox" name="ProfileType[]" id="ProfileType[]" value="<?php echo  $data3['DataTypeID'] ?>" <?php echo (!empty($ProfileTypeArray) && in_array($data3['DataTypeID'], $ProfileTypeArray)) ? ' checked="checked"' : '' ?> /><?php echo $data3['DataTypeTitle'] ?><br />
                     <?php endwhile; ?>
                     </fieldset>
                     <?php if ($count3 < 1) : ?>
@@ -1346,7 +1346,7 @@ function bb_display_list() {
                             ?>
                             <p>
                             <?php while ($fetchGender = mysql_fetch_assoc($queryGenderResult)) : ?>
-                                <a class="button-primary" href="<?php echo admin_url("admin.php?page=" . $_GET['page']) ?>&action=add&ProfileGender=<?php echo $fetchGender["GenderID"] ?>"><?php _e("Create New " . ucfirst($fetchGender["GenderTitle"]), bb_agency_TEXTDOMAIN) ?></a>
+                                <a class="button-primary" href="<?php echo admin_url("admin.php?page=" . $_GET['page']) ?>&action=addRecord&ProfileGender=<?php echo $fetchGender["GenderID"] ?>"><?php _e("Create New " . ucfirst($fetchGender["GenderTitle"]), bb_agency_TEXTDOMAIN) ?></a>
                             <?php endwhile; ?>
                             </p>
                             <?php if ($queryGenderCount < 1) : ?>

@@ -1712,8 +1712,8 @@ class bb_agency_image {
 
 	function save($filename, $image_type=IMAGETYPE_JPEG, $compression=75, $permissions=NULL) {
 
-	if ( $image_type == IMAGETYPE_JPEG ) {
-		imagejpeg($this->image,$filename,$compression);
+		if ( $image_type == IMAGETYPE_JPEG ) {
+			imagejpeg($this->image,$filename,$compression);
 		} elseif ( $image_type == IMAGETYPE_GIF ) {
 
 			imagegif ($this->image,$filename);
