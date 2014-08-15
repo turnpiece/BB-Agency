@@ -623,7 +623,8 @@
 	 * @return - formatted folder name 
      */		
 	function generate_foldername($ID = NULL, $first, $last, $display) {
-			
+		return bb_agency_safenames($first . "-". substr($last, 0, 1));
+		/*
 	    switch (bb_agency_get_option('bb_agency_option_profilenaming')) {
 	    	case 0 :
 	    		$ProfileGalleryFixed = $first . "-". $last;
@@ -650,7 +651,8 @@
 	    		break;
 	    }
 		
-		return bb_agency_safenames($ProfileGalleryFixed); 
+		return bb_agency_safenames($ProfileGalleryFixed);
+		*/
 	}
 
    /**
@@ -1580,6 +1582,8 @@ EOF;
 			echo "  <div class=\"image image-broken\"><a href=\"". bb_agency_PROFILEDIR ."". $row["ProfileGallery"] ."/\">No Image</a></div>\n";
 			}
 			echo "<div class=\"profile-info\">";
+			$ProfileContactDisplay = $row["ProfileContactNameFirst"] . " ". substr($row["ProfileContactNameLast"], 0, 1);
+			/*
 	                    $bb_agency_option_profilenaming = bb_agency_get_option('bb_agency_option_profilenaming');
 							if ($bb_agency_option_profilenaming == 0) {
 								$ProfileContactDisplay = $row["ProfileContactNameFirst"] . " ". $row["ProfileContactNameLast"];
@@ -1594,6 +1598,7 @@ EOF;
 							} elseif ($bb_agency_option_profilenaming == 5) {
 								$ProfileContactDisplay = $ProfileContactNameLast;
 							}
+			*/
 				 
 			echo "     <h3 class=\"name\"><a href=\"". bb_agency_PROFILEDIR ."". $row["ProfileGallery"] ."/\">". $ProfileContactDisplay ."</a></h3>\n";
 			if (isset($bb_agency_option_profilelist_expanddetails)) {
@@ -1713,7 +1718,7 @@ class bb_agency_image {
 	function save($filename, $image_type=IMAGETYPE_JPEG, $compression=75, $permissions=NULL) {
 
 		if ( $image_type == IMAGETYPE_JPEG ) {
-			imagejpeg($this->image,$filename,$compression);
+			imagejpeg($this->image, $filename, $compression);
 		} elseif ( $image_type == IMAGETYPE_GIF ) {
 
 			imagegif ($this->image,$filename);

@@ -10,7 +10,7 @@ $bb_agency_option_agencyimagemaxheight = bb_agency_get_option('bb_agency_option_
 if (empty($bb_agency_option_agencyimagemaxheight) || $bb_agency_option_agencyimagemaxheight < 500) {
     $bb_agency_option_agencyimagemaxheight = 800;
 }
-$bb_agency_option_profilenaming = (int) bb_agency_get_option('bb_agency_option_profilenaming');
+//$bb_agency_option_profilenaming = (int) bb_agency_get_option('bb_agency_option_profilenaming');
 $bb_agency_option_locationtimezone = (int) bb_agency_get_option('bb_agency_option_locationtimezone');
 
 
@@ -54,6 +54,7 @@ if (isset($_POST['action'])) {
         */
     }
 
+    $ProfileGallery = trim($_POST['ProfileGallery']);
     if (empty($ProfileGallery)) {  // Probably a new record...
         $ProfileGallery = bb_agency_safenames($ProfileContactDisplay);
     }
@@ -72,7 +73,7 @@ if (isset($_POST['action'])) {
     $ProfileContactPhoneWork = $_POST['ProfileContactPhoneWork'];
     $ProfileLocationStreet = $_POST['ProfileLocationStreet'];
     $ProfileLocationCity = bb_agency_strtoproper($_POST['ProfileLocationCity']);
-    $ProfileLocationState = strtoupper($_POST['ProfileLocationState']);
+    $ProfileLocationState = $_POST['ProfileLocationState'];
     $ProfileLocationZip = $_POST['ProfileLocationZip'];
     $ProfileLocationCountry = $_POST['ProfileLocationCountry'];
     $ProfileLanguage = $_POST['ProfileLanguage'];
@@ -152,7 +153,7 @@ if (isset($_POST['action'])) {
                 
                 foreach ($fields as $field) {
                     $value = is_array($_POST[$field]) ? implode(',', $_POST[$field]) : $_POST[$field];
-                    $sqlData[] = $field .' = "'. $wpdb->escape($value) . '"';
+                    $sqlData[] = "`{$field}` = \"".$wpdb->escape($value)."\"";
 
                     if (preg_match("/^ProfileLocation/", $field) && $_POST[$field]) {
                         $arrAddress[] = $value;
@@ -160,9 +161,12 @@ if (isset($_POST['action'])) {
                 }
 
                 if (isset($new_user))
-                    $sqlData[] = 'ProfileUserLinked = '.$new_user;
+                    $sqlData[] = '`ProfileUserLinked` = '.$new_user;
 
-                $sqlData[] = 'ProfileDateUpdated = NOW()';
+                if ($ProfileGallery)
+                    $sqlData[] = "`ProfileGallery` = \"$ProfileGallery\"";
+
+                $sqlData[] = '`ProfileDateUpdated` = NOW()';
 
                 // get latitude and longitude
                 if (!empty($arrAddress)) {
@@ -240,14 +244,14 @@ if (isset($_POST['action'])) {
                 
                 foreach ($fields as $field) {
                     $value = is_array($_POST[$field]) ? implode(',', $_POST[$field]) : $_POST[$field];
-                    $sqlData[] = $field .' = "'. $wpdb->escape($value) . '"';
+                    $sqlData[] = "`{$field}` = \"".$wpdb->escape($value)."\"";
 
                     if (preg_match("/^ProfileLocation/", $field) && $_POST[$field]) {
                         $arrAddress[] = $value;
                     }
                 }
 
-                $sqlData[] = 'ProfileDateUpdated = NOW()';
+                $sqlData[] = '`ProfileDateUpdated` = NOW()';
 
                 // get latitude and longitude
                 if (!empty($arrAddress)) {
@@ -255,8 +259,8 @@ if (isset($_POST['action'])) {
 
                     if ($location = bb_agency_geocode($address)) {
                         // geocode address
-                        $sqlData[] = 'ProfileLocationLatitude = "'.$location['lat'].'"';
-                        $sqlData[] = 'ProfileLocationLongitude = "'.$location['lng'].'"';
+                        $sqlData[] = '`ProfileLocationLatitude` = "'.$location['lat'].'"';
+                        $sqlData[] = '`ProfileLocationLongitude` = "'.$location['lng'].'"';
                     } else {
                         echo '<div id="message" class="error"><p>' . sprintf(__("Failed to get location of address '%s'", bb_agency_TEXTDOMAIN), $address) . '</p></div>';
                     }
@@ -562,7 +566,7 @@ function bb_display_manage($ProfileID) {
     if (empty($bb_agency_option_agencyimagemaxheight) || $bb_agency_option_agencyimagemaxheight < 500) {
         $bb_agency_option_agencyimagemaxheight = 800;
     }
-    $bb_agency_option_profilenaming = (int) bb_agency_get_option('bb_agency_option_profilenaming');
+//    $bb_agency_option_profilenaming = (int) bb_agency_get_option('bb_agency_option_profilenaming');
     $bb_agency_option_locationcountry = bb_agency_get_option('bb_agency_option_locationcountry');
     ?>
     <div class="wrap">
@@ -885,9 +889,9 @@ function bb_display_manage($ProfileID) {
                 //delete images on the disk
                 $dirURL = bb_agency_UPLOADPATH . $ProfileGallery;
                 foreach ($mass_image_data as $mid => $ProfileMediaURL) {
-                    if (!unlink($dirURL . '/' . $ProfileMediaURL)) : ?>
+                    if (!@unlink($dirURL . '/' . $ProfileMediaURL)) : ?>
                         <div id="message" class="error">
-                            <p><?php _e("Error removing", bb_agency_TEXTDOMAIN) ?> <strong><?php echo $ProfileMediaURL ?></strong><?php _e("File did not exist.", bb_agency_TEXTDOMAIN) ?>.</p></div>
+                            <p><?php _e("Error removing", bb_agency_TEXTDOMAIN) ?> <strong><?php echo $ProfileMediaURL ?></strong>: <?php _e("file did not exist.", bb_agency_TEXTDOMAIN) ?>.</p></div>
                     <?php else : ?>
                         <div id="message" class="updated">
                             <p>File <strong><?php echo $ProfileMediaURL ?></strong> <?php _e("successfully removed", bb_agency_TEXTDOMAIN) ?>.</p>
@@ -1627,7 +1631,6 @@ function bb_display_list() {
 
 function bb_agency_get_profile_fields() {
     $fields = array(
-        'ProfileGallery',
         'ProfileContactDisplay',
         'ProfileContactNameFirst',
         'ProfileContactNameLast',
