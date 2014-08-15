@@ -1,7 +1,5 @@
 <?php
 
-echo network_site_url();
-
 global $wpdb;
 define("LabelPlural", "Profiles");
 define("LabelSingular", "Profile");
@@ -1159,7 +1157,7 @@ function bb_display_manage($ProfileID) {
     <h4>Bookings</h4>
     <?php
     // booked
-    $sql = "SELECT j.*, p.`ProfileContactDisplay` AS ClientName FROM `$t_job` j LEFT JOIN `$t_profile` p ON p.`ProfileID` = j.`JobClient` WHERE $ProfileID IN (j.`JobModelBooked`)";
+    $sql = "SELECT j.*, p.`ProfileContactDisplay` AS ClientName FROM `$t_job` j LEFT JOIN `$t_profile` p ON p.`ProfileID` = j.`JobClient` WHERE FIND_IN_SET($ProfileID, j.`JobModelBooked`)";
     $results = $wpdb->get_results($sql);
     
     if (count($results)) :
@@ -1171,7 +1169,7 @@ function bb_display_manage($ProfileID) {
     <h4>Casting Calls</h4>
     <?php
     // castings
-    $sql = "SELECT j.*, p.`ProfileContactDisplay` AS ClientName FROM `$t_job` j LEFT JOIN `$t_profile` p ON p.`ProfileID` = j.`JobClient` WHERE $ProfileID IN (j.`JobModelCasted`)";
+    $sql = "SELECT j.*, p.`ProfileContactDisplay` AS ClientName FROM `$t_job` j LEFT JOIN `$t_profile` p ON p.`ProfileID` = j.`JobClient` WHERE FIND_IN_SET($ProfileID, j.`JobModelCasted`)";
     $results = $wpdb->get_results($sql);
     
     if (count($results)) :

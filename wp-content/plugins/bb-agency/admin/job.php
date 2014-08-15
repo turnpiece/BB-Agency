@@ -373,3 +373,7 @@ switch ($action) {
         break;
 
 }
+
+?>
+    <div class="clear"></div>
+</div>
