@@ -624,35 +624,6 @@
      */		
 	function generate_foldername($ID = NULL, $first, $last, $display) {
 		return bb_agency_safenames($first . "-". substr($last, 0, 1));
-		/*
-	    switch (bb_agency_get_option('bb_agency_option_profilenaming')) {
-	    	case 0 :
-	    		$ProfileGalleryFixed = $first . "-". $last;
-	    		break;
-
-	    	case 1 :
-	    		$ProfileGalleryFixed = $first . "-". substr($last, 0, 1);
-	    		break;
-
-	    	case 2 :
-	    		$ProfileGalleryFixed = $display;
-	    		break;
-
-	    	case 3 :
-	    		$ProfileGalleryFixed = "ID".$ID;
-	    		break;
-
-	    	case 4 :
-	    		$ProfileGalleryFixed = $first;
-	    		break;
-
-	    	case 5 :
-	    		$ProfileGalleryFixed = $last;
-	    		break;
-	    }
-		
-		return bb_agency_safenames($ProfileGalleryFixed);
-		*/
 	}
 
    /**
@@ -1146,22 +1117,7 @@
 
 		// Can we show the profiles?
 		// P R I V A C Y FILTER ====================================================
-		if ( (isset($OverridePrivacy)) || 
-		     
-			  //Must be logged to view model list and profile information
-			 ($bb_agency_option_privacy == 2 && is_user_logged_in()) || 
-			 
-			 // Model list public. Must be logged to view profile information
-			 ($bb_agency_option_privacy == 1) ||
-			 
-			 // All Public
-             ($bb_agency_option_privacy == 0) ||
-			 
-			 // admin users
-			 (is_user_logged_in() && current_user_can( 'manage_options' )) ||
-			 
-			 //  Must be logged as "Client" to view model list and profile information
-			 ($bb_agency_option_privacy == 3 && is_user_logged_in() && is_client_profiletype()) ) {
+		if (bb_agency_SITETYPE == 'bumps' || is_user_logged_in()) {
 		// P R I V A C Y FILTER ====================================================
 
 			if (!$isDownload) {
