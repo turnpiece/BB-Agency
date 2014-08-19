@@ -1367,14 +1367,16 @@ EOF;
 							//$displayHTML .="<div class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $row["ProfileGallery"] ."/\"><img src=\"".bb_agency_BASEDIR."tasks/timthumb.php?src=".bb_agency_UPLOADDIR ."". $row["ProfileGallery"] ."/". $row["ProfileMediaURL"]."&w=200&h=300&zc=1\" id=\"roll".$row["ProfileID"]."\"  /></a>".$images."</div>\n";
 
 							$displayHTML .= '<div class="image">';
-							$displayHTML .= '<a href="'. bb_agency_PROFILEDIR . $row["ProfileGallery"] .'">';
-							$displayHTML .= '<img src="'.bb_agency_get_thumbnail_url($row["ProfileGallery"] .'/'. $row["ProfileMediaURL"], 200).'" id="roll'.$row['ProfileID'].'" />';
-							$displayHTML .= '</a>';
-							$displayHTML .= $images;
+							if (is_user_logged_in() || !bb_agency_datatype_privacy($row['ProfileType'])) {
+								$displayHTML .= '<a href="'. bb_agency_PROFILEDIR . $row["ProfileGallery"] .'">';
+								$displayHTML .= '<img src="'.bb_agency_get_thumbnail_url($row["ProfileGallery"] .'/'. $row["ProfileMediaURL"], 200).'" id="roll'.$row['ProfileID'].'" />';
+								$displayHTML .= '</a>';
+								$displayHTML .= $images;
+							}
 							$displayHTML .= '</div>'."\n";
 
 						} else {
-
+							// a download
 							$displayHTML .="<div  class=\"image\">"."<a href=\"". bb_agency_PROFILEDIR ."". $row["ProfileGallery"] ."/\" style=\"background-image: url(".bb_agency_UPLOADDIR ."". $row["ProfileGallery"] ."/". $row["ProfileMediaURL"].")\"></a>".$images."</div>\n";
 						}
 					
