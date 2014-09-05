@@ -214,7 +214,7 @@
 
 
 		// Show Social Media Links
-		if ($bb_agency_option_showsocial == "1") { 
+		if (bb_agency_get_option('bb_agency_options_showsocial')) { 
 		echo "    <tr valign=\"top\">\n";
 		echo "		<td scope=\"row\" colspan=\"2\"><h3>". __("Social Media Profiles", bb_agencyinteract_TEXTDOMAIN) ."</h3></th>\n";
 		echo "	  </tr>\n";
