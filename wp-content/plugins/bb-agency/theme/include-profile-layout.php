@@ -107,50 +107,19 @@ Profile View with Scrolling Thumbnails and Primary Image
 
 	}
 
-	/*
+	if (bb_agency_SITETYPE == 'bumps') :
 
-	if (!empty($ProfileStatWeight)) {
+	if (bb_agency_ismumtobe($ProfileType) && !empty($ProfileDateDue)) : // if pregnant display due date ?>
+	<li><strong><?php _e("Due date", bb_agency_TEXTDOMAIN) ?><span class="divider">:</span></strong> <?php echo bb_agency_displaydate($ProfileDateDue) ?></li>
 
-		if ($bb_agency_option_unittype == 0) { // Metric
+	<?php elseif (bb_agency_isbaby($ProfileType) && !empty($ProfileDateBirth)) : // if a family display the baby's date of birth ?>
+	<li><strong><?php echo (bb_agency_isfamily($ProfileType) ? __("Baby's date of birth", bb_agency_TEXTDOMAIN) : __("Date of birth", bb_agency_TEXTDOMAIN)) ?><span class="divider">:</span></strong> <?php echo bb_agency_displaydate($ProfileDateBirth) ?></li>
+	<?php endif;
 
-			echo "<li><strong>". __("Weight", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatWeight ." ". __("kg", bb_agency_TEXTDOMAIN). "</li>\n";
-
-		} else { // Imperial
-
-			echo "<li><strong>". __("Weight", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatWeight ." ". __("lb", bb_agency_TEXTDOMAIN). "</li>\n";
-
-		}
-
-	}
-
-	*/
-
-
-
-	if (bb_agency_SITE_TYPE == 'bumps' && bb_agency_ismumtobe($ProfileType) && !empty($ProfileDateDue)) {
-
-		// if pregnant display due date
-
-		echo "<li><strong>". __("Due date", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". bb_agency_displaydate($ProfileDateDue) ."</li>\n";
-
-	}
-
-	if (bb_agency_SITE_TYPE == 'bumps' && bb_agency_isbaby($ProfileType) && !empty($ProfileDateBirth)) {
-
-		// if a family display the baby's date of birth
-
-		echo "<li><strong>". (bb_agency_isfamily($ProfileType) ? __("Baby's date of birth", bb_agency_TEXTDOMAIN) : __("Date of birth", bb_agency_TEXTDOMAIN)) . "<span class=\"divider\">:</span></strong> ". bb_agency_displaydate($ProfileDateBirth) ."</li>\n";
-
-	}
-
+	endif;
 
 	// Insert Custom Fields
-
 	bb_agency_getProfileCustomFields($ProfileID, $ProfileGender);
-
-	
-
-
 
 	if($bb_agency_option_showcontactpage==1){
 
@@ -159,37 +128,19 @@ Profile View with Scrolling Thumbnails and Primary Image
 	}
 
 	echo "	  </ul>\n"; // Close ul
-
-	echo "	  </div>\n"; // Close Stats
-
-	
-
+	echo "	  </div>\n"; // Close Stats	
 	echo "		<div id=\"links\" class=\"col_3 column\">\n";
-
 	echo "			<h3>". $AgencyName ." ". $ProfileClassification ."</h3>\n";
 
-
-
 					 // Social Link
-
 					 bb_agency_getSocialLinks();
 
-	
-
 	echo "			<ul>\n";
-
-	
-
 	echo	'<div class="profile-actions-favorited">';		
-
-			
 
 			$cl1 = ""; $cl2=""; $tl1="Add to Favorites"; $tl2="Add to Casting Cart";
 
-
-
 			if(is_permitted("casting")){
-
 
 					$query_castingcart = mysql_query("SELECT * FROM ". table_agency_castingcart."  WHERE CastingCartTalentID='".$ProfileID
 
