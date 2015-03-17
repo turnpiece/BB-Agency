@@ -124,7 +124,6 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 // Declare Global WordPress Database Access
     global $wpdb;
 
-
 // Do the tables exist?
 	if ($wpdb->get_var("show tables like '". table_agency_profile ."'") == table_agency_profile) { // No, it doesn't
 		// Time for a diaper change, call the upgrade script

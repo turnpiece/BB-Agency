@@ -34,22 +34,6 @@ if (isset($_POST['action'])) {
     $ProfileContactDisplay = trim($_POST['ProfileContactDisplay']);
     if (empty($ProfileContactDisplay)) {  // Probably a new record... 
         $ProfileContactDisplay = $ProfileContactNameFirst . " " . substr($ProfileContactNameLast, 0, 1);
-        /*
-        if ($bb_agency_option_profilenaming == 0) {
-            $ProfileContactDisplay = $ProfileContactNameFirst . " " . $ProfileContactNameLast;
-        } elseif ($bb_agency_option_profilenaming == 1) {
-            $ProfileContactDisplay = $ProfileContactNameFirst . " " . substr($ProfileContactNameLast, 0, 1);
-        } elseif ($bb_agency_option_profilenaming == 2) {
-            $error .= '<b><i>'. __(LabelSingular . " must have a display name identified", bb_agency_TEXTDOMAIN) . '.</i></b><br />';
-            $have_error = true;
-        } elseif ($bb_agency_option_profilenaming == 3) {
-            $ProfileContactDisplay = "ID " . $ProfileID;
-        } elseif ($bb_agency_option_profilenaming == 4) {
-            $ProfileContactDisplay = $ProfileContactNameFirst;
-        } elseif ($bb_agency_option_profilenaming == 5) {
-            $ProfileContactDisplay = $ProfileContactNameLast;
-        }
-        */
     }
 
     $ProfileGallery = trim($_POST['ProfileGallery']);
@@ -1177,6 +1161,14 @@ function bb_display_manage($ProfileID) {
     else : ?>
     <p>No casting calls yet.</p>
     <?php endif; ?>
+
+    <?php if ($ProfileIsActive == 1) : ?>
+    <h3>Model Card</h3>
+    <?php
+        // generate model card
+
+
+    endif; ?>
     
     <?php _e('Last updated on', bb_agency_TEXTDOMAIN) ?> <?php echo bb_agency_human_date($ProfileDateUpdated) ?>
     <p class="submit">

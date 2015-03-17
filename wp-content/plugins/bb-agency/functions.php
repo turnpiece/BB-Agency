@@ -126,6 +126,8 @@
 			$newrules['client-view/(.*)$'] = 'index.php?type=profilesecure&target=$matches[1]';
 			$newrules['profile/(.*)/contact'] = 'index.php?type=profilecontact&target=$matches[1]';
 			$newrules['profile/(.*)$'] = 'index.php?type=profile&target=$matches[1]';
+			// model card
+			$newrules['card/(.*)$'] = 'index.php?type=card&target=$matches[1]';
 			
 		    $newrules['version-bb-agency'] = 'index.php?type=rbv'; // ping this page for version checker
 			
@@ -172,7 +174,7 @@
 				switch ($type) {
 					case 'search' :
 						return $dir.'view-search.php'; 
-					case  "category" :
+					case "category" :
 						return $dir.'view-category.php'; 
 					case "profile" :
 						return $dir.'view-profile.php'; 
@@ -190,15 +192,17 @@
 						return $dir.'view-castingcart.php';
 					case 'models' :
 						return $dir.'view-models.php';
+					case 'card' :
+						return $dir.'view-model-card.php';
 					case "version-bb-agency" :
-						return dirname(__FILE__) . '/rbv.php'; 
+						return dirname(__FILE__) . '/rbv.php';
 				}			  
 			}
 			return $template;
 		}
 	
 	// Remember to flush_rules() when adding rules
-	add_filter('init','bb_agency_flushrules');
+	add_filter('init', 'bb_agency_flushrules');
 		function bb_agency_flushRules() {
 			global $wp_rewrite;
 			$wp_rewrite->flush_rules();
@@ -1541,22 +1545,6 @@ EOF;
 			}
 			echo "<div class=\"profile-info\">";
 			$ProfileContactDisplay = $row["ProfileContactNameFirst"] . " ". substr($row["ProfileContactNameLast"], 0, 1);
-			/*
-	                    $bb_agency_option_profilenaming = bb_agency_get_option('bb_agency_option_profilenaming');
-							if ($bb_agency_option_profilenaming == 0) {
-								$ProfileContactDisplay = $row["ProfileContactNameFirst"] . " ". $row["ProfileContactNameLast"];
-							} elseif ($bb_agency_option_profilenaming == 1) {
-								$ProfileContactDisplay = $row["ProfileContactNameFirst"] . " ". substr($row["ProfileContactNameLast"], 0, 1);
-							} elseif ($bb_agency_option_profilenaming == 2) {
-								$ProfileContactDisplay = $row["ProfileContactNameFirst"];
-							} elseif ($bb_agency_option_profilenaming == 3) {
-								$ProfileContactDisplay = "ID ". $ProfileID;
-							} elseif ($bb_agency_option_profilenaming == 4) {
-								$ProfileContactDisplay = $ProfileContactNameFirst;
-							} elseif ($bb_agency_option_profilenaming == 5) {
-								$ProfileContactDisplay = $ProfileContactNameLast;
-							}
-			*/
 				 
 			echo "     <h3 class=\"name\"><a href=\"". bb_agency_PROFILEDIR ."". $row["ProfileGallery"] ."/\">". $ProfileContactDisplay ."</a></h3>\n";
 			if (isset($bb_agency_option_profilelist_expanddetails)) {
@@ -1582,11 +1570,6 @@ EOF;
 
 	// Profile Search
 	function bb_agency_profilesearch($atts, $content = NULL) {
-		/*
-		if (function_exists('bb_agency_profilesearch')) { 
-			$atts = array('profilesearch_layout' => 'advanced');
-			bb_agency_profilesearch($atts); }
-		*/
 		// Get Privacy Information
 		
 		$bb_agency_option_privacy = bb_agency_get_option('bb_agency_option_privacy');

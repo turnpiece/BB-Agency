@@ -15,13 +15,8 @@ Profile View with Scrolling Thumbnails and Primary Image
 	
 
 	echo "<div id=\"profile\">\n";
-
 	echo " <div id=\"rblayout-zero\" class=\"rblayout\">\n";
-
-
-
 	echo "	<div id=\"photos\" class=\"col_6 column\">\n";
-
 	echo "	  <div class=\"inner\">\n";
 
 			// images
@@ -36,21 +31,10 @@ Profile View with Scrolling Thumbnails and Primary Image
 					<img src="<?php echo bb_agency_BASEDIR.'/tasks/timthumb.php?src=' . $path . $dataImg->ProfileMediaURL . '&h=139' ?>" alt="<?php echo $ProfileContactDisplay ?>" />
 				</a>
 			</div>
-<?php /*
-			  } else {
-
-				echo "<div class=\"photo\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" rel=\"lightbox\" title=\"". $ProfileContactDisplay ."\"><img src=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt=\"". $ProfileContactDisplay ."\" /></a></div>\n";
-
-			  }
-*/ ?>
 			<?php endforeach;
 
-
-
 	echo "	  <div class=\"cb\"></div>\n";
-
 	echo "	  </div>\n";
-
 	echo "	</div>\n"; // close #photos
 
 	
