@@ -58,9 +58,26 @@ imagecopy($canvas, $tmpimg, 50, 50, 0, 0, $newwidth, $newheight);
 
 $text_color = imagecolorallocate($canvas, 0, 0, 0);
 
-imagestring($canvas, 5, 550, 50, $profile->ProfileContactNameFirst, $text_color);
-imagestring($canvas, 5, 550, 200, $profile->ProfileLocationStreet, $text_color);
-imagestring($canvas, 5, 550, 230, $profile->ProfileLocationCity, $text_color);
+$name = $profile->ProfileContactNameFirst;
+if ($profile->ProfileContactNameLast) {
+    $name .= ' '.$profile->ProfileContactNameLast;
+}
+imagestring($canvas, 5, 550, 50, $name, $text_color);
+
+$y = 100;
+
+$address = array(
+    $profile->ProfileLocationStreet,
+    $profile->ProfileLocationCity,
+    $profile->ProfileLocationState,
+    $profile->ProfileLocationZip
+);
+foreach ($address as $row) {
+    if ($row) {
+        imagestring($canvas, 5, 550, $y, $row, $text_color);
+        $y += 30;
+    }
+}
 
 // Set the content type header - in this case image/jpeg
 header('Content-Type: image/jpeg');
