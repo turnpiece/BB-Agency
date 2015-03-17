@@ -1,7 +1,0 @@
-[01-Jul-2013 10:45:04 UTC] PHP Fatal error:  Call to undefined function get_header() in /home/beautif1/public_html/wp-content/themes/newgate/index.php on line 13
-[20-Sep-2013 21:53:13 UTC] PHP Fatal error:  Call to undefined function get_header() in /home/beautif1/public_html/wp-content/themes/newgate/index.php on line 13
-[04-Oct-2013 17:12:04 UTC] PHP Fatal error:  Call to undefined function get_header() in /home/beautif1/public_html/wp-content/themes/newgate/index.php on line 13
-[04-Oct-2013 17:14:10 UTC] PHP Fatal error:  Call to undefined function get_header() in /home/beautif1/public_html/wp-content/themes/newgate/index.php on line 13
-[04-Oct-2013 17:21:06 UTC] PHP Fatal error:  Call to undefined function get_header() in /home/beautif1/public_html/wp-content/themes/newgate/index.php on line 13
-[04-Oct-2013 17:22:31 UTC] PHP Fatal error:  Call to undefined function get_header() in /home/beautif1/public_html/wp-content/themes/newgate/index.php on line 13
-[07-Oct-2013 02:09:14 UTC] PHP Fatal error:  Call to undefined function get_header() in /home/beautif1/public_html/wp-content/themes/newgate/index.php on line 13

@@ -52,6 +52,7 @@ if (
 <html <?php language_attributes(); ?>>
 <!--<![endif]-->
 <head>
+<meta name="google-site-verification" content="BGcBP0wS3Jt-boBZErs79c4_IRgLiNhhpaDsPptDgoU" />
 <meta charset="<?php bloginfo('charset'); ?>" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <meta name="description" content="<?php 
@@ -153,6 +154,7 @@ wp_head();
 
 ?>
 </head>
+<a href="https://plus.google.com/108406575773494236177" rel="publisher">Google+</a>
 <?php
 	if ($cmsms_option[CMSMS_SHORTNAME . '_boxed_version'] || is_page(3027)) {
 		$cmsms_boxed = 'cmsms_boxed';
