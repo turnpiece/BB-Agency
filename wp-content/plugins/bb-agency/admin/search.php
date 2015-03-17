@@ -260,9 +260,8 @@ if ($action) {
                             $val = array_shift(array_values($val));
                         } 
                     }
-                    $q = $wpdb->get_results("SELECT * FROM ". table_agency_customfields ." WHERE ProfileCustomID = '".substr($key,15)."' ", ARRAY_A);
-
-                    $ProfileCustomType = array_shift($q);
+                    $q = mysql_query("SELECT * FROM ". table_agency_customfields ." WHERE ProfileCustomID = '".substr($key,15)."' ");
+                    $ProfileCustomType = mysql_fetch_assoc($q);
                     
                     // get key id
                     $keyID = substr($key, 15);
@@ -358,7 +357,8 @@ if ($action) {
                             }
                         }
                     }
-
+                        
+                    mysql_free_result($q);
                 } // if not empty
             }  // end if
         } // end for each
@@ -421,8 +421,8 @@ if ($action) {
             ORDER BY $sort $dir $limit";
 
         // Search Results
-        $results2 = $wpdb->get_results($query, ARRAY_A);
-        $count = count($results2);
+        $results2 = mysql_query($query);
+        $count = mysql_num_rows($results2);
         ?>
         <h2 class="title">Search Results: <?php echo $count ?></h2>
         <?php
@@ -470,7 +470,7 @@ if ($action) {
                 </tfoot>
                 <tbody>
                 <?php 
-                foreach ($results2 as $data) :
+                while ($data = mysql_fetch_array($results2)) :
                     $ProfileID = $data['pID'];
                     $isInactive = $data['ProfileIsActive'] == 0;
                     $isInactiveDisable = $data['ProfileIsActive'] ? '' : 'disabled="disabled"';  
@@ -579,7 +579,10 @@ if ($action) {
                         <?php endif; ?>
                         </td>
                     </tr>
-                <?php endforeach;
+                <?php endwhile;
+            
+                // clear mysql 
+                mysql_free_result($results2);
 
                 // check for no results
                 if ($count < 1) : ?>
@@ -798,10 +801,10 @@ EOF;
                                     
                                     $filter = array( 'agents', 'agent', 'producer', 'producers' );
                                      
-                                    $profileDataTypes = $wpdb->get_results("SELECT * FROM ". table_agency_data_type, ARRAY_A);
-                                    foreach ($profileDataTypes as $dataType) : if (!in_array(strtolower($dataType["DataTypeTitle"]), $filter)) : ?>
+                                    $profileDataTypes = mysql_query("SELECT * FROM ". table_agency_data_type ."");
+                                    while ($dataType = mysql_fetch_array($profileDataTypes)) : if (!in_array(strtolower($dataType["DataTypeTitle"]), $filter)) : ?>
                                     <option value="<?php echo $dataType['DataTypeID'] ?>" <?php selected(isset($_SESSION['ProfileType']) ? $_SESSION['ProfileType'] : false, $dataType["DataTypeID"]) ?>><?php echo $dataType['DataTypeTitle'] ?></option>
-                                    <?php endif; endforeach; ?>
+                                    <?php endif; endwhile; ?>
                                     
                                 </select>
                             </td>
@@ -813,10 +816,10 @@ EOF;
                                     <option value="">--</option>
                                     <?php
                                         $query2 = "SELECT GenderID, GenderTitle FROM ". table_agency_data_gender ." ORDER BY GenderID";
-                                        $results2 = $wpdb->get_results($query2, ARRAY_A);
-                                        foreach ($results2 as $dataGender) : ?>
+                                        $results2 = mysql_query($query2);
+                                        while ($dataGender = mysql_fetch_array($results2)) : ?>
                                     <option value="<?php echo $dataGender['GenderID'] ?>" <?php selected(isset($_SESSION['ProfileGender']) ? $_SESSION['ProfileGender'] : 0, $dataGender['GenderID']) ?>><?php echo $dataGender['GenderTitle'] ?></option>
-                                        <?php endforeach; ?>
+                                        <?php endwhile; ?>
                                 </select>
                             </td>
                         </tr>
@@ -857,11 +860,11 @@ EOF;
                                 <select name="ProfileLocationCity" id="ProfileLocationCity">               
                                     <option value="">--</option>
                                     <?php  // get a list of cities 
-                                    $profilecity = $wpdb->get_results('SELECT DISTINCT `ProfileLocationCity` FROM '.table_agency_profile, ARRAY_A);
+                                    $profilecity = mysql_query('SELECT DISTINCT `ProfileLocationCity` FROM '.table_agency_profile);
                                     
-                                    foreach($profilecity as $dataLocation) : $city = $dataLocation['ProfileLocationCity']; ?>
+                                    while ($dataLocation = mysql_fetch_array($profilecity)) : $city = $dataLocation['ProfileLocationCity']; ?>
                                     <option value="<?php echo $city ?>" <?php selected(isset($_GET['ProfileLocationCity']) ? $_GET['ProfileLocationCity'] : false, $city) ?>><?php echo bb_agency_strtoproper($city) ?></option>
-                                    <?php endforeach; ?>
+                                    <?php endwhile; ?>
                                 </select>
                             </td>
                         </tr>
@@ -872,11 +875,11 @@ EOF;
                                 <select name="ProfileLocationState" id="ProfileLocationState">               
                                     <option value="">--</option>
                                     <?php  // get a list of states
-                                    $profilestate = $wpdb->get_results('SELECT DISTINCT `ProfileLocationState` FROM '.table_agency_profile, ARRAY_A);
+                                    $profilestate = mysql_query('SELECT DISTINCT `ProfileLocationState` FROM '.table_agency_profile);
                                     
-                                    foreach ($profilestate as $dataLocation) : $state = $dataLocation['ProfileLocationState']; ?>
+                                    while ($dataLocation = mysql_fetch_array($profilestate)) : $state = $dataLocation['ProfileLocationState']; ?>
                                     <option value="<?php echo $state ?>" <?php selected(isset($_GET['ProfileLocationState']) ? $_GET['ProfileLocationState'] : false, $state) ?>><?php echo bb_agency_strtoproper($state) ?></option>
-                                    <?php endforeach; ?>
+                                    <?php endwhile; ?>
                                 </select>
                             </td>
                         </tr>
@@ -890,10 +893,10 @@ EOF;
                         <?php
                             //bb_custom_fields(0, $ProfileID, $ProfileGender,false);
                             $query1 = "SELECT ProfileCustomID, ProfileCustomTitle, ProfileCustomType, ProfileCustomOptions, ProfileCustomOrder, ProfileCustomView, ProfileCustomShowGender, ProfileCustomShowProfile, ProfileCustomShowSearch, ProfileCustomShowLogged, ProfileCustomShowAdmin FROM ". table_agency_customfields ." WHERE ProfileCustomView IN('0','1')  AND ProfileCustomID != 39 AND ProfileCustomID != 48 ORDER BY ProfileCustomOrder ASC";
-                            $results1 = $wpdb->get_results($query1, ARRAY_A);
-                            $count1 = count($results1);
+                            $results1 = mysql_query($query1);
+                            $count1 = mysql_num_rows($results1);
                             $pos = 0;
-                            foreach ($results1 as $data1) :
+                            while ($data1 = mysql_fetch_array($results1)) :
                                 // set data vars
                                 $id = $data1['ProfileCustomID'];
                                 $title = $data1['ProfileCustomTitle'];
@@ -1189,7 +1192,7 @@ EOF;
                             </td>
                         </tr>
             
-                            <?php endforeach; //end of foreach $data1
+                            <?php endwhile; //end of while ($data1
 
                             // status filter
                             ?>

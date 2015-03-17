@@ -1306,15 +1306,7 @@ function bb_display_list() {
 
     
     // Paginate
-    $profiles = $wpdb->get_results("SELECT * FROM `$t_profile` profile LEFT JOIN `$t_data_type` profiletype ON profile.`ProfileType` = profiletype.`DataTypeID` $filter", ARRAY_A);
-
-    if (empty($profiles)) {
-        // no profiles
-        echo "<p class=\"error\">No profiles found.</p>";
-        return;
-    }
-
-    $items = count($profiles); // number of total rows in the database
+    $items = mysql_num_rows(mysql_query("SELECT * FROM `$t_profile` profile LEFT JOIN `$t_data_type` profiletype ON profile.`ProfileType` = profiletype.`DataTypeID` $filter")); // number of total rows in the database
 
     if ($items > 0) {
         $p = new bb_agency_pagination;
@@ -1351,21 +1343,17 @@ function bb_display_list() {
                     <div class="inside-x" style="padding: 10px 10px 0px 10px; ">
                         <?php echo sprintf(__("Currently %d Profiles", bb_agency_TEXTDOMAIN), $items) ?><br />
                         <?php
-                            $queryGenderResult = $wpdb->get_results("SELECT GenderID, GenderTitle FROM " . table_agency_data_gender, ARRAY_A);
-
-                            if (!empty($queryGenderResult)) {
-                                $queryGenderCount = count($queryGenderResult);
-                                ?>
-                                <p>
-                                <?php foreach ($queryGenderResult as $fetchGender) : ?>
-                                    <a class="button-primary" href="<?php echo admin_url("admin.php?page=" . $_GET['page']) ?>&amp;action=addRecord&amp;ProfileGender=<?php echo $fetchGender["GenderID"] ?>"><?php _e("Create New " . ucfirst($fetchGender["GenderTitle"]), bb_agency_TEXTDOMAIN) ?></a>
-                                <?php endforeach; ?>
-                                </p>
-                                <?php if ($queryGenderCount < 1) : ?>
-                                    <p><?php echo sprintf(__('No Gender Found. <a href="%s">Create New Gender</a>', bb_agency_TEXTDOMAIN), admin_url('admin.php?page=bb_agency_settings&ampConfigID=5')) ?></p>
-                                <?php endif;                              
-                            }
-                        ?>
+                            $queryGenderResult = mysql_query("SELECT GenderID, GenderTitle FROM " . table_agency_data_gender);
+                            $queryGenderCount = mysql_num_rows($queryGenderResult);
+                            ?>
+                            <p>
+                            <?php while ($fetchGender = mysql_fetch_assoc($queryGenderResult)) : ?>
+                                <a class="button-primary" href="<?php echo admin_url("admin.php?page=" . $_GET['page']) ?>&action=addRecord&ProfileGender=<?php echo $fetchGender["GenderID"] ?>"><?php _e("Create New " . ucfirst($fetchGender["GenderTitle"]), bb_agency_TEXTDOMAIN) ?></a>
+                            <?php endwhile; ?>
+                            </p>
+                            <?php if ($queryGenderCount < 1) : ?>
+                                <p><?php echo sprintf(__('No Gender Found. <a href="%s">Create New Gender</a>', bb_agency_TEXTDOMAIN), admin_url('admin.php?page=bb_agency_settings&ampConfigID=5')) ?></p>
+                            <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -1497,14 +1485,9 @@ function bb_display_list() {
                     <tbody>
                     <?php
                     $query = "SELECT * FROM `$t_profile` profile LEFT JOIN `$t_data_type` profiletype ON profile.`ProfileType` = profiletype.`DataTypeID` $filter  ORDER BY $sort $dir $limit";
-                    $results2 = $wpdb->get_results($query, ARRAY_A);
-
-                    if (empty($results2)) {
-                        // no results
-                        return;
-                    }
-                    $count = count($results2);
-                    foreach ($results2 as $data) {
+                    $results2 = mysql_query($query);
+                    $count = mysql_num_rows($results2);
+                    while ($data = mysql_fetch_array($results2)) {
 
                         $ProfileID = $data['ProfileID'];
                         $ProfileGallery = stripslashes($data['ProfileGallery']);
@@ -1553,10 +1536,13 @@ function bb_display_list() {
                             $new_title = '';
                             foreach($title as $t){
                                 $id = (int)$t;
-                                $get_title = "SELECT `DataTypeTitle` FROM " . table_agency_data_type .  
+                                $get_title = "SELECT DataTypeTitle FROM " . table_agency_data_type .  
                                              " WHERE DataTypeID = " . $id;   
-                                $DataTypeTitle = $wpdb->get_var($get_title);             
-                                $new_title .= "," . $DataTypeTitle; 
+                                $resource = mysql_query($get_title);             
+                                $get = mysql_fetch_assoc($resource);
+                                if (mysql_num_rows($resource) > 0 ){
+                                    $new_title .= "," . $get['DataTypeTitle']; 
+                                }
                             }
                             $new_title = substr($new_title,1);
                         } else {
@@ -1564,15 +1550,17 @@ function bb_display_list() {
                             $id = (int)$data['ProfileType'];
                             $get_title = "SELECT DataTypeTitle FROM " . table_agency_data_type .  
                                          " WHERE DataTypeID = " . $id;   
-                            $DataTypeTitle = $wpdb->get_var($get_title);             
-                            $new_title = $DataTypeTitle; 
+                            $resource = mysql_query($get_title);             
+                            $get = mysql_fetch_assoc($resource);
+                            if (mysql_num_rows($resource) > 0 ){
+                                $new_title = $get['DataTypeTitle']; 
+                            }
                         }
                         
                         $DataTypeTitle = stripslashes($new_title);
 
-                        $resultImageCount = $wpdb->get_results("SELECT * FROM `$t_media` WHERE `ProfileID` = '$ProfileID' AND `ProfileMediaType` = 'Image'", ARRAY_A);
-
-                        $profileImageCount = count($resultImageCount);
+                        $resultImageCount = mysql_query("SELECT * FROM `$t_media` WHERE `ProfileID` = '$ProfileID' AND `ProfileMediaType` = 'Image'");
+                        $profileImageCount = mysql_num_rows($resultImageCount);
 
                         ?>
                         <tr"<?php echo $rowColor ?>">
@@ -1599,8 +1587,8 @@ function bb_display_list() {
                             <td class="ProfileDateViewLast column-ProfileDateViewLast"><?php echo bb_agency_makeago(bb_agency_convertdatetime($ProfileDateViewLast), $bb_agency_option_locationtimezone); ?></td>
                         </tr>
                         <?php
-                    }                       
-
+                    }
+                    mysql_free_result($results2);
                     if ($count < 1) {
                         if (isset($filter)) : ?>
                             <tr>
