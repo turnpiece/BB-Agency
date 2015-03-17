@@ -127,7 +127,7 @@
 			$newrules['profile/(.*)/contact'] = 'index.php?type=profilecontact&target=$matches[1]';
 			$newrules['profile/(.*)$'] = 'index.php?type=profile&target=$matches[1]';
 			// model card
-			$newrules['card/(.*)$'] = 'index.php?type=card&target=$matches[1]';
+			$newrules['card/(.*)\.jpg$'] = 'index.php?type=card&target=$matches[1]';
 			
 		    $newrules['version-bb-agency'] = 'index.php?type=rbv'; // ping this page for version checker
 			

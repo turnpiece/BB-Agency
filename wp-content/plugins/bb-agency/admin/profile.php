@@ -1033,6 +1033,18 @@ function bb_display_manage($ProfileID) {
         <div>Type: <select name="profileMediaV1Type"><option selected><?php _e("Video Slate", bb_agency_TEXTDOMAIN) ?></option><option><?php _e("Video Monologue", bb_agency_TEXTDOMAIN) ?></option><option><?php _e("Demo Reel", bb_agency_TEXTDOMAIN) ?></option></select><textarea id='profileMediaV1' name='profileMediaV1'></textarea></div>
         <div>Type: <select name="profileMediaV2Type"><option><?php _e("Video Slate", bb_agency_TEXTDOMAIN) ?></option><option selected><?php _e("Video Monologue", bb_agency_TEXTDOMAIN) ?></option><option><?php _e("Demo Reel", bb_agency_TEXTDOMAIN) ?></option></select><textarea id='profileMediaV2' name='profileMediaV2'></textarea></div>
         <div>Type: <select name="profileMediaV3Type"><option><?php _e("Video Slate", bb_agency_TEXTDOMAIN) ?></option><option><?php _e("Video Monologue", bb_agency_TEXTDOMAIN) ?></option><option selected><?php _e("Demo Reel", bb_agency_TEXTDOMAIN) ?></option></select><textarea id='profileMediaV3' name='profileMediaV3'></textarea></div>
+
+
+        <?php if ($ProfileIsActive == 1) : ?>
+        <div>
+            <h3>Model Card</h3>
+            <p>
+                <a href="/card/<?php echo $ProfileGallery ?>.jpg">
+                    <img src="/card/<?php echo $ProfileGallery ?>.jpg" width="400" alt="<?php echo $ProfileGallery ?>" />
+                </a>
+            </p>
+        </div>
+        <?php endif; ?>
     <?php
     }
     ?>
@@ -1125,6 +1137,7 @@ function bb_display_manage($ProfileID) {
             <?php endif; ?>
         </tbody>
     </table>
+
     <?php if (!empty($ProfileID) && ($ProfileID > 0)) :
     $t_job = table_agency_job;
     ?>
@@ -1162,13 +1175,6 @@ function bb_display_manage($ProfileID) {
     <p>No casting calls yet.</p>
     <?php endif; ?>
 
-    <?php if ($ProfileIsActive == 1) : ?>
-    <h3>Model Card</h3>
-    <?php
-        // generate model card
-
-
-    endif; ?>
     
     <?php _e('Last updated on', bb_agency_TEXTDOMAIN) ?> <?php echo bb_agency_human_date($ProfileDateUpdated) ?>
     <p class="submit">
