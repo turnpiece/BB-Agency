@@ -1,5 +1,9 @@
 <?php
 
+// check login
+if (!is_user_logged_in())
+    exit;
+
 // Get Profile
 $profileURL = get_query_var('target');
 
