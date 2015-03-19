@@ -48,6 +48,8 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 	//define('bb_agency_TESTING', true);
 	define('bb_agency_TERMS', get_bloginfo('url').'/clients-standard-terms-conditions');
 
+	define('bb_agency_PHONE', '0208 651 1201');
+
 	// email sending
 	define('bb_agency_SEND_EMAILS', false); // whether or not to send emails
 	$bb_agency_CURRENT_TYPE_ID = 0; // will contain current type

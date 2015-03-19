@@ -94,7 +94,7 @@
             $this->small_font();
             $this->standard_colour();
             $this->SetX(self::LEFT);
-            $this->Cell(40, self::V_SPACE, 'Phone: 0208 651 1201');
+            $this->Cell(40, self::V_SPACE, 'Phone: '.bb_agency_PHONE);
 
             //$this->v_space();
 
