@@ -128,7 +128,7 @@
       <th scope="row"><?php _e('Delete Options', bb_agency_TEXTDOMAIN) ?></th>
       <td>
         <input type="radio" name="bb_agency_options[bb_agency_option_profiledeletion]" value="1" ".checked(bb_agency_get_option('bb_agency_option_profiledeletion'), 1,false)."/> <?php _e("No", bb_agency_TEXTDOMAIN) ?><br />
-        <input type="radio" name="bb_agency_options[bb_agency_option_profiledeletion]" value="2" ".checked(bb_agency_get_option('bb_agency_option_profiledeletion'), 2,false)."/> <?php _e("Yes (Allow USers to delete)", bb_agency_TEXTDOMAIN) ?><br />
+        <input type="radio" name="bb_agency_options[bb_agency_option_profiledeletion]" value="2" ".checked(bb_agency_get_option('bb_agency_option_profiledeletion'), 2,false)."/> <?php _e("Yes (Allow users to delete)", bb_agency_TEXTDOMAIN) ?><br />
         <input type="radio" name="bb_agency_options[bb_agency_option_profiledeletion]" value="3" ".checked(bb_agency_get_option('bb_agency_option_profiledeletion'), 3,false)."/> <?php _e("Archive Only (Users can remove themselves as active but profile remains)", bb_agency_TEXTDOMAIN) ?><br />
               </td>
     </tr>      

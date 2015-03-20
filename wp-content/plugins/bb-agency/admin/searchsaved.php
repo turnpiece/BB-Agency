@@ -190,15 +190,21 @@ if (isset($_POST['action'])) {
         <b>Preview: <?php echo  $count." Profile(s)"; ?></b>
         <div style="height:550px; width:580px; overflow-y:scroll;">
             <?php
-            while ($data2 = mysql_fetch_array($results)) {
-                echo " <div style=\"background:black; color:white;float: left; max-width: 100px; height: 180px; margin: 2px; overflow:hidden;  \">";
-				echo " <div style=\"margin:3px;max-width:250px; max-height:300px; overflow:hidden;\">";
-				echo stripslashes($data2['ProfileContactNameFirst']) ." ". stripslashes($data2['ProfileContactNameLast']);
-				echo "<br /><a href=\"". bb_agency_PROFILEDIR . $data2['ProfileGallery'] ."/\" target=\"_blank\">";
-				echo "<img style=\"max-width:130px; max-height:150px; \" src=\"". bb_agency_UPLOADDIR ."". $data2['ProfileGallery'] ."/". $data2['ProfileMediaURL'] ."\" /></a>";
-				echo "</div>\n";
-				echo "</div>\n";
-            }
+            while ($data2 = mysql_fetch_array($results)) : ?>
+                <div style="background:black; color:white;float: left; max-width: 100px; height: 180px; margin: 2px; overflow:hidden;">
+				    <div style="margin:3px; max-width:250px; max-height:300px; overflow:hidden;">
+				        <?php echo stripslashes($data2['ProfileContactNameFirst']) ." ". stripslashes($data2['ProfileContactNameLast']); ?>
+				        <br />
+                        <?php if (bb_agency_EMAIL_CARDS) : ?>
+                        <a href="<?php bloginfo('wpurl') ?>/card/<?php echo $data2['ProfileGallery'] ?>.jpg" target="_blank">
+                        <?php else : ?>
+                        <a href="<?php echo bb_agency_PROFILEDIR . $data2['ProfileGallery'] ?>" target="_blank">
+                        <?php endif; ?>
+                            <img style="max-width:130px; max-height:150px;" src="<?php echo bb_agency_UPLOADDIR . $data2['ProfileGallery'] ."/". $data2['ProfileMediaURL'] ?>" />
+                        </a>
+				    </div>
+				</div>
+            <?php endwhile;
         ?>
         </div>
     </div>

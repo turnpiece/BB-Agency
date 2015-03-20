@@ -52,6 +52,8 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 
 	// email sending
 	define('bb_agency_SEND_EMAILS', false); // whether or not to send emails
+	define('bb_agency_EMAIL_CARDS', true); // whether or not to email links to cards or profiles
+	
 	$bb_agency_CURRENT_TYPE_ID = 0; // will contain current type
 	// Clean Up:
 	$pageURL = '';

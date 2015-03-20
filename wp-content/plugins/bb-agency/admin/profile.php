@@ -233,6 +233,9 @@ if (isset($_POST['action'])) {
                     }
                 }
 
+                if ($ProfileGallery)
+                    $sqlData[] = "`ProfileGallery` = \"$ProfileGallery\"";
+
                 $sqlData[] = '`ProfileDateUpdated` = NOW()';
 
                 // get latitude and longitude
@@ -280,8 +283,9 @@ if (isset($_POST['action'])) {
                         $results1 = $wpdb->query($insert1);
                     }
                 }
-
-			     //  bb_agency_checkdir($ProfileGallery);  // Check Directory - create directory if does not exist
+ 
+                bb_agency_checkdir($ProfileGallery);  // Check Directory - create directory if does not exist
+                
                 // Upload Image & Add to Database
                 $i = 1;
 

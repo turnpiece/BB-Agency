@@ -38,46 +38,29 @@ EOF;
         imagefill($this->canvas, 0, 0, $colour);
 
         $filepath = bb_agency_UPLOADPATH . '/' . $profile->ProfileGallery . '/' . $profile->ProfileMediaURL;
-/*
-        $size = getimagesize($filepath);
 
-        $headshot = imagecreatefromjpeg($filepath);
+        if (file_exists($filepath)) {
+            $headshot = $this->image_resize( $filepath, 350, 500, true );
 
-        $width = imagesx( $headshot );
-        $height = imagesy( $headshot );
+            if (!empty($headshot))
+                imagecopy($this->canvas, $headshot, 50, 50, 0, 0, imagesx($headshot), imagesy($headshot));
 
-        $p_width = 350;
-        $p_height = 500;
-*/
-        $headshot = $this->image_resize( $filepath, 350, 500, true );
-/*
-        if ($width > $height) {
-            $newwidth = $p_width;
-            $divisor = $width / $p_width;
-            $newheight = floor( $height / $divisor);
+            else
+                die("Failed to copy profile image $profile->ProfileMediaURL to card: ".$headshot);
         }
-        else {
-            $newheight = $p_height;
-            $divisor = $height / $p_height;
-            $newwidth = floor( $width / $divisor );
-        }
-
-        // Create a new temporary image.
-        $tmpimg = imagecreatetruecolor( $newwidth, $newheight );
-
-        // Copy and resize old image into new image.
-        imagecopyresampled( $tmpimg, $headshot, 0, 0, 0, 0, $newwidth, $newheight, $width, $height );
-*/
-        imagecopy($this->canvas, $headshot, 50, 50, 0, 0, imagesx($headshot), imagesy($headshot));
-
+        
         // get logo
         $logo_option = get_option('cmsms_options_newgate_logo_image');
         $logo_url = $logo_option['newgate_logo_url'];
         $logo_path = str_replace(get_bloginfo('wpurl'), ABSPATH, $logo_url);
 
-        $logo_img = $this->image_resize( $logo_path, 250, 90 );
+        // add logo to canvas
+        if (file_exists($logo_path)) {
+            $logo_img = $this->image_resize( $logo_path, 250, 90 );
 
-        imagecopy($this->canvas, $logo_img, $this->text_x, $this->text_y, 0, 0, imagesx($logo_img), imagesy($logo_img));
+            if (!empty($logo_img))
+                imagecopy($this->canvas, $logo_img, $this->text_x, $this->text_y, 0, 0, imagesx($logo_img), imagesy($logo_img));
+        }
 
         $this->text_y += 120;
 
@@ -159,45 +142,64 @@ EOF;
 
     private function image_resize($src, $width, $height, $crop=0){
 
-          if(!list($w, $h) = getimagesize($src)) return "Unsupported picture type!";
+        if (!list($w, $h) = getimagesize($src))
+            $this->fatal("Unsupported picture type");
 
-          $type = strtolower(substr(strrchr($src,"."),1));
-          if($type == 'jpeg') $type = 'jpg';
-          switch($type){
-            case 'bmp': $img = imagecreatefromwbmp($src); break;
-            case 'gif': $img = imagecreatefromgif($src); break;
-            case 'jpg': $img = imagecreatefromjpeg($src); break;
-            case 'png': $img = imagecreatefrompng($src); break;
-            default : return "Unsupported picture type!";
-          }
+        $type = strtolower(substr(strrchr($src,"."),1));
+        
+        if ($type == 'jpeg') 
+            $type = 'jpg';
 
-          // resize
-          if($crop){
-            if($w < $width or $h < $height) return "Picture is too small!";
+        switch($type){
+            case 'bmp': 
+                $img = imagecreatefromwbmp($src); 
+                break;
+            case 'gif': 
+                $img = imagecreatefromgif($src); 
+                break;
+            case 'jpg': 
+                $img = imagecreatefromjpeg($src); 
+                break;
+            case 'png': 
+                $img = imagecreatefrompng($src); 
+                break;
+            default : 
+                $this->fatal("Unsupported picture type");
+        }
+
+        // resize
+        if($crop){
+            if ($w < $width or $h < $height)
+                $this->fatal("Picture is too small");
             $ratio = max($width/$w, $height/$h);
             $h = $height / $ratio;
             $x = ($w - $width / $ratio) / 2;
             $w = $width / $ratio;
-          }
-          else{
-            if($w < $width and $h < $height) return "Picture is too small!";
+        }
+        else{
+            if ($w < $width and $h < $height) 
+                $this->fatal("Picture is too small");
             $ratio = min($width/$w, $height/$h);
             $width = $w * $ratio;
             $height = $h * $ratio;
             $x = 0;
-          }
+        }
 
-          $new = imagecreatetruecolor($width, $height);
+        $new = imagecreatetruecolor($width, $height);
 
-          // preserve transparency
-          if($type == "gif" or $type == "png"){
+        // preserve transparency
+        if ($type == "gif" or $type == "png"){
             imagecolortransparent($new, imagecolorallocatealpha($new, 0, 0, 0, 127));
             imagealphablending($new, false);
             imagesavealpha($new, true);
-          }
+        }
 
-          imagecopyresampled($new, $img, 0, 0, $x, 0, $width, $height, $w, $h);
+        imagecopyresampled($new, $img, 0, 0, $x, 0, $width, $height, $w, $h);
 
-          return $new;
+        return $new;
+    }
+
+    private function fatal($message) {
+        die($message);
     }
 }
