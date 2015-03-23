@@ -11,7 +11,7 @@ $model = get_query_var('target');
 if ($model) {
     include bb_agency_BASEPATH.'Classes/ModelCard.php';
 
-    $Card = new ModelCard;
+    $Card = new ModelCard($model);
 
-    $Card->display( $model );
+    $Card->display();
 }

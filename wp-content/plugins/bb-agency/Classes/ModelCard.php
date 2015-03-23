@@ -2,33 +2,23 @@
 
 class ModelCard {
 
+    private $model;
     private $canvas;
+    private $quality = 90;
     private $fontfile;
+    private $profile = array();
     private $text_colour;
     private $text_x = 500;
     private $text_y = 50;
     private $text_size = 11;
     
-    function __construct() {
+    function __construct($model) {
+        $this->model = $model;
 
+        $this->set_profile();
     }
 
-    function display( $model ) {
-
-        global $wpdb;
-        $t_profile = table_agency_profile;
-        $t_datatype = table_agency_data_type;
-        $t_media = table_agency_profile_media;
-        $query = <<<EOF
-SELECT p.*, dt.`DataTypePrivacy` AS ProfilePrivacy, m.`ProfileMediaURL` 
-FROM $t_profile AS p
-LEFT JOIN $t_datatype AS dt ON dt.`DataTypeID` = p.`ProfileType`
-LEFT JOIN $t_media AS m ON m.`ProfileID` = p.`ProfileID` AND m.`ProfileMediaPrimary` = 1 AND m.`ProfileMediaType` = "Image"
-WHERE p.`ProfileGallery` = '$model'
-LIMIT 1
-EOF;
-
-        $profile = $wpdb->get_row($query);
+    function save() {
 
         // Create a blank image and add some text
         $this->canvas = imagecreatetruecolor(800, 600);
@@ -37,7 +27,7 @@ EOF;
         $colour = imagecolorallocate($this->canvas, 255, 255, 255);
         imagefill($this->canvas, 0, 0, $colour);
 
-        $filepath = bb_agency_UPLOADPATH . '/' . $profile->ProfileGallery . '/' . $profile->ProfileMediaURL;
+        $filepath = bb_agency_UPLOADPATH . '/' . $this->profile->ProfileGallery . '/' . $this->profile->ProfileMediaURL;
 
         if (file_exists($filepath)) {
             $headshot = $this->image_resize( $filepath, 350, 500, true );
@@ -46,7 +36,7 @@ EOF;
                 imagecopy($this->canvas, $headshot, 50, 50, 0, 0, imagesx($headshot), imagesy($headshot));
 
             else
-                die("Failed to copy profile image $profile->ProfileMediaURL to card: ".$headshot);
+                die("Failed to copy profile image $this->profile->ProfileMediaURL to card: ".$headshot);
         }
         
         // get logo
@@ -66,7 +56,7 @@ EOF;
 
         $this->text_colour = imagecolorallocate($this->canvas, 0, 0, 0);
 
-        $name = $profile->ProfileContactNameFirst;
+        $name = $this->profile->ProfileContactNameFirst;
 
         $this->fontfile = dirname(dirname(__FILE__)).'/fonts/Raleway-Regular.ttf';
 
@@ -91,16 +81,60 @@ EOF;
 
         $this->text_y += 50;
 
-        $this->print_text( 'Age: ' . $this->get_age( $profile->ProfileDateBirth ) );
+        $this->print_text( 'Age: ' . $this->get_age( $this->profile->ProfileDateBirth ) );
+
+        // Write to file image
+        $success = imagejpeg($this->canvas, $this->filepath(), $this->quality);
+
+        // Free up memory
+        imagedestroy($this->canvas);
+
+        return $success;
+    }
+
+    public function display() {
+
+        $path = $this->filepath();
+
+        if (!@file_exists($path)) {
+            if (!$this->save())
+                die ('failed to save image to '.$path);
+        }
 
         // Set the content type header - in this case image/jpeg
         header('Content-Type: image/jpeg');
 
-        // Output the image
-        imagejpeg($this->canvas);
+        // write image to browser
+        echo file_get_contents($path);
+    }
 
-        // Free up memory
-        imagedestroy($this->canvas);
+    public function filepath() {
+        return bb_agency_UPLOADPATH .$this->profile->ProfileGallery.'/'.$this->filename();
+    }
+
+    /**
+     * filename
+     *
+     */
+    private function filename() {
+        return str_replace(' ', '-', get_bloginfo('name', 'display')).'-'.$this->profile->ProfileContactNameFirst.'.jpg';
+    }
+
+    private function set_profile() {
+        global $wpdb;
+        $t_profile = table_agency_profile;
+        $t_datatype = table_agency_data_type;
+        $t_media = table_agency_profile_media;
+        $query = <<<EOF
+SELECT p.*, dt.`DataTypePrivacy` AS ProfilePrivacy, m.`ProfileMediaURL` 
+FROM $t_profile AS p
+LEFT JOIN $t_datatype AS dt ON dt.`DataTypeID` = p.`ProfileType`
+LEFT JOIN $t_media AS m ON m.`ProfileID` = p.`ProfileID` AND m.`ProfileMediaPrimary` = 1 AND m.`ProfileMediaType` = "Image"
+WHERE p.`ProfileGallery` = '$this->model'
+LIMIT 1
+EOF;
+
+        $this->profile = $wpdb->get_row($query);
     }
 
     private function print_text( $string ) {

@@ -102,11 +102,33 @@ if (isset($_POST['action'])) {
 			$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 			$headers .= 'From: '. $bb_agency_option_agencyname .' <'. $bb_agency_option_agencyemail .'>' . "\r\n";
 
+            // attachments
+            $attachments = array();
+
+            require_once(bb_agency_BASEPATH.'/Classes/ModelCard.php');
+
+            $query = "SELECT `SearchProfileID` FROM " . table_agency_searchsaved ." WHERE `SearchID` = ".$SearchID;
+
+            $pID = $wpdb->get_var($query);
+
+            if (empty($pID))
+                wp_die('Failed to find that saved search.');
+                
+            $query = "SELECT * FROM ". table_agency_profile ." WHERE `ProfileID` IN (".$pID.") ORDER BY `ProfileContactNameFirst` ASC";
+
+            $profiles = $wpdb->get_results($query);
+
+            foreach ($profiles AS $profile) {
+                $Card = new ModelCard($profile->ProfileGallery);
+                $attachments[] = $Card->filepath();
+            }
+
 			$isSent = wp_mail(
                 bb_agency_SEND_EMAILS ? $SearchMuxToEmail : $bb_agency_option_agencyemail, 
                 $SearchMuxSubject, 
                 nl2br($SearchMuxMessage), 
-                $headers
+                $headers,
+                $attachments
             );
 
 			if ($isSent) : ?>   			
@@ -170,14 +192,14 @@ if (isset($_POST['action'])) {
     </div>
     <?php
 	 
-        $query = "SELECT search.SearchTitle, search.SearchProfileID, search.SearchOptions, searchsent.SearchMuxHash FROM ". table_agency_searchsaved ." search LEFT JOIN ". table_agency_searchsaved_mux ." searchsent ON search.SearchID = searchsent.SearchID WHERE search.SearchID = \"". $_GET["SearchID"]."\"";
+        $query = "SELECT search.`SearchTitle`, search.`SearchProfileID`, search.`SearchOptions`, searchsent.`SearchMuxHash` FROM ". table_agency_searchsaved ." search LEFT JOIN ". table_agency_searchsaved_mux ." searchsent ON search.`SearchID` = searchsent.`SearchID` WHERE search.`SearchID` = \"". $_GET["SearchID"]."\"";
 
         $qProfiles =  mysql_query($query);
 
         $data = mysql_fetch_array($qProfiles);
 
         if (empty($data) || !$data['SearchProfileID'])
-        wp_die('Failed to find that saved search.');
+            wp_die('Failed to find that saved search.');
             
         $query = "SELECT * FROM ". table_agency_profile ." profile, ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1 AND profile.ProfileID IN (".$data['SearchProfileID'].") ORDER BY ProfileContactNameFirst ASC";
 

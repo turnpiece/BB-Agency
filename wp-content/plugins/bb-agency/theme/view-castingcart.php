@@ -37,14 +37,22 @@ if(isset($_POST["action"]) && $_POST["action"] == "sendEmailCastingCart"){
 	$SearchMuxCustomValue	=$_POST['SearchMuxCustomValue'];
 
 	// Get Casting Cart
-	$query = "SELECT  profile.*, profile.ProfileGallery, profile.ProfileContactDisplay, profile.ProfileDateBirth, profile.ProfileLocationState, profile.ProfileID as pID , cart.CastingCartTalentID, cart.CastingCartTalentID, (SELECT media.ProfileMediaURL FROM ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1) AS ProfileMediaURL FROM ". table_agency_profile ." profile INNER JOIN  ".table_agency_castingcart."  cart WHERE  cart.CastingCartTalentID = profile.ProfileID   AND cart.CastingCartProfileID = '".bb_agency_get_current_userid()."' AND ProfileIsActive = 1 ORDER BY profile.ProfileContactNameFirst";
+	$query = "SELECT  profile.*, profile.`ProfileGallery`, profile.`ProfileContactDisplay`, profile.`ProfileDateBirth`, profile.`ProfileLocationState`, profile.`ProfileID` as pID , cart.`CastingCartTalentID`, cart.`CastingCartTalentID`, (SELECT media.`ProfileMediaURL` FROM ". table_agency_profile_media ." media WHERE profile.`ProfileID` = media.`ProfileID` AND media.`ProfileMediaType` = \"Image\" AND media.`ProfileMediaPrimary` = 1) AS ProfileMediaURL FROM ". table_agency_profile ." profile INNER JOIN  ".table_agency_castingcart."  cart WHERE cart.`CastingCartTalentID` = profile.`ProfileID` AND cart.`CastingCartProfileID` = '".bb_agency_get_current_userid()."' AND `ProfileIsActive` = 1 ORDER BY profile.`ProfileContactNameFirst`";
 	$result = mysql_query($query);
 	$pID = "";
 	$profileid_arr = array();
+	$attachments = array();
+
+	require_once(bb_agency_BASEPATH.'/Classes/ModelCard.php');
 	
 	while($fetch = mysql_fetch_assoc($result)){		
 	    $profileid_arr[] = $fetch["pID"];
+
+	    $Card = new ModelCard($fetch['ProfileGallery']);
+	    $attachments[] = $Card->filepath();
 	}
+	print_r($attachments);
+	exit;
 	
 	$casting = implode(",",$profileid_arr);
 	$wpdb->query("INSERT INTO " . table_agency_searchsaved." (SearchProfileID) VALUES('".$casting."')") or die(mysql_error());
@@ -89,8 +97,8 @@ if(isset($_POST["action"]) && $_POST["action"] == "sendEmailCastingCart"){
 	if(!empty($SearchMuxEmailToBcc)){
 		$headers = 'Bcc: '.$SearchMuxEmailToBcc.'' . "\r\n";
 	}
- 
-  	$isSent = wp_mail($SearchMuxToEmail, $SearchMuxSubject, $SearchMuxMessage, $headers);
+
+  	$isSent = wp_mail($SearchMuxToEmail, $SearchMuxSubject, $SearchMuxMessage, $headers, $attachments);
   	remove_filter( 'wp_mail_content_type', 'bb_agency_set_content_type' );
 
     if ($isSent) {
@@ -157,17 +165,6 @@ get_header(); ?>
 						}
 									
 		echo "			</div>\n";
-          
-	/*	
-		
-		echo "			<div class=\"profile-category-filter\">\n";
-		echo "			  <h3>". __("Filter Profiles", bb_agency_TEXTDOMAIN) .":</h3>\n";
-	 
-						  $profilesearch_layout = "condensed";
-						  include("include-profile-search.php"); 	
-	
-		echo "			</div>\n";
-		*/
 		echo "</div>\n";
 		echo "<div class=\"clear line\"></div>\n";
 		echo "<input type=\"hidden\" name=\"castingcart\" value=\"1\"/>";
