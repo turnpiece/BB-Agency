@@ -81,7 +81,16 @@ class ModelCard {
 
         $this->text_y += 50;
 
-        $this->print_text( 'Age: ' . $this->get_age( $this->profile->ProfileDateBirth ) );
+        if (bb_agency_SITETYPE == 'children') {
+            $this->print_text( 'Age: ' . $this->get_age( $this->profile->ProfileDateBirth ) );
+        } else {
+            $this->print_text( 'Due date: ' . $this->get_date( $this->profile->ProfileDateDue ) );
+        }
+
+        if ($profile->height) {
+            $this->text_y += 50;
+            $this->print_text( 'Height: ' . $this->get_age( $this->profile->ProfileDateBirth ) );
+        }
 
         // Write to file image
         $success = imagejpeg($this->canvas, $this->filepath(), $this->quality);
@@ -125,14 +134,15 @@ class ModelCard {
         $t_profile = table_agency_profile;
         $t_datatype = table_agency_data_type;
         $t_media = table_agency_profile_media;
-        $query = <<<EOF
-SELECT p.*, dt.`DataTypePrivacy` AS ProfilePrivacy, m.`ProfileMediaURL` 
-FROM $t_profile AS p
-LEFT JOIN $t_datatype AS dt ON dt.`DataTypeID` = p.`ProfileType`
-LEFT JOIN $t_media AS m ON m.`ProfileID` = p.`ProfileID` AND m.`ProfileMediaPrimary` = 1 AND m.`ProfileMediaType` = "Image"
-WHERE p.`ProfileGallery` = '$this->model'
-LIMIT 1
-EOF;
+        $t_custom = table_agency_customfield_mux;
+        $query = "
+            SELECT p.*, dt.`DataTypePrivacy` AS ProfilePrivacy, m.`ProfileMediaURL`, h.`ProfileCustomValue` AS height
+            FROM $t_profile AS p
+            LEFT JOIN $t_datatype AS dt ON dt.`DataTypeID` = p.`ProfileType`
+            LEFT JOIN $t_media AS m ON m.`ProfileID` = p.`ProfileID` AND m.`ProfileMediaPrimary` = 1 AND m.`ProfileMediaType` = 'Image'
+            LEFT JOIN $t_custom AS h ON h.`ProfileID` = p.`ProfileID` AND h.`ProfileCustomID` = 5
+            WHERE p.`ProfileGallery` = '$this->model'
+            LIMIT 1";
 
         $this->profile = $wpdb->get_row($query);
     }
@@ -142,12 +152,19 @@ EOF;
     }
 
     private function get_age( $dob ) {
-        $birthday = new DateTime($dob);
-        $interval = $birthday->diff(new DateTime);
-        if ($interval->y > 0)
-            return $interval->y;
-        else
-            return $interval->m . ' months';
+        return bb_agency_get_age($dob);
+    }
+
+    private function get_date( $date ) {
+        return bb_agency_displaydate($date);
+    }
+
+    private function get_height( $height ) {
+
+            $feet = floor($height / 12);
+            $inch = $height - floor($feet * 12);
+
+            return $feet.'ft '.$inch.'in';
     }
 
     private function imagecreatefromfile( $filename ) {

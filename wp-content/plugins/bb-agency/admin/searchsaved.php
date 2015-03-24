@@ -135,10 +135,14 @@ if (isset($_POST['action'])) {
                 <div style="margin:15px;">
         			<div id="message" class="updated">
         			     Email successfully sent from <strong><?php echo $bb_agency_option_agencyemail ?></strong> to <strong><?php echo (bb_agency_SEND_EMAILS ? $SearchMuxToEmail : $bb_agency_option_agencyemail.'(would have gone to: '.$SearchMuxToEmail.')') ?></strong><br />
+                        <?php if (!empty($attachments)) : ?>
                         Model card attachments:
+                        <ul>
                         <?php foreach ($attachments as $attachment) : ?>
-                            <a href="<?php echo str_replace(bb_agency_UPLOADPATH, bb_agency_UPLOADDIR, $attachment) ?>"><?php echo basename($attachment) ?></a>
+                            <li><a href="<?php echo str_replace(bb_agency_UPLOADPATH, bb_agency_UPLOADDIR, $attachment) ?>"><?php echo basename($attachment) ?></a></li>
                         <?php endforeach; ?>
+                        </ul>
+                        <?php endif; ?>
         			</div>
         		</div>				
             <?php endif;
