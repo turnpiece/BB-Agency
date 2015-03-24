@@ -16,6 +16,7 @@ class ModelCard {
         $this->model = $model;
 
         $this->set_profile();
+        $this->save();
     }
 
     function save() {
