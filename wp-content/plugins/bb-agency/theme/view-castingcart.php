@@ -51,8 +51,6 @@ if(isset($_POST["action"]) && $_POST["action"] == "sendEmailCastingCart"){
 	    $Card = new ModelCard($fetch['ProfileGallery']);
 	    $attachments[] = $Card->filepath();
 	}
-	print_r($attachments);
-	exit;
 	
 	$casting = implode(",",$profileid_arr);
 	$wpdb->query("INSERT INTO " . table_agency_searchsaved." (SearchProfileID) VALUES('".$casting."')") or die(mysql_error());
