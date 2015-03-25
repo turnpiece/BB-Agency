@@ -78,7 +78,8 @@ if (isset($_POST['action'])) {
 			
 			$link = get_bloginfo("url") ."/client-view/".$SearchMuxHash;
 			
-            $SearchMuxMessage	= str_ireplace("[link-place-holder]", "<a href='$link'>$link</a>", $SearchMuxMessage);
+            //$SearchMuxMessage = str_ireplace("[link-place-holder]", "<a href='$link'>$link</a>", $SearchMuxMessage);
+            $SearchMuxMessage = '';
 
             // add terms link
             if (bb_agency_TERMS) {
@@ -120,7 +121,9 @@ if (isset($_POST['action'])) {
 
             foreach ($profiles AS $profile) {
                 $Card = new ModelCard($profile->ProfileGallery);
-                $attachments[] = $Card->filepath();
+                
+                if ($Card->save())
+                    $attachments[] = $Card->filepath();
             }
 
 			$isSent = wp_mail(
@@ -187,8 +190,8 @@ if (isset($_POST['action'])) {
             <div><label for="SearchMuxToName"><strong>Send to Name:</strong></label><br/><input style="width:300px;" type="text" id="SearchMuxToName" name="SearchMuxToName" value="<?php echo $dataSearchSavedMux["SearchMuxToName"]; ?>" /></div>
             <div><label for="SearchMuxToEmail"><strong>Send to Email:</strong></label><br/><input  style="width:300px;" type="text" id="SearchMuxToEmail" name="SearchMuxToEmail" value="<?php echo $dataSearchSavedMux["SearchMuxToEmail"]; ?>" /></div>
             <div><label for="SearchMuxSubject"><strong>Subject:</strong></label><br/><input  style="width:300px;" type="text" id="SearchMuxSubject" name="SearchMuxSubject" value="<?php echo $bb_agency_option_agencyname; ?> Casting Cart" /></div>
-            <div><label for="SearchMuxMessage"><strong>Message: (copy/paste: [link-place-holder] )</strong></label><br/>
-		        <textarea id="SearchMuxMessage" name="SearchMuxMessage" style="width: 500px; height: 300px; "><?php if (!isset($_GET["SearchMuxHash"])){  if (isset($dataSearchSavedMux["SearchMuxMessage"])) echo $dataSearchSavedMux["SearchMuxMessage"];else{echo "Click the following link (or copy and paste it into your browser): [link-place-holder]";}}else{echo "Click the following link (or copy and paste it into your browser): [link-place-holder]";} ?></textarea>
+            <div><label for="SearchMuxMessage"><strong>Message:</strong></label><br/>
+		        <textarea id="SearchMuxMessage" name="SearchMuxMessage" style="width: 500px; height: 300px; "><?php if (!isset($_GET["SearchMuxHash"]) && isset($dataSearchSavedMux["SearchMuxMessage"])) echo $dataSearchSavedMux["SearchMuxMessage"]; ?></textarea>
             </div>
             <p class="submit">
                 <input type="hidden" name="SearchID" value="<?php echo $SearchID; ?>" />

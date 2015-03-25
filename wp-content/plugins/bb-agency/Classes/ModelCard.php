@@ -16,7 +16,6 @@ class ModelCard {
         $this->model = $model;
 
         $this->set_profile();
-        $this->save();
     }
 
     function save() {
@@ -37,9 +36,30 @@ class ModelCard {
                 imagecopy($this->canvas, $headshot, 50, 50, 0, 0, imagesx($headshot), imagesy($headshot));
 
             else
-                die("Failed to copy profile image $this->profile->ProfileMediaURL to card: ".$headshot);
+                return $this->fatal("Failed to copy profile image  to card: ".is_string($headshot) ? $headshot : '');
         }
         
+        // print text
+        $this->text_size = 14;
+        $this->fontfile = dirname(dirname(__FILE__)).'/fonts/Raleway-Regular.ttf';
+
+        $this->print_text( $name );
+
+        $this->text_y += 50;
+
+        if (bb_agency_SITETYPE == 'children') {
+            $this->print_text( 'Age: ' . $this->get_age( $this->profile->ProfileDateBirth ) );
+        } else {
+            $this->print_text( 'Due date: ' . $this->get_date( $this->profile->ProfileDateDue ) );
+        }
+
+        if ($this->profile->height) {
+            $this->text_y += 50;
+            $this->print_text( 'Height: ' . $this->get_height( $this->profile->height ) );
+        }
+
+        $this->text_y = 360;
+
         // get logo
         $logo_option = get_option('cmsms_options_newgate_logo_image');
         $logo_url = $logo_option['newgate_logo_url'];
@@ -59,8 +79,6 @@ class ModelCard {
 
         $name = $this->profile->ProfileContactNameFirst;
 
-        $this->fontfile = dirname(dirname(__FILE__)).'/fonts/Raleway-Regular.ttf';
-
         // get site url
         $url = preg_replace('#^http(s)?://#', '', trim(get_bloginfo('wpurl'), '/'));
 
@@ -76,25 +94,13 @@ class ModelCard {
 
         $this->text_y += 150;
 
-        $this->text_size = 14;
-
-        $this->print_text( $name );
-
-        $this->text_y += 50;
-
-        if (bb_agency_SITETYPE == 'children') {
-            $this->print_text( 'Age: ' . $this->get_age( $this->profile->ProfileDateBirth ) );
-        } else {
-            $this->print_text( 'Due date: ' . $this->get_date( $this->profile->ProfileDateDue ) );
-        }
-
-        if ($profile->height) {
-            $this->text_y += 50;
-            $this->print_text( 'Height: ' . $this->get_age( $this->profile->ProfileDateBirth ) );
-        }
-
         // Write to file image
-        $success = imagejpeg($this->canvas, $this->filepath(), $this->quality);
+        if (is_writable($this->filepath()))
+            $success = imagejpeg($this->canvas, $this->filepath(), $this->quality);
+        else {
+            $success = false;
+            $this->fatal("Unable to write to ".$this->filepath());
+        }
 
         // Free up memory
         imagedestroy($this->canvas);
@@ -204,23 +210,26 @@ class ModelCard {
 
         switch($type){
             case 'bmp': 
-                $img = imagecreatefromwbmp($src); 
+                $img = @imagecreatefromwbmp($src); 
                 break;
             case 'gif': 
-                $img = imagecreatefromgif($src); 
+                $img = @imagecreatefromgif($src); 
                 break;
             case 'jpg': 
-                $img = imagecreatefromjpeg($src); 
+                $img = @imagecreatefromjpeg($src); 
                 break;
             case 'png': 
-                $img = imagecreatefrompng($src); 
+                $img = @imagecreatefrompng($src); 
                 break;
             default : 
-                $this->fatal("Unsupported picture type");
+                return $this->fatal("Unsupported picture type");
         }
 
+        if (empty($img))
+            return $this->fatal("Failed to read image");
+
         // resize
-        if($crop){
+        if ($crop){
             if ($w < $width or $h < $height)
                 $this->fatal("Picture is too small");
             $ratio = max($width/$w, $height/$h);
@@ -252,6 +261,7 @@ class ModelCard {
     }
 
     private function fatal($message) {
-        die($message);
+        error_log(__CLASS__.': '.$message);
+        return false;
     }
 }
