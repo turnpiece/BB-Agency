@@ -18,7 +18,17 @@ class ModelCard {
         $this->set_profile();
     }
 
-    function save() {
+    /**
+     *
+     * save image
+     *
+     * @param bool $force
+     * @return bool
+     */
+    function save($force = false) {
+
+        if (!$force && @file_exists($this->filepath()))
+            return true;
 
         // Create a blank image and add some text
         $this->canvas = imagecreatetruecolor(800, 600);
@@ -108,6 +118,23 @@ class ModelCard {
         return $success;
     }
 
+    /**
+     *
+     * delete image
+     *
+     */
+    public function delete() {
+        $path = $this->filepath();
+
+        if (@file_exists($path))
+            unlink($path);
+    }
+
+    /**
+     *
+     * display image
+     *
+     */
     public function display() {
 
         $path = $this->filepath();
