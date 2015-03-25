@@ -168,10 +168,15 @@ class ModelCard {
 
     private function get_height( $height ) {
 
-            $feet = floor($height / 12);
-            $inch = $height - floor($feet * 12);
+        if (bb_agency_get_option('bb_agency_option_unittype') == 0)
+            return $height;
+
+        else {
+            $feet = floor(intval($height) / 12);
+            $inch = intval($height) - floor($feet * 12);
 
             return $feet.'ft '.$inch.'in';
+        }
     }
 
     private function imagecreatefromfile( $filename ) {
