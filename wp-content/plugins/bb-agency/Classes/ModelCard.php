@@ -61,13 +61,16 @@ class ModelCard {
         $this->text_y += 50;
 
         if (bb_agency_SITETYPE == 'children') {
-            $this->print_text( 'Age: ' . $this->get_age() );
+            if ($age = $this->get_age()) {
+                $this->print_text( 'Age: ' . $age );
+                $this->text_y += 50;
+            }
         } else {
             $this->print_text( 'Due date: ' . $this->get_date( $this->profile->ProfileDateDue ) );
+            $this->text_y += 50;
         }
 
         if ($this->profile->height) {
-            $this->text_y += 50;
             $this->print_text( 'Height: ' . $this->get_height() );
         }
 
@@ -187,7 +190,7 @@ class ModelCard {
     }
 
     private function get_age() {
-        if (!$this->profile->ProfileDateBirth)
+        if (!$this->profile->ProfileDateBirth || strpos($this->profile->ProfileDateBirth, '0') == 0)
             return false;
 
         $birthday = new DateTime($this->profile->ProfileDateBirth);
