@@ -9,7 +9,7 @@ class ModelCard {
     private $profile = array();
     private $text_colour;
     private $text_x = 500;
-    private $text_y = 50;
+    private $text_y = 70;
     private $text_size = 11;
     private $error = 'Unknown error';
     
@@ -54,19 +54,21 @@ class ModelCard {
         $this->text_size = 14;
         $this->fontfile = dirname(dirname(__FILE__)).'/fonts/Raleway-Regular.ttf';
 
+        // print first name
+        $name = $this->profile->ProfileContactNameFirst;
         $this->print_text( $name );
 
         $this->text_y += 50;
 
         if (bb_agency_SITETYPE == 'children') {
-            $this->print_text( 'Age: ' . $this->get_age( $this->profile->ProfileDateBirth ) );
+            $this->print_text( 'Age: ' . $this->get_age() );
         } else {
             $this->print_text( 'Due date: ' . $this->get_date( $this->profile->ProfileDateDue ) );
         }
 
         if ($this->profile->height) {
             $this->text_y += 50;
-            $this->print_text( 'Height: ' . $this->get_height( $this->profile->height ) );
+            $this->print_text( 'Height: ' . $this->get_height() );
         }
 
         $this->text_y = 360;
@@ -87,8 +89,6 @@ class ModelCard {
         $this->text_y += 120;
 
         $this->text_colour = imagecolorallocate($this->canvas, 0, 0, 0);
-
-        $name = $this->profile->ProfileContactNameFirst;
 
         // get site url
         $url = preg_replace('#^http(s)?://#', '', trim(get_bloginfo('wpurl'), '/'));
@@ -186,15 +186,25 @@ class ModelCard {
         imagettftext($this->canvas, $this->text_size, 0, $this->text_x, $this->text_y, $this->text_colour, $this->fontfile, $string);
     }
 
-    private function get_age( $dob ) {
-        return bb_agency_get_age($dob);
+    private function get_age() {
+        if (!$this->profile->ProfileDateBirth)
+            return false;
+
+        $birthday = new DateTime($this->profile->ProfileDateBirth);
+        $interval = $birthday->diff(new DateTime);
+        if ($interval->y > 0)
+            return $interval->y;
+        else
+            return $interval->m . ' months';
     }
 
     private function get_date( $date ) {
         return bb_agency_displaydate($date);
     }
 
-    private function get_height( $height ) {
+    private function get_height() {
+
+        $height = $this->profile->height;
 
         if (bb_agency_get_option('bb_agency_option_unittype') == 0)
             return $height;

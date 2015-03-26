@@ -424,7 +424,8 @@
 				elseif (in_array($dob_m, $secondMonths)) 
 				{
 					array_push($secondMonths, 0);
-				}elseif (in_array($dob_m, $thirdMonths)) 
+				}
+				elseif (in_array($dob_m, $thirdMonths)) 
 				{
 					array_push($thirdMonths, 0);
 				}
