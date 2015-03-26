@@ -47,7 +47,7 @@ class ModelCard {
                 imagecopy($this->canvas, $headshot, 50, 50, 0, 0, imagesx($headshot), imagesy($headshot));
 
             else
-                return $this->fatal("Failed to copy profile image  to card: ".is_string($headshot) ? $headshot : '');
+                return $this->fatal("Failed to copy profile image  to card: ".$this->error);
         }
         
         // print text
@@ -142,7 +142,7 @@ class ModelCard {
 
         if (!@file_exists($path)) {
             if (!$this->save())
-                die ('failed to save image to '.$path);
+                return $this->fatal('Failed to save image to '.$path);
         }
 
         // Set the content type header - in this case image/jpeg
@@ -219,7 +219,7 @@ class ModelCard {
 
     private function imagecreatefromfile( $filename ) {
         if (!file_exists($filename)) {
-            throw new InvalidArgumentException('File "'.$filename.'" not found.');
+            return $this->fatal('File "'.$filename.'" not found.');
         }
         switch ( strtolower( pathinfo( $filename, PATHINFO_EXTENSION ))) {
             case 'jpeg':
@@ -236,7 +236,7 @@ class ModelCard {
             break;
 
             default:
-                throw new InvalidArgumentException('File "'.$filename.'" is not valid jpg, png or gif image.');
+                return $this->fatal('File "'.$filename.'" is not valid jpg, png or gif image.');
             break;
         }
     }
@@ -244,7 +244,7 @@ class ModelCard {
     private function image_resize($src, $width, $height, $crop=0){
 
         if (!list($w, $h) = getimagesize($src))
-            $this->fatal("Unsupported picture type");
+            return $this->set_error("Unsupported picture type ".basename($src));
 
         $type = strtolower(substr(strrchr($src,"."),1));
         
@@ -265,16 +265,17 @@ class ModelCard {
                 $img = @imagecreatefrompng($src); 
                 break;
             default : 
-                return $this->fatal("Unsupported picture type");
+                return $this->set_error("Unsupported picture type ".basename($src));
         }
 
         if (empty($img))
-            return $this->fatal("Failed to read image");
+            return $this->set_error("Failed to read image ".basename($src));
 
         // resize
         if ($crop){
             if ($w < $width or $h < $height)
-                $this->fatal("Picture is too small");
+                return $this->set_error("Picture ".basename($src)." is too small");
+
             $ratio = max($width/$w, $height/$h);
             $h = $height / $ratio;
             $x = ($w - $width / $ratio) / 2;
@@ -282,7 +283,8 @@ class ModelCard {
         }
         else{
             if ($w < $width and $h < $height) 
-                $this->fatal("Picture is too small");
+                return $this->set_error("Picture ".basename($src)." is too small");
+
             $ratio = min($width/$w, $height/$h);
             $width = $w * $ratio;
             $height = $h * $ratio;
@@ -303,13 +305,18 @@ class ModelCard {
         return $new;
     }
 
+    private function set_error($message) {
+        $this->error = $message;
+        error_log(__CLASS__.': '.$message);
+        return false;
+    }
+
     public function get_error() {
         return $this->error;
     }
 
     private function fatal($message) {
-        $this->error = $message;
-        error_log(__CLASS__.': '.$message);
+        $this->set_error( '(' . $this->profile->ProfileGallery . ') ' . $message );
         return false;
     }
 }
