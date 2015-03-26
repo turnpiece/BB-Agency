@@ -198,9 +198,9 @@ class ModelCard {
         if ($interval->y > 1)
             return $interval->y;
         elseif ($interval->y > 0)
-            return '1 year '.$interval->m.' months';
+            return '1 '.__('year', bb_agency_TEXTDOMAIN).' '.$interval->m.' '.__('months', bb_agency_TEXTDOMAIN);
         else
-            return $interval->m . ' months';
+            return $interval->m . ' '.__('months', bb_agency_TEXTDOMAIN);
     }
 
     private function get_date( $date ) {
@@ -209,16 +209,16 @@ class ModelCard {
 
     private function get_height() {
 
-        $height = $this->profile->height;
+        $height = intval($this->profile->height);
 
         if (bb_agency_get_option('bb_agency_option_unittype') == 0)
-            return $height;
+            return $height.' '.__('cm', bb_agency_TEXTDOMAIN);
 
         else {
             $feet = floor(intval($height) / 12);
             $inch = intval($height) - floor($feet * 12);
 
-            return $feet.'ft '.$inch.'in';
+            return $feet.__('ft', bb_agency_TEXTDOMAIN).' '.$inch.__('in', bb_agency_TEXTDOMAIN);
         }
     }
 
