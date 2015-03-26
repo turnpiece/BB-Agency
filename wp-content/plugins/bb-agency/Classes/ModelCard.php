@@ -11,6 +11,7 @@ class ModelCard {
     private $text_x = 500;
     private $text_y = 50;
     private $text_size = 11;
+    private $error = 'Unknown error';
     
     function __construct($model) {
         $this->model = $model;
@@ -105,7 +106,7 @@ class ModelCard {
         $this->text_y += 150;
 
         // Write to file image
-        if (is_writable($this->filepath()))
+        if (is_writable(dirname($this->filepath())))
             $success = imagejpeg($this->canvas, $this->filepath(), $this->quality);
         else {
             $success = false;
@@ -292,7 +293,12 @@ class ModelCard {
         return $new;
     }
 
+    public function get_error() {
+        return $this->error;
+    }
+
     private function fatal($message) {
+        $this->error = $message;
         error_log(__CLASS__.': '.$message);
         return false;
     }

@@ -3813,3 +3813,26 @@ function bb_agency_get_datatypes($public = true) {
 	global $wpdb;
 	return $wpdb->get_results('SELECT * FROM '. table_agency_data_type . ($public ? ' WHERE DataTypeID <> '.bb_agency_CLIENTS_ID : '').' ORDER BY `DataTypeTitle` ASC');
 }
+
+/**
+ *
+ * save model card
+ *
+ * @param string $gallery
+ * @return string file path
+ *
+ */
+function bb_agency_save_modelcard( $gallery ) {
+	require_once(bb_agency_BASEPATH.'/Classes/ModelCard.php');
+
+	// check gallery directory exists
+    bb_agency_checkdir($gallery);
+
+    // instantiate model card class
+    $Card = new ModelCard($gallery);
+    
+    if ($Card->save(true))
+        return $Card->filepath();
+    
+    bb_agency_adminmessage_former('Error saving model card: '.$Card->get_error(), true);
+}

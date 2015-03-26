@@ -53,23 +53,7 @@ Profile View with Scrolling Thumbnails and Primary Image
 
 	echo "</h2>\n";
 
-
-
 	echo "	  <ul>\n";
-
-	/*
-
-	if (!empty($ProfileGender)) {
-
-		$queryGenderResult = mysql_query("SELECT GenderID, GenderTitle FROM ".table_agency_data_gender." WHERE GenderID='".$ProfileGender."' ");
-
-		$fetchGenderData = mysql_fetch_assoc($queryGenderResult);
-
-		echo "<li><strong>". __("Gender", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". __($fetchGenderData["GenderTitle"], bb_agency_TEXTDOMAIN). "</li>\n";
-
-	}
-
-	*/
 
 	if (!empty($ProfileStatHeight)) {
 

@@ -405,9 +405,13 @@ if (isset($_POST['action'])) {
                 }
                 if ($ProfileMediaPrimaryID > 0) {
                     // Update Primary Image
-                    $results = $wpdb->query("UPDATE `$t_media` SET ProfileMediaPrimary='0' WHERE ProfileID=$ProfileID");
-                    $results = $wpdb->query("UPDATE `$t_media` SET ProfileMediaPrimary='1' WHERE ProfileID=$ProfileID AND ProfileMediaID=$ProfileMediaPrimaryID");
+                    $results = $wpdb->query("UPDATE `$t_media` SET `ProfileMediaPrimary` = '0' WHERE `ProfileID` = $ProfileID");
+                    $results = $wpdb->query("UPDATE `$t_media` SET `ProfileMediaPrimary` = '1' WHERE `ProfileID` = $ProfileID AND `ProfileMediaID` = $ProfileMediaPrimaryID");
                 }
+
+                // save model card
+                bb_agency_save_modelcard($ProfileGallery);
+
                 /* --------------------------------------------------------- CLEAN THIS UP -------------- */
                 ?>
                 <div id="message" class="updated">

@@ -106,8 +106,6 @@ if (isset($_POST['action'])) {
             // attachments
             $attachments = array();
 
-            require_once(bb_agency_BASEPATH.'/Classes/ModelCard.php');
-
             $query = "SELECT `SearchProfileID` FROM " . table_agency_searchsaved ." WHERE `SearchID` = ".$SearchID;
 
             $pID = $wpdb->get_var($query);
@@ -120,10 +118,8 @@ if (isset($_POST['action'])) {
             $profiles = $wpdb->get_results($query);
 
             foreach ($profiles AS $profile) {
-                $Card = new ModelCard($profile->ProfileGallery);
-                
-                if ($Card->save())
-                    $attachments[] = $Card->filepath();
+                if ($path = bb_agency_save_modelcard($profile->ProfileGallery))
+                    $attachments[] = $path;
             }
 
 			$isSent = wp_mail(
