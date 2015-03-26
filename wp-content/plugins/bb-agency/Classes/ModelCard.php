@@ -192,8 +192,10 @@ class ModelCard {
 
         $birthday = new DateTime($this->profile->ProfileDateBirth);
         $interval = $birthday->diff(new DateTime);
-        if ($interval->y > 0)
+        if ($interval->y > 1)
             return $interval->y;
+        elseif ($interval->y > 0)
+            return '1 year '.$interval->m.' months';
         else
             return $interval->m . ' months';
     }
@@ -241,12 +243,12 @@ class ModelCard {
         }
     }
 
-    private function image_resize($src, $width, $height, $crop=0){
+    private function image_resize($src, $width, $height, $crop = false){
 
-        if (!list($w, $h) = getimagesize($src))
+        if ((!list($w, $h) = getimagesize($src)) || $w == 0 || $h == 0)
             return $this->set_error("Unsupported picture type ".basename($src));
 
-        $type = strtolower(substr(strrchr($src,"."),1));
+        $type = strtolower(substr(strrchr($src, "."), 1));
         
         if ($type == 'jpeg') 
             $type = 'jpg';
@@ -273,19 +275,15 @@ class ModelCard {
 
         // resize
         if ($crop){
-            if ($w < $width or $h < $height)
-                return $this->set_error("Picture ".basename($src)." is too small");
-
             $ratio = max($width/$w, $height/$h);
+
             $h = $height / $ratio;
             $x = ($w - $width / $ratio) / 2;
             $w = $width / $ratio;
         }
         else{
-            if ($w < $width and $h < $height) 
-                return $this->set_error("Picture ".basename($src)." is too small");
-
             $ratio = min($width/$w, $height/$h);
+
             $width = $w * $ratio;
             $height = $h * $ratio;
             $x = 0;
@@ -293,12 +291,8 @@ class ModelCard {
 
         $new = imagecreatetruecolor($width, $height);
 
-        // preserve transparency
-        if ($type == "gif" or $type == "png"){
-            imagecolortransparent($new, imagecolorallocatealpha($new, 0, 0, 0, 127));
-            imagealphablending($new, false);
-            imagesavealpha($new, true);
-        }
+        $colour = imagecolorallocate($new, 255, 255, 255);
+        imagefill($new, 0, 0, $colour);
 
         imagecopyresampled($new, $img, 0, 0, $x, 0, $width, $height, $w, $h);
 

@@ -78,8 +78,7 @@ if (isset($_POST['action'])) {
 			
 			$link = get_bloginfo("url") ."/client-view/".$SearchMuxHash;
 			
-            //$SearchMuxMessage = str_ireplace("[link-place-holder]", "<a href='$link'>$link</a>", $SearchMuxMessage);
-            $SearchMuxMessage = '';
+            $SearchMuxMessage = str_ireplace("[link-place-holder]", "<a href='$link'>$link</a>", $SearchMuxMessage);
 
             // add terms link
             if (bb_agency_TERMS) {
