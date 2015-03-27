@@ -45,10 +45,10 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 	define('bb_agency_TEXTDOMAIN', basename(dirname( __FILE__ )) ); //   bb-agency
 	define('bb_agency_SITETYPE', 'children'); // bumps or children
 	define('bb_agency_PLUGIN_TITLE', 'BB Agency'. (bb_agency_SITETYPE == 'children' ? ' (Kiddiwinks)' : ''));
+	define('bb_agency_PHONE', bb_agency_SITETYPE == 'children' ? '020 8651 1201' : '020 3355 8743');
+	
 	//define('bb_agency_TESTING', true);
 	define('bb_agency_TERMS', get_bloginfo('url').'/clients-standard-terms-conditions');
-
-	define('bb_agency_PHONE', '0208 651 1201');
 
 	// email sending
 	define('bb_agency_SEND_EMAILS', false); // whether or not to send emails

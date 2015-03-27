@@ -10,7 +10,7 @@ class ModelCard {
     private $text_colour;
     private $text_x = 500;
     private $text_y = 70;
-    private $text_size = 11;
+    private $text_size = 14;
     private $error = 'Unknown error';
     
     function __construct($model) {
@@ -38,6 +38,9 @@ class ModelCard {
         $colour = imagecolorallocate($this->canvas, 255, 255, 255);
         imagefill($this->canvas, 0, 0, $colour);
 
+        // black text
+        $this->text_colour = imagecolorallocate($this->canvas, 0, 0, 0);
+
         $filepath = bb_agency_UPLOADPATH . '/' . $this->profile->ProfileGallery . '/' . $this->profile->ProfileMediaURL;
 
         if (file_exists($filepath)) {
@@ -50,63 +53,15 @@ class ModelCard {
                 return $this->fatal("Failed to copy profile image  to card: ".$this->error);
         }
         
-        // print text
-        $this->text_size = 14;
+        // set font
         $this->fontfile = dirname(dirname(__FILE__)).'/fonts/Raleway-Regular.ttf';
 
-        // print first name
-        $name = $this->profile->ProfileContactNameFirst;
-        $this->print_text( $name );
+        // print model details
+        $this->print_model_details();
 
-        $this->text_y += 50;
-
-        if (bb_agency_SITETYPE == 'children') {
-            if ($age = $this->get_age()) {
-                $this->print_text( 'Age: ' . $age );
-                $this->text_y += 50;
-            }
-        } else {
-            $this->print_text( 'Due date: ' . $this->get_date( $this->profile->ProfileDateDue ) );
-            $this->text_y += 50;
-        }
-
-        if ($this->profile->height) {
-            $this->print_text( 'Height: ' . $this->get_height() );
-        }
-
-        $this->text_y = 360;
-
-        // get logo
-        $logo_option = get_option('cmsms_options_newgate_logo_image');
-        $logo_url = $logo_option['newgate_logo_url'];
-        $logo_path = str_replace(get_bloginfo('wpurl'), ABSPATH, $logo_url);
-
-        // add logo to canvas
-        if (file_exists($logo_path)) {
-            $logo_img = $this->image_resize( $logo_path, 250, 90 );
-
-            if (!empty($logo_img))
-                imagecopy($this->canvas, $logo_img, $this->text_x, $this->text_y, 0, 0, imagesx($logo_img), imagesy($logo_img));
-        }
-
-        $this->text_y += 120;
-
-        $this->text_colour = imagecolorallocate($this->canvas, 0, 0, 0);
-
-        // get site url
-        $url = preg_replace('#^http(s)?://#', '', trim(get_bloginfo('wpurl'), '/'));
-
-        $this->print_text( $url );
-
-        $this->text_y += 30;
-
-        $this->print_text( get_bloginfo('admin_email') );
-
-        $this->text_y += 30;
-
-        $this->print_text( bb_agency_PHONE );
-
-        $this->text_y += 150;
+        // print logo and company details
+        $this->text_size = 11;
+        $this->print_company_details();
 
         // Write to file image
         if (is_writable(dirname($this->filepath())))
@@ -157,6 +112,68 @@ class ModelCard {
 
     public function filepath() {
         return bb_agency_UPLOADPATH .$this->profile->ProfileGallery.'/'.$this->filename();
+    }
+
+    private function print_model_details() {
+
+        // print first name
+        $name = $this->profile->ProfileContactNameFirst;
+        $this->print_text( $name );
+
+        $this->text_y += 50;
+
+        if (bb_agency_SITETYPE == 'children') {
+            if ($age = $this->get_age()) {
+                $this->print_text( 'Age: ' . $age );
+                $this->text_y += 50;
+            }
+        } else {
+            $this->print_text( 'Due date: ' . $this->get_date( $this->profile->ProfileDateDue ) );
+            $this->text_y += 50;
+        }
+
+        if ($this->profile->height) {
+            $this->print_text( 'Height: ' . $this->get_height() );
+        }        
+    }
+
+    private function print_company_details() {
+        $this->text_y = 360;
+
+        // print company logo
+        $this->print_logo();
+
+        $this->text_y += 120;
+
+        // get site url
+        $url = preg_replace('#^http(s)?://#', '', trim(get_bloginfo('wpurl'), '/'));
+
+        $this->print_text( $url );
+
+        $this->text_y += 30;
+
+        $this->print_text( get_bloginfo('admin_email') );
+
+        $this->text_y += 30;
+
+        $this->print_text( bb_agency_PHONE );
+
+        $this->text_y += 150;
+    }
+
+    private function print_logo() {
+        // get logo
+        $logo_option = get_option('cmsms_options_newgate_logo_image');
+        $logo_url = $logo_option['newgate_logo_url'];
+        $logo_path = str_replace(get_bloginfo('wpurl'), ABSPATH, $logo_url);
+
+        // add logo to canvas
+        if (file_exists($logo_path)) {
+            $logo_img = $this->image_resize( $logo_path, 250, 90 );
+
+            if (!empty($logo_img))
+                imagecopy($this->canvas, $logo_img, $this->text_x, $this->text_y, 0, 0, imagesx($logo_img), imagesy($logo_img));
+        }        
     }
 
     /**
