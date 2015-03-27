@@ -152,9 +152,10 @@ class ModelCard {
 
         $this->text_y += 30;
 
-        $this->print_text( get_bloginfo('admin_email') );
-
-        $this->text_y += 30;
+        if ($email = bb_agency_get_option('bb_agency_option_agencyemail')) {
+            $this->print_text( $email );
+            $this->text_y += 30;           
+        }
 
         $this->print_text( bb_agency_PHONE );
 
