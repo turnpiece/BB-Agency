@@ -148,7 +148,7 @@ class ModelCard {
                 $this->text_y += 50;
             }
 
-            if ($shoe_size = $this->get_dress_size()) {
+            if ($dress_size = $this->get_dress_size()) {
                 $this->print_text( 'Dress size: ' . $dress_size );
                 $this->text_y += 50;
             } 
