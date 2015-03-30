@@ -123,18 +123,36 @@ class ModelCard {
         $this->text_y += 50;
 
         if (bb_agency_SITETYPE == 'children') {
+            // children
             if ($age = $this->get_age()) {
                 $this->print_text( 'Age: ' . $age );
                 $this->text_y += 50;
             }
+
+            if ($this->profile->height) {
+                $this->print_text( 'Height: ' . $this->get_height() );
+                $this->text_y += 50;
+            }
+
+            if ($shoe_size = $this->get_shoe_size()) {
+                $this->print_text( 'Shoe size: ' . $shoe_size );
+                $this->text_y += 50;
+            } 
         } else {
+            // pregnant women
             $this->print_text( 'Due date: ' . $this->get_date( $this->profile->ProfileDateDue ) );
             $this->text_y += 50;
-        }
 
-        if ($this->profile->height) {
-            $this->print_text( 'Height: ' . $this->get_height() );
-        }        
+            if ($this->profile->height) {
+                $this->print_text( 'Height: ' . $this->get_height() );
+                $this->text_y += 50;
+            }
+
+            if ($shoe_size = $this->get_dress_size()) {
+                $this->print_text( 'Dress size: ' . $dress_size );
+                $this->text_y += 50;
+            } 
+        }
     }
 
     private function print_company_details() {
@@ -192,11 +210,13 @@ class ModelCard {
         $t_media = table_agency_profile_media;
         $t_custom = table_agency_customfield_mux;
         $query = "
-            SELECT p.*, dt.`DataTypePrivacy` AS ProfilePrivacy, m.`ProfileMediaURL`, h.`ProfileCustomValue` AS height
+            SELECT p.*, dt.`DataTypePrivacy` AS ProfilePrivacy, m.`ProfileMediaURL`, h.`ProfileCustomValue` AS height, ss.`ProfileCustomValue` AS shoe_size, ds.`ProfileCustomValue` AS dress_size
             FROM $t_profile AS p
             LEFT JOIN $t_datatype AS dt ON dt.`DataTypeID` = p.`ProfileType`
             LEFT JOIN $t_media AS m ON m.`ProfileID` = p.`ProfileID` AND m.`ProfileMediaPrimary` = 1 AND m.`ProfileMediaType` = 'Image'
             LEFT JOIN $t_custom AS h ON h.`ProfileID` = p.`ProfileID` AND h.`ProfileCustomID` = 5
+            LEFT JOIN $t_custom AS ss ON ss.`ProfileID` = p.`ProfileID` AND ss.`ProfileCustomID` = 10
+            LEFT JOIN $t_custom AS ds ON ds.`ProfileID` = p.`ProfileID` AND ds.`ProfileCustomID` = 13
             WHERE p.`ProfileGallery` = '$this->model'
             LIMIT 1";
 
@@ -238,6 +258,14 @@ class ModelCard {
 
             return $feet.__('ft', bb_agency_TEXTDOMAIN).' '.$inch.__('in', bb_agency_TEXTDOMAIN);
         }
+    }
+
+    private function get_shoe_size() {
+        return $this->profile->shoe_size;
+    }
+
+    private function get_dress_size() {
+        return $this->profile->dress_size;
     }
 
     private function imagecreatefromfile( $filename ) {
