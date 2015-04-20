@@ -99,7 +99,7 @@ if (isset($_POST['action'])) {
 			// Mail it
 
 			$headers  = 'MIME-Version: 1.0' . "\r\n";
-			$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+			$headers .= 'Content-type: text/html; charset='. bb_agency_CHARSET . "\r\n";
 			$headers .= 'From: '. $bb_agency_option_agencyname .' <'. $bb_agency_option_agencyemail .'>' . "\r\n";
 
             // attachments

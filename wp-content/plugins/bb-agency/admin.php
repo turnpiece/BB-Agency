@@ -254,7 +254,7 @@ EOF;
     
     // Mail it
     $headers[] = 'MIME-Version: 1.0';
-    $headers[] = 'Content-type: text/html; charset=iso-8859-1';
+    $headers[] = 'Content-type: text/html; charset='.bb_agency_CHARSET;
     $headers[] = 'From: '.$bb_agency_value_agencyname.' <'. $correspondenceEmail .'>';
     
     if (!empty($expMail)){

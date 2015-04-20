@@ -64,12 +64,13 @@ class ModelCard {
         $this->print_company_details();
 
         // Write to file image
+        $success = false;
+
         if (is_writable(dirname($this->filepath())))
-            $success = imagejpeg($this->canvas, $this->filepath(), $this->quality);
-        else {
-            $success = false;
+            $success = @imagejpeg($this->canvas, $this->filepath(), $this->quality);
+        
+        if (!$success)
             $this->fatal("Unable to write to ".$this->filepath());
-        }
 
         // Free up memory
         imagedestroy($this->canvas);

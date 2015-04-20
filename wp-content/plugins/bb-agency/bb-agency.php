@@ -43,7 +43,7 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 	define('bb_agency_UPLOADDIR', $bb_agency_WPUPLOADARRAY['baseurl'] .'/profile-media/' );  // http://domain.com/wordpress/wp-content/uploads/profile-media/
 	define('bb_agency_UPLOADPATH', $bb_agency_WPUPLOADARRAY['basedir'] .'/profile-media/' ); // /home/content/99/6048999/html/domain.com/wordpress/wp-content/uploads/profile-media/
 	define('bb_agency_TEXTDOMAIN', basename(dirname( __FILE__ )) ); //   bb-agency
-	define('bb_agency_SITETYPE', 'bumps'); // bumps or children
+	define('bb_agency_SITETYPE', 'children'); // bumps or children
 	define('bb_agency_PLUGIN_TITLE', 'BB Agency'. (bb_agency_SITETYPE == 'children' ? ' (Kiddiwinks)' : ''));
 	define('bb_agency_PHONE', bb_agency_SITETYPE == 'children' ? '020 8651 1201' : '020 3355 8743');
 	
@@ -51,6 +51,7 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 	define('bb_agency_TERMS', get_bloginfo('url').'/clients-standard-terms-conditions');
 
 	// email sending
+	define('bb_agency_CHARSET', 'utf-8'); // was iso-8859-1
 	define('bb_agency_SEND_EMAILS', true); // whether or not to send emails
 	define('bb_agency_EMAIL_CARDS', true); // whether or not to email links to cards or profiles
 	
