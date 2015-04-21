@@ -70,10 +70,10 @@ if (isset($_POST['action'])) {
 				$SearchMuxHash			= bb_agency_random(8);
 			}
 			
-			$SearchMuxToName		= $_POST['SearchMuxToName'];
-			$SearchMuxToEmail		= $_POST['SearchMuxToEmail'];
-			$SearchMuxSubject		= $_POST['SearchMuxSubject'];
-			$SearchMuxMessage		= $_POST['SearchMuxMessage'];
+			$SearchMuxToName		= stripslashes($_POST['SearchMuxToName']);
+			$SearchMuxToEmail		= stripslashes($_POST['SearchMuxToEmail']);
+			$SearchMuxSubject		= stripslashes($_POST['SearchMuxSubject']);
+			$SearchMuxMessage		= stripslashes($_POST['SearchMuxMessage']);
 			$SearchMuxCustomValue	= $_POST['SearchMuxCustomValue'];
 			
 			$link = get_bloginfo("url") ."/client-view/".$SearchMuxHash;

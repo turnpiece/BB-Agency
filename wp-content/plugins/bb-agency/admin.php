@@ -201,12 +201,12 @@ function bb_agency_send_email() {
 
     $SearchID               = time(U);
     $SearchMuxHash          = bb_agency_random(8);
-    $SearchMuxToName        = $_POST["MassEmailRecipient"];
-    $SearchMuxToEmail       = $_POST["MassEmailRecipient"];
+    $SearchMuxToName        = stripslashes($_POST["MassEmailRecipient"]);
+    $SearchMuxToEmail       = stripslashes($_POST["MassEmailRecipient"]);
     
-    $SearchMuxEmailToBcc    = $_POST['MassEmailBccRecipient'];
-    $SearchMuxSubject       = $_POST['MassEmailSubject'];
-    $SearchMuxMessage       = $_POST['MassEmailMessage'];
+    $SearchMuxEmailToBcc    = stripslashes($_POST['MassEmailBccRecipient']);
+    $SearchMuxSubject       = stripslashes($_POST['MassEmailSubject']);
+    $SearchMuxMessage       = stripslashes($_POST['MassEmailMessage']);
     $SearchMuxCustomValue   = '';                    
 
     $cartString = bb_agency_get_cart_string();
