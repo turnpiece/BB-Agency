@@ -183,12 +183,13 @@ class ModelCard {
 
     private function print_logo() {
         // get logo
-        /*
-        $logo_option = get_option('cmsms_options_newgate_logo_image');
-        $logo_url = $logo_option['newgate_logo_url'];
-        $logo_path = str_replace(get_bloginfo('wpurl'), ABSPATH, $logo_url);
-        */
-        $logo_path = ABSPATH . '/wp-content/uploads/2014/07/Kiddiwinks-Logo.png';
+        if (defined('bb_agency_LOGOPATH')) {
+            $logo_path = bb_agency_LOGOPATH;
+        } else {
+            $logo_option = get_option('cmsms_options_newgate_logo_image');
+            $logo_url = $logo_option['newgate_logo_url'];
+            $logo_path = str_replace(get_bloginfo('wpurl'), ABSPATH, $logo_url);
+        }
 
         // add logo to canvas
         if (file_exists($logo_path)) {

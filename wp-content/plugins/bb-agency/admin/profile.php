@@ -1042,8 +1042,6 @@ function bb_display_manage($ProfileID) {
         <div>Type: <select name="profileMediaV2Type"><option><?php _e("Video Slate", bb_agency_TEXTDOMAIN) ?></option><option selected><?php _e("Video Monologue", bb_agency_TEXTDOMAIN) ?></option><option><?php _e("Demo Reel", bb_agency_TEXTDOMAIN) ?></option></select><textarea id='profileMediaV2' name='profileMediaV2'></textarea></div>
         <div>Type: <select name="profileMediaV3Type"><option><?php _e("Video Slate", bb_agency_TEXTDOMAIN) ?></option><option><?php _e("Video Monologue", bb_agency_TEXTDOMAIN) ?></option><option selected><?php _e("Demo Reel", bb_agency_TEXTDOMAIN) ?></option></select><textarea id='profileMediaV3' name='profileMediaV3'></textarea></div>
 
-
-        <?php if ($ProfileIsActive == 1) : ?>
         <div>
             <h3>Model Card</h3>
             <p>
@@ -1052,7 +1050,6 @@ function bb_display_manage($ProfileID) {
                 </a>
             </p>
         </div>
-        <?php endif; ?>
     <?php
     }
     ?>
