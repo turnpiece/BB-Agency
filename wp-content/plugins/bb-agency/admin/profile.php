@@ -1220,7 +1220,7 @@ function bb_display_list() {
     if (!empty($_GET['sort'])) {
         $sort = $_GET['sort'];
     } else {
-        $sort = "profile.`ProfileContactNameFirst`";
+        $sort = "profile.`ProfileDateUpdated`";
     }
 
     // Sort Order
@@ -1233,8 +1233,8 @@ function bb_display_list() {
             $sortDirection = "desc";
         }
     } else {
-        $sortDirection = "desc";
-        $dir = "asc";
+        $sortDirection = "asc";
+        $dir = "desc";
     }
 
     // Filter
@@ -1466,7 +1466,8 @@ function bb_display_list() {
                             <th class="column-ProfileDetails" id="ProfileDetails" scope="col">Category</th>
                             <th class="column-ProfileDetails" id="ProfileDetails" scope="col">Images</th>
                             <th class="column-ProfileStatHits" id="ProfileStatHits" scope="col">Views</th>
-                            <th class="column-ProfileDateViewLast" id="ProfileDateViewLast" scope="col" style="width:125px;">Last Viewed Date</th>
+                            <th class="column-ProfileDateViewLast" id="ProfileDateViewLast" scope="col" style="width:125px;">Last Viewed</th>
+                            <th class="column-ProfileDateViewLast" id="ProfileDateViewLast" scope="col" style="width:125px;">Updated</th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -1483,6 +1484,7 @@ function bb_display_list() {
                             <th class="column" scope="col">Images</th>
                             <th class="column" scope="col">Views</th>
                             <th class="column" scope="col">Last Viewed</th>
+                            <th class="column" scope="col">Updated</th>
                         </tr>
                     </tfoot>
                     <tbody>
@@ -1503,6 +1505,7 @@ function bb_display_list() {
                         $ProfileDateBirth = stripslashes($data['ProfileDateBirth']);
                         $ProfileStatHits = stripslashes($data['ProfileStatHits']);
                         $ProfileDateViewLast = stripslashes($data['ProfileDateViewLast']);
+                        $ProfileDateUpdated = stripslashes($data['ProfileDateUpdated']);
                         if ($data['ProfileIsActive'] == 0) {
                             // Inactive
                             $rowColor = ' style="background: #FFEBE8"';
@@ -1588,6 +1591,7 @@ function bb_display_list() {
                             <td class="ProfileDetails column-ProfileDetails"><?php echo $profileImageCount ?></td>
                             <td class="ProfileStatHits column-ProfileStatHits"><?php echo $ProfileStatHits ?></td>
                             <td class="ProfileDateViewLast column-ProfileDateViewLast"><?php echo bb_agency_makeago(bb_agency_convertdatetime($ProfileDateViewLast), $bb_agency_option_locationtimezone); ?></td>
+                            <td class="ProfileDateUpdated column-ProfileDateUpdated"><?php echo bb_agency_makeago(bb_agency_convertdatetime($ProfileDateUpdated), $bb_agency_option_locationtimezone); ?></td>
                         </tr>
                         <?php
                     }
@@ -1630,6 +1634,7 @@ function bb_display_list() {
 <?php
 }
 
+// get fields for insert & update queries
 function bb_agency_get_profile_fields() {
     $fields = array(
         'ProfileContactDisplay',
