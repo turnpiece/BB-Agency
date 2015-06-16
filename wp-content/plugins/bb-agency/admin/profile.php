@@ -1489,10 +1489,15 @@ function bb_display_list() {
                     </tfoot>
                     <tbody>
                     <?php
-                    $query = "SELECT * FROM `$t_profile` profile LEFT JOIN `$t_data_type` profiletype ON profile.`ProfileType` = profiletype.`DataTypeID` $filter  ORDER BY $sort $dir $limit";
-                    $results2 = mysql_query($query);
-                    $count = mysql_num_rows($results2);
-                    while ($data = mysql_fetch_array($results2)) {
+                    $query = "SELECT * FROM `$t_profile` profile 
+                            LEFT JOIN `$t_data_type` profiletype 
+                            ON profile.`ProfileType` = profiletype.`DataTypeID` $filter 
+                            ORDER BY $sort $dir $limit";
+
+                    $results = $wpdb->get_results( $query, ARRAY_A );
+                    $count = count($results);
+
+                    foreach ( $results as $data ) {
 
                         $ProfileID = $data['ProfileID'];
                         $ProfileGallery = stripslashes($data['ProfileGallery']);
@@ -1565,8 +1570,7 @@ function bb_display_list() {
                         
                         $DataTypeTitle = stripslashes($new_title);
 
-                        $resultImageCount = mysql_query("SELECT * FROM `$t_media` WHERE `ProfileID` = '$ProfileID' AND `ProfileMediaType` = 'Image'");
-                        $profileImageCount = mysql_num_rows($resultImageCount);
+                        $profileImageCount = $wpdb->get_var("SELECT COUNT(*) FROM `$t_media` WHERE `ProfileID` = '$ProfileID' AND `ProfileMediaType` = 'Image'");
 
                         ?>
                         <tr"<?php echo $rowColor ?>">
@@ -1595,7 +1599,7 @@ function bb_display_list() {
                         </tr>
                         <?php
                     }
-                    mysql_free_result($results2);
+
                     if ($count < 1) {
                         if (isset($filter)) : ?>
                             <tr>

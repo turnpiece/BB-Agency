@@ -110,7 +110,7 @@
 						<?php
 						if ($user_level >= 7) {
 							// Recently Updated
-							$query = "SELECT `ProfileID`, `ProfileContactDisplay`, `ProfileDateUpdated` FROM ". table_agency_profile ." ORDER BY `ProfileDateUpdated` DESC LIMIT 0,10";
+							$query = "SELECT `ProfileID`, `ProfileContactDisplay`, `ProfileDateUpdated` FROM ". table_agency_profile ." ORDER BY `ProfileDateUpdated` DESC LIMIT 0,20";
 							$results = mysql_query($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ).': '.mysql_error());
 							$count = mysql_num_rows($results);
 							while ($data = mysql_fetch_array($results)) : ?>
