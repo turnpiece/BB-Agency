@@ -1220,7 +1220,7 @@ function bb_display_list() {
     if (!empty($_GET['sort'])) {
         $sort = $_GET['sort'];
     } else {
-        $sort = "profile.`ProfileDateUpdated`";
+        $sort = "profile.`ProfileContactNameFirst`";
     }
 
     // Sort Order
@@ -1233,8 +1233,8 @@ function bb_display_list() {
             $sortDirection = "desc";
         }
     } else {
-        $sortDirection = "asc";
-        $dir = "desc";
+        $sortDirection = "desc";
+        $dir = "asc";
     }
 
     // Filter
@@ -1466,8 +1466,7 @@ function bb_display_list() {
                             <th class="column-ProfileDetails" id="ProfileDetails" scope="col">Category</th>
                             <th class="column-ProfileDetails" id="ProfileDetails" scope="col">Images</th>
                             <th class="column-ProfileStatHits" id="ProfileStatHits" scope="col">Views</th>
-                            <th class="column-ProfileDateViewLast" id="ProfileDateViewLast" scope="col" style="width:125px;">Last Viewed</th>
-                            <th class="column-ProfileDateViewLast" id="ProfileDateViewLast" scope="col" style="width:125px;">Updated</th>
+                            <th class="column-ProfileDateViewLast" id="ProfileDateViewLast" scope="col" style="width:125px;">Last Viewed Date</th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -1484,20 +1483,14 @@ function bb_display_list() {
                             <th class="column" scope="col">Images</th>
                             <th class="column" scope="col">Views</th>
                             <th class="column" scope="col">Last Viewed</th>
-                            <th class="column" scope="col">Updated</th>
                         </tr>
                     </tfoot>
                     <tbody>
                     <?php
-                    $query = "SELECT * FROM `$t_profile` profile 
-                            LEFT JOIN `$t_data_type` profiletype 
-                            ON profile.`ProfileType` = profiletype.`DataTypeID` $filter 
-                            ORDER BY $sort $dir $limit";
-
-                    $results = $wpdb->get_results( $query, ARRAY_A );
-                    $count = count($results);
-
-                    foreach ( $results as $data ) {
+                    $query = "SELECT * FROM `$t_profile` profile LEFT JOIN `$t_data_type` profiletype ON profile.`ProfileType` = profiletype.`DataTypeID` $filter  ORDER BY $sort $dir $limit";
+                    $results2 = mysql_query($query);
+                    $count = mysql_num_rows($results2);
+                    while ($data = mysql_fetch_array($results2)) {
 
                         $ProfileID = $data['ProfileID'];
                         $ProfileGallery = stripslashes($data['ProfileGallery']);
@@ -1510,7 +1503,6 @@ function bb_display_list() {
                         $ProfileDateBirth = stripslashes($data['ProfileDateBirth']);
                         $ProfileStatHits = stripslashes($data['ProfileStatHits']);
                         $ProfileDateViewLast = stripslashes($data['ProfileDateViewLast']);
-                        $ProfileDateUpdated = stripslashes($data['ProfileDateUpdated']);
                         if ($data['ProfileIsActive'] == 0) {
                             // Inactive
                             $rowColor = ' style="background: #FFEBE8"';
@@ -1570,7 +1562,8 @@ function bb_display_list() {
                         
                         $DataTypeTitle = stripslashes($new_title);
 
-                        $profileImageCount = $wpdb->get_var("SELECT COUNT(*) FROM `$t_media` WHERE `ProfileID` = '$ProfileID' AND `ProfileMediaType` = 'Image'");
+                        $resultImageCount = mysql_query("SELECT * FROM `$t_media` WHERE `ProfileID` = '$ProfileID' AND `ProfileMediaType` = 'Image'");
+                        $profileImageCount = mysql_num_rows($resultImageCount);
 
                         ?>
                         <tr"<?php echo $rowColor ?>">
@@ -1595,11 +1588,10 @@ function bb_display_list() {
                             <td class="ProfileDetails column-ProfileDetails"><?php echo $profileImageCount ?></td>
                             <td class="ProfileStatHits column-ProfileStatHits"><?php echo $ProfileStatHits ?></td>
                             <td class="ProfileDateViewLast column-ProfileDateViewLast"><?php echo bb_agency_makeago(bb_agency_convertdatetime($ProfileDateViewLast), $bb_agency_option_locationtimezone); ?></td>
-                            <td class="ProfileDateUpdated column-ProfileDateUpdated"><?php echo bb_agency_makeago(bb_agency_convertdatetime($ProfileDateUpdated), $bb_agency_option_locationtimezone); ?></td>
                         </tr>
                         <?php
                     }
-
+                    mysql_free_result($results2);
                     if ($count < 1) {
                         if (isset($filter)) : ?>
                             <tr>
@@ -1638,7 +1630,6 @@ function bb_display_list() {
 <?php
 }
 
-// get fields for insert & update queries
 function bb_agency_get_profile_fields() {
     $fields = array(
         'ProfileContactDisplay',
