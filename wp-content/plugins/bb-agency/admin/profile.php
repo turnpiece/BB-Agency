@@ -1020,6 +1020,8 @@ function bb_display_manage($ProfileID) {
             </div>
         <?php endif; ?>
         <div style="clear: both;"></div>
+
+    <?php if (defined('bb_agency_ADMIN_MEDIA_UPLOAD') && bb_agency_ADMIN_MEDIA_UPLOAD) : ?>
         <h3><?php _e("Upload", bb_agency_TEXTDOMAIN) ?></h3>
         <p><?php _e("Upload new media using the forms below", bb_agency_TEXTDOMAIN) ?>.</p>
 
@@ -1041,7 +1043,8 @@ function bb_display_manage($ProfileID) {
         <div>Type: <select name="profileMediaV1Type"><option selected><?php _e("Video Slate", bb_agency_TEXTDOMAIN) ?></option><option><?php _e("Video Monologue", bb_agency_TEXTDOMAIN) ?></option><option><?php _e("Demo Reel", bb_agency_TEXTDOMAIN) ?></option></select><textarea id='profileMediaV1' name='profileMediaV1'></textarea></div>
         <div>Type: <select name="profileMediaV2Type"><option><?php _e("Video Slate", bb_agency_TEXTDOMAIN) ?></option><option selected><?php _e("Video Monologue", bb_agency_TEXTDOMAIN) ?></option><option><?php _e("Demo Reel", bb_agency_TEXTDOMAIN) ?></option></select><textarea id='profileMediaV2' name='profileMediaV2'></textarea></div>
         <div>Type: <select name="profileMediaV3Type"><option><?php _e("Video Slate", bb_agency_TEXTDOMAIN) ?></option><option><?php _e("Video Monologue", bb_agency_TEXTDOMAIN) ?></option><option selected><?php _e("Demo Reel", bb_agency_TEXTDOMAIN) ?></option></select><textarea id='profileMediaV3' name='profileMediaV3'></textarea></div>
-
+    <?php endif; ?>
+    
         <div>
             <h3>Model Card</h3>
             <p>
@@ -1346,15 +1349,14 @@ function bb_display_list() {
                     <div class="inside-x" style="padding: 10px 10px 0px 10px; ">
                         <?php echo sprintf(__("Currently %d Profiles", bb_agency_TEXTDOMAIN), $items) ?><br />
                         <?php
-                            $queryGenderResult = mysql_query("SELECT GenderID, GenderTitle FROM " . table_agency_data_gender);
-                            $queryGenderCount = mysql_num_rows($queryGenderResult);
+                            $queryGenderResult = $wpdb->get_results( "SELECT GenderID, GenderTitle FROM " . table_agency_data_gender, ARRAY_A );
                             ?>
                             <p>
-                            <?php while ($fetchGender = mysql_fetch_assoc($queryGenderResult)) : ?>
-                                <a class="button-primary" href="<?php echo admin_url("admin.php?page=" . $_GET['page']) ?>&action=addRecord&ProfileGender=<?php echo $fetchGender["GenderID"] ?>"><?php _e("Create New " . ucfirst($fetchGender["GenderTitle"]), bb_agency_TEXTDOMAIN) ?></a>
-                            <?php endwhile; ?>
+                            <?php if (!empty($queryGenderResult)) : foreach ($queryGenderResult as $gender) : ?>
+                                <a class="button-primary" href="<?php echo admin_url("admin.php?page=" . $_GET['page']) ?>&action=addRecord&ProfileGender=<?php echo $fetchGender["GenderID"] ?>"><?php _e("Create New " . ucfirst($gender["GenderTitle"]), bb_agency_TEXTDOMAIN) ?></a>
+                            <?php endforeach; ?>
                             </p>
-                            <?php if ($queryGenderCount < 1) : ?>
+                            <?php else : ?>
                                 <p><?php echo sprintf(__('No Gender Found. <a href="%s">Create New Gender</a>', bb_agency_TEXTDOMAIN), admin_url('admin.php?page=bb_agency_settings&ampConfigID=5')) ?></p>
                             <?php endif; ?>
                     </div>
@@ -1580,7 +1582,7 @@ function bb_display_list() {
                               </div>
                             </td>
                             <?php if (bb_agency_SITETYPE == 'bumps') : ?>
-                            <td class="ProfilesProfileDate column-ProfilesProfileDate"><?php echo (is_null($ProfileDateDue) || $ProfileDateDue == '0000-00-00' || bb_agency_datepassed($ProfileDateDue) ? $ProfileDateBirth : $ProfileDateDue) ?></td>
+                            <td class="ProfilesProfileDate column-ProfilesProfileDate"><?php echo (is_null($ProfileDateDue) || $ProfileDateDue == '0000-00-00' ? $ProfileDateBirth : $ProfileDateDue) ?></td>
                             <?php endif; ?>
                             <td class="ProfileLocationCity column-ProfileLocationCity"><?php echo $ProfileLocationCity ?></td>
                             <td class="ProfileLocationCity column-ProfileLocationState"><?php echo $ProfileLocationState ?></td>

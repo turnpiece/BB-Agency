@@ -37,6 +37,7 @@ add_action( 'the_post', 'bbagency_interact_the_post_action' );
 	define("bb_agencyinteract_BASEDIR", get_bloginfo("wpurl") ."/". PLUGINDIR ."/". dirname( plugin_basename(__FILE__) ) ."/" );  // http://domain.com/wordpress/wp-content/plugins/bb-agency-interact/
 	define("bb_agencyinteract_UPLOADDIR", $bb_agencyinteract_WPUPLOADARRAY['baseurl'] ."/profile-media/" );  // http://domain.com/wordpress/wp-content/uploads/profile-media/
 	define("bb_agencyinteract_UPLOADPATH", $bb_agencyinteract_WPUPLOADARRAY['basedir'] ."/profile-media/" ); // /home/content/99/6048999/html/domain.com/wordpress/wp-content/uploads/profile-media/
+	define("bb_agencyinteract_ALLOW_UPLOADS", false);
 	define("bb_agencyinteract_TEXTDOMAIN", basename(dirname( __FILE__ )) ); //   bb-agency
 // Call Language Options
 	add_action('init', 'bb_agencyinteract_loadtranslation');

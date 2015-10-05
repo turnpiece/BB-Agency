@@ -42,6 +42,7 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 	define('bb_agency_UPLOADREL', str_replace(get_bloginfo('url'), '', $bb_agency_WPUPLOADARRAY['baseurl']) .'/profile-media/' );  // /wordpress/wp-content/uploads/profile-media/
 	define('bb_agency_UPLOADDIR', $bb_agency_WPUPLOADARRAY['baseurl'] .'/profile-media/' );  // http://domain.com/wordpress/wp-content/uploads/profile-media/
 	define('bb_agency_UPLOADPATH', $bb_agency_WPUPLOADARRAY['basedir'] .'/profile-media/' ); // /home/content/99/6048999/html/domain.com/wordpress/wp-content/uploads/profile-media/
+	define('bb_agency_ADMIN_MEDIA_UPLOAD', true); // whether to allow administrators to upload media for models
 	define('bb_agency_TEXTDOMAIN', basename(dirname( __FILE__ )) ); //   bb-agency
 	define('bb_agency_SITETYPE', 'bumps'); // bumps or children
 	define('bb_agency_PLUGIN_TITLE', 'BB Agency'. (bb_agency_SITETYPE == 'children' ? ' (Kiddiwinks)' : ''));

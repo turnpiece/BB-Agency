@@ -5,7 +5,7 @@
 
 	$bb_agency_option_unittype = bb_agency_get_option('bb_agency_option_unittype');
 	get_currentuserinfo(); 
-	global $user_level;
+	global $user_level, $wpdb;
 
 	// get data types
 	$dataTypes = bb_agency_get_datatypes(false);
@@ -42,24 +42,23 @@
 										<?php else : $type = $dataTypes[0]; ?>
 										<input type="hidden" name="ProfileType" value="<?php echo $type->DataTypeID ?>" />
 										<?php endif; ?>
+										<?php
+											// do genders dropdown
+											$genders = $wpdb->get_results("SELECT `GenderID`, `GenderTitle` FROM ". table_agency_data_gender, ARRAY_A);
+
+											if (!empty($genders) && count($genders) > 0) : 
+										?>
 									    <tr>
 									        <th scope="row"><?php _e("Gender", bb_agency_TEXTDOMAIN) ?>:</th>
-									        <td><select name="ProfileGender" id="ProfileGender">
-									        <?php      
-												$query1 = "SELECT GenderID, GenderTitle FROM ". table_agency_data_gender ."";
-												$results1 = mysql_query($query1);
-												$count1 = mysql_num_rows($results1);
-												if ($count1 > 0) : ?>
-													<option value="">All Gender</option>";
-													<?php while ($data1 = mysql_fetch_array($results1)) : ?>
-													<option value="<?php echo $data1["GenderID"] ?>" <?php echo selected( $_SESSION['ProfileGender'], $data1["GenderID"]) ?>><?php echo $data1["GenderTitle"] ?></option>
-													<?php endwhile; ?>
-													</select>
-												<?php else : ?>
-													<?php _e("No items to select", bb_restaurant_TEXTDOMAIN) ?>
-												<?php endif; ?>
+									        <td><select name="ProfileGender" id="ProfileGender">  
+													<option value=""><?php _e('All Genders', bb_agency_TEXTDOMAIN) ?></option>
+													<?php foreach ($genders as $gender) : ?>
+													<option value="<?php echo $gender["GenderID"] ?>" <?php echo selected( $_SESSION['ProfileGender'], $gender["GenderID"]) ?>><?php echo $gender["GenderTitle"] ?></option>
+													<?php endforeach; ?>
+												</select>
 									        </td>
 									    </tr>
+										<?php endif; ?>
 									    <tr>
 									        <th scope="row"><?php _e("Age", bb_agency_TEXTDOMAIN) ?>:</th>
 									        <td>

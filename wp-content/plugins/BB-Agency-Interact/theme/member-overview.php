@@ -86,9 +86,11 @@ get_header();
 				echo " 	<ul>\n";
 				echo "      <li><a href=\"account/\">Edit Your Account Details</a></li>\n";
 				echo "      <li><a href=\"manage/\">Manage Your Profile Information</a></li>\n";
-				echo "      <li><a href=\"media/\">Manage Photos and Media</a></li>\n";
-				if($bb_subscription){
-				echo "      <li><a href=\"subscription/\">Manage your Subscription</a></li>\n";
+				if (defined('bb_agencyinteract_ALLOW_UPLOADS') && bb_agencyinteract_ALLOW_UPLOADS) {
+					echo "      <li><a href=\"media/\">Manage Photos and Media</a></li>\n";
+				}
+				if ($bb_subscription){
+					echo "      <li><a href=\"subscription/\">Manage your Subscription</a></li>\n";
 				}
 				echo "	</ul>\n";
 				echo " </div>\n";

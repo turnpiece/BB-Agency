@@ -15,41 +15,43 @@
 		echo " 			</a>\n";
 		echo " 		</div>\n";
 		if ($profiletype == 1) {
-		// Agents
+			// Agents
 
-					if ( ($_SERVER["REQUEST_URI"]) == "/profile-favorite/") { $tabclass = "active"; } else { $tabclass = "inactive"; }
-		echo " 		<div class=\"tab-inner tab-". $tabclass ."\">\n";
-		echo " 			<a href=\"\">\n";
-		echo " 			  <div class=\"subMenuTabBG\"><div class=\"subMenuTabBorders\"><div class=\"subMenuTabText\">".__("Favorites", bb_agencyinteract_TEXTDOMAIN) ."</div></div></div>\n";
-		echo " 			</a>\n";
-		echo " 		</div>\n";
+						if ( ($_SERVER["REQUEST_URI"]) == "/profile-favorite/") { $tabclass = "active"; } else { $tabclass = "inactive"; }
+			echo " 		<div class=\"tab-inner tab-". $tabclass ."\">\n";
+			echo " 			<a href=\"\">\n";
+			echo " 			  <div class=\"subMenuTabBG\"><div class=\"subMenuTabBorders\"><div class=\"subMenuTabText\">".__("Favorites", bb_agencyinteract_TEXTDOMAIN) ."</div></div></div>\n";
+			echo " 			</a>\n";
+			echo " 		</div>\n";
 		} else {
-		//Models Talent
-					if ( ($_SERVER["REQUEST_URI"]) == "/profile-member/manage/") { $tabclass = "active"; } else { $tabclass = "inactive"; }
-		echo " 		<div class=\"tab-inner tab-". $tabclass ."\">\n";
-		echo " 			<a  href=\"". get_bloginfo("wpurl") ."/profile-member/manage/\">\n";
-		echo " 			  <div class=\"subMenuTabBG\"><div class=\"subMenuTabBorders\"><div class=\"subMenuTabText\">".__("My Profile", bb_agencyinteract_TEXTDOMAIN) ."</div></div></div>\n";
-		echo " 			</a>\n";
-		echo " 		</div>\n";
-		/*
-		 * Set Media to not show to
-		 * client/s, agents, producers,
-		 */
-		$ptype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
-	        $ptype = retrieve_title($ptype);
-		$restrict = array('client','clients','agents','producers');
-		if(in_array(strtolower($ptype),$restrict)){
-			$d = 'display:none;';
-		} else {
-			$d = '';
-		}
+			//Models Talent
+						if ( ($_SERVER["REQUEST_URI"]) == "/profile-member/manage/") { $tabclass = "active"; } else { $tabclass = "inactive"; }
+			echo " 		<div class=\"tab-inner tab-". $tabclass ."\">\n";
+			echo " 			<a  href=\"". get_bloginfo("wpurl") ."/profile-member/manage/\">\n";
+			echo " 			  <div class=\"subMenuTabBG\"><div class=\"subMenuTabBorders\"><div class=\"subMenuTabText\">".__("My Profile", bb_agencyinteract_TEXTDOMAIN) ."</div></div></div>\n";
+			echo " 			</a>\n";
+			echo " 		</div>\n";
+			/*
+			 * Set Media to not show to
+			 * client/s, agents, producers,
+			 */
+			$ptype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
+		        $ptype = retrieve_title($ptype);
+			$restrict = array('client','clients','agents','producers');
+			if(in_array(strtolower($ptype),$restrict)){
+				$d = 'display:none;';
+			} else {
+				$d = '';
+			}
 
-		if ( ($_SERVER["REQUEST_URI"]) == "/profile-member/media/") { $tabclass = "active"; } else { $tabclass = "inactive"; }
-		echo ' 		<div class="tab-inner tab-'. $tabclass .'" style="'.$d.'">';
-		echo " 			<a href=\"". get_bloginfo("wpurl") ."/profile-member/media/\">\n";
-		echo " 			  <div class=\"subMenuTabBG\"><div class=\"subMenuTabBorders\"><div class=\"subMenuTabText\">".__("My Media", bb_agencyinteract_TEXTDOMAIN) ."</div></div></div>\n";
-		echo " 			</a>\n";
-		echo " 		</div>\n";
+			if (defined('bb_agencyinteract_ALLOW_UPLOADS') && bb_agencyinteract_ALLOW_UPLOADS) :
+			if ( ($_SERVER["REQUEST_URI"]) == "/profile-member/media/") { $tabclass = "active"; } else { $tabclass = "inactive"; }
+			echo ' 		<div class="tab-inner tab-'. $tabclass .'" style="'.$d.'">';
+			echo " 			<a href=\"". get_bloginfo("wpurl") ."/profile-member/media/\">\n";
+			echo " 			  <div class=\"subMenuTabBG\"><div class=\"subMenuTabBorders\"><div class=\"subMenuTabText\">".__("My Media", bb_agencyinteract_TEXTDOMAIN) ."</div></div></div>\n";
+			echo " 			</a>\n";
+			echo " 		</div>\n";
+			endif;
 		}
                 
 		$bb_agencyinteract_options_arr = get_option('bb_agencyinteract_options');
