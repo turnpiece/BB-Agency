@@ -39,7 +39,7 @@ if ($profilesearch_layout == "condensed" || $profilesearch_layout == "simple") :
 	 	</div>
 	 	<?php // get data types
 	 	$dataTypes = bb_agency_get_datatypes();
-
+?><pre><?php print_r($dataTypes) ?></pre><?php
 	 	if (!empty($dataTypes)) :
 	 	if (count($dataTypes) > 1) : ?>	
 		<div class="search-field single">

@@ -18,7 +18,11 @@ if( isset($_REQUEST['action']) && !empty($_REQUEST['action']) ) {
 	}
 }
 
-if(!isset($_REQUEST['ConfigID']) && empty($_REQUEST['ConfigID'])){ $ConfigID=0;} else { $ConfigID=$_REQUEST['ConfigID']; }
+if (!isset($_REQUEST['ConfigID']) && empty($_REQUEST['ConfigID'])) { 
+    $ConfigID = 0;
+} else { 
+    $ConfigID = $_REQUEST['ConfigID']; 
+}
 
 if ($ConfigID <> 0) { ?>
     <a class="button-primary" href="?page=bb_agency_reports&ConfigID=0" title="Overview">Back to Overview</a>
@@ -28,7 +32,7 @@ if ($ConfigID <> 0) { ?>
 if ($ConfigID == 0) {
 	
 	if (function_exists(bb_agencyinteract_approvemembers)) {
-    	// RB Agency Interact Settings
+    	// BB Agency Interact Settings
         echo "<div class=\"boxlinkgroup\">\n";
         echo "  <h2>". __("Interactive Reporting", bb_agency_TEXTDOMAIN) . "</h2>\n";
         echo "  <p>". __("Run reports on membership and other usage.", bb_agency_TEXTDOMAIN) . "</p>\n";
@@ -45,7 +49,7 @@ if ($ConfigID == 0) {
 	//
     echo "<div class=\"boxlinkgroup\">\n";
     echo "  <h2>". __("Initial Setup", bb_agency_TEXTDOMAIN) . "</h2>\n";
-    echo "  <p>". __("If you are doing the initial instal of RB Agency you this section will help you get your data inplace", bb_agency_TEXTDOMAIN) . "</p>\n";
+    echo "  <p>". __("If you are doing the initial instal of BB Agency you this section will help you get your data inplace", bb_agency_TEXTDOMAIN) . "</p>\n";
     echo "</div>\n";
     echo "<hr />\n";
 
@@ -181,6 +185,15 @@ if ($ConfigID == 0) {
     echo "    </div>\n";
 
     echo "</div>\n";
+
+    ?>
+    <div class="boxlinkgroup">
+        <h2>Custom Import</h2>
+        <div class="boxlink">
+            <a class="button-primary" href="?page=<?php echo $_GET['page'] ?>&amp;ConfigID=79" title="<?php _e('Custom Import', bb_agency_TEXTDOMAIN) ?>"><?php _e('Custom Import', bb_agency_TEXTDOMAIN) ?></a>
+        </div>
+    </div>
+    <?php
 
 }
 elseif ($ConfigID == 11) {
@@ -939,18 +952,75 @@ elseif ($ConfigID == 12) {
 	echo "<a href=\"". bb_agency_BASEDIR ."tasks/exportDatabase.php\">Export Database</a>\n";
 
 }
+elseif ($ConfigID == 79)
+{
+    ?>
+    <h2><?php _e('Import from another site', bb_agency_TEXTDOMAIN) ?></h2>
+    <?php 
+        if ($_POST) {
+            bb_import_from_database();
+        } 
+    ?>
+    <form action="" method="post">
+        <input type="hidden" name="ConfigID" value="79" />
+        <p>
+            <label for="db_name"><?php _e( "Database name", bb_agency_TEXTDOMAIN ) ?></label>
+            <input type="text" name="db_name" value="" />
+        </p>
+        <p>
+            <label for="db_user"><?php _e( "Database user", bb_agency_TEXTDOMAIN ) ?></label>
+            <input type="text" name="db_user" value="" />
+        </p>
+        <p>
+            <label for="db_pass"><?php _e( "Database password", bb_agency_TEXTDOMAIN ) ?></label>
+            <input type="password" name="db_pass" value="" />
+        </p>
+        <p>
+            <label for="db_host"><?php _e( "Database host", bb_agency_TEXTDOMAIN ) ?></label>
+            <input type="text" name="db_host" value="" />
+        </p>
+        <p>
+            <label for="db_host"><?php _e( "Profile Type ID on external site", bb_agency_TEXTDOMAIN ) ?></label>
+            <input type="text" name="ExtProfileType" value="" />
+        </p>
+        <p>
+            <label for="ProfileType"><?php _e( 'ProfileType', bb_agency_TEXTDOMAIN ) ?></label>
+            <?php $dataTypes = bb_agency_get_datatypes(false); if (!empty($dataTypes)) : ?>
+            <select name="ProfileType" id="ProfileType">               
+                <?php foreach ($dataTypes as $type) : ?>
+                <option value="<?php echo $dataType->DataTypeID ?>" <?php selected($type->DataTypeID, $_SESSION['ProfileType']) ?>><?php echo $type->DataTypeTitle ?></option>
+                <?php endforeach; ?>
+            </select>
+            <?php endif; ?>
+        </p>
+        <p>
+            <input type="submit" value="Import Now" class="button-primary">
+        </p>
+    </form>
+    <?php
+}
 elseif ($ConfigID == 81) 
 {
-    echo "<h2>". __(" Export Database", bb_agency_TEXTDOMAIN) . "</h2>\n";
+    ?>
+    <h2><?php _e("Export Models", bb_agency_TEXTDOMAIN) ?></h2>
     
-    echo " <form action=\"".bb_agency_BASEDIR."tasks/export-Profile-Database.php\" method=\"post\">";
-    echo "      <select name=\"file_type\">";
-    echo "          <option value=\"\">Select file format</option>";
-    echo "          <option value=\"xls\">XLS</option>";
-    echo "          <option value=\"csv\">CSV</option>";
-    echo "      </select>";
-    echo "      <input type=\"submit\" value=\"Export Now\" class=\"button-primary\">";
-    echo "  </form>";    
+    <form action="<?php echo bb_agency_BASEDIR ?>tasks/export-Profile-Database.php" method="post">
+        <select name="file_type">
+            <option value="">Select file format</option>
+            <option value="xls">XLS</option>
+            <option value="csv">CSV</option>
+        </select>
+        <?php $dataTypes = bb_agency_get_datatypes(false); if (!empty($dataTypes)) : ?>
+        <select name="ProfileType" id="ProfileType">               
+            <option value=""><?php _e("Any Profile Type", bb_agency_TEXTDOMAIN) ?></option>
+            <?php foreach ($dataTypes as $type) : ?>
+            <option value="<?php echo $dataType->DataTypeID ?>" <?php selected($type->DataTypeID, $_SESSION['ProfileType']) ?>><?php echo $type->DataTypeTitle ?></option>
+            <?php endforeach; ?>
+        </select>
+        <?php endif; ?>
+        <input type="submit" value="Export Now" class="button-primary">
+    </form>
+    <?php
 }
 elseif ($ConfigID == 80) {
 
@@ -1438,6 +1508,127 @@ function bb_chmod_file_display($file){
     return $file;
 }
 
+/**
+ *
+ * import profiles from another database
+ * ie. from another site
+ *
+ */
+function bb_import_from_database() {
+
+    global $wpdb;
+
+    if (isset($_POST['db_host']) && 
+        isset($_POST['db_name']) && 
+        isset($_POST['db_user']) && 
+        isset($_POST['db_pass'])) {
+
+        $conn = mysql_connect( $_POST['db_host'], $_POST['db_user'], $_POST['db_pass'] );
+
+        if (!$conn)
+            die( "Failed to connect to database as ".$_POST['db_user'] );
+
+        mysql_select_db( $_POST['db_name'], $conn ) || die( "Unable to connect to database ". $_POST['db_name'] );
+
+        // we're connected
+        
+        // get profile type
+        $ExtProfileType = isset($_POST['ExtProfileType']) ? $_POST['ExtProfileType'] : 0;
+        $ProfileType = isset($_POST['ProfileType']) ? $_POST['ProfileType'] : 0;
+
+        $sql = "SELECT * FROM `".table_agency_profile."`";
+
+        if ($ProfileType > 0)
+            $sql .= " WHERE `ProfileType` = $ExtProfileType";
+
+        // get the profile table columns
+        $p_cols = $wpdb->get_results("SHOW COLUMNS FROM `".table_agency_profile."`");
+
+        // get media table columns
+        $m_cols = $wpdb->get_results("SHOW COLUMNS FROM `".table_agency_profile_media."`");
+
+        // custom fields
+        $custom_fields = $wpdb->get_results("SELECT `ProfileCustomID`, `ProfileCustomTitle` FROM ". table_agency_customfields ." ORDER BY `ProfileCustomOrder`");
+
+        $profiles = mysql_query($sql, $conn);
+
+        if (!mysql_num_rows($profiles))
+            die( "Failed to get any profiles." );
+
+        while ( $profile = mysql_fetch_array($profiles) ) {
+
+            $insert_data = array();
+            
+            foreach ( $p_cols as $col ) {
+
+                if ($col->Field == 'ProfileID') {
+                    $oldID = $profile[$col->Field];
+                    continue;
+                } elseif ($col->Field == 'ProfileType') {
+                    $insert_data[$col->Field] = $ProfileType;
+                } else {
+                    $insert_data[$col->Field] = $profile[$col->Field];
+                }
+            }
+
+            $wpdb->insert( table_agency_profile, $insert_data );
+
+            $ProfileID = $wpdb->insert_id;
+
+            // do media
+            $media_sql = "SELECT * FROM `".table_agency_profile_media."` WHERE `ProfileID` = $oldID";
+
+            $medias = mysql_query($media_sql, $conn);
+
+            if (mysql_num_rows($medias) > 0) {
+
+                while( $media = mysql_fetch_array($medias) ) {
+
+                    $media_data = array( 'ProfileID' => $ProfileID );
+
+                    foreach( $m_cols as $col ) {
+
+                        if ($col->Field == 'ProfileMediaID' || $col->Field == 'ProfileID')
+                            continue;
+
+                        $media_data[$col->Field] = $media[$col->Field];
+                    }
+
+                    $wpdb->insert( table_agency_profile_media, $media_data );
+                }
+            }
+
+            // now do custom fields
+            if (!empty($custom_fields)) {
+                foreach( $custom_fields as $field ) {
+
+                    $ext_cf = mysql_query("SELECT cf.`ProfileCustomID`, cf.`ProfileCustomTitle`, cfm.`ProfileCustomValue` FROM ". table_agency_profile_customfields ." cf, ".table_agency_profile_customfieldmux." cfm WHERE cf.`ProfileCustomID` = cfm.`ProfileCustomID` AND cfm.`ProfileID` = $oldID", $conn);
+
+                    if (mysql_num_rows($ext_cf) == 0)
+                        continue;
+
+                    while( $ext_field = mysql_fetch_array($ext_cf) ) {
+
+                        if ($ext_cf['ProfileCustomTitle'] == $field->ProfileCustomTitle) {
+
+                            $wpdb->insert( 
+                                table_agency_profile_customfieldmux, 
+                                array(
+                                    'ProfileCustomID' => $field->ProfileCustomID,
+                                    'ProfileID' => $ProfileID,
+                                    'ProfileCustomValue' => $ext_cf['ProfileCustomValue']
+                                )
+                            );
+                        }
+                    }  
+                }         
+            }
+        }
+    
+    } else {
+        die( "Did not receive database connection details." );
+    }
+}
 
 /*Naresh Kumar @ Matrix Infologics*/
 

@@ -14,13 +14,61 @@ global $wpdb;
 	$query3 = "SELECT ProfileCustomID, ProfileCustomTitle FROM ". table_agency_customfields ." ORDER BY ProfileCustomOrder";
 	$custom_fields_name = array();
 	$custom_fields_id = array();
-	$custom_fields = $wpdb->get_results($query3,ARRAY_A);
+	$custom_fields = $wpdb->get_results($query3, ARRAY_A);
 	foreach ($custom_fields as $key => $value) {
 		array_push($custom_fields_name, 'Client'.str_replace(' ', '', $value['ProfileCustomTitle']));
 		array_push($custom_fields_id, $value['ProfileCustomID']);
 	}
 	if(isset($_POST))
 	{
+
+		$cols = $wpdb->query("SHOW COLUMNS FROM `bb_agency_profile`", ARRAY_A);
+		$i = 0;
+		if (count($cols) > 0) {
+		  	foreach ($cols as $col) {
+		  		if ($i > 0)
+					$csv_output .= $col['Field'].", ";
+
+				$i++;
+		  	}
+		}
+		$csv_output .= ", Media\n";
+		
+	    // get profile type
+	    $ProfileType = isset($_POST['ProfileType']) ? $_POST['ProfileType'] : 0;
+
+	    $sql = "SELECT * FROM `bb_agency_profile`";
+
+	    if ($ProfileType > 0)
+	        $sql .= " WHERE `ProfileType` = $ProfileType";
+
+		$profiles = $wpdb->get_results($sql, ARRAY_N);
+
+		foreach ($profiles as $profile) {
+			for ($j = 1; $j < $i; $j++) {
+				$csv_output .= $profile[$j].", ";
+			}
+			// get images & media attachments
+			$media_sql = "SELECT * FROM `bb_agency_profile_media` WHERE `ProfileID` = ".$profile[0];
+
+			$files = $wpdb->get_results( $media_sql, ARRAY_A );
+
+			$media = array()
+
+			foreach ($files as $file) {
+				$media[] = $file['ProfileMediaType'] . '=' . $file['ProfileMediaURL'];
+			}
+
+		  	$csv_output .= implode('&', $media) . "\n";
+		}
+		
+		$filename = "bb_agency_".date("Y-m-d_H-i",time());
+		header("Content-type: application/vnd.ms-excel");
+		header("Content-disposition: csv" . date("Y-m-d") . ".csv");
+		header( "Content-disposition: filename=".$filename.".csv");
+		print $csv_output;
+		exit;
+
 		if($_POST['file_type'] == 'csv')
 		{ 
 			$profile_data = $wpdb->get_results("SELECT ProfileContactDisplay,ProfileContactNameFirst,ProfileContactNameLast,ProfileGender,ProfileDateBirth,ProfileContactEmail,ProfileContactWebsite,ProfileContactPhoneHome,ProfileContactPhoneCell,ProfileContactPhoneWork,ProfileLocationStreet,ProfileLocationCity,ProfileLocationState,ProfileLocationZip,ProfileLocationCountry,ProfileType,ProfileIsActive FROM bb_agency_profile ", ARRAY_A);
@@ -29,9 +77,9 @@ global $wpdb;
 			$csv_output .= implode(',', $custom_fields_name);
 			$csv_output .= "\n"; 
 			foreach ($profile_data as $key => $data_value) { 
-                                $gender = $wpdb->get_row("SELECT GenderTitle FROM ". table_agency_data_gender ." WHERE GenderID = ".$data_value['ProfileGender'], ARRAY_A);
-                                $data_value['ProfileGender'] = $gender['GenderTitle'];
-                                $data_value['ProfileType'] = str_replace(","," | ",$data_value['ProfileType']);  
+                $gender = $wpdb->get_row("SELECT GenderTitle FROM ". table_agency_data_gender ." WHERE GenderID = ".$data_value['ProfileGender'], ARRAY_A);
+                $data_value['ProfileGender'] = $gender['GenderTitle'];
+                $data_value['ProfileType'] = str_replace(","," | ",$data_value['ProfileType']);  
 				$csv_output .= implode(',', $data_value);
 				$subresult = $wpdb->get_results("SELECT ProfileCustomID, ProfileCustomValue FROM ". table_agency_customfield_mux ." WHERE ProfileID = ". $profile_data_id[$key]['ProfileID'], ARRAY_A);
                 $temp_array = array();

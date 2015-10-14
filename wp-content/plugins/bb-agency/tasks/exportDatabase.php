@@ -10,30 +10,47 @@ global $wpdb;
 // *************************************************************************************************** //
 // Get Going
 
-	$result = mysql_query("SHOW COLUMNS FROM bb_agency_profile");
+	$cols = $wpdb->query("SHOW COLUMNS FROM `bb_agency_profile`", ARRAY_A);
 	$i = 0;
-	if (mysql_num_rows($result) > 0) {
-	  while ($row = mysql_fetch_assoc($result)) {
-		$csv_output .= $row['Field'].", ";
-		$i++;
-	  }
+	if (count($cols) > 0) {
+	  	foreach ($cols as $col) {
+			$csv_output .= $col['Field'].", ";
+			$i++;
+	  	}
 	}
-	$csv_output .= "\n";
+	$csv_output .= ", Media\n";
 	
-	$values = mysql_query("SELECT * FROM bb_agency_profile");
-	while ($rowr = mysql_fetch_row($values)) {
-		for ($j=0;$j<$i;$j++) {
-		$csv_output .= $rowr[$j].", ";
+    // get profile type
+    $ProfileType = isset($_POST['ProfileType']) ? $_POST['ProfileType'] : 0;
+
+    $sql = "SELECT * FROM `bb_agency_profile`";
+
+    if ($ProfileType > 0)
+        $sql .= " WHERE `ProfileType` = $ProfileType";
+
+	$profiles = $wpdb->get_results($sql, ARRAY_N);
+
+	foreach ($profiles as $profile) {
+		for ($j = 0; $j < $i; $j++) {
+			$csv_output .= $profile[$j].", ";
 		}
-	  $csv_output .= "\n";
+		// get images & media attachments
+		$media_sql = "SELECT * FROM `bb_agency_profile_media` WHERE `ProfileID` = ".$profile[0];
+
+		$files = $wpdb->get_results( $media_sql, ARRAY_A );
+
+		$media = array()
+
+		foreach ($files as $file) {
+			$media[] = $file['ProfileMediaType'] . '=' . $file['ProfileMediaURL'];
+		}
+
+	  	$csv_output .= implode('&', $media) . "\n";
 	}
 	
-	$filename = $file."_".date("Y-m-d_H-i",time());
+	$filename = "bb_agency_".date("Y-m-d_H-i",time());
 	header("Content-type: application/vnd.ms-excel");
 	header("Content-disposition: csv" . date("Y-m-d") . ".csv");
 	header( "Content-disposition: filename=".$filename.".csv");
 	print $csv_output;
 	exit;
-
-
-?>
