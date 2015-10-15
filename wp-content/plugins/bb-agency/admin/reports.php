@@ -24,171 +24,11 @@ if (!isset($_REQUEST['ConfigID']) && empty($_REQUEST['ConfigID'])) {
     $ConfigID = $_REQUEST['ConfigID']; 
 }
 
-if ($ConfigID <> 0) { ?>
-    <a class="button-primary" href="?page=bb_agency_reports&ConfigID=0" title="Overview">Back to Overview</a>
-    <?php
-}
-
 if ($ConfigID == 0) {
 	
-	if (function_exists(bb_agencyinteract_approvemembers)) {
-    	// BB Agency Interact Settings
-        echo "<div class=\"boxlinkgroup\">\n";
-        echo "  <h2>". __("Interactive Reporting", bb_agency_TEXTDOMAIN) . "</h2>\n";
-        echo "  <p>". __("Run reports on membership and other usage.", bb_agency_TEXTDOMAIN) . "</p>\n";
-
-        echo "    <div class=\"boxlink\">\n";
-        echo "      <h3>". __("Recent Payments", bb_agency_TEXTDOMAIN) . "</h3>\n";
-        echo "      <a class=\"button-primary\" href=\"?page=". $_GET["page"] ."&ConfigID=11\" title=\"". __("Recent Payments", bb_agency_TEXTDOMAIN) . "\">". __("Recent Payments", bb_agency_TEXTDOMAIN) . "</a><br />\n";
-        echo "      <p>". __("Payments and membership renewals", bb_agency_TEXTDOMAIN) . "</p>\n";
-        echo "    </div>\n";
-    echo "</div>\n";
-    echo "<hr />\n";
-	}
-
-	//
-    echo "<div class=\"boxlinkgroup\">\n";
-    echo "  <h2>". __("Initial Setup", bb_agency_TEXTDOMAIN) . "</h2>\n";
-    echo "  <p>". __("If you are doing the initial instal of BB Agency you this section will help you get your data inplace", bb_agency_TEXTDOMAIN) . "</p>\n";
-    echo "</div>\n";
-    echo "<hr />\n";
-
-	//
-    echo "<div class=\"boxlinkgroup\">\n";
-    echo "  <h2>". __("Data Integrity", bb_agency_TEXTDOMAIN) . "</h2>\n";
-    echo "  <p>". __("Once your data is in place use the tools below to check your records", bb_agency_TEXTDOMAIN) . "</p>\n";
-
-    echo "    <div class=\"boxlink\">\n";
-    echo "      <h3>". __("Export Data", bb_agency_TEXTDOMAIN) . "</h3>\n";
-    echo "      <a class=\"button-primary\" href=\"?page=". $_GET["page"] ."&ConfigID=12\" title=\"". __("Export Data", bb_agency_TEXTDOMAIN) . "\">". __("Export Data", bb_agency_TEXTDOMAIN) . "</a><br />\n";
-    echo "      <p>". __("Export databases", bb_agency_TEXTDOMAIN) . ".</p>\n";
-    echo "    </div>\n";
-
-    echo "    <div class=\"boxlink\">\n";
-    echo "      <h3>". __("Check for Abnormalities", bb_agency_TEXTDOMAIN) . "</h3>\n";
-    echo "      <a class=\"button-primary\" href=\"?page=". $_GET["page"] ."&ConfigID=5\" title=\"". __("Check for Abnormalities", bb_agency_TEXTDOMAIN) . "\">". __("Check for Abnormalities", bb_agency_TEXTDOMAIN) . "</a><br />\n";
-    echo "      <p>". __("Search profile records for fields which seem invalid", bb_agency_TEXTDOMAIN) . ".</p>\n";
-    echo "    </div>\n";
-
-    echo "    <div class=\"boxlink\">\n";
-    echo "      <h3>". __("Rename Profile Folder Names", bb_agency_TEXTDOMAIN) . "</h3>\n";
-    echo "      <a class=\"button-primary\" href=\"?page=". $_GET["page"] ."&ConfigID=8\" title=\"". __("Rename Folders", bb_agency_TEXTDOMAIN) . "\">". __("Rename Folders", bb_agency_TEXTDOMAIN) . "</a><br />\n";
-    echo "      <p>". __("If you created model profiles while under 'First Last' or 'First L' and wish to switch to Display names or IDs you will have to rename the existing folders so that they do not have the models name in it", bb_agency_TEXTDOMAIN) . ".</p>\n";
-    echo "    </div>\n";
-
-    echo "    <div class=\"boxlink\">\n";
-    echo "      <h3>". __("Resize Photos", bb_agency_TEXTDOMAIN) . "</h3>\n";
-    echo "      <a class=\"button-primary\" href=\"?page=". $_GET["page"] ."&ConfigID=13\" title=\"". __("Resize Photos", bb_agency_TEXTDOMAIN) . "\">". __("Resize Photos", bb_agency_TEXTDOMAIN) . "</a><br />\n";
-    echo "      <p>". __("Ensure files are not larger than approved size", bb_agency_TEXTDOMAIN) . ". (<a href=\"?page=bb_agency_settings&ConfigID=1\" title=\"". __("Configure Sizes", bb_agency_TEXTDOMAIN) . "\">". __("Configure Sizes", bb_agency_TEXTDOMAIN) . "</a>)</p>\n";
-    echo "    </div>\n";
-
-    echo "    <div class=\"boxlink\">\n";
-    echo "      <h3>". __("Orphaned Profile Images", bb_agency_TEXTDOMAIN) . "</h3>\n";
-    echo "      <a class=\"button-primary\" href=\"?page=". $_GET["page"] ."&ConfigID=7\" title=\"". __("Remove Orphan Images From Database", bb_agency_TEXTDOMAIN) . "\">". __("Remove Orphan Images From Database", bb_agency_TEXTDOMAIN) . "</a><br />\n";
-    echo "      <p>". __("If for any reason you are getting blank images appear it may be because images were added in the database but have been removed via FTP.  Use this tool to remove all images in the databse which do not physically exist.", bb_agency_TEXTDOMAIN) . ".</p>\n";
-    echo "    </div>\n";
-
-    echo "    <div class=\"boxlink\">\n";
-    echo "      <h3>". __("FTP Blank Folder Check", bb_agency_TEXTDOMAIN) . "</h3>\n";
-    echo "      <a class=\"button-primary\" href=\"?page=". $_GET["page"] ."&ConfigID=1\" title=\"". __("Scan for Orphan Folders", bb_agency_TEXTDOMAIN) . "\">". __("Scan for Orphan Folders", bb_agency_TEXTDOMAIN) . "</a><br />\n";
-    echo "      <p>". __("Check for any empty folders which do no have models assigned using this tool", bb_agency_TEXTDOMAIN) . ".</p>\n";
-    echo "    </div>\n";
-    echo "</div>\n";
-    echo "<hr />\n";
-
-	//
-    echo "<div class=\"boxlinkgroup\">\n";
-    echo "  <h2>". __("Profile Management", bb_agency_TEXTDOMAIN) . "</h2>\n";
-    echo "  <p>". __("The following reports will help you manage your profile information", bb_agency_TEXTDOMAIN) . "</p>\n";
-
-    echo "    <div class=\"boxlink\">\n";
-    echo "      <h3>". __("Inactive Users", bb_agency_TEXTDOMAIN) . "</h3>\n";
-    echo "      <a class=\"button-primary\" href=\"?page=". $_GET["page"] ."&ConfigID=6\" title=\"". __("Check Inactive Users", bb_agency_TEXTDOMAIN) . "\">". __("Check Inactive Users", bb_agency_TEXTDOMAIN) . "</a><br />\n";
-    echo "      <p>". __("Find profiles who are currently set as inactive.  Use this tool to set multiple users to active", bb_agency_TEXTDOMAIN) . ".</p>\n";
-    echo "    </div>\n";
-
-    echo "    <div class=\"boxlink\">\n";
-    echo "      <h3>". __("Profile Search", bb_agency_TEXTDOMAIN) . "</h3>\n";
-    echo "      <a class=\"button-primary\" href=\"?page=bb_agency_search\" title=\"". __("Profile Search", bb_agency_TEXTDOMAIN) . "\">". __("Profile Search", bb_agency_TEXTDOMAIN) . "</a><br />\n";
-    echo "      <p>". __("You may search for profiles by using this tool", bb_agency_TEXTDOMAIN) . ".</p>\n";
-    echo "    </div>\n";
-
-    echo "    <div class=\"boxlink\">\n";
-    echo "      <h3>". __("Dummy Profiles with Sample Media", bb_agency_TEXTDOMAIN) . "</h3>\n";
-    echo "      <a class=\"button-primary\" href=\"?page=". $_GET["page"] ."&ConfigID=14\" title=\"". __("Generate Dummy Profiles with Media Content", bb_agency_TEXTDOMAIN) . "\">". __("Generate Dummy Profiles with Media Content", bb_agency_TEXTDOMAIN) . "</a><br />\n";
-    echo "      <p>". __("You may add dummy profiles by using this tool", bb_agency_TEXTDOMAIN) . ".</p>\n";
-    echo "    </div>\n";
-    echo "    </div>\n";
-
-    echo "    <div class=\"boxlink\">\n";
-    echo "      <h3>". __("Generate User Logins / Passwords", bb_agency_TEXTDOMAIN) . "</h3>\n";
-    echo "      <a class=\"button-primary\" href=\"?page=". $_GET["page"] ."&ConfigID=99\" title=\"". __("Generate Logins / Passwords", bb_agency_TEXTDOMAIN) . "\">". __("Generate Logins / Passwords", bb_agency_TEXTDOMAIN) . "</a><br />\n";
-    echo "      <p>". __("You may generate login and password for profiles which has been uploaded via importer, using this tool", bb_agency_TEXTDOMAIN) . ".</p>\n";
-    echo "    </div>\n";
-    echo "<hr />\n";
-
-    echo "<div class=\"boxlinkgroup\">\n";
-    echo "  <h2>". __("Importing Records", bb_agency_TEXTDOMAIN) . "</h2>\n";
-    echo "  <p>". __("The following tools will help import records.  DO NOT USE THESE TOOLS IF YOU ALREADY HAVE DATA LOADED", bb_agency_TEXTDOMAIN) . "</p>\n";
-
-    
-/*NK*/
-    echo "    <div class=\"boxlink\">\n";
-    echo "      <h3>". __("Step 1", bb_agency_TEXTDOMAIN) . "</h3>\n";
-    echo "      <a class=\"button-primary\" href=\"?page=". $_GET["page"] ."&ConfigID=81\" title=\"". __("Export Now", bb_agency_TEXTDOMAIN) . "\">". __("Export Now", bb_agency_TEXTDOMAIN) . "</a><br />\n";
-    echo "      <p>". __("Download this template and load your profile data into this file to import into the database.", bb_agency_TEXTDOMAIN) . ".</p>\n";
-    echo "    </div>\n";
-    
-    echo "    <div class=\"boxlink\">\n";
-    echo "      <h3>". __("Step 2", bb_agency_TEXTDOMAIN) . "</h3>\n";
-    echo "      <a class=\"button-primary\" href=\"?page=". $_GET["page"] ."&ConfigID=80\" title=\"". __("Import Data", bb_agency_TEXTDOMAIN) . "\">". __("Import Data", bb_agency_TEXTDOMAIN) . "</a><br />\n";
-    echo "      <p>". __("Upload the model profiles into the database.", bb_agency_TEXTDOMAIN) . ".</p>\n";
-    echo "    </div>\n";
-
-
-/*NK*/
-/*
-    echo "    <div class=\"boxlink\">\n";
-    echo "      <h3>". __("Step 1", bb_agency_TEXTDOMAIN) . "</h3>\n";
-    echo "      <span class=\"button-secondary\" href=\"?page=". $_GET["page"] ."&ConfigID=51\" title=\"". __("Download Excel Template", bb_agency_TEXTDOMAIN) . "\">". __("Download Excel Template", bb_agency_TEXTDOMAIN) . "</span><br />\n";
-    echo "      <p>". __("Download this template and load your profile data into this file to import into the database.", bb_agency_TEXTDOMAIN) . ".</p>\n";
-    echo "    </div>\n";
-
-    echo "    <div class=\"boxlink\">\n";
-    echo "      <h3>". __("Step 2", bb_agency_TEXTDOMAIN) . "</h3>\n";
-    echo "      <span class=\"button-secondary\" href=\"?page=". $_GET["page"] ."&ConfigID=52\" title=\"". __("Upload to Database", bb_agency_TEXTDOMAIN) . "\">". __("Upload to Database", bb_agency_TEXTDOMAIN) . "</span><br />\n";
-    echo "      <p>". __("Upload the model profiles into the database.", bb_agency_TEXTDOMAIN) . ".</p>\n";
-    echo "    </div>\n";
-*/
-    echo "    <div class=\"boxlink\">\n";
-    echo "      <h3>". __("Step 3", bb_agency_TEXTDOMAIN) . "</h3>\n";
-    echo "      <a class=\"button-primary\" href=\"?page=". $_GET["page"] ."&ConfigID=53\" title=\"". __("Generate folder names for profiles", bb_agency_TEXTDOMAIN) . "\">". __("Generate folder names for profiles", bb_agency_TEXTDOMAIN) . "</a><br />\n";
-    echo "      <p>". __("Check that all profiles have folder names generated.", bb_agency_TEXTDOMAIN) . ".</p>\n";
-    echo "    </div>\n";
-
-    echo "    <div class=\"boxlink\">\n";
-    echo "      <h3>". __("Step 4", bb_agency_TEXTDOMAIN) . "</h3>\n";
-    echo "      <a class=\"button-primary\" href=\"?page=". $_GET["page"] ."&ConfigID=2\" title=\"". __("Create folders for all profiles", bb_agency_TEXTDOMAIN) . "\">". __("Create folders for all profiles", bb_agency_TEXTDOMAIN) . "</a><br />\n";
-    echo "      <p>". __("Check that all profiles have folders created on the server.", bb_agency_TEXTDOMAIN) . ".</p>\n";
-    echo "    </div>\n";
-
-    echo "    <div class=\"boxlink\">\n";
-    echo "      <h3>". __("Step 5", bb_agency_TEXTDOMAIN) . "</h3>\n";
-    echo "      <a class=\"button-primary\" href=\"?page=". $_GET["page"] ."&ConfigID=3\" title=\"". __("Scan Folders for Images", bb_agency_TEXTDOMAIN) . "\">". __("Scan Folders for Images", bb_agency_TEXTDOMAIN) . "</a><br />\n";
-    echo "      <p>". __("First upload images directly to folders via FTP then use this tool to sync the images to the database.", bb_agency_TEXTDOMAIN) . ".</p>\n";
-    echo "    </div>\n";
-
-    echo "    <div class=\"boxlink\">\n";
-    echo "      <h3>". __("Step 6", bb_agency_TEXTDOMAIN) . "</h3>\n";
-    echo "      <a class=\"button-primary\" href=\"?page=". $_GET["page"] ."&ConfigID=4\" title=\"". __("Set Primary Profile Image", bb_agency_TEXTDOMAIN) . "\">". __("Set Primary Profile Image", bb_agency_TEXTDOMAIN) . "</a><br />\n";
-    echo "      <p>". __("Identify which image is the primary image for each profile.", bb_agency_TEXTDOMAIN) . ".</p>\n";
-    echo "    </div>\n";
-
-    echo "</div>\n";
-
     ?>
     <div class="boxlinkgroup">
-        <h2>Custom Import</h2>
+        <h2>Import</h2>
         <div class="boxlink">
             <a class="button-primary" href="?page=<?php echo $_GET['page'] ?>&amp;ConfigID=79" title="<?php _e('Custom Import', bb_agency_TEXTDOMAIN) ?>"><?php _e('Custom Import', bb_agency_TEXTDOMAIN) ?></a>
         </div>
@@ -661,198 +501,6 @@ elseif ($ConfigID == 7) {
 
     <?php
 } // End 6
-elseif ($ConfigID == 8) {
-//////////////////////////////////////////////////////////////////////////////////// ?>
-  <?php
-
-	
-	global $wpdb;
-	$bb_options = bb_agency_get_option();
-    /*
-		$bb_agency_option_profilenaming 		= (int)bb_agency_get_option('bb_agency_option_profilenaming');
-
-		echo "Current Naming Convention:";
-		if ($bb_agency_option_profilenaming == 0) {
-			echo "<h2>First Last</h2>";
-		} elseif ($bb_agency_option_profilenaming == 1) {
-			echo "<h2>First L</h2>";
-		} elseif ($bb_agency_option_profilenaming == 2) {
-			echo "<h2>Display Name</h2>";
-		} elseif ($bb_agency_option_profilenaming == 3) {
-			echo "<h2>Autogenerated ID</h2>";
-		}
-    */
-
-	if($_REQUEST['action'] == 'generate') {
-
-		// LETS DO IT!
-		$query1 = "SELECT * FROM ". table_agency_profile ." ORDER BY ProfileContactNameFirst";
-		$results1 = mysql_query($query1);
-		$count1 = mysql_num_rows($results1);
-		$arrayReservedFoldername = array();
-		$pos = 0;
-		while ($data1 = mysql_fetch_array($results1)) {
-			$ProfileID				=$data1["ProfileID"];
-			$ProfileContactNameFirst=$data1["ProfileContactNameFirst"];
-			$ProfileContactNameLast	=$data1["ProfileContactNameLast"];
-			$ProfileContactDisplay	=$data1["ProfileContactDisplay"];
-			$ProfileGallery			=$data1["ProfileGallery"];
-            /*
-				if ($bb_agency_option_profilenaming == 0) {
-					$ProfileGalleryFixed = $ProfileContactNameFirst . " ". $ProfileContactNameLast;
-				} elseif ($bb_agency_option_profilenaming == 1) {
-					$ProfileGalleryFixed = $ProfileContactNameFirst . " ". substr($ProfileContactNameLast, 0, 1);
-				} elseif ($bb_agency_option_profilenaming == 2) {
-					$ProfileGalleryFixed = $ProfileContactDisplay;
-				} elseif ($bb_agency_option_profilenaming == 3) {
-					$ProfileGalleryFixed = "ID ";
-				}
-            */
-                $ProfileGalleryFixed = $ProfileContactNameFirst . " ". substr($ProfileContactNameLast, 0, 1);
-				$ProfileGalleryFixed = bb_agency_safenames($ProfileGalleryFixed); 
-			
-			  if(in_array($ProfileGallery,$arrayReservedFoldername)){
-				$ProfileGalleryFixed = bb_agency_set_directory($ProfileGalleryFixed);
-				$arrayReservedFoldername[$pos] = $ProfileGalleryFixed;
-			 }
-				
-				if ($ProfileGallery == $ProfileGalleryFixed ) {
-			     				$ProfileGalleryFixed = $ProfileGallery;
-				} else {
-					      	$ProfileGalleryFixed  = bb_agency_set_directory($ProfileGalleryFixed);
-				}
-
-			if ($ProfileGallery == $ProfileGalleryFixed) {
-			} else {
-				// Folder Exist?
-				if (is_dir(bb_agency_UPLOADPATH ."/". $ProfileGalleryFixed)) {
-					$finished = false;                       // we're not finished yet (we just started)
-					while ( ! $finished ):                   // while not finished
-                        $ProfileGalleryFixed = $ProfileGalleryFixed .$ProfileID;   // output folder name
-                        if ( ! is_dir(bb_agency_UPLOADPATH ."/". $ProfileGalleryFixed) ):        // if folder DOES NOT exist...
-                            rename(bb_agency_UPLOADPATH ."/". $ProfileGallery, bb_agency_UPLOADPATH ."/". $ProfileGalleryFixed);
-
-                            if (is_dir(bb_agency_UPLOADPATH ."/". $ProfileGalleryFixed)) {
-                            	$rename = "UPDATE " . table_agency_profile . " SET ProfileGallery = '". $ProfileGalleryFixed ."' WHERE ProfileID = \"". $ProfileID ."\"";
-                            	$renamed = mysql_query($rename);
-                                echo "  <div id=\"message\" class=\"updated highlight\">Folder <strong>/" . $ProfileGalleryFixed . "/</strong> has been renamed for <a href='admin.php?page=bb_agency_profiles&action=editRecord&ProfileID=" . $data1['ProfileID'] . "'>" . $data1['ProfileContactNameFirst'] . " " . $data1['ProfileContactNameLast'] . "</a></div>\n";
-                            } else {
-                                echo "  <div id=\"message\" class=\"error\">Error renaming <strong>/" . $ProfileGalleryFixed . "/</strong> for <a href='admin.php?page=bb_agency_profiles&action=editRecord&ProfileID=" . $data1['ProfileID'] . "'>" . $data1['ProfileContactNameFirst'] . " " . $data1['ProfileContactNameLast'] . "</a></div>\n";
-                            }
-
-                            $finished = true; // ...we are finished
-                        endif;
-					endwhile;
-
-				} else {
-					
-					// Create Folders
-					rename(bb_agency_UPLOADPATH ."/". $ProfileGallery, bb_agency_UPLOADPATH ."/". $ProfileGalleryFixed);
-					if (is_dir(bb_agency_UPLOADPATH ."/". $ProfileGalleryFixed) ) { // if folder DOES NOT exist...
-						$rename = "UPDATE " . table_agency_profile . " SET ProfileGallery = '". $ProfileGalleryFixed ."' WHERE ProfileID = \"". $ProfileID ."\"";
-						$renamed = mysql_query($rename);
-		                echo "  <div id=\"message\" class=\"updated highlight\">Folder <strong>/" . $ProfileGalleryFixed . "/</strong> has been renamed for <a href='admin.php?page=bb_agency_profiles&action=editRecord&ProfileID=" . $data1['ProfileID'] . "'>" . $data1['ProfileContactNameFirst'] . " " . $data1['ProfileContactNameLast'] . "</a></div>\n";
-					} else {
-                        echo "  <div id=\"message\" class=\"error\">Error renaming <strong>/" . $ProfileGalleryFixed . "/</strong> for <a href='admin.php?page=bb_agency_profiles&action=editRecord&ProfileID=" . $data1['ProfileID'] . "'>" . $data1['ProfileContactNameFirst'] . " " . $data1['ProfileContactNameLast'] . "</a></div>\n";
-					}
-				}
-			}
-			$pos++;
-		}
-
-    } else {
-
-    	echo "<h3>Hide Profile Identity</h3>\n";
-    	echo "<p>If you created model profiles while under \"First Last\" or \"First L\" and wish to switch to Display names or IDs you will have to rename the existing folders so that they do not have the models name in it.</p>\n";
-	
-	
-    	/*
-    	echo "<br />";
-    	var_dump(is_dir(bb_agency_UPLOADPATH . "/john-doe/"));
-    	echo "<br />";
-    	echo bb_agency_UPLOADREL;
-    	// Open a known directory, and proceed to read its contents
-    	$dir = bb_agency_UPLOADPATH;
-    	if (is_dir($dir)) {
-    		if ($dh = opendir($dir)) {
-    			while (($file = readdir($dh)) !== false) {
-    				echo "filename: $file : filetype: " . filetype($dir . $file) . "\n";
-    			}
-    			closedir($dh);
-    		}
-    	}
-    	*/
-
-		$query1 = "SELECT * FROM ". table_agency_profile ." ORDER BY ProfileContactNameFirst";
-		$results1 = mysql_query($query1);
-		$count1 = mysql_num_rows($results1);
-		
-		$pos = 0;
-		$pos_suggested = 0;
-		$arrayReservedFoldername = array();
-		while ($data1 = mysql_fetch_array($results1)) {
-			$ProfileID				=$data1["ProfileID"];
-			$ProfileContactNameFirst=$data1["ProfileContactNameFirst"];
-			$ProfileContactNameLast	=$data1["ProfileContactNameLast"];
-			$ProfileContactDisplay	=$data1["ProfileContactDisplay"];
-			$ProfileGallery			=$data1["ProfileGallery"];
-			$arrayAllFolderNames[$pos] = $ProfileGallery;
-			$pos++; // array position start = 0	
-			/*
-			if ($bb_agency_option_profilenaming == 0) {
-				$ProfileGalleryFixed = $ProfileContactNameFirst . " ". $ProfileContactNameLast;
-			} elseif ($bb_agency_option_profilenaming == 1) {
-				$ProfileGalleryFixed = $ProfileContactNameFirst . " ". substr($ProfileContactNameLast, 0, 1);
-			} elseif ($bb_agency_option_profilenaming == 2) {
-				$ProfileGalleryFixed = $ProfileContactDisplay;
-			} elseif ($bb_agency_option_profilenaming == 3) {
-				$ProfileGalleryFixed = "ID ". $ProfileID;
-			}
-            */
-            $ProfileGalleryFixed = $ProfileContactNameFirst . " ". substr($ProfileContactNameLast, 0, 1);
-			$ProfileGalleryFixed = bb_agency_safenames($ProfileGalleryFixed); 
-		
-		    if(in_array($ProfileGallery,$arrayReservedFoldername)){
-			    $ProfileGalleryFixed = bb_agency_just_checkdir($ProfileGalleryFixed);
-			    $arrayReservedFoldername[$pos] = $ProfileGalleryFixed;
-	        }
-			echo "<div>\n";
-			// Check for duplicate
-			$query_duplicate = "SELECT ProfileGallery, count(ProfileGallery) as cnt FROM ". table_agency_profile ." WHERE ProfileGallery='".$ProfileGallery."' GROUP BY ProfileGallery   HAVING cnt > 1";
-			$rs = mysql_query($query_duplicate);
-			$count  = mysql_num_rows($rs);
-			if($count > 0){
-					
-				// Add Profiles to Array to Create later
-				$throw_error = true;
-				$ProfileGalleryFixed =  bb_agency_set_directory($ProfileGalleryFixed);
-				echo "  <span style='width: 240px; color: red;'>". bb_agency_UPLOADDIR  . $ProfileGallery ."/</span>\n";
-				echo "  <strong>Profile <a href='admin.php?page=bb_agency_profiles&action=editRecord&ProfileID=". $data1['ProfileID'] ."'>". $data1['ProfileContactNameFirst'] ." ". $data1['ProfileContactNameLast'] ."</a></strong>\n";
-				echo "  Should be renamed to /<span style='width: 240px; color: red;'>". $ProfileGalleryFixed ."/</span>\n";
-
-			} elseif ($ProfileGallery == $ProfileGalleryFixed ) {
-				echo "  <span style='width: 240px; color: green;'>". bb_agency_UPLOADDIR  . $ProfileGallery ."/</span>\n";
-			}
-			$pos++;
-		}//endwhile
-			
-			echo "</div>\n";
-		if ($count1 < 1) {
-				
-            echo "There are currently no profile records.";
-				
-		} elseif ($throw_error == true) { ?>
-            <a name="generate"></a>
-            <h3>Generate Folders for Profiles</h3>
-            <p>Click the button below to create folders for all profiles identified as not having a folder created:</p>
-            <p><a class="button-primary" href="?page=bb_agency_reports&ConfigID=<?php echo $ConfigID; ?>&action=generate" title="Generate Missing Folders for Profiles">Rename Profiles to match Privacy Settings</a>  Clicking this button will rename folders for the above profiles<p>
-            <?php
-		}
-	} // To Generate or Not to Generate
-	  
-   
-		
-}
 elseif ($ConfigID == 13) {
 
 // *************************************************************************************************** //
@@ -963,39 +611,45 @@ elseif ($ConfigID == 79)
     ?>
     <form action="" method="post">
         <input type="hidden" name="ConfigID" value="79" />
-        <p>
-            <label for="db_name"><?php _e( "Database name", bb_agency_TEXTDOMAIN ) ?></label>
-            <input type="text" name="db_name" value="" />
-        </p>
-        <p>
-            <label for="db_user"><?php _e( "Database user", bb_agency_TEXTDOMAIN ) ?></label>
-            <input type="text" name="db_user" value="" />
-        </p>
-        <p>
-            <label for="db_pass"><?php _e( "Database password", bb_agency_TEXTDOMAIN ) ?></label>
-            <input type="password" name="db_pass" value="" />
-        </p>
-        <p>
-            <label for="db_host"><?php _e( "Database host", bb_agency_TEXTDOMAIN ) ?></label>
-            <input type="text" name="db_host" value="" />
-        </p>
-        <p>
-            <label for="db_host"><?php _e( "Profile Type ID on external site", bb_agency_TEXTDOMAIN ) ?></label>
-            <input type="text" name="ExtProfileType" value="" />
-        </p>
-        <p>
-            <label for="ProfileType"><?php _e( 'ProfileType', bb_agency_TEXTDOMAIN ) ?></label>
+        <table>
+            <tr>
+                <td><label for="db_name"><?php _e( "Database name", bb_agency_TEXTDOMAIN ) ?></label></td>
+                <td><input type="text" name="db_name" value="" /></td>
+            </tr>
+            <tr>
+                <td><label for="db_user"><?php _e( "Database user", bb_agency_TEXTDOMAIN ) ?></label></td>
+                <td><input type="text" name="db_user" value="" /></td>
+            </tr>
+            <tr>
+                <td><label for="db_pass"><?php _e( "Database password", bb_agency_TEXTDOMAIN ) ?></label></td>
+                <td><input type="password" name="db_pass" value="" /></td>
+            </tr>
+            <tr>
+                <td><label for="db_host"><?php _e( "Database host", bb_agency_TEXTDOMAIN ) ?></label></td>
+                <td><input type="text" name="db_host" value="" /></td>
+            </tr>
+            <tr>
+                <td><label for="db_host"><?php _e( "Profile Type ID on external site", bb_agency_TEXTDOMAIN ) ?></label></td>
+                <td><input type="text" name="ExtProfileType" value="" /></td>
+            </tr>
+            <tr>
+                <td><label for="media_url"><?php _e( "Media URL on external site", bb_agency_TEXTDOMAIN ) ?></label></td>
+                <td><input type="text" name="media_url" value="" /></td>
+            </tr>
             <?php $dataTypes = bb_agency_get_datatypes(false); if (!empty($dataTypes)) : ?>
-            <select name="ProfileType" id="ProfileType">               
-                <?php foreach ($dataTypes as $type) : ?>
-                <option value="<?php echo $dataType->DataTypeID ?>" <?php selected($type->DataTypeID, $_SESSION['ProfileType']) ?>><?php echo $type->DataTypeTitle ?></option>
-                <?php endforeach; ?>
-            </select>
+            <tr>
+                <td><label for="ProfileType"><?php _e( 'ProfileType', bb_agency_TEXTDOMAIN ) ?></label></td>
+                <td>
+                    <select name="ProfileType" id="ProfileType">               
+                        <?php foreach ($dataTypes as $type) : ?>
+                        <option value="<?php echo $dataType->DataTypeID ?>" <?php selected($type->DataTypeID, $_SESSION['ProfileType']) ?>><?php echo $type->DataTypeTitle ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+            </tr>
             <?php endif; ?>
-        </p>
-        <p>
-            <input type="submit" value="Import Now" class="button-primary">
-        </p>
+        </table>
+        <input type="submit" value="Import Now" class="button-primary">
     </form>
     <?php
 }
@@ -1022,428 +676,14 @@ elseif ($ConfigID == 81)
     </form>
     <?php
 }
-elseif ($ConfigID == 80) {
-
-// *************************************************************************************************** //
-// Import CSV or XLS files (NK)
-
-    $obj_csv = new bbagencyCSVXLSImpoterPlugin();
-    $error_message = ""; 
-    $form_display_flag = true;
-
-    global $wpdb;
-
-    $custom_fields_bb_agency = $wpdb->get_results("SELECT * FROM ". table_agency_customfields ." WHERE ProfileCustomView = 0  ORDER BY ProfileCustomOrder", ARRAY_A);
-    $fields_array = array( 0 => array('ProfileContactDisplay','ProfileContactNameFirst','ProfileContactNameLast','ProfileGender','ProfileDateBirth','ProfileContactEmail','ProfileContactWebsite','ProfileContactPhoneHome','ProfileContactPhoneCell','ProfileContactPhoneWork','ProfileLocationStreet','ProfileLocationCity','ProfileLocationState','ProfileLocationZip','ProfileLocationCountry','ProfileType','ProfileIsActive'));
-
-    $count = count($fields_array[0]);
-    foreach ($custom_fields_bb_agency as $key => $c_field) 
-    {
-        $fields_array[0][$count] = 'Client'.str_replace(' ', '',$c_field['ProfileCustomTitle']);
-        $count++;
-    }
-
-    $target_path = WP_CONTENT_DIR.'/FORMAT.csv';
-
-    $csv_format = fopen($target_path,'w');
-    fputcsv($csv_format, $fields_array[0]);  
-            
-//    foreach ($fields_array as $key => $value) 
-//    {
-//        fputcsv($csv_format, $value);
-//    }
-    fclose($csv_format);
-    chmod($target_path, 0777);
-    
-
-    if(isset($_POST['submit_importer']))
-    {   
-        /*Reading a file type to confirm input of CSV, XLS or XLSX file*/
-        if($_FILES['source_file']['name'] == "")
-        {
-            $error_message = "Empty file!";
-        }
-        //echo $_FILES['source_file']['type'];die;
-        if($_FILES['source_file']['type'] == 'application/octet-stream' || $_FILES['source_file']['type'] == 'application/vnd.ms-excel' || $_FILES['source_file']['type'] == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') /*CSV and Excel files*/
-        {
-            $return_result = $obj_csv->match_column_and_table(); /*Display colunm head*/
-            if( $return_result == 0)
-            {
-                $error_message = "Empty header!";
-                $form_display_flag = true;
-            }
-            else
-            {
-                $form_display_flag = false;
-            }
-        }
-        else
-        {
-            $error_message = 'Incorrect file format. Only CSV, XLS and XLSX file formats are allowed!';
-            $form_display_flag = true;
-        }
-    }
-    else if($_POST['submit_importer_to_db'])
-    {
-        $obj_csv->import_to_db();   /*Store profile data*/
-        $form_display_flag = true;
-    }
-    
-    if( $form_display_flag == true )
-    {
-        echo "<h2>". __("Import CSV / XLS", bb_agency_TEXTDOMAIN) . "</h2>\n";
-        
-        /*File error message*/
-        echo "<span class=\"error-message\">$error_message</span> <br>";
-        
-        /*Form for file selection*/
-        echo "  <form action=\"\" method=\"post\" enctype=\"multipart/form-data\">";
-        echo "      <label>Select File</label>";
-        echo "      <input type=\"file\" name=\"source_file\">  <br>";
-        echo "      <input type=\"submit\" id=\"submit\" class=\"button-primary\" value=\"Read Column Head\" name=\"submit_importer\">";
-        echo "  </form>";
-    }
-    
-}
-// Install Dummy Accounts/Profiles with Media Content bb-agency/task/installDummy.php
-elseif ($ConfigID == 14) {
-
-		$trackDummies = array();
-		$sample_url = bb_agency_BASEPATH."tasks/samples"; // Samples' folder
-		
-		$userProfileNames = array(
-		"Arvay" 	=> "Steven",
-		"Bailey"	=>"Victor",
-		"Barr"		=>"Ann",
-		"Benton"	=>"Jared",
-		"Bousfield"	=>"Joanne",
-		"Brading"	=>"Eric",
-		"Brading"	=>"Richard",
-		"Brading"	=>"Monique",
-		"Bradley"	=>"John",
-		"Champ"		=>"Camba",
-		"Kristel" 	=> "Cuadra",
-		"Fhil" 		=>"Barrion",
-		"Anne" 		=> "Panlilio",
-		"Childs"	=>"Trevor",
-		"Cowal"		=>"Randy",
-		"Curtis"	=>"Bradley",
-		"Dales"     =>"Otmar",
-		"Dickson"   =>"Elizabeth",
-		"Downs"     =>"Ricardo",
-		"Ellis"     =>"Carlita",
-		"Ezeard"=>"Theresa",
-		"Fields"=>"Grace",
-		"Fields"=>"Marvette",
-		"Goutouski"=>"Geoffrey",
-		"Gullis"=>"Nancy",
-		"Hastman"=>"Joanne",
-		"Hearns"=>"Joyce",
-		"Holmes"=>"Bernice",
-		"Holmes"=>"Myra",
-		"Holmes"=>"Kelly",
-		"Ingles"=>"Patrick",
-		"Jackson"=>"Jeffrey",
-		"Jesch"=>"Kay ",
-		"Johnson"=>"Jeanette",
-		"Johnson"=>"David",
-		"Johnson"=>"Leonard",
-		"Jones"=>"Ford",
-		"Jones"=>"Ford",
-		"Kunick"=>"Samuel",
-		"Ladell"=>"Jillian",
-		"Lazenby"=>"Andrew",
-		"Leonard"=>"Heather",
-		"Leonard"=>"Heather",
-		"Leslie"=>"Sharon",
-		"Marr"=>"Edward",
-		"McCarron"=>"Elijah",
-		"McKinnon"=>"Jeanette",
-		"McKinnon"=>"Adele",
-		"Muir"=>"Caitlin",
-		"Newell"=>"Samantha",
-		"Onstein"=>"Ethel",
-		"Onstein"=>"Lee",
-		"Page"=>"Inez",
-		"Ralph"=>"Debra",
-		"Riaz	"=>"Carl",
-		"Robertson"=>"Ethel",
-		"Rouse"=>"Wycliffe",
-		"Rouse"=>"Marco",
-		"Schmitz"=>"Joseph",
-		"Shannon"=>"Barbara",
-		"Smith"=>"Jason",
-		"Smith"=>"Carrie",
-		"Smith"=>"Margaret",
-		"Smith"=>"Margaret",
-		"Smith"=>"Bradley",
-		"Stanfield"=>"Joyce",
-		"Sutherland"=>"Louise",
-		"Sutherland"=>"Lynn",
-		"Taylor"=>"Valerie",
-		"Tallyn"=>"Glenn",
-		"Taylor"=>"Eleanor",
-		"Taylor"=>"Ann",
-		"Taylor"=>"Valerie",
-		"Timber"=>"Doris",
-		"Valdez"=>"Karen",
-		"Wickson"=>"Jean",
-		"Wilson"=>"Millicent",
-		"Wood"=>"Drucylla",
-		"Taylor"=>"Valerie",
-		"Wood"=>"Janice",
-		"Woodley"=>"Bartholomew",
-		"Wright"=>"Andre",
-		"Wright"=>"Brenda"
-		);
-		
-		$userMediaVideo = array(
-			"http://www.youtube.com/watch?v=0hMzBRM96gk",
-			"http://www.youtube.com/watch?v=xNiSREeN-rk",
-			"http://www.youtube.com/watch?v=c8YZIL8JZfg",
-			"http://www.youtube.com/watch?v=Mx3wQGU862E",
-			"http://www.youtube.com/watch?v=p8DYtnBa4a8",
-			"http://www.youtube.com/watch?v=y58mkKh_0Gw"
-		);
-
-		$userMediaImagesM = array("male_model-01.jpg","male_model-02.jpg","male_model-03.jpg","male_model-04.jpg","male_model-05.jpg","male_model-06.jpg","male_model-07.jpg","male_model-08.jpg","male_model-09.jpg");
-		$userMediaImagesF = array("female_model-01.jpg","female_model-02.jpg","female_model-03.jpg","female_model-04.jpg","female_model-05.jpg","female_model-06.jpg","female_model-07.jpg","female_model-08.jpg","female_model-09.jpg");
-		$userMediaVideoType = array("Demo Reel","Video Monologue","Video Slate");
-		$userMediaHeadshot = array("headshot.jpg","headshot-2.jpg");
-		$userMediaResume = array("resume.docx","resume_PDF.pdf");
-		$userMediaCompcard = array("comp-card.jpg");
-		$userMediaVoicedemo = array("voice-demo.mp3");
 
 
-		#========== Register dummies to track===
-		foreach($userProfileNames as $ProfileContactNameFirst => $ProfileContactNameLast):	
-			$ProfileContactDisplay = "";
-			$ProfileGallery = "";
-						
-			if (empty($ProfileContactDisplay)) {  // Probably a new record... 
-				if ($bb_agency_option_profilenaming == 0) {
-					$ProfileContactDisplay = $ProfileContactNameFirst . " ". $ProfileContactNameLast;
-				} elseif ($bb_agency_option_profilenaming == 1) {
-					$ProfileContactDisplay = $ProfileContactNameFirst . " ". substr($ProfileContactNameLast, 0, 1);
-				} elseif ($bb_agency_option_profilenaming == 2) {
-					$error .= "<b><i>". __(LabelSingular ." must have a display name identified", bb_agency_TEXTDOMAIN) . ".</i></b><br>";
-					$have_error = true;
-				} elseif ($bb_agency_option_profilenaming == 3) {
-					$ProfileContactDisplay = "ID ". $ProfileID;
-				}
-			  }
-		
-			  if (empty($ProfileGallery)) {  // Probably a new record... 
-				$ProfileGallery = bb_agency_safenames($ProfileContactDisplay); 
-				}
-				
-			$ProfileGallery = bb_agency_just_checkdir($ProfileGallery);
-			#DEBBUG echo $ProfileGallery ."<Br/>";
-			array_push($trackDummies,$ProfileGallery);
-		endforeach;
-		 
-		$trackDummies_text = implode(",",$trackDummies);
-		
-		echo "<form method=\"post\" action=\"options.php\">\n";
-		echo "<br/><br/>";    
-			settings_fields( 'bb-agency-dummy-settings-group' ); 
-	     	      $bb_agency_dummy_options_arr = get_option('bb_agency_dummy_options');
-			
-			if (empty($bb_agency_dummy_options_installdummy)) { $bb_agency_dummy_options_installdummy =""; }
-			$bb_agency_dummy_options_installdummy = $bb_agency_dummy_options_arr['bb_agency_dummy_options_installdummy'];
-			
-			
-		if(empty($bb_agency_dummy_options_installdummy)){	
-			echo "<input type=\"hidden\" name=\"bb_agency_dummy_options[bb_agency_dummy_options_installdummy]\" value=\"".$trackDummies_text."\" />\n";
-			echo "<input type=\"submit\" name=\"generate\" value=\"Generate Dummies Now!\" />\n";
-			$_SESSION["trackDummies_text"] = $trackDummies_text;
-		}else{
-			echo "<input type=\"submit\" name=\"remove\" value=\"Remove All ".count($userProfileNames)." Dummy Accounts generated\" />\n";	
-			echo "<input type=\"hidden\" name=\"bb_agency_dummy_options[bb_agency_dummy_options_installdummy]\" value=\"\" />\n";
-			
-		}
-		echo "</form>\n";
-		#END========== Register dummies to track===
-
-		if(isset($_GET["settings-updated"]) && empty($bb_agency_dummy_options_installdummy)){
-				
-			  echo "<h2>". __("Removing Dummy Profiles...", bb_agency_TEXTDOMAIN) . "</h2>\n";
-			  echo "<br/>Succesfully removed...";
-			  echo "<br/>";
-			  $trackDummies = explode(",",$_SESSION["trackDummies_text"]);
-			 
-				 // Track dummies to pull out
-				 foreach($trackDummies as $gallery){
-					 echo "<strong>/".$gallery."/</strong> linked directory removed.<br/>";
-				  $qID = mysql_query("SELECT ProfileID,ProfileGallery FROM ".table_agency_profile ." WHERE ProfileGallery = '".$gallery."' ") or die("1".mysql_error());
-				  $fID = mysql_fetch_assoc($qID);
-				 
-				  mysql_query("DELETE FROM ".table_agency_profile ." WHERE ProfileID = '".$fID["ProfileID"]."' ") or die("2".mysql_error());
-				  mysql_query("DELETE FROM ".table_agency_profile_media ." WHERE ProfileID = '".$fID["ProfileID"]."' ") or die("3".mysql_error());
-				  
-				  uninstall_dummy_profile($gallery);
-				 }
-					
-				unset($_SESSION["trackDummies_text"]); 
-		}
-					
-				
-		if(isset($_GET["settings-updated"]) && !empty($bb_agency_dummy_options_installdummy) && isset($_SESSION["trackDummies_text"])){	
-				echo "<h2>". __("Installing Dummies...", bb_agency_TEXTDOMAIN) . "</h2>\n";
-				echo "<br/>";  
-			  	echo "Succesfully created ".count($userProfileNames)." dummy profiles..<br/>";
-			
-						 foreach($userProfileNames as $ProfileContactNameLast => $ProfileContactNameFirst){
-							  
-							  $ProfileContactDisplay = "";
-							  $ProfileGallery = "";
-							  $userCategory = "";
-							  $userGender ="";
-							
-							  $queryGender = mysql_query("SELECT * FROM ".table_agency_data_gender."  WHERE GenderID >= (SELECT FLOOR( MAX(GenderID) * RAND()) FROM ".table_agency_data_gender." ) ORDER BY RAND() LIMIT 1");
-							  $userGender = mysql_fetch_assoc($queryGender);
-							  
-							  $queryCategory = mysql_query("SELECT * FROM ".table_agency_data_type."  WHERE DataTypeID >= (SELECT FLOOR( MAX(DataTypeID) * RAND()) FROM ".table_agency_data_type." ) ORDER BY  RAND() LIMIT 1");
-							  $userCategory = mysql_fetch_assoc($queryCategory);
-							  mysql_free_result($queryGender);
-							  mysql_free_result($queryCategory);
-							   
-							   
-							  echo $ProfileContactNameFirst." ".$ProfileContactNameLast."<br/>";
-							  
-							 if (empty($ProfileContactDisplay)) {  // Probably a new record... 
-								if ($bb_agency_option_profilenaming == 0) {
-									$ProfileContactDisplay = $ProfileContactNameFirst . " ". $ProfileContactNameLast;
-								} elseif ($bb_agency_option_profilenaming == 1) {
-									$ProfileContactDisplay = $ProfileContactNameFirst . " ". substr($ProfileContactNameLast, 0, 1);
-								} elseif ($bb_agency_option_profilenaming == 2) {
-									$error .= "<b><i>". __(LabelSingular ." must have a display name identified", bb_agency_TEXTDOMAIN) . ".</i></b><br>";
-									$have_error = true;
-								} elseif ($bb_agency_option_profilenaming == 3) {
-									$ProfileContactDisplay = "ID ". $ProfileID;
-								}
-							}
-						
-							if (empty($ProfileGallery)) {  // Probably a new record... 
-								$ProfileGallery = bb_agency_safenames($ProfileContactDisplay); 
-							}
-								
-							  $ProfileGallery = bb_agency_checkdir($ProfileGallery);
-								
-							  $insert = "INSERT INTO " . table_agency_profile . "(
-    								  ProfileGallery,
-    								  ProfileContactDisplay,
-    								  ProfileContactNameFirst,
-    								  ProfileContactNameLast,
-    								  ProfileIsActive,
-    								  ProfileGender,
-    								  ProfileType,
-                                      ProfileDateBirth,
-                                      ProfileDateDue, 
-    							  ) VALUES (
-    								  '".$ProfileGallery."',
-    								  '".trim($ProfileContactDisplay)."',
-    								  '".trim($ProfileContactNameFirst)."',
-    								  '".trim($ProfileContactNameLast)."',
-    								  1,
-    								  '".$userGender["GenderID"]."',
-    								  '".$userCategory["DataTypeID"]."',
-    								  '".date('Y-m-d', strtotime(mt_rand(1970,2010).'-'.mt_rand(1,12)."-".mt_rand(1,30)))."',
-                                      '".date('Y-m-d', strtotime(mt_rand(2013,2016).'-'.mt_rand(1,12)."-".mt_rand(1,30)))."'
-    							 );"; 
-							  
-							$results = $wpdb->query($insert) or die(mysql_error());
-							$ProfileID = $wpdb->insert_id;
-								
-							$rand = rand(0,1); // 2
-							$randTo6 = rand(0,5); //6
-							$randTo4 = rand(0,4); // 5
-							$randTo8 = rand(0,8); // 5
-						   
-							  for($a=0; $a<=3; $a++){
-								  
-								  // Copy images
-								  if($a<=3){
-									if ($userGender["GenderID"] % 2 != 0) {
-									 if(!copy(bb_chmod_file_display($sample_url."/".$userMediaImagesM[$a]),bb_chmod_file_display(bb_agency_UPLOADPATH . $ProfileGallery ."/".$userMediaImagesM[$a]))){
-										echo $sample_url."/".$userMediaImagesM[$a]."<br/>".bb_agency_UPLOADPATH . $ProfileGallery ."/".$userMediaImagesM[$a];
-										echo "<br/>";
-										die("Failed to Copy files... <br/>".phpinfo());
-									 }
-									 $results = mysql_query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL) VALUES ('". $ProfileID ."','Image','". $userMediaImagesM[$a] ."','". $userMediaImagesM[$a] ."')");
-									} else {
-									 if(!copy(bb_chmod_file_display($sample_url."/".$userMediaImagesF[$a]),bb_chmod_file_display(bb_agency_UPLOADPATH . $ProfileGallery ."/".$userMediaImagesF[$a]))){
-										echo $sample_url."/".$userMediaImagesF[$a]."<br/>".bb_agency_UPLOADPATH . $ProfileGallery ."/".$userMediaImagesF[$a];
-										echo "<br/>";
-										die("Failed to Copy files... <br/>".phpinfo());
-									 }
-									 $results = mysql_query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL) VALUES ('". $ProfileID ."','Image','". $userMediaImages[$a] ."','". $userMediaImages[$a] ."')");
-									}
-								  }
-								  if($a<=3){
-									$results = mysql_query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL) VALUES ('". $ProfileID ."','". $userMediaVideoType[$a]."','".bb_agency_get_VideoFromObject($userMediaVideo[$randTo6]) ."','". bb_agency_get_VideoFromObject($userMediaVideo[$randTo6])  ."')");
-								  }
-								  if($a==1){ 
-									if ($userGender["GenderID"] % 2 != 0) {
-									 copy(bb_chmod_file_display($sample_url."/".$userMediaImagesM[$randTo8]),bb_agency_UPLOADPATH . $ProfileGallery ."/".$userMediaImagesM[$randTo8]);
-									 $results = mysql_query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL,ProfileMediaPrimary) VALUES ('". $ProfileID ."','Image','". $userMediaImagesM[$randTo8]."','". $userMediaImagesM[$randTo8] ."',1)") or die(mysql_error());
-									} else {
-									 copy(bb_chmod_file_display($sample_url."/".$userMediaImagesF[$randTo8]),bb_agency_UPLOADPATH . $ProfileGallery ."/".$userMediaImagesF[$randTo8]);
-									 $results = mysql_query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL,ProfileMediaPrimary) VALUES ('". $ProfileID ."','Image','". $userMediaImagesF[$randTo8]."','". $userMediaImagesF[$randTo8] ."',1)") or die(mysql_error());
-									}
-									copy(bb_chmod_file_display($sample_url."/".$userMediaHeadshot[$rand]),bb_agency_UPLOADPATH . $ProfileGallery ."/".$userMediaHeadshot[$rand]);
-									 $results = mysql_query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL) VALUES ('". $ProfileID ."','Headshot','". $userMediaHeadshot[$rand]."','". $userMediaHeadshot[$rand] ."')");
-									
-									copy(bb_chmod_file_display($sample_url."/".$userMediaVoicedemo[0]),bb_agency_UPLOADPATH . $ProfileGallery ."/".$userMediaVoicedemo[0]);
-									 $results = mysql_query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL) VALUES ('". $ProfileID ."','VoiceDemo','". $userMediaVoicedemo[0] ."','".  $userMediaVoicedemo[0] ."')");
-												 
-									copy(bb_chmod_file_display($sample_url."/".$userMediaCompcard[0]),bb_agency_UPLOADPATH . $ProfileGallery ."/".$userMediaCompcard[0]);
-									$results = mysql_query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL) VALUES ('". $ProfileID ."','CompCard','".$userMediaCompcard[0] ."','". $userMediaCompcard[0]."')");
-									
-									copy(bb_chmod_file_display($sample_url."/".$userMediaResume[$rand]),bb_agency_UPLOADPATH . $ProfileGallery ."/".$userMediaResume[$rand]);
-									$results = mysql_query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL) VALUES ('". $ProfileID ."','Resume','". $userMediaResume[$rand]."','".$userMediaResume[$rand]."')");
-												 
-								  }
-								
-							  }
-						   } // End foreach
-						   
-			 unset($_SESSION["trackDummies_text"]);
-		} // if option is empty
-		
-		
-			
-		if (isset($_GET["a"])){
-				unset($_SESSION["trackDummies_text"]); 
-				uninstall_allprofile();
-		}
-} //END $ConfigID == 14
-elseif($ConfigID == '99'){
-
-    echo "<h2>". __("Generate Login / Passwords", bb_agency_TEXTDOMAIN) . "</h2>\n";
-
-    bb_display_profile_list();
-
-    
-}
 
 
 
 
 /******************************************************************************************/
 
-
-
-function uninstall_dummy_profile($profile){
-	
-	
-	 $dir  = bb_agency_UPLOADPATH .$profile;  
-	 foreach (scandir($dir) as $item) {
- 			if ($item == '.' || $item == '..') continue;
-  	 		 unlink($dir.DIRECTORY_SEPARATOR.$item);
-	 }
-	 rmdir($dir);
-}
 
 function uninstall_allprofile(){
 	
@@ -1557,6 +797,8 @@ function bb_import_from_database() {
 
         while ( $profile = mysql_fetch_array($profiles) ) {
 
+            bb_log_message( $profile['ProfileContactDisplay'] );
+
             $insert_data = array();
             
             foreach ( $p_cols as $col ) {
@@ -1580,6 +822,8 @@ function bb_import_from_database() {
 
             $medias = mysql_query($media_sql, $conn);
 
+            $media_url = $_POST['media_url'] ? trailingslashit($_POST['media_url']) : false;
+
             if (mysql_num_rows($medias) > 0) {
 
                 while( $media = mysql_fetch_array($medias) ) {
@@ -1595,6 +839,13 @@ function bb_import_from_database() {
                     }
 
                     $wpdb->insert( table_agency_profile_media, $media_data );
+
+                    if ($media_url) {
+                        // get media and import it
+                        $file = $profile['ProfileGallery'] . '/' . $media['ProfileMediaURL'];
+
+                        bb_save_media( $media_url . $file, bb_agency_UPLOADPATH . $file );
+                    }
                 }
             }
 
@@ -1602,7 +853,9 @@ function bb_import_from_database() {
             if (!empty($custom_fields)) {
                 foreach( $custom_fields as $field ) {
 
-                    $ext_cf = mysql_query("SELECT cf.`ProfileCustomID`, cf.`ProfileCustomTitle`, cfm.`ProfileCustomValue` FROM ". table_agency_profile_customfields ." cf, ".table_agency_profile_customfieldmux." cfm WHERE cf.`ProfileCustomID` = cfm.`ProfileCustomID` AND cfm.`ProfileID` = $oldID", $conn);
+                    $ext_cf_sql = "SELECT cf.`ProfileCustomID`, cf.`ProfileCustomTitle`, cfm.`ProfileCustomValue` FROM ". table_agency_customfields ." cf, ".table_agency_customfield_mux." cfm WHERE cf.`ProfileCustomID` = cfm.`ProfileCustomID` AND cfm.`ProfileID` = $oldID";
+
+                    $ext_cf = mysql_query($ext_cf_sql, $conn);
 
                     if (mysql_num_rows($ext_cf) == 0)
                         continue;
@@ -1612,7 +865,7 @@ function bb_import_from_database() {
                         if ($ext_cf['ProfileCustomTitle'] == $field->ProfileCustomTitle) {
 
                             $wpdb->insert( 
-                                table_agency_profile_customfieldmux, 
+                                table_agency_customfield_mux, 
                                 array(
                                     'ProfileCustomID' => $field->ProfileCustomID,
                                     'ProfileID' => $ProfileID,
@@ -1628,6 +881,25 @@ function bb_import_from_database() {
     } else {
         die( "Did not receive database connection details." );
     }
+}
+
+function bb_save_media($url, $saveto){
+    $ch = curl_init ($url);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
+    $raw=curl_exec($ch);
+    curl_close ($ch);
+    if(file_exists($saveto)){
+        unlink($saveto);
+    }
+    $fp = fopen($saveto,'x');
+    fwrite($fp, $raw);
+    fclose($fp);
+}
+
+function bb_log_message($message) {
+    echo '<p>' . $message . '</p>';
 }
 
 /*Naresh Kumar @ Matrix Infologics*/
