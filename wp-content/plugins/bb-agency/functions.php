@@ -3837,3 +3837,15 @@ function bb_agency_save_modelcard( $gallery ) {
     
     bb_agency_adminmessage_former('Error saving model card: '.$Card->get_error(), true);
 }
+
+/**
+ *
+ * debug
+ *
+ * @param string $message
+ *
+ */
+function bb_agency_debug( $message ) {
+	if (bb_agency_DEBUGGING)
+		error_log( "DEBUG: $message" );
+}

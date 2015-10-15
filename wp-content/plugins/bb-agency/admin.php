@@ -185,7 +185,7 @@ function set_bb_agency_menu(){
     add_submenu_page("bb_agency_menu", __("Saved Searches", bb_agency_TEXTDOMAIN), __("Saved Searches", bb_agency_TEXTDOMAIN), 7,"bb_agency_searchsaved","bb_agency_searchsaved");
     add_submenu_page("bb_agency_menu", __("Manage Jobs", bb_agency_TEXTDOMAIN), __("Manage Jobs", bb_agency_TEXTDOMAIN), 7,"bb_agency_jobs","bb_agency_jobs");
     add_submenu_page("bb_agency_menu", __("Search Jobs", bb_agency_TEXTDOMAIN), __("Search Jobs", bb_agency_TEXTDOMAIN), 7,"bb_agency_jobsearch","bb_agency_jobsearch");
-    add_submenu_page("bb_agency_menu", __("Tools &amp; Reports", bb_agency_TEXTDOMAIN), __("Tools &amp; Reports", bb_agency_TEXTDOMAIN), 7,"bb_agency_reports","bb_agency_reports");
+    add_submenu_page("bb_agency_menu", __("Import", bb_agency_TEXTDOMAIN), __("Import", bb_agency_TEXTDOMAIN), 7,"bb_agency_import","bb_agency_import");
     add_submenu_page("bb_agency_menu", __("Edit Settings", bb_agency_TEXTDOMAIN), __("Settings", bb_agency_TEXTDOMAIN), 7,"bb_agency_settings","bb_agency_settings");
 }
 
@@ -294,8 +294,8 @@ function bb_agency_job_invoice(){
 function bb_agency_searchsaved(){
     include_once('admin/searchsaved.php');
 }
-function bb_agency_reports(){
-    include_once('admin/reports.php');
+function bb_agency_import(){
+    include_once('admin/import.php');
 }
 function bb_agency_settings(){
     include_once('admin/settings.php');
