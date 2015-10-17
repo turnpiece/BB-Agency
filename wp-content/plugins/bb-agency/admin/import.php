@@ -79,6 +79,8 @@
  */
 function bb_import_from_database() {
 
+    set_time_limit(0); // avoid time outs
+
     global $wpdb;
 
     if (isset($_POST['db_host']) && 
