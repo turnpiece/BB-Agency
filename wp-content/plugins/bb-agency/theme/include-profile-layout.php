@@ -1,23 +1,7 @@
-<?php
-
-/*
-
-Profile View with Scrolling Thumbnails and Primary Image
-
-*/
-
-	# lightbox.	
-
-  	/*//echo "<script type='text/javascript' src='".bb_agency_BASEDIR."js/slimbox2.js'></script>";
-
-	//echo '<link rel="stylesheet" href="'.bb_agency_BASEDIR.'style/slimbox2.css" type="text/css" media="screen" />';*/
-
-	
-
-	echo "<div id=\"profile\">\n";
-	echo " <div id=\"rblayout-zero\" class=\"rblayout\">\n";
-	echo "	<div id=\"photos\" class=\"col_6 column\">\n";
-	echo "	  <div class=\"inner\">\n";
+<div id="profile">
+	<div id="rblayout-zero" class="rblayout">
+		<div id="photos" class="col_6 column">
+			<div class="inner"><?php
 
 			// images
 			global $wpdb;
@@ -25,23 +9,19 @@ Profile View with Scrolling Thumbnails and Primary Image
 			$resultsImg = $wpdb->get_results($queryImg);
 			$countImg = count($resultsImg);
 			$path = bb_agency_UPLOADPATH . $ProfileGallery .'/';
-			foreach ($resultsImg as $dataImg) : ?>
+			foreach ($resultsImg as $dataImg) : if (file_exists($path . $dataImg->ProfileMediaURL)) : ?>
 			<div class="photo">
 				<a href="<?php echo bb_agency_UPLOADDIR . $ProfileGallery .'/'. $dataImg->ProfileMediaURL ?>" rel="lightbox" title="<?php $ProfileContactDisplay ?>">
 					<img src="<?php echo bb_agency_BASEDIR.'/tasks/timthumb.php?src=' . $path . $dataImg->ProfileMediaURL . '&h=139' ?>" alt="<?php echo $ProfileContactDisplay ?>" />
 				</a>
 			</div>
-			<?php endforeach;
+			<?php endif; endforeach; ?>
 
-	echo "	  <div class=\"cb\"></div>\n";
-	echo "	  </div>\n";
-	echo "	</div>\n"; // close #photos
+				<div class="cb"></div>
+			</div>
+		</div>
 
-	
-
-	echo "	  <div id=\"stats\" class=\"col_3 column\">\n";
-
-
+		<div id="stats" class="col_3 column"><?php
 
 	echo "	  <h2>". $ProfileContactDisplay;
 
@@ -116,17 +96,11 @@ Profile View with Scrolling Thumbnails and Primary Image
 
 					$count_castingcart = mysql_num_rows($query_castingcart);
 
-
-
 					if($count_castingcart>0){ $cl2 = "cart_bg"; $tl2="Remove from Casting Cart"; }
-
-					
 
 					echo '<li><a title="'.$tl2.'" href="javascript:;" class="save_cart '.$cl2.' bb_button" id="'.$ProfileID.'">'.$tl2.'</a></li>';
 
 			}
-
-			
 			
 			if(is_permitted("favorite")){
 
@@ -139,17 +113,11 @@ Profile View with Scrolling Thumbnails and Primary Image
 
 					$datas_favorite = mysql_fetch_assoc($query_favorite);				
 
-
-
 					if($count_favorite>0){ $cl1 = "fav_bg"; $tl1="Remove from Favorites"; }
-
-					
 
 					echo '<li class=\"favorite\"><a title="'.$tl1.'" href="javascript:;" id="mycart" class="save_fav '.$cl1.' bb_button">'.$tl1.'</a></li>';
 
 			}
-
-	
 
 	echo '</div>';
 
@@ -159,19 +127,11 @@ Profile View with Scrolling Thumbnails and Primary Image
 
 						?>
 
-        
-
         <div id="view_casting_cart" style="<?php if($tl2=="Add to Casting Cart"){?>display:none;<?php }else{?>display:block;<?php }?>"><li class="casting"><a class="bb_button" href="<?php echo get_bloginfo('url')?>/profile-casting/"><?php echo __("View Casting Cart", bb_agency_TEXTDOMAIN);?></a></li></div>
-
-    
-
-        
 
         <div id="view_favorite" style="<?php if($tl1=="Add to Favorites"){?>display:none;<?php }else{?>display:block;<?php }?>"><li class="favorite"><a class="bb_button" href="<?php echo get_bloginfo('url')?>/profile-favorite/"><?php echo __("View favorite", bb_agency_TEXTDOMAIN);?></a></li></div>
 
     <?php
-
-
 
 				// Resume
 
@@ -188,8 +148,6 @@ Profile View with Scrolling Thumbnails and Primary Image
 				  }
 
 				}
-
-			
 
 				// Comp Card
 
@@ -223,8 +181,6 @@ Profile View with Scrolling Thumbnails and Primary Image
 
 				}
 
-				
-
 				//Voice Demo
 
 				$resultsMedia = mysql_query("SELECT * FROM ". table_agency_profile_media ." media WHERE ProfileID =  \"". $ProfileID ."\" AND ProfileMediaType = \"VoiceDemo\"");
@@ -240,8 +196,6 @@ Profile View with Scrolling Thumbnails and Primary Image
 				  }
 
 				}
-
-
 
 				//Video Slate
 
@@ -261,8 +215,6 @@ Profile View with Scrolling Thumbnails and Primary Image
 
 				}
 
-
-
 				//Video Monologue
 
 				$resultsMedia = mysql_query("SELECT * FROM ". table_agency_profile_media ." media WHERE ProfileID =  \"". $ProfileID ."\" AND ProfileMediaType = \"Video Monologue\"");
@@ -278,8 +230,6 @@ Profile View with Scrolling Thumbnails and Primary Image
 				  }
 
 				}
-
-
 
 				//Demo Reel
 
@@ -341,32 +291,21 @@ Profile View with Scrolling Thumbnails and Primary Image
 
 							 	var qString = 'usage=addtocart&pid=' +pid;
 
-							
 
 						     	$.post('<?php echo get_bloginfo("url");?>/wp-content/plugins/bb-agency/theme/sub_db_handler.php', qString, processResponseAddtoCart);
 
 		                     		// alert(qString);
 
-							 	}
+							 }
 
 							 
-
 							function processResponseAddtoCart(data) {
-
 								document.getElementById('resultsGoHereAddtoCart').style.display="block";
-
 								document.getElementById('view_casting_cart').style.display="block";
-
 								document.getElementById('resultsGoHereAddtoCart').textContent=data;
-
 								setTimeout('document.getElementById(\'resultsGoHereAddtoCart\').style.display="none";',3000); 
-
 								//setTimeout('document.getElementById(\'view_casting_cart\').style.display="none";',3000);
-
 								setTimeout('document.getElementById(\'casting_cart_li\').style.display="none";',3000);
-
-								
-
 							}
 
 							
@@ -375,28 +314,11 @@ Profile View with Scrolling Thumbnails and Primary Image
 
 	                        <?php
 
-						 
-
-							
-
-						} else {
-
-				  			# removed as required
-
-							#echo "<li class=\"add to cart\">". __("", bb_agency_TEXTDOMAIN);						  
-
-						  	#echo " <a href=\"".get_bloginfo('url')."/profile-casting/\" class=\"bb_button\">". __("View Casting Cart", bb_agency_TEXTDOMAIN)."</a></li>\n";
-
-							
-
-			          	}
+						}
 
 					}	//end if(checkCart(bb_agency_get_current_userid()
 
-					# removed as required.
-
-					#echo "		<li class=\"return dashboard\"><a href=\"". get_bloginfo("url") ."/dashboard/\" class=\"bb_button\">". __("Access Dashboard", bb_agency_TEXTDOMAIN). "</a></li>\n";
-
+					
 				}
 
 				
@@ -415,21 +337,7 @@ Profile View with Scrolling Thumbnails and Primary Image
 
 	echo "	  </div>\n"; // Close Experience
 
-/*
-
-			if (isset($profileVideoEmbed)) {
-
-	echo "		<div id=\"movie\" class=\"six column\"><object width=\"250\" height=\"190\"><param name=\"movie\" value=\"http://www.youtube.com/v/". $profileVideoEmbed ."?fs=1&amp;hl=en_US&rel=0&showsearch=0\"></param><param name=\"allowFullScreen\" value=\"true\"></param><param name=\"allowscriptaccess\" value=\"always\"></param><embed src=\"http://www.youtube.com/v/". $profileVideoEmbed ."?fs=1&amp;hl=en_US\" type=\"application/x-shockwave-flash\" allowscriptaccess=\"always\" allowfullscreen=\"true\" width=\"250\" height=\"190\"></embed></object></div>\n";
-
-			}
-
-*/	
-
-	
-
-	echo "	  <div style=\"clear: both;\"></div>\n"; // Clear All
-
-	echo "  </div>\n";  // Close Profile Zero
+		echo "	  <div style=\"clear: both;\"></div>\n"; // Clear All	echo "  </div>\n";  // Close Profile Zero
 
 	echo "<div style=\"clear: both;\"></div>\n"; // Clear All
 
@@ -441,21 +349,11 @@ Profile View with Scrolling Thumbnails and Primary Image
 
 
 
-jQuery(document).ready(function(){
-
-
-
+jQuery(document).ready(function(){	
 	jQuery(".save_fav").click(function(){
 
-
-
 		ajax_submit(jQuery(this),"favorite");
-
-
-
 	});
-
-
 
 	jQuery(".save_cart").click(function(){
 
@@ -465,19 +363,11 @@ jQuery(document).ready(function(){
 
 	});	
 
-
-
     function ajax_submit(Obj,type){
-
-                
 
 				if(type == "favorite"){
 
-					
-
-					var action_function = "bb_agency_save_favorite";
-
-						
+					var action_function = "bb_agency_save_favorite";						
 
 				} else if(type == "casting"){
 
