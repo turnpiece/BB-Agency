@@ -5,24 +5,25 @@
 
     global $wpdb;
  
-    if (!isset($_SESSION['profile_start']))
-        $_SESSION['profile_start'] = 0;
+    $number = 100;
+    $start = isset($_REQUEST['profile_start']) ? $_REQUEST['profile_start'] : 0;
 
     ?>
     <h2><?php _e('Import from another site', bb_agency_TEXTDOMAIN) ?></h2>
     <?php 
         if ($_POST) {
-            $profiles = bb_import_from_database();
+            $profiles = bb_import_from_database( $start, $number );
 
             if ($profiles) {
                 bb_log_message( "Transferred $profiles profiles." );
-                $_SESSION['profile_start'] += $profiles;
+                $start += $profiles;
             }
             else
                 bb_log_message( "Did not transfer any profiles." );
         } 
     ?>
     <form action="" method="post">
+        <input type="hidden" name="profile_start" value="<?php echo $start ?>" />
         <table>
             <tr>
                 <td><label for="db_name"><?php _e( "Database name", bb_agency_TEXTDOMAIN ) ?></label></td>
@@ -50,15 +51,15 @@
                 <td>
                     <select name="ProfileType" id="ProfileType">               
                         <?php foreach ($dataTypes as $type) : ?>
-                        <option value="<?php echo $dataType->DataTypeID ?>" <?php selected($type->DataTypeID, $_POST['ProfileType']) ?>><?php echo $type->DataTypeTitle ?></option>
+                        <option value="<?php echo $type->DataTypeID ?>" <?php echo selected($type->DataTypeID, $_POST['ProfileType']) ?>><?php echo $type->DataTypeTitle ?></option>
                         <?php endforeach; ?>
                     </select>
                 </td>
             </tr>
             <?php endif; ?>
             <tr>
-                <td><label for="media_url"><?php _e( "Media URL on source site", bb_agency_TEXTDOMAIN ) ?></label></td>
-                <td><input type="text" name="media_url" value="" /></td>
+                <td><label for="media_dir"><?php _e( "External media directory", bb_agency_TEXTDOMAIN ) ?></label></td>
+                <td><input type="text" name="media_dir" value="<?php echo $_POST ? $_POST['media_dir'] : '' ?>" /></td>
             </tr>
         </table>
         <input type="submit" value="Import Now" class="button-primary">
@@ -76,8 +77,11 @@
  * import profiles from another database
  * ie. from another site
  *
+ * @param int $start
+ * @param int $number
+ *
  */
-function bb_import_from_database() {
+function bb_import_from_database( $start, $number ) {
 
     set_time_limit(0); // avoid time outs
 
@@ -109,12 +113,12 @@ function bb_import_from_database() {
 
         $i = 0; //set counter
 
-        $start = $_SESSION['profile_start'] ? $_SESSION['profile_start'] : 0; // set start point
-
-        $sql = "SELECT * FROM `".table_agency_profile."` LIMIT $start, 50";
+        $sql = "SELECT * FROM `".table_agency_profile."`";
 
         if ($ProfileType > 0)
             $sql .= " WHERE `ProfileType` = $ExtProfileType";
+
+        $sql .= " LIMIT $start, $number";
 
         // get the profile table columns
         $p_cols = $wpdb->get_results("SHOW COLUMNS FROM `".table_agency_profile."`");
@@ -127,8 +131,14 @@ function bb_import_from_database() {
 
         $profiles = mysqli_query($conn, $sql);
 
+        // get uploads dir
+        $uploads = wp_upload_dir();
+
+        // set external media directory
+        $media_dir = $_POST['media_dir'] ? $uploads['basedir'] . '/' . trailingslashit($_POST['media_dir']) : false;
+
         if (!mysqli_num_rows($profiles))
-            die( "Failed to get any profiles." );
+            die( "Failed to get any profiles starting from profile $start: '$sql'" );
 
         while ( $profile = mysqli_fetch_array($profiles) ) {
 
@@ -143,6 +153,9 @@ function bb_import_from_database() {
                     continue;
                 } elseif ($col->Field == 'ProfileType') {
                     $insert_data[$col->Field] = $ProfileType;
+                } elseif ($col->Field == 'ProfileGallery') {
+                    // create gallery directory
+                    $insert_data['ProfileGallery'] = bb_agency_createdir( $profile['ProfileGallery'] );
                 } else {
                     $insert_data[$col->Field] = $profile[$col->Field];
                 }
@@ -156,8 +169,6 @@ function bb_import_from_database() {
             $media_sql = "SELECT * FROM `".table_agency_profile_media."` WHERE `ProfileID` = $oldID";
 
             $medias = mysqli_query($conn, $media_sql);
-
-            $media_url = $_POST['media_url'] ? trailingslashit($_POST['media_url']) : false;
 
             if (mysqli_num_rows($medias) > 0) {
 
@@ -173,21 +184,18 @@ function bb_import_from_database() {
                         $media_data[$col->Field] = $media[$col->Field];
                     }
 
-                    $wpdb->insert( table_agency_profile_media, $media_data );
-
-                    if ($media_url && preg_match( "/Image|Headshot|Private/", $media['ProfileMediaType'] ) ) {
+                    if ($media_dir && preg_match( "/Image|Headshot|Private/", $media['ProfileMediaType'] ) ) {
                         // get media and import it
-                        $file = $profile['ProfileGallery'] . '/' . $media['ProfileMediaURL'];
-
-                        // create gallery directory
-                        bb_agency_createdir( $profile['ProfileGallery'] );
+                        $file = $media['ProfileMediaURL'];
 
                         // save the file
-                        if (bb_save_media( $media_url . $file, bb_agency_UPLOADPATH . $file ))
+                        if (bb_save_media( $media_dir . $profile['ProfileGallery'] . '/' . $file, bb_agency_UPLOADPATH . $insert_data['ProfileGallery'] . '/' . $file ) )
                             bb_log_message( "Saved media file $file" );
                         else
-                            bb_log_message( "Failed to save media file $file" );
+                            bb_log_message( "Failed to copy media file {$media_dir}/".$profile['ProfileGallery']."/{$file} => ".bb_agency_UPLOADPATH . $insert_data['ProfileGallery'] . "/{$file}" );
                     }
+
+                    $wpdb->insert( table_agency_profile_media, $media_data );
                 }
             }
 
@@ -238,26 +246,10 @@ function bb_import_from_database() {
     }
 }
 
-function bb_save_media($url, $saveto){
-    bb_agency_debug( __FUNCTION__ . " $url => $saveto" );
+function bb_save_media($path, $saveto){
 
-    $ch = curl_init($url);
-
-    if (!$ch) {
-        bb_agency_debug( "failed to open cURL handle to $url" );
+    if (!file_exists($path))
         return false;
-    }
-
-    if (curl_errno($ch)) {
-        bb_log_message( 'ERROR:' . curl_error($ch) );
-        return false;
-    }
-
-    curl_setopt($ch, CURLOPT_HEADER, 0);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
-    $raw = curl_exec($ch);
-    curl_close ($ch);
 
     if (file_exists($saveto)){
         bb_agency_debug( "deleting existing media file $saveto" );
@@ -266,11 +258,16 @@ function bb_save_media($url, $saveto){
             return false;  
         }
     }
-    $fp = fopen($saveto,'x');
-    fwrite($fp, $raw);
-    fclose($fp);
 
-    return true;
+    if (!is_dir(dirname($saveto))) {
+        bb_agency_debug( "trying to create directory " . dirname($saveto) );
+        if (!mkdir( dirname($saveto) )) {
+            bb_agency_debug( "failed to create directory " . dirname($saveto) );
+            return false;
+        }
+    }
+
+    return copy( $path, $saveto );
 }
 
 function bb_log_message($message) {
