@@ -117,9 +117,25 @@ class ModelCard {
 
     private function print_model_details() {
 
-        // print first name
-        $name = $this->profile->ProfileContactNameFirst;
-        $this->print_text( $name );
+        if ($this->profile->ProfileType == 2) {
+            // families
+            $names = array();
+
+            if ($this->profile->mum_name)
+                $names[] = $this->profile->mum_name;
+
+            if ($this->profile->dad_name)
+                $names[] = $this->profile->dad_name;
+           
+            $this->print_text( implode( ' & ', $names ) );
+            
+
+        } else {
+            // print first name
+            $name = $this->profile->ProfileContactNameFirst;
+            $this->print_text( $name );
+
+        }
 
         $this->text_y += 50;
 
@@ -138,7 +154,8 @@ class ModelCard {
             if ($shoe_size = $this->get_shoe_size()) {
                 $this->print_text( 'Shoe size: ' . $shoe_size );
                 $this->text_y += 50;
-            } 
+            }
+
         } else {
             // pregnant women
             $this->print_text( 'Due date: ' . $this->get_date( $this->profile->ProfileDateDue ) );
@@ -215,13 +232,30 @@ class ModelCard {
         $t_media = table_agency_profile_media;
         $t_custom = table_agency_customfield_mux;
         $query = "
-            SELECT p.*, dt.`DataTypePrivacy` AS ProfilePrivacy, m.`ProfileMediaURL`, h.`ProfileCustomValue` AS height, ss.`ProfileCustomValue` AS shoe_size, ds.`ProfileCustomValue` AS dress_size
+            SELECT p.*, 
+                dt.`DataTypePrivacy` AS ProfilePrivacy, 
+                m.`ProfileMediaURL`, 
+                h.`ProfileCustomValue` AS height, 
+                ss.`ProfileCustomValue` AS shoe_size, 
+                ds.`ProfileCustomValue` AS dress_size,
+                mum.`ProfileCustomValue` AS mum_name, 
+                dad.`ProfileCustomValue` AS dad_name
             FROM $t_profile AS p
             LEFT JOIN $t_datatype AS dt ON dt.`DataTypeID` = p.`ProfileType`
             LEFT JOIN $t_media AS m ON m.`ProfileID` = p.`ProfileID` AND m.`ProfileMediaPrimary` = 1 AND m.`ProfileMediaType` = 'Image'
             LEFT JOIN $t_custom AS h ON h.`ProfileID` = p.`ProfileID` AND h.`ProfileCustomID` = 5
             LEFT JOIN $t_custom AS ss ON ss.`ProfileID` = p.`ProfileID` AND ss.`ProfileCustomID` = 10
             LEFT JOIN $t_custom AS ds ON ds.`ProfileID` = p.`ProfileID` AND ds.`ProfileCustomID` = 13
+            LEFT JOIN $t_custom AS mum ON mum.`ProfileID` = p.`ProfileID` AND mum.`ProfileCustomID` = 42
+            LEFT JOIN $t_custom AS dad ON dad.`ProfileID` = p.`ProfileID` AND dad.`ProfileCustomID` = 43
+            LEFT JOIN $t_custom AS child1 ON child1.`ProfileID` = p.`ProfileID` AND child1.`ProfileCustomID` = 44
+            LEFT JOIN $t_custom AS child2 ON child2.`ProfileID` = p.`ProfileID` AND child2.`ProfileCustomID` = 45            
+            LEFT JOIN $t_custom AS child3 ON child3.`ProfileID` = p.`ProfileID` AND child3.`ProfileCustomID` = 46
+            LEFT JOIN $t_custom AS child4 ON child4.`ProfileID` = p.`ProfileID` AND child4.`ProfileCustomID` = 47
+            LEFT JOIN $t_custom AS child1_dob ON child1_dob.`ProfileID` = p.`ProfileID` AND child1_dob.`ProfileCustomID` = 48
+            LEFT JOIN $t_custom AS child2_dob ON child2_dob.`ProfileID` = p.`ProfileID` AND child2_dob.`ProfileCustomID` = 49            
+            LEFT JOIN $t_custom AS child3_dob ON child3_dob.`ProfileID` = p.`ProfileID` AND child3_dob.`ProfileCustomID` = 50
+            LEFT JOIN $t_custom AS child4_dob ON child4_dob.`ProfileID` = p.`ProfileID` AND child4_dob.`ProfileCustomID` = 51
             WHERE p.`ProfileGallery` = '$this->model'
             LIMIT 1";
 

@@ -15,7 +15,17 @@
 					<img src="<?php echo bb_agency_BASEDIR.'/tasks/timthumb.php?src=' . $path . $dataImg->ProfileMediaURL . '&h=139' ?>" alt="<?php echo $ProfileContactDisplay ?>" />
 				</a>
 			</div>
-			<?php endif; endforeach; ?>
+			<?php else :
+			// remove missing image
+			$wpdb->delete( 
+				table_agency_profile_media, 
+				array( 
+					'ProfileID' => $ProfileID, 
+					'ProfileMediaUrl' => $dataImg->ProfileMediaURL 
+				) 
+			);
+
+			endif; endforeach; ?>
 
 				<div class="cb"></div>
 			</div>
