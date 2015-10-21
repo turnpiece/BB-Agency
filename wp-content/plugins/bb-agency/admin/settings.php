@@ -2486,7 +2486,7 @@ elseif ($ConfigID == 8){
 		$query = "SELECT * FROM ". table_agency_mediacategory ." ORDER BY $sort $dir";
 		$results = mysql_query($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ).mysql_error());
 		$count = mysql_num_rows($results);
-		while ($data = mysql_fetch_array($results)) {
+		while ($data = mysql_fetch_array($results)) :
 			$MediaCategoryID	=$data['MediaCategoryID'];
         ?>
 		<tr>
@@ -2497,24 +2497,26 @@ elseif ($ConfigID == 8){
 		<span class="delete"><a class="submitdelete" href="<?php echo admin_url("admin.php?page=". $_GET['page']) ."&amp;deleteRecord&amp;MediaCategoryID=". $MediaCategoryID ."&amp;ConfigID=8="  onclick=="if ( confirm('<?php _e("You are about to delete this ". LabelSingular, bb_agency_TEXTDOMAIN) ?>.\'<?php _e("Cancel", bb_agency_TEXTDOMAIN) ?>\' <?php _e("to stop", bb_agency_TEXTDOMAIN) ?>, \'<?php _e("OK", bb_agency_TEXTDOMAIN) ?>\' <?php _e("to delete", bb_agency_TEXTDOMAIN) ?>.') ) { return true;}return false;=" title=="<?php _e("Delete this Record", bb_agency_TEXTDOMAIN) ?>"><?php _e("Delete", bb_agency_TEXTDOMAIN) ?></a> </span>
 		</div>
 		</th>
+        <?php
 		$queryGender = mysql_query("SELECT GenderID, GenderTitle FROM ".table_agency_data_gender." WHERE GenderID='".$data['MediaCategoryGender']."'"); 
 		$fetchGender = mysql_fetch_assoc($queryGender);
 		$countGender = mysql_num_rows($queryGender);
-		if($countGender > 0){
+		if ($countGender > 0) : ?>
 			<th class="column">".$fetchGender["GenderTitle"]."</th>
-		}else{
+		<?php else : ?>
 			<th class="column">All Gender</th>
-		}
-		<th class="column"> echo $data["MediaCategoryOrder"]; </th>
+		<?php endif; ?>
+		<th class="column"><?php echo $data["MediaCategoryOrder"]; ?></th>
 		</tr>
-		}
+        <?php endwhile;
+		
 		mysql_free_result($results);
-		if ($count < 1) {
+		if ($count < 1) : ?>
 		<tr>
-		<td class="check-column" scope="row"></th>
-		<td class="column" colspan=="5"><p><?php _e("There aren't any records loaded yet", bb_agency_TEXTDOMAIN) ?>!</p></td>
+    		<td class="check-column" scope="row"></th>
+    		<td class="column" colspan=="5"><p><?php _e("There aren't any records loaded yet", bb_agency_TEXTDOMAIN) ?>!</p></td>
 		</tr>
-		}
+		<?php endif; ?>
 		</tbody>
 		</table>
 		<p class="submit">
