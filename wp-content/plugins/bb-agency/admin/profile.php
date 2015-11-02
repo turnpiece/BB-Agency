@@ -21,6 +21,7 @@ if (function_exists('bb_agencyinteract_approvemembers')) {
 $t_profile = table_agency_profile;
 $t_media = table_agency_profile_media;
 $t_data_type = table_agency_data_type;
+$t_data_talent = table_agency_data_talent;
 $t_custom = table_agency_customfield_mux;
 
 // *************************************************************************************************** //
@@ -61,9 +62,15 @@ if (isset($_POST['action'])) {
     $ProfileLanguage = $_POST['ProfileLanguage'];
     $ProfileDateUpdated = $_POST['ProfileDateUpdated'];
     $ProfileDateViewLast = $_POST['ProfileDateViewLast'];
+    // get posted profile types
     $ProfileType = $_POST['ProfileType'];
     if (is_array($ProfileType)) {
         $ProfileType = implode(",", $ProfileType);
+    }
+    // get posted talents
+    $ProfileTalent = $_POST['ProfileTalent'];
+    if (is_array($ProfileTalent)) {
+        $ProfileTalent = implode(",", $ProfileTalent);
     }
     $ProfileIsActive = $_POST['ProfileIsActive']; // 0 Inactive | 1 Active | 2 Archived | 3 Pending Approval
     $ProfileIsFeatured = $_POST['ProfileIsFeatured'];
@@ -550,6 +557,7 @@ function bb_display_manage($ProfileID) {
     $t_profile = table_agency_profile;
     $t_media = table_agency_profile_media;
     $t_data_type = table_agency_data_type;
+    $t_data_talent = table_agency_data_talent;
     $t_gender = table_agency_data_gender;
 
     $bb_agency_option_agencyimagemaxheight = bb_agency_get_option('bb_agency_option_agencyimagemaxheight');
@@ -589,7 +597,7 @@ function bb_display_manage($ProfileID) {
             $ProfileContactPhoneWork = stripslashes($data['ProfileContactPhoneWork']);
             $ProfileGender = stripslashes($data['ProfileGender']);
             $ProfileTypeArray = stripslashes($data['ProfileType']);
-           
+            $ProfileTalentArray = stripslashes($data['ProfileTalent']);
 			$ProfileDateBirth = stripslashes($data['ProfileDateBirth']);
             if (bb_agency_SITETYPE == 'bumps') {
                 $ProfileDateDue = stripslashes($data['ProfileDateDue']);
@@ -604,6 +612,7 @@ function bb_display_manage($ProfileID) {
 
             $ProfileDateUpdated = stripslashes($data['ProfileDateUpdated']);
             $ProfileType = stripslashes($data['ProfileType']);
+            $ProfileTalent = isset($data['ProfileTalent']) ? stripslashes($data['ProfileTalent']) : null;
             $ProfileIsActive = stripslashes($data['ProfileIsActive']);
             $ProfileIsFeatured = stripslashes($data['ProfileIsFeatured']);
             $ProfileIsPromoted = stripslashes($data['ProfileIsPromoted']);
@@ -1076,7 +1085,7 @@ function bb_display_manage($ProfileID) {
                     $count3 = mysql_num_rows($results3);
                     $action = @$_GET["action"];
                     while ($data3 = mysql_fetch_array($results3)) : ?>
-                        <input type="checkbox" name="ProfileType[]" id="ProfileType[]" value="<?php echo  $data3['DataTypeID'] ?>" <?php echo (!empty($ProfileTypeArray) && in_array($data3['DataTypeID'], $ProfileTypeArray)) ? ' checked="checked"' : '' ?> /><?php echo $data3['DataTypeTitle'] ?><br />
+                        <input type="checkbox" name="ProfileType[]" id="ProfileType_<?php echo $data3['DataTypeID'] ?>" value="<?php echo $data3['DataTypeID'] ?>" <?php echo (!empty($ProfileTypeArray) && in_array($data3['DataTypeID'], $ProfileTypeArray)) ? ' checked="checked"' : '' ?> /><?php echo $data3['DataTypeTitle'] ?><br />
                     <?php endwhile; ?>
                     </fieldset>
                     <?php if ($count3 < 1) : ?>
@@ -1085,6 +1094,20 @@ function bb_display_manage($ProfileID) {
 
                 </td>
             </tr>
+            <?php $talents = $wpdb->get_results("SELECT * FROM `$t_data_talent` ORDER BY `DataTalentTitle`"); if (!empty($talents)) : ?>
+            <tr valign="top">
+                <th scope="row"><?php _e("Talent", bb_agency_TEXTDOMAIN) ?></th>
+                <td>
+                    <fieldset><?php
+                    $ProfileTalentArray = explode(",", $ProfileTalentArray);
+
+                    foreach ($talents as $talent) : ?>
+                        <input type="checkbox" name="ProfileTalent[]" id="ProfileTalent_<?php echo $talent->DataTalentID ?>" value="<?php echo $talent->DataTalentID ?>" <?php echo (!empty($ProfileTalentArray) && in_array($talent->DataTalentID, $ProfileTalentArray)) ? ' checked="checked"' : '' ?> /><?php echo $talent->DataTalentTitle ?><br />
+                    <?php endforeach; ?>
+                    </fieldset>
+                </td>
+            </tr>
+            <?php endif; ?>
             <tr valign="top">
                 <th scope="row"><?php _e("Status", bb_agency_TEXTDOMAIN) ?>:</th>
                 <td>

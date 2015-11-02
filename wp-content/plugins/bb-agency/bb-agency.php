@@ -111,6 +111,8 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 		define('table_agency_rel_taxonomy', "bb_agency_rel_taxonomy");
 	if (!defined("table_agency_data_type"))
 		define('table_agency_data_type', "bb_agency_data_type");
+	if (!defined("table_agency_data_talent"))
+		define('table_agency_data_talent', "bb_agency_data_talent");
 	if (!defined("table_agency_customfields"))
 		define('table_agency_customfields', "bb_agency_customfields");
 	if (!defined("table_agency_customfield_mux"))
@@ -227,6 +229,7 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 				ProfileDateUpdated TIMESTAMP,
 				ProfileDateViewLast TIMESTAMP,
 				ProfileType VARCHAR(255),
+				ProfileTalent VARCHAR(255),
 				ProfileIsActive INT(10) NOT NULL DEFAULT '0',
 				ProfileIsFeatured INT(10) NOT NULL DEFAULT '0',
 				ProfileIsPromoted INT(10) NOT NULL DEFAULT '0',
@@ -260,6 +263,18 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 			dbDelta($sql);
 			$results = $wpdb->query("INSERT INTO " . table_agency_data_type . " (DataTypeID, DataTypeTitle) VALUES ('','Model')");
 			$results = $wpdb->query("INSERT INTO " . table_agency_data_type . " (DataTypeID, DataTypeTitle) VALUES ('','Talent')");
+
+			// Setup > Talent
+			$sql = "CREATE TABLE IF NOT EXISTS ".table_agency_data_talent." (
+				DataTalentID INT(10) NOT NULL AUTO_INCREMENT,
+				DataTalentTitle VARCHAR(255),
+				DataTalentTag VARCHAR(50),
+				PRIMARY KEY (DataTalentID)
+				);";
+			dbDelta($sql);
+			$results = $wpdb->query("INSERT INTO " . table_agency_data_talent . " (DataTypeID, DataTypeTitle) VALUES ('','Dance','dance')");
+			$results = $wpdb->query("INSERT INTO " . table_agency_data_talent . " (DataTypeID, DataTypeTitle) VALUES ('','Singing','singing')");
+			$results = $wpdb->query("INSERT INTO " . table_agency_data_talent . " (DataTypeID, DataTypeTitle) VALUES ('','Acting','acting')");
 
 			// Setup > Taxonomy: Gender
 			$sql = "CREATE TABLE IF NOT EXISTS ". table_agency_data_gender ." (
