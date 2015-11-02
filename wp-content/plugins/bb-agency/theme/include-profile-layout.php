@@ -31,50 +31,48 @@
 			</div>
 		</div>
 
-		<div id="stats" class="col_3 column"><?php
+		<div id="stats" class="col_3 column">
+			<h2><?php echo $ProfileContactDisplay . (bb_agency_isfamily($ProfileType) ? __(' and family', bb_agency_TEXTDOMAIN) : '') ?></h2>
+			<ul>
+			<?php if ($ProfileHasTalent) : $t_name = bb_agency_get_talents(); $talents = explode(',', $ProfileTalent); ?>
+				<li><strong><?php _e('Talent', bb_agency_TEXTDOMAIN) ?><span class="divider">:</span></strong></strong>
+				<?php foreach( $talents as $talent ) {
+					$t_display[] = $t_name[ $talent ];
+				}
+				echo implode(', ', $t_display);
+				?>
+				</li>
+			<?php endif; // end of talent
 
-	echo "	  <h2>". $ProfileContactDisplay;
+				if (!empty($ProfileStatHeight)) {
 
-	if (bb_agency_isfamily($ProfileType)) {
+					if ($bb_agency_option_unittype == 0) { // Metric
 
-		echo __(' and family', bb_agency_TEXTDOMAIN);
+						echo "<li><strong>". __("Height", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatHeight ." ". __("cm", bb_agency_TEXTDOMAIN). "" ."</li>\n";
 
-	}	
+					} else { // Imperial
 
-	echo "</h2>\n";
+						$heightraw = $ProfileStatHeight;
 
-	echo "	  <ul>\n";
+						$heightfeet = floor($heightraw/12);
 
-	if (!empty($ProfileStatHeight)) {
+						$heightinch = $heightraw - floor($heightfeet*12);
 
-		if ($bb_agency_option_unittype == 0) { // Metric
+						echo "<li><strong>". __("Height", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $heightfeet ." ". __("ft", bb_agency_TEXTDOMAIN). " ". $heightinch ." ". __("in", bb_agency_TEXTDOMAIN). "" ."</li>\n";
 
-			echo "<li><strong>". __("Height", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatHeight ." ". __("cm", bb_agency_TEXTDOMAIN). "" ."</li>\n";
+					}
+				}
 
-		} else { // Imperial
+				if (bb_agency_SITETYPE == 'bumps') :
 
-			$heightraw = $ProfileStatHeight;
+				if (bb_agency_ismumtobe($ProfileType) && !empty($ProfileDateDue)) : // if pregnant display due date ?>
+				<li><strong><?php _e("Due date", bb_agency_TEXTDOMAIN) ?><span class="divider">:</span></strong> <?php echo bb_agency_displaydate($ProfileDateDue) ?></li>
 
-			$heightfeet = floor($heightraw/12);
+				<?php elseif (bb_agency_isbaby($ProfileType) && !empty($ProfileDateBirth)) : // if a family display the baby's date of birth ?>
+				<li><strong><?php echo (bb_agency_isfamily($ProfileType) ? __("Baby's date of birth", bb_agency_TEXTDOMAIN) : __("Date of birth", bb_agency_TEXTDOMAIN)) ?><span class="divider">:</span></strong> <?php echo bb_agency_displaydate($ProfileDateBirth) ?></li>
+				<?php endif;
 
-			$heightinch = $heightraw - floor($heightfeet*12);
-
-			echo "<li><strong>". __("Height", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $heightfeet ." ". __("ft", bb_agency_TEXTDOMAIN). " ". $heightinch ." ". __("in", bb_agency_TEXTDOMAIN). "" ."</li>\n";
-
-		}
-
-	}
-
-	if (bb_agency_SITETYPE == 'bumps') :
-
-	if (bb_agency_ismumtobe($ProfileType) && !empty($ProfileDateDue)) : // if pregnant display due date ?>
-	<li><strong><?php _e("Due date", bb_agency_TEXTDOMAIN) ?><span class="divider">:</span></strong> <?php echo bb_agency_displaydate($ProfileDateDue) ?></li>
-
-	<?php elseif (bb_agency_isbaby($ProfileType) && !empty($ProfileDateBirth)) : // if a family display the baby's date of birth ?>
-	<li><strong><?php echo (bb_agency_isfamily($ProfileType) ? __("Baby's date of birth", bb_agency_TEXTDOMAIN) : __("Date of birth", bb_agency_TEXTDOMAIN)) ?><span class="divider">:</span></strong> <?php echo bb_agency_displaydate($ProfileDateBirth) ?></li>
-	<?php endif;
-
-	endif;
+				endif;
 
 	// Insert Custom Fields
 	bb_agency_getProfileCustomFields($ProfileID, $ProfileGender);
@@ -84,40 +82,40 @@
 		echo "<li class=\"rel\"><strong>". __("Contact: ", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> <a href=\"". get_bloginfo("wpurl") ."/profile/".$ProfileGallery	."/contact/\">Click Here</a></li>\n";
 
 	}
+	?>
+		</ul>
+	</div>	
+	<div id="links" class="col_3 column">
+		<h3><?php echo $AgencyName ." ". $ProfileClassification ?></h3>
+		<?php
+			// Social Link
+			bb_agency_getSocialLinks();
+		?>
+		<ul>
+			<div class="profile-actions-favorited">	
+			<?php
+			$cl1 = ""; 
+			$cl2 = ""; 
+			$tl1 = "Add to Favorites"; 
+			$tl2 = "Add to Casting Cart";
 
-	echo "	  </ul>\n"; // Close ul
-	echo "	  </div>\n"; // Close Stats	
-	echo "		<div id=\"links\" class=\"col_3 column\">\n";
-	echo "			<h3>". $AgencyName ." ". $ProfileClassification ."</h3>\n";
+			if (is_permitted("casting")) {
 
-					 // Social Link
-					 bb_agency_getSocialLinks();
-
-	echo "			<ul>\n";
-	echo	'<div class="profile-actions-favorited">';		
-
-			$cl1 = ""; $cl2=""; $tl1="Add to Favorites"; $tl2="Add to Casting Cart";
-
-			if(is_permitted("casting")){
-
-					$query_castingcart = mysql_query("SELECT * FROM ". table_agency_castingcart."  WHERE CastingCartTalentID='".$ProfileID
-
-													 ."'  AND CastingCartProfileID = '".bb_agency_get_current_userid()."'" ) or die("error");
+					$query_castingcart = mysql_query("SELECT * FROM ". table_agency_castingcart."  WHERE CastingCartTalentID='".$ProfileID."'  AND CastingCartProfileID = '".bb_agency_get_current_userid()."'" ) or die("error");
 
 					$count_castingcart = mysql_num_rows($query_castingcart);
 
-					if($count_castingcart>0){ $cl2 = "cart_bg"; $tl2="Remove from Casting Cart"; }
+					if ($count_castingcart>0) { 
+						$cl2 = "cart_bg"; $tl2="Remove from Casting Cart"; 
+					}
 
 					echo '<li><a title="'.$tl2.'" href="javascript:;" class="save_cart '.$cl2.' bb_button" id="'.$ProfileID.'">'.$tl2.'</a></li>';
 
 			}
 			
-			if(is_permitted("favorite")){
+			if (is_permitted("favorite")) {
 
-
-					$query_favorite = mysql_query("SELECT * FROM ".table_agency_savedfavorite." WHERE SavedFavoriteTalentID='".$ProfileID
-
-												  ."'  AND SavedFavoriteProfileID = '".bb_agency_get_current_userid()."'" ) or die("error");
+					$query_favorite = mysql_query("SELECT * FROM ".table_agency_savedfavorite." WHERE SavedFavoriteTalentID='".$ProfileID."'  AND SavedFavoriteProfileID = '".bb_agency_get_current_userid()."'" ) or die("error");
 
 					$count_favorite = mysql_num_rows($query_favorite);
 
@@ -128,18 +126,15 @@
 					echo '<li class=\"favorite\"><a title="'.$tl1.'" href="javascript:;" id="mycart" class="save_fav '.$cl1.' bb_button">'.$tl1.'</a></li>';
 
 			}
+			?>
+		</ul>
+	</div>
 
-	echo '</div>';
+	<div id="resultsGoHereAddtoCart"></div>
 
+    <div id="view_casting_cart" style="<?php if($tl2=="Add to Casting Cart"){?>display:none;<?php }else{?>display:block;<?php }?>"><li class="casting"><a class="bb_button" href="<?php echo get_bloginfo('url')?>/profile-casting/"><?php echo __("View Casting Cart", bb_agency_TEXTDOMAIN);?></a></li></div>
 
-
-						echo '<div id="resultsGoHereAddtoCart"></div>';
-
-						?>
-
-        <div id="view_casting_cart" style="<?php if($tl2=="Add to Casting Cart"){?>display:none;<?php }else{?>display:block;<?php }?>"><li class="casting"><a class="bb_button" href="<?php echo get_bloginfo('url')?>/profile-casting/"><?php echo __("View Casting Cart", bb_agency_TEXTDOMAIN);?></a></li></div>
-
-        <div id="view_favorite" style="<?php if($tl1=="Add to Favorites"){?>display:none;<?php }else{?>display:block;<?php }?>"><li class="favorite"><a class="bb_button" href="<?php echo get_bloginfo('url')?>/profile-favorite/"><?php echo __("View favorite", bb_agency_TEXTDOMAIN);?></a></li></div>
+    <div id="view_favorite" style="<?php if($tl1=="Add to Favorites"){?>display:none;<?php }else{?>display:block;<?php }?>"><li class="favorite"><a class="bb_button" href="<?php echo get_bloginfo('url')?>/profile-favorite/"><?php echo __("View favorite", bb_agency_TEXTDOMAIN);?></a></li></div>
 
     <?php
 

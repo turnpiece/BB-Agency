@@ -3817,6 +3817,23 @@ function bb_agency_get_datatypes($public = true) {
 
 /**
  *
+ * get talents
+ */
+function bb_agency_get_talents() {
+	$talents = array();
+
+	global $wpdb;
+	$results = $wpdb->get_results('SELECT * FROM '. table_agency_data_talent);
+
+	foreach ( $results as $result ) {
+		$talents[ $result->DataTalentID ] = $result->DataTalentTitle;
+	}
+
+	return $talents;
+}
+
+/**
+ *
  * save model card
  *
  * @param string $gallery
