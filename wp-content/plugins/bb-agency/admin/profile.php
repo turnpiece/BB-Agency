@@ -1091,7 +1091,7 @@ function bb_display_manage($ProfileID) {
             <tr valign="top">
               <th scope="row" colspan="2"><h3><?php _e("Classification", bb_agency_TEXTDOMAIN) ?></h3></th>
             </tr>
-            <tr valign="top">
+            <tr valign="top" id="ProfileType">
                 <th scope="row"><?php _e("Classification", bb_agency_TEXTDOMAIN) ?></th>
                 <td>
                     <?php $types = $wpdb->get_results("SELECT * FROM `$t_data_type` ORDER BY `DataTypeTitle`");
@@ -1101,8 +1101,27 @@ function bb_display_manage($ProfileID) {
                     $ProfileTypeArray = explode(",", $ProfileTypeArray);
 
                 	foreach ($types as $type) : ?>
-                        <input type="checkbox" name="ProfileType[]" id="ProfileType_<?php echo $type->DataTypeID ?>" value="<?php echo $type->DataTypeID ?>" <?php echo (!empty($ProfileTypeArray) && in_array($type->DataTypeID, $ProfileTypeArray)) ? ' checked="checked"' : '' ?> /><?php echo $type->DataTypeTitle ?><br />
+                        <input type="checkbox" name="ProfileType[]" id="ProfileType_<?php echo $type->DataTypeID ?>" value="<?php echo $type->DataTypeID ?>" class="profile-type <?php if ($type->DataTypeTalent) echo 'talent'; ?>" <?php echo (!empty($ProfileTypeArray) && in_array($type->DataTypeID, $ProfileTypeArray)) ? ' checked="checked"' : '' ?> /><?php echo $type->DataTypeTitle ?><br />
                     <?php endforeach; ?>
+                    <script>
+                    jQuery(document).ready(function($) {
+
+                        $('#ProfileType').find('input.profile-type').on('change', function() {
+                            toggleTalent();
+                        });
+
+                        function toggleTalent() {
+                            if ($('#ProfileType').find('input.profile-type.talent').prop('checked')) {
+                                $('.profile-talent').show();
+                            } else {
+                                $('.profile-talent').hide();
+                            }
+                        }
+
+                        toggleTalent();
+                        
+                    });
+                    </script>
                     </fieldset>
                     <?php else : ?>
                         <?php _e("No items to select", bb_agency_TEXTDOMAIN) ?> <a href="<?php echo admin_url("admin.php?page=bb_agency_settings&ConfigID=5") ?>"><?php _e("Setup Options", bb_agency_TEXTDOMAIN) ?></a>
@@ -1110,7 +1129,7 @@ function bb_display_manage($ProfileID) {
                 </td>
             </tr>
             <?php $talents = $wpdb->get_results("SELECT * FROM `$t_data_talent` ORDER BY `DataTalentTitle`"); if (!empty($talents)) : ?>
-            <tr valign="top">
+            <tr valign="top" id="ProfileTalent" class="profile-talent">
                 <th scope="row"><?php _e("Talent", bb_agency_TEXTDOMAIN) ?></th>
                 <td>
                     <fieldset><?php
@@ -1123,7 +1142,7 @@ function bb_display_manage($ProfileID) {
                 </td>
             </tr>
             <?php $genres = $wpdb->get_results("SELECT * FROM `$t_data_genre`"); if (!empty($genres)) : ?>
-            <tr valign="top">
+            <tr valign="top" id="ProfileGenre" class="profile-talent">
                 <th scope="row"><?php _e("Genre", bb_agency_TEXTDOMAIN) ?></th>
                 <td>
                     <fieldset><?php
@@ -1137,14 +1156,14 @@ function bb_display_manage($ProfileID) {
             </tr>
             <?php endif; // end of genres ?>
             <?php $abilities = $wpdb->get_results("SELECT * FROM `$t_data_ability`"); if (!empty($abilities)) : ?>
-            <tr valign="top">
+            <tr valign="top" id="ProfileAbility" class="profile-talent">
                 <th scope="row"><?php _e("Ability", bb_agency_TEXTDOMAIN) ?></th>
                 <td>
                     <fieldset>
                         <select name="ProfileAbility" size="1">
                             <option value=""> --- Ability --- </option>
                             <?php foreach ($abilities as $ability) : ?>
-                            <option id="ProfileAbility_<?php echo $ability->DataAbilityID ?>" value="<?php echo $ability->DataAbilityID ?>" <?php checked($ability->DataAbilityID, $ProfileAbility) ?>><?php echo $ability->DataAbilityTitle ?></option>
+                            <option id="ProfileAbility_<?php echo $ability->DataAbilityID ?>" value="<?php echo $ability->DataAbilityID ?>" <?php selected($ability->DataAbilityID, $ProfileAbility) ?>><?php echo $ability->DataAbilityTitle ?></option>
                             <?php endforeach; ?>
                         </select>
                     </fieldset>
