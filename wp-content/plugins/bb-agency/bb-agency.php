@@ -113,6 +113,10 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 		define('table_agency_data_type', "bb_agency_data_type");
 	if (!defined("table_agency_data_talent"))
 		define('table_agency_data_talent', "bb_agency_data_talent");
+	if (!defined("table_agency_data_genre"))
+		define('table_agency_data_genre', "bb_agency_data_genre");
+	if (!defined("table_agency_data_ability"))
+		define('table_agency_data_ability', "bb_agency_data_ability");
 	if (!defined("table_agency_customfields"))
 		define('table_agency_customfields', "bb_agency_customfields");
 	if (!defined("table_agency_customfield_mux"))

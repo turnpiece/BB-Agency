@@ -62,16 +62,28 @@ if (isset($_POST['action'])) {
     $ProfileLanguage = $_POST['ProfileLanguage'];
     $ProfileDateUpdated = $_POST['ProfileDateUpdated'];
     $ProfileDateViewLast = $_POST['ProfileDateViewLast'];
+    
     // get posted profile types
     $ProfileType = $_POST['ProfileType'];
     if (is_array($ProfileType)) {
         $ProfileType = implode(",", $ProfileType);
     }
+    
     // get posted talents
     $ProfileTalent = $_POST['ProfileTalent'];
     if (is_array($ProfileTalent)) {
         $ProfileTalent = implode(",", $ProfileTalent);
     }
+
+    // get posted genres
+    $ProfileGenre = $_POST['ProfileGenre'];
+    if (is_array($ProfileGenre)) {
+        $ProfileGenre = implode(",", $ProfileGenre);
+    }
+    
+    // get posted ability
+    $ProfileAbility = $_POST['ProfileAbility'];
+
     $ProfileIsActive = $_POST['ProfileIsActive']; // 0 Inactive | 1 Active | 2 Archived | 3 Pending Approval
     $ProfileIsFeatured = $_POST['ProfileIsFeatured'];
     $ProfileIsPromoted = $_POST['ProfileIsPromoted'];
@@ -554,11 +566,13 @@ function bb_display_manage($ProfileID) {
     global $wpdb;
 
     // database tables
-    $t_profile = table_agency_profile;
-    $t_media = table_agency_profile_media;
-    $t_data_type = table_agency_data_type;
-    $t_data_talent = table_agency_data_talent;
-    $t_gender = table_agency_data_gender;
+    $t_profile      = table_agency_profile;
+    $t_media        = table_agency_profile_media;
+    $t_data_type    = table_agency_data_type;
+    $t_data_talent  = table_agency_data_talent;
+    $t_data_genre   = table_agency_data_genre;
+    $t_data_ability = table_agency_data_ability;
+    $t_gender       = table_agency_data_gender;
 
     $bb_agency_option_agencyimagemaxheight = bb_agency_get_option('bb_agency_option_agencyimagemaxheight');
     if (empty($bb_agency_option_agencyimagemaxheight) || $bb_agency_option_agencyimagemaxheight < 500) {
@@ -598,6 +612,7 @@ function bb_display_manage($ProfileID) {
             $ProfileGender = stripslashes($data['ProfileGender']);
             $ProfileTypeArray = stripslashes($data['ProfileType']);
             $ProfileTalentArray = stripslashes($data['ProfileTalent']);
+            $ProfileGenreArray = stripslashes($data['ProfileGenre']);
 			$ProfileDateBirth = stripslashes($data['ProfileDateBirth']);
             if (bb_agency_SITETYPE == 'bumps') {
                 $ProfileDateDue = stripslashes($data['ProfileDateDue']);
@@ -613,6 +628,8 @@ function bb_display_manage($ProfileID) {
             $ProfileDateUpdated = stripslashes($data['ProfileDateUpdated']);
             $ProfileType = stripslashes($data['ProfileType']);
             $ProfileTalent = isset($data['ProfileTalent']) ? stripslashes($data['ProfileTalent']) : null;
+            $ProfileGenre = isset($data['ProfileGenre']) ? stripslashes($data['ProfileGenre']) : null;
+            $ProfileAbility = isset($data['ProfileAbility']) ? stripslashes($data['ProfileAbility']) : null;
             $ProfileIsActive = stripslashes($data['ProfileIsActive']);
             $ProfileIsFeatured = stripslashes($data['ProfileIsFeatured']);
             $ProfileIsPromoted = stripslashes($data['ProfileIsPromoted']);
@@ -1105,7 +1122,36 @@ function bb_display_manage($ProfileID) {
                     </fieldset>
                 </td>
             </tr>
-            <?php endif; ?>
+            <?php $genres = $wpdb->get_results("SELECT * FROM `$t_data_genre`"); if (!empty($genres)) : ?>
+            <tr valign="top">
+                <th scope="row"><?php _e("Genre", bb_agency_TEXTDOMAIN) ?></th>
+                <td>
+                    <fieldset><?php
+                    $ProfileGenreArray = explode(",", $ProfileGenreArray);
+
+                    foreach ($genres as $genre) : ?>
+                        <input type="checkbox" name="ProfileGenre[]" id="ProfileGenre_<?php echo $genre->DataGenreID ?>" value="<?php echo $genre->DataGenreID ?>" <?php echo (!empty($ProfileGenreArray) && in_array($genre->DataGenreID, $ProfileGenreArray)) ? ' checked="checked"' : '' ?> /><?php echo $genre->DataGenreTitle ?><br />
+                    <?php endforeach; ?>
+                    </fieldset>
+                </td>
+            </tr>
+            <?php endif; // end of genres ?>
+            <?php $abilities = $wpdb->get_results("SELECT * FROM `$t_data_ability`"); if (!empty($abilities)) : ?>
+            <tr valign="top">
+                <th scope="row"><?php _e("Ability", bb_agency_TEXTDOMAIN) ?></th>
+                <td>
+                    <fieldset>
+                        <select name="ProfileAbility" size="1">
+                            <option value=""> --- Ability --- </option>
+                            <?php foreach ($abilities as $ability) : ?>
+                            <option id="ProfileAbility_<?php echo $ability->DataAbilityID ?>" value="<?php echo $ability->DataAbilityID ?>" <?php checked($ability->DataAbilityID, $ProfileAbility) ?>><?php echo $ability->DataAbilityTitle ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </fieldset>
+                </td>
+            </tr>
+            <?php endif; // end of abilities ?>
+            <?php endif; // end of talents ?>
             <tr valign="top">
                 <th scope="row"><?php _e("Status", bb_agency_TEXTDOMAIN) ?>:</th>
                 <td>
@@ -1682,6 +1728,8 @@ function bb_agency_get_profile_fields() {
         'ProfileContactPhoneWork',
         'ProfileType',
         'ProfileTalent',
+        'ProfileGenre',
+        'ProfileAbility',
         'ProfileIsActive',
         'ProfileIsFeatured',
         'ProfileIsPromoted',
