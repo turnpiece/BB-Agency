@@ -182,7 +182,17 @@ if ($action) {
             //$filter .= " AND Find_in_set (". $ProfileType .",profile.ProfileType) ";
         } else {
             $ProfileType = "";
-        }   
+        }
+
+        // Talent   
+        if (isset($_GET['ProfileTalent']) && !empty($_GET['ProfileTalent'])){
+            $ProfileTalent = $_GET['ProfileTalent'];
+            $filter .= " AND profile.`ProfileTalent` like'%". $ProfileType ."%'";
+            //$filter .= " AND Find_in_set (". $ProfileTalent .",profile.ProfileTalent) ";
+        } else {
+            $ProfileTalent = "";
+        }  
+
         if (isset($_GET['ProfileIsActive'])&& $_GET['ProfileIsActive'] !="") {
             $ProfileIsActive = $_GET['ProfileIsActive'];
             $filter .= " AND profile.`ProfileIsActive` = ". $ProfileIsActive ."";       
@@ -801,14 +811,30 @@ EOF;
                                     
                                     $filter = array( 'agents', 'agent', 'producer', 'producers' );
                                      
-                                    $profileDataTypes = mysql_query("SELECT * FROM ". table_agency_data_type ."");
-                                    while ($dataType = mysql_fetch_array($profileDataTypes)) : if (!in_array(strtolower($dataType["DataTypeTitle"]), $filter)) : ?>
-                                    <option value="<?php echo $dataType['DataTypeID'] ?>" <?php selected(isset($_SESSION['ProfileType']) ? $_SESSION['ProfileType'] : false, $dataType["DataTypeID"]) ?>><?php echo $dataType['DataTypeTitle'] ?></option>
-                                    <?php endif; endwhile; ?>
+                                    $DataTypes = $wpdb->get_results("SELECT * FROM ". table_agency_data_type);
+                                    
+                                    foreach ($DataType as $type) : if (!in_array(strtolower($type->DataTypeTitle), $filter)) : ?>
+                                    <option value="<?php echo $type->DataTypeID ?>" <?php selected(isset($_SESSION['ProfileType']) ? $_SESSION['ProfileType'] : false, $type->DataTypeID) ?>><?php echo $type->DataTypeTitle ?></option>
+                                    <?php endif; endforeach; ?>
                                     
                                 </select>
                             </td>
                         </tr>
+                        <?php $talents = $wpdb->get_results("SELECT * FROM ". table_agency_data_talent); if (!empty($talents)) : ?>
+                        <tr>
+                            <th scope="row"><?php _e('Talent', bb_agency_TEXTDOMAIN) ?>:</th>
+                            <td>
+                                <select name="ProfileTalent" id="ProfileTalent">               
+                                    <option value="">--</option>
+                                    
+                                    <?php foreach ($talents as $talent) : ?>
+                                    <option value="<?php echo $talent->DataTalentID ?>" <?php selected(isset($_SESSION['ProfileTalent']) ? $_SESSION['ProfileTalent'] : false, $talent->DataTalentID) ?>><?php echo $talent->DataTalentTitle ?></option>
+                                    <?php endforeach; ?>
+                                    
+                                </select>
+                            </td>
+                        </tr>
+                        <?php endif; ?>
                         <tr>
                             <th scope="row"><?php _e('Gender', bb_agency_TEXTDOMAIN) ?>:</th>
                             <td>

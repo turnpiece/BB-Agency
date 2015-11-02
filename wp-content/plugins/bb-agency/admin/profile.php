@@ -1077,21 +1077,19 @@ function bb_display_manage($ProfileID) {
             <tr valign="top">
                 <th scope="row"><?php _e("Classification", bb_agency_TEXTDOMAIN) ?></th>
                 <td>
+                    <?php $types = $wpdb->get_results("SELECT * FROM `$t_data_type` ORDER BY `DataTypeTitle`");
+
+                    if (!empty($types)) : ?>
                     <fieldset><?php
                     $ProfileTypeArray = explode(",", $ProfileTypeArray);
 
-                	$query3 = "SELECT * FROM `$t_data_type` ORDER BY `DataTypeTitle`";
-                    $results3 = mysql_query($query3);
-                    $count3 = mysql_num_rows($results3);
-                    $action = @$_GET["action"];
-                    while ($data3 = mysql_fetch_array($results3)) : ?>
-                        <input type="checkbox" name="ProfileType[]" id="ProfileType_<?php echo $data3['DataTypeID'] ?>" value="<?php echo $data3['DataTypeID'] ?>" <?php echo (!empty($ProfileTypeArray) && in_array($data3['DataTypeID'], $ProfileTypeArray)) ? ' checked="checked"' : '' ?> /><?php echo $data3['DataTypeTitle'] ?><br />
-                    <?php endwhile; ?>
+                	foreach ($types as $type) : ?>
+                        <input type="checkbox" name="ProfileType[]" id="ProfileType_<?php echo $type->DataTypeID ?>" value="<?php echo $type->DataTypeID ?>" <?php echo (!empty($ProfileTypeArray) && in_array($type->DataTypeID, $ProfileTypeArray)) ? ' checked="checked"' : '' ?> /><?php echo $type->DataTypeTitle ?><br />
+                    <?php endforeach; ?>
                     </fieldset>
-                    <?php if ($count3 < 1) : ?>
+                    <?php else : ?>
                         <?php _e("No items to select", bb_agency_TEXTDOMAIN) ?> <a href="<?php echo admin_url("admin.php?page=bb_agency_settings&ConfigID=5") ?>"><?php _e("Setup Options", bb_agency_TEXTDOMAIN) ?></a>
                     <?php endif; ?>
-
                 </td>
             </tr>
             <?php $talents = $wpdb->get_results("SELECT * FROM `$t_data_talent` ORDER BY `DataTalentTitle`"); if (!empty($talents)) : ?>
@@ -1235,6 +1233,7 @@ function bb_display_list() {
     $t_profile = table_agency_profile;
     $t_media = table_agency_profile_media;
     $t_data_type = table_agency_data_type;
+    $t_data_talent = table_agency_data_talent;
     ?>
     <div class="wrap">
     <?php
@@ -1302,6 +1301,15 @@ function bb_display_list() {
              $filter .= " AND profile.ProfileType LIKE '%". $selectedType ."%'";
         } else {
               $filter .= " profile.ProfileType LIKE '%". $selectedType ."%'";
+        }
+    }
+    if (!empty($_GET['ProfileTalent'])){
+        $selectedTalent = strtolower($_GET['ProfileTalent']);
+        $query .= "&ProfileTalent=". $selectedTalent .'';
+        if(strpos($filter,'profile') > 0){
+             $filter .= " AND profile.ProfileTalent LIKE '%". $selectedTalent ."%'";
+        } else {
+              $filter .= " profile.ProfileTalent LIKE '%". $selectedTalent ."%'";
         }
     }
     if (isset($_GET['ProfileVisible'])){
@@ -1673,6 +1681,7 @@ function bb_agency_get_profile_fields() {
         'ProfileContactPhoneCell', 
         'ProfileContactPhoneWork',
         'ProfileType',
+        'ProfileTalent',
         'ProfileIsActive',
         'ProfileIsFeatured',
         'ProfileIsPromoted',
