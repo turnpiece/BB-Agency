@@ -451,7 +451,6 @@ if ($action) {
             ORDER BY $sort $dir $limit";
 
         // Search Results
-            echo $query;
         $results2 = mysql_query($query);
         $count = mysql_num_rows($results2);
         ?>
@@ -855,32 +854,18 @@ EOF;
                                 </select>
                             </td>
                         </tr>
-                        <?php endif; ?>
+                        <?php $genres = $wpdb->get_results("SELECT * FROM ". table_agency_data_genre); if (!empty($genres)) : ?>
                         <tr>
-                            <th scope="row"><?php _e('Gender', bb_agency_TEXTDOMAIN) ?>:</th>
+                            <th scope="row"><?php _e('Genre', bb_agency_TEXTDOMAIN) ?>:</th>
                             <td>
-                                <select name="ProfileGender" id="ProfileGender">               
+                                <select name="ProfileGenre" id="ProfileGenre">               
                                     <option value="">--</option>
-                                    <?php
-                                        $query2 = "SELECT GenderID, GenderTitle FROM ". table_agency_data_gender ." ORDER BY GenderID";
-                                        $results2 = mysql_query($query2);
-                                        while ($dataGender = mysql_fetch_array($results2)) : ?>
-                                    <option value="<?php echo $dataGender['GenderID'] ?>" <?php selected(isset($_SESSION['ProfileGender']) ? $_SESSION['ProfileGender'] : 0, $dataGender['GenderID']) ?>><?php echo $dataGender['GenderTitle'] ?></option>
-                                        <?php endwhile; ?>
+                                    
+                                    <?php foreach ($genres as $genre) : ?>
+                                    <option value="<?php echo $genre->DataGenreID ?>" <?php selected(isset($_SESSION['ProfileGenre']) ? $_SESSION['ProfileGenre'] : false, $genre->DataGenreID) ?>><?php echo $genre->DataGenreTitle ?></option>
+                                    <?php endforeach; ?>
+                                    
                                 </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row"><?php _e('Age', bb_agency_TEXTDOMAIN) ?>:</th>
-                            <td>
-                                <fieldset>
-                                    <div>
-                                        <?php echo bb_agency_age_dropdown('ProfileAge_min') ?>
-                                    </div>
-                                    <div>
-                                        <?php echo bb_agency_age_dropdown('ProfileAge_max') ?>
-                                    </div>
-                                </fieldset>
                             </td>
                         </tr>
                         <?php 
@@ -910,7 +895,36 @@ EOF;
                                 </fieldset>
                             </td>
                         </tr>
-                        <?php endif; ?>
+                        <?php endif; // end of abilities ?>
+                        <?php endif; // end of genres ?>
+                        <?php endif; // end of talents ?>
+                        <tr>
+                            <th scope="row"><?php _e('Gender', bb_agency_TEXTDOMAIN) ?>:</th>
+                            <td>
+                                <select name="ProfileGender" id="ProfileGender">               
+                                    <option value="">--</option>
+                                    <?php
+                                        $query2 = "SELECT GenderID, GenderTitle FROM ". table_agency_data_gender ." ORDER BY GenderID";
+                                        $results2 = mysql_query($query2);
+                                        while ($dataGender = mysql_fetch_array($results2)) : ?>
+                                    <option value="<?php echo $dataGender['GenderID'] ?>" <?php selected(isset($_SESSION['ProfileGender']) ? $_SESSION['ProfileGender'] : 0, $dataGender['GenderID']) ?>><?php echo $dataGender['GenderTitle'] ?></option>
+                                        <?php endwhile; ?>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><?php _e('Age', bb_agency_TEXTDOMAIN) ?>:</th>
+                            <td>
+                                <fieldset>
+                                    <div>
+                                        <?php echo bb_agency_age_dropdown('ProfileAge_min') ?>
+                                    </div>
+                                    <div>
+                                        <?php echo bb_agency_age_dropdown('ProfileAge_max') ?>
+                                    </div>
+                                </fieldset>
+                            </td>
+                        </tr>
                         <?php if (defined('bb_agency_MUMSTOBE_ID') && bb_agency_MUMSTOBE_ID) : ?>
                         <tr>
                             <th scope="row"><?php _e('Due date', bb_agency_TEXTDOMAIN) ?>:</th>
