@@ -178,8 +178,8 @@ if ($action) {
         // Type
         if (isset($_GET['ProfileType']) && !empty($_GET['ProfileType'])){
             $ProfileType = $_GET['ProfileType'];
-            $filter .= " AND profile.`ProfileType` like'%". $ProfileType ."%'";
-            //$filter .= " AND Find_in_set (". $ProfileType .",profile.ProfileType) ";
+            //$filter .= " AND profile.`ProfileType` like'%". $ProfileType ."%'";
+            $filter .= " AND Find_in_set (". $ProfileType .",profile.ProfileType) ";
         } else {
             $ProfileType = "";
         }
@@ -187,11 +187,31 @@ if ($action) {
         // Talent   
         if (isset($_GET['ProfileTalent']) && !empty($_GET['ProfileTalent'])){
             $ProfileTalent = $_GET['ProfileTalent'];
-            $filter .= " AND profile.`ProfileTalent` like'%". $ProfileType ."%'";
-            //$filter .= " AND Find_in_set (". $ProfileTalent .",profile.ProfileTalent) ";
+            //$filter .= " AND profile.`ProfileTalent` like'%". $ProfileTalent ."%'";
+            $filter .= " AND Find_in_set (". $ProfileTalent .",profile.ProfileTalent) ";
         } else {
             $ProfileTalent = "";
         }  
+
+        // Genre  
+        if (isset($_GET['ProfileGenre']) && !empty($_GET['ProfileGenre'])){
+            $ProfileTalent = $_GET['ProfileGenre'];
+            //$filter .= " AND profile.`ProfileTalent` like'%". $ProfileTalent ."%'";
+            $filter .= " AND Find_in_set (". $ProfileGenre .",profile.ProfileGenre) ";
+        } else {
+            $ProfileGenre = "";
+        }  
+
+        // Ability range
+        if (isset($_GET['ProfileAbility_min']) && !empty($_GET['ProfileAbility_min'])) {
+            if ($ability = $_GET['ProfileAbility_min'])
+                $filter .= " AND profile.`ProfileAbility` >= $ability";
+        }
+        
+        if (isset($_GET['ProfileAbility_max']) && !empty($_GET['ProfileAbility_max'])) {
+            if ($ability = $_GET['ProfileAbility_max'])
+                $filter .= " AND profile.`ProfileAbility` <= $ability";
+        }
 
         if (isset($_GET['ProfileIsActive'])&& $_GET['ProfileIsActive'] !="") {
             $ProfileIsActive = $_GET['ProfileIsActive'];
@@ -431,6 +451,7 @@ if ($action) {
             ORDER BY $sort $dir $limit";
 
         // Search Results
+            echo $query;
         $results2 = mysql_query($query);
         $count = mysql_num_rows($results2);
         ?>
@@ -862,6 +883,34 @@ EOF;
                                 </fieldset>
                             </td>
                         </tr>
+                        <?php 
+                            $field = 'ProfileAbility'; 
+                            $abilities = $wpdb->get_results("SELECT * FROM ".table_agency_data_ability); 
+                            if (!empty($abilities)) : ?>
+                        <tr>
+                            <th scope="row"><?php _e('Ability', bb_agency_TEXTDOMAIN) ?>:</th>
+                            <td>
+                                <fieldset class="bbselect">
+                                    <div>
+                                        <select name="<?php echo $field ?>_min">
+                                            <option value=""><?php _e('From', bb_agency_TEXTDOMAIN) ?></option>
+                                        <?php foreach ($abilities as $ability) : // display ability options ?>
+                                            <option value="<?php echo $ability->DataAbilityID ?>" <?php selected(isset($_GET[$field.'_min']) ? $_GET[$field.'_min'] : false, $ability->DataAbilityID) ?>><?php echo $ability->DataAbilityTitle ?></option>
+                                        <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <select name="<?php echo $field ?>_max">
+                                            <option value=""><?php _e('To', bb_agency_TEXTDOMAIN) ?></option>
+                                        <?php foreach ($abilities as $ability) : // display ability options ?>
+                                            <option value="<?php echo $ability->DataAbilityID ?>" <?php selected(isset($_GET[$field.'_max']) ? $_GET[$field.'_max'] : false, $ability->DataAbilityID) ?>><?php echo $ability->DataAbilityTitle ?></option>
+                                        <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                </fieldset>
+                            </td>
+                        </tr>
+                        <?php endif; ?>
                         <?php if (defined('bb_agency_MUMSTOBE_ID') && bb_agency_MUMSTOBE_ID) : ?>
                         <tr>
                             <th scope="row"><?php _e('Due date', bb_agency_TEXTDOMAIN) ?>:</th>
