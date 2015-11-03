@@ -34,7 +34,11 @@
 		<div id="stats" class="col_3 column">
 			<h2><?php echo $ProfileContactDisplay . (bb_agency_isfamily($ProfileType) ? __(' and family', bb_agency_TEXTDOMAIN) : '') ?></h2>
 			<ul>
-			<?php if ($ProfileHasTalent) : $t_name = bb_agency_get_talents(); $talents = explode(',', $ProfileTalent); ?>
+			<?php 
+				if ($ProfileHasTalent) : 
+				$t_name = bb_agency_get_talents(); 
+				$talents = explode(',', $ProfileTalent); 
+				if (!empty($ProfileTalent)) : ?>
 				<li><strong><?php _e('Talent', bb_agency_TEXTDOMAIN) ?><span class="divider">:</span></strong></strong>
 				<?php foreach( $talents as $talent ) {
 					$t_display[] = $t_name[ $talent ];
@@ -42,26 +46,25 @@
 				echo implode(', ', $t_display);
 				?>
 				</li>
-			<?php endif; // end of talent
+			<?php endif; endif; // end of talent
 
-				if (!empty($ProfileStatHeight)) {
+				if (!empty($ProfileStatHeight)) :
 
-					if ($bb_agency_option_unittype == 0) { // Metric
+				if ($bb_agency_option_unittype == 0) : // Metric ?>
 
-						echo "<li><strong>". __("Height", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $ProfileStatHeight ." ". __("cm", bb_agency_TEXTDOMAIN). "" ."</li>\n";
+					<li><strong><?php _e("Height", bb_agency_TEXTDOMAIN) ?><span class="divider">:</span></strong> <?php echo $ProfileStatHeight ." ". __("cm", bb_agency_TEXTDOMAIN) ?></li>
 
-					} else { // Imperial
+				<?php else : // Imperial
 
-						$heightraw = $ProfileStatHeight;
+					$heightraw = $ProfileStatHeight;
+					$heightfeet = floor($heightraw/12);
+					$heightinch = $heightraw - floor($heightfeet*12);
+					?>
+					<li><strong><?php _e("Height", bb_agency_TEXTDOMAIN) ?><span class="divider">:</span></strong> <?php echo $heightfeet ." ". __("ft", bb_agency_TEXTDOMAIN). " ". $heightinch ." ". __("in", bb_agency_TEXTDOMAIN) ?></li>
 
-						$heightfeet = floor($heightraw/12);
+				<?php endif;
 
-						$heightinch = $heightraw - floor($heightfeet*12);
-
-						echo "<li><strong>". __("Height", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> ". $heightfeet ." ". __("ft", bb_agency_TEXTDOMAIN). " ". $heightinch ." ". __("in", bb_agency_TEXTDOMAIN). "" ."</li>\n";
-
-					}
-				}
+				endif; // end of height
 
 				if (bb_agency_SITETYPE == 'bumps') :
 
