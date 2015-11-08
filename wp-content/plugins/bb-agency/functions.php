@@ -3837,6 +3837,40 @@ function bb_agency_get_talents() {
 
 /**
  *
+ * get genres
+ */
+function bb_agency_get_genres() {
+	$talents = array();
+
+	global $wpdb;
+	$results = $wpdb->get_results('SELECT * FROM '. table_agency_data_genre);
+
+	foreach ( $results as $result ) {
+		$talents[ $result->DataGenreID ] = $result->DataGenreTitle;
+	}
+
+	return $talents;
+}
+
+/**
+ *
+ * get abilities
+ */
+function bb_agency_get_abilities() {
+	$talents = array();
+
+	global $wpdb;
+	$results = $wpdb->get_results('SELECT * FROM '. table_agency_data_ability);
+
+	foreach ( $results as $result ) {
+		$talents[ $result->DataAbilityID ] = $result->DataAbilityTitle;
+	}
+
+	return $talents;
+}
+
+/**
+ *
  * save model card
  *
  * @param string $gallery

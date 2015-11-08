@@ -12,7 +12,7 @@ class ModelCard {
     protected $text_y = 70;
     protected $text_size = 14;
     protected $error = 'Unknown error';
-    protected $debugging = true;
+    protected $debugging = false;
     
     function __construct($model) {
         $this->model = $model;
@@ -44,7 +44,7 @@ class ModelCard {
         // black text
         $this->text_colour = imagecolorallocate($this->canvas, 0, 0, 0);
 
-        $filepath = bb_agency_UPLOADPATH . '/' . $this->profile->ProfileGallery . '/' . $this->profile->ProfileMediaURL;
+        $filepath = bb_agency_UPLOADPATH . '/' . $this->profile['ProfileGallery'] . '/' . $this->profile['ProfileMediaURL'];
 
         if (file_exists($filepath)) {
             $headshot = $this->image_resize( $filepath, 350, 500, true );
@@ -117,27 +117,27 @@ class ModelCard {
     }
 
     public function filepath() {
-        return bb_agency_UPLOADPATH .$this->profile->ProfileGallery.'/'.$this->filename();
+        return bb_agency_UPLOADPATH .$this->profile['ProfileGallery'].'/'.$this->filename();
     }
 
     protected function print_model_details() {
 
-        if ($this->profile->ProfileType == 2) {
+        if ($this->profile['ProfileType'] == 2) {
             // families
             $names = array();
 
-            if ($this->profile->mum_name)
-                $names[] = $this->profile->mum_name;
+            if ($this->profile['mum_name'])
+                $names[] = $this->profile['mum_name'];
 
-            if ($this->profile->dad_name)
-                $names[] = $this->profile->dad_name;
+            if ($this->profile['dad_name'])
+                $names[] = $this->profile['dad_name'];
            
             $this->print_text( implode( ' & ', $names ) );
             
 
         } else {
             // print first name
-            $name = $this->profile->ProfileContactNameFirst;
+            $name = $this->profile['ProfileContactNameFirst'];
             $this->print_text( $name );
 
         }
@@ -151,7 +151,7 @@ class ModelCard {
                 $this->text_y += 50;
             }
 
-            if ($this->profile->height) {
+            if ($this->profile['height']) {
                 $this->print_text( 'Height: ' . $this->get_height() );
                 $this->text_y += 50;
             }
@@ -163,10 +163,10 @@ class ModelCard {
 
         } else {
             // pregnant women
-            $this->print_text( 'Due date: ' . $this->get_date( $this->profile->ProfileDateDue ) );
+            $this->print_text( 'Due date: ' . $this->get_date( $this->profile['ProfileDateDue'] ) );
             $this->text_y += 50;
 
-            if ($this->profile->height) {
+            if ($this->profile['height']) {
                 $this->print_text( 'Height: ' . $this->get_height() );
                 $this->text_y += 50;
             }
@@ -227,7 +227,7 @@ class ModelCard {
      *
      */
     protected function filename() {
-        return str_replace(' ', '-', get_bloginfo('name')).'-'.$this->profile->ProfileContactNameFirst.'.jpg';
+        return str_replace(' ', '-', get_bloginfo('name')).'-'.$this->profile['ProfileContactNameFirst'].'.jpg';
     }
 
     protected function set_profile() {
@@ -261,15 +261,17 @@ class ModelCard {
             LEFT JOIN $t_custom AS child2_dob ON child2_dob.`ProfileID` = p.`ProfileID` AND child2_dob.`ProfileCustomID` = 49            
             LEFT JOIN $t_custom AS child3_dob ON child3_dob.`ProfileID` = p.`ProfileID` AND child3_dob.`ProfileCustomID` = 50
             LEFT JOIN $t_custom AS child4_dob ON child4_dob.`ProfileID` = p.`ProfileID` AND child4_dob.`ProfileCustomID` = 51
-            WHERE p.`ProfileGallery` = '$this->model'
+            WHERE p.`ProfileGallery` = '%s'
             LIMIT 1";
 
-        $this->debug( __FUNCTION__ . ' => ' . $query );
+        //$this->debug( __FUNCTION__ . ' => ' . $query );
 
-        $profile = $wpdb->get_row($query);
+        $profile = $wpdb->get_row( $wpdb->prepare( $query, $this->model ), ARRAY_A );
 
         if (empty($profile))
             $this->fatal( "Failed to get profile for model '$this->model' - " . mysql_error() );
+
+        $this->debug( print_r($profile, true) );
 
         $this->profile = $profile;
     }
@@ -279,10 +281,10 @@ class ModelCard {
     }
 
     protected function get_age() {
-        if (!$this->profile->ProfileDateBirth || strpos($this->profile->ProfileDateBirth, '0') == 0)
+        if (!$this->profile['ProfileDateBirth'] || strpos($this->profile['ProfileDateBirth'], '0') == 0)
             return false;
 
-        $birthday = new DateTime($this->profile->ProfileDateBirth);
+        $birthday = new DateTime($this->profile['ProfileDateBirth']);
         $interval = $birthday->diff(new DateTime);
         if ($interval->y > 1)
             return $interval->y;
@@ -298,7 +300,7 @@ class ModelCard {
 
     protected function get_height() {
 
-        $height = intval($this->profile->height);
+        $height = intval($this->profile['height']);
 
         if (bb_agency_get_option('bb_agency_option_unittype') == 0)
             return $height.' '.__('cm', bb_agency_TEXTDOMAIN);
@@ -312,11 +314,11 @@ class ModelCard {
     }
 
     protected function get_shoe_size() {
-        return $this->profile->shoe_size;
+        return $this->profile['shoe_size'];
     }
 
     protected function get_dress_size() {
-        return $this->profile->dress_size;
+        return $this->profile['dress_size'];
     }
 
     protected function imagecreatefromfile( $filename ) {
@@ -346,7 +348,7 @@ class ModelCard {
     protected function image_resize($src, $width, $height, $crop = false){
 
         if ((!list($w, $h) = getimagesize($src)) || $w == 0 || $h == 0)
-            return $this->set_error("Unsupported picture type ".basename($src));
+            return $this->set_error("$src is an unsupported picture type");
 
         $type = strtolower(substr(strrchr($src, "."), 1));
         
@@ -399,6 +401,16 @@ class ModelCard {
         $this->debug( "created image with width $width and height $height" );
 
         return $new;
+    }
+
+    protected function get_profile_field( $key ) {
+        if (empty($this->profile))
+            $this->fatal( "Profile was not set." );
+
+        if (!isset($this->profile[$key]))
+            return $this->set_error( "Profile field $key was not set" );
+
+        return $this->profile[$key];
     }
 
     protected function debug($message) {
