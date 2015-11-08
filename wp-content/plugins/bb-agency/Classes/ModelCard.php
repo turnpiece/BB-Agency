@@ -2,16 +2,17 @@
 
 class ModelCard {
 
-    private $model;
-    private $canvas;
-    private $quality = 90;
-    private $fontfile;
-    private $profile = array();
-    private $text_colour;
-    private $text_x = 500;
-    private $text_y = 70;
-    private $text_size = 14;
-    private $error = 'Unknown error';
+    protected $model;
+    protected $canvas;
+    protected $quality = 90;
+    protected $fontfile;
+    protected $profile = array();
+    protected $text_colour;
+    protected $text_x = 500;
+    protected $text_y = 70;
+    protected $text_size = 14;
+    protected $error = 'Unknown error';
+    protected $debugging = true;
     
     function __construct($model) {
         $this->model = $model;
@@ -27,6 +28,8 @@ class ModelCard {
      * @return bool
      */
     function save($force = false) {
+
+        $this->debug( __FUNCTION__ );
 
         if (!$force && @file_exists($this->filepath()))
             return true;
@@ -100,6 +103,8 @@ class ModelCard {
         $path = $this->filepath();
 
         if (!@file_exists($path)) {
+            $this->debug( "Card not found at $path so creating it..." );
+
             if (!$this->save())
                 return $this->fatal('Failed to save image to '.$path);
         }
@@ -115,7 +120,7 @@ class ModelCard {
         return bb_agency_UPLOADPATH .$this->profile->ProfileGallery.'/'.$this->filename();
     }
 
-    private function print_model_details() {
+    protected function print_model_details() {
 
         if ($this->profile->ProfileType == 2) {
             // families
@@ -225,7 +230,7 @@ class ModelCard {
         return str_replace(' ', '-', get_bloginfo('name')).'-'.$this->profile->ProfileContactNameFirst.'.jpg';
     }
 
-    private function set_profile() {
+    protected function set_profile() {
         global $wpdb;
         $t_profile = table_agency_profile;
         $t_datatype = table_agency_data_type;
@@ -259,14 +264,21 @@ class ModelCard {
             WHERE p.`ProfileGallery` = '$this->model'
             LIMIT 1";
 
-        $this->profile = $wpdb->get_row($query);
+        $this->debug( __FUNCTION__ . ' => ' . $query );
+
+        $profile = $wpdb->get_row($query);
+
+        if (empty($profile))
+            $this->fatal( "Failed to get profile for model '$this->model' - " . mysql_error() );
+
+        $this->profile = $profile;
     }
 
-    private function print_text( $string ) {
+    protected function print_text( $string ) {
         imagettftext($this->canvas, $this->text_size, 0, $this->text_x, $this->text_y, $this->text_colour, $this->fontfile, $string);
     }
 
-    private function get_age() {
+    protected function get_age() {
         if (!$this->profile->ProfileDateBirth || strpos($this->profile->ProfileDateBirth, '0') == 0)
             return false;
 
@@ -280,11 +292,11 @@ class ModelCard {
             return $interval->m . ' '.__('months', bb_agency_TEXTDOMAIN);
     }
 
-    private function get_date( $date ) {
+    protected function get_date( $date ) {
         return bb_agency_displaydate($date);
     }
 
-    private function get_height() {
+    protected function get_height() {
 
         $height = intval($this->profile->height);
 
@@ -299,15 +311,15 @@ class ModelCard {
         }
     }
 
-    private function get_shoe_size() {
+    protected function get_shoe_size() {
         return $this->profile->shoe_size;
     }
 
-    private function get_dress_size() {
+    protected function get_dress_size() {
         return $this->profile->dress_size;
     }
 
-    private function imagecreatefromfile( $filename ) {
+    protected function imagecreatefromfile( $filename ) {
         if (!file_exists($filename)) {
             return $this->fatal('File "'.$filename.'" not found.');
         }
@@ -331,7 +343,7 @@ class ModelCard {
         }
     }
 
-    private function image_resize($src, $width, $height, $crop = false){
+    protected function image_resize($src, $width, $height, $crop = false){
 
         if ((!list($w, $h) = getimagesize($src)) || $w == 0 || $h == 0)
             return $this->set_error("Unsupported picture type ".basename($src));
@@ -384,12 +396,19 @@ class ModelCard {
 
         imagecopyresampled($new, $img, 0, 0, $x, 0, $width, $height, $w, $h);
 
+        $this->debug( "created image with width $width and height $height" );
+
         return $new;
     }
 
-    private function set_error($message) {
+    protected function debug($message) {
+        if ($this->debugging)
+            error_log(__CLASS__.' DEBUG: '.$message);
+    }
+
+    protected function set_error($message) {
         $this->error = $message;
-        error_log(__CLASS__.': '.$message);
+        error_log(__CLASS__.' ERROR: '.$message);
         return false;
     }
 
@@ -397,8 +416,8 @@ class ModelCard {
         return $this->error;
     }
 
-    private function fatal($message) {
-        $this->set_error( '(' . $this->profile->ProfileGallery . ') ' . $message );
+    protected function fatal($message) {
+        $this->set_error( $message );
         return false;
     }
 }

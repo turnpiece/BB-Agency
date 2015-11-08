@@ -128,6 +128,7 @@
 			$newrules['profile/(.*)$'] = 'index.php?type=profile&target=$matches[1]';
 			// model card
 			$newrules['card/(.+)\.jpg$'] = 'index.php?type=card&target=$matches[1]';
+			$newrules['lbda/(.+)\.jpg$'] = 'index.php?type=lbda&target=$matches[1]';
 			
 		    $newrules['version-bb-agency'] = 'index.php?type=rbv'; // ping this page for version checker
 			
@@ -194,6 +195,8 @@
 						return $dir.'view-models.php';
 					case 'card' :
 						return $dir.'view-model-card.php';
+					case 'lbda' :
+						return $dir.'view-lbda-card.php';
 					case "version-bb-agency" :
 						return dirname(__FILE__) . '/rbv.php';
 				}			  

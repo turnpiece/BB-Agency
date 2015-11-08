@@ -1083,8 +1083,8 @@ function bb_display_manage($ProfileID) {
         <div>
             <h3>LBDA Card</h3>
             <p>
-                <a href="/card/LBDA-<?php echo $ProfileGallery ?>.jpg">
-                    <img src="/card/LBDA-<?php echo $ProfileGallery ?>.jpg" width="400" alt="<?php echo $ProfileGallery ?>" />
+                <a href="/lbda/<?php echo $ProfileGallery ?>.jpg">
+                    <img src="/lbda/<?php echo $ProfileGallery ?>.jpg" width="400" alt="<?php echo $ProfileGallery ?>" />
                 </a>
             </p>
         </div>

@@ -296,7 +296,7 @@ if (isset($_POST['action'])) {
                         <?php echo stripslashes($data2['ProfileContactNameFirst']) ." ". stripslashes($data2['ProfileContactNameLast']); ?>
                         <br />
                         <?php if (bb_agency_EMAIL_CARDS) : ?>
-                        <a href="<?php bloginfo('wpurl') ?>/card/LBDA-<?php echo $data2['ProfileGallery'] ?>.jpg" target="_blank">
+                        <a href="<?php bloginfo('wpurl') ?>/lbda/<?php echo $data2['ProfileGallery'] ?>.jpg" target="_blank">
                         <?php else : ?>
                         <a href="<?php echo bb_agency_PROFILEDIR . $data2['ProfileGallery'] ?>" target="_blank">
                         <?php endif; ?>
