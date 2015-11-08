@@ -3837,10 +3837,15 @@ function bb_agency_get_talents() {
  * save model card
  *
  * @param string $gallery
+ * @param bool $lbda
  * @return string file path
  *
  */
-function bb_agency_save_modelcard( $gallery ) {
+function bb_agency_save_modelcard( $gallery, $lbda = false ) {
+
+	if ($lbda)
+		return bb_agency_save_lbda_modelcard( $gallery ); // do an LBDA model card
+
 	require_once(bb_agency_BASEPATH.'/Classes/ModelCard.php');
 
 	// check gallery directory exists
@@ -3853,6 +3858,29 @@ function bb_agency_save_modelcard( $gallery ) {
         return $Card->filepath();
     
     bb_agency_adminmessage_former('Error saving model card: '.$Card->get_error(), true);
+}
+
+/**
+ *
+ * save LBDA model card
+ *
+ * @param string $gallery
+ * @return string file path
+ *
+ */
+function bb_agency_save_lbda_modelcard( $gallery ) {
+	require_once(bb_agency_BASEPATH.'/Classes/LBDA_ModelCard.php');
+
+	// check gallery directory exists
+    bb_agency_checkdir($gallery);
+
+    // instantiate model card class
+    $Card = new LBDA_ModelCard($gallery);
+    
+    if ($Card->save(true))
+        return $Card->filepath();
+    
+    bb_agency_adminmessage_former('Error saving LBDA model card: '.$Card->get_error(), true);
 }
 
 /**

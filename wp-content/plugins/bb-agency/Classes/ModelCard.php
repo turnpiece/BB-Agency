@@ -50,7 +50,7 @@ class ModelCard {
                 imagecopy($this->canvas, $headshot, 50, 50, 0, 0, imagesx($headshot), imagesy($headshot));
 
             else
-                return $this->fatal("Failed to copy profile image  to card: ".$this->error);
+                return $this->fatal("Failed to copy profile image to card: ".$this->error);
         }
         
         // set font
@@ -173,7 +173,7 @@ class ModelCard {
         }
     }
 
-    private function print_company_details() {
+    protected function print_company_details() {
         $this->text_y = 360;
 
         // print company logo
@@ -198,7 +198,7 @@ class ModelCard {
         $this->text_y += 150;
     }
 
-    private function print_logo() {
+    protected function print_logo() {
         // get logo
         if (defined('bb_agency_LOGOPATH')) {
             $logo_path = bb_agency_LOGOPATH;
@@ -221,8 +221,8 @@ class ModelCard {
      * filename
      *
      */
-    private function filename() {
-        return str_replace(' ', '-', get_bloginfo('name', 'display')).'-'.$this->profile->ProfileContactNameFirst.'.jpg';
+    protected function filename() {
+        return str_replace(' ', '-', get_bloginfo('name')).'-'.$this->profile->ProfileContactNameFirst.'.jpg';
     }
 
     private function set_profile() {
