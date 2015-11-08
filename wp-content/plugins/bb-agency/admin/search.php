@@ -195,7 +195,7 @@ if ($action) {
 
         // Genre  
         if (isset($_GET['ProfileGenre']) && !empty($_GET['ProfileGenre'])){
-            $ProfileTalent = $_GET['ProfileGenre'];
+            $ProfileGenre = $_GET['ProfileGenre'];
             //$filter .= " AND profile.`ProfileTalent` like'%". $ProfileTalent ."%'";
             $filter .= " AND Find_in_set (". $ProfileGenre .",profile.ProfileGenre) ";
         } else {
