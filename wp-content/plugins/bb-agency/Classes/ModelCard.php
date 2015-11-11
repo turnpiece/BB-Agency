@@ -13,7 +13,7 @@ class ModelCard {
     protected $text_size = 13;
     protected $line_height = 30;
     protected $error = 'Unknown error';
-    protected $debugging = false;
+    protected $debugging = true;
     
     function __construct($model) {
         $this->model = $model;
@@ -136,7 +136,15 @@ class ModelCard {
                 $names[] = $dad;
            
             $this->print_text( implode( ' & ', $names ) );
-            
+
+            $this->text_y += $this->line_height;
+
+            for ($i = 1; $i <= 4; $i++) {
+                if ($name = $this->get_profile_field('child'.$i.'_name')) {
+                    $this->print_text( $name );
+                    $this->text_y += $this->line_height;
+                }
+            }
 
         } else {
             // print first name
@@ -246,7 +254,11 @@ class ModelCard {
                 ss.`ProfileCustomValue` AS shoe_size, 
                 ds.`ProfileCustomValue` AS dress_size,
                 mum.`ProfileCustomValue` AS mum_name, 
-                dad.`ProfileCustomValue` AS dad_name
+                dad.`ProfileCustomValue` AS dad_name,
+                child1.`ProfileCustomValue` AS child1_name,
+                child2.`ProfileCustomValue` AS child2_name,
+                child3.`ProfileCustomValue` AS child3_name,
+                child4.`ProfileCustomValue` AS child4_name
             FROM $t_profile AS p
             LEFT JOIN $t_datatype AS dt ON dt.`DataTypeID` = p.`ProfileType`
             LEFT JOIN $t_media AS m ON m.`ProfileID` = p.`ProfileID` AND m.`ProfileMediaPrimary` = 1 AND m.`ProfileMediaType` = 'Image'
@@ -266,14 +278,14 @@ class ModelCard {
             WHERE p.`ProfileGallery` = '%s'
             LIMIT 1";
 
-        //$this->debug( __FUNCTION__ . ' => ' . $query );
+        $this->debug( __FUNCTION__ . ' => ' . $query );
 
         $profile = $wpdb->get_row( $wpdb->prepare( $query, $this->model ), ARRAY_A );
 
         if (empty($profile))
             $this->fatal( "Failed to get profile for model '$this->model' - " . mysql_error() );
 
-        //$this->debug( print_r($profile, true) );
+        $this->debug( print_r($profile, true) );
 
         $this->profile = $profile;
     }
