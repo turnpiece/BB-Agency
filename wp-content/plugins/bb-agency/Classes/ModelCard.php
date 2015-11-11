@@ -10,7 +10,8 @@ class ModelCard {
     protected $text_colour;
     protected $text_x = 500;
     protected $text_y = 70;
-    protected $text_size = 14;
+    protected $text_size = 13;
+    protected $line_height = 30;
     protected $error = 'Unknown error';
     protected $debugging = false;
     
@@ -31,7 +32,7 @@ class ModelCard {
 
         $this->debug( __FUNCTION__ );
 
-        if (!$force && @file_exists($this->filepath()))
+        if (!$force && !$this->debugging && @file_exists($this->filepath()))
             return true;
 
         // Create a blank image and add some text
@@ -44,7 +45,7 @@ class ModelCard {
         // black text
         $this->text_colour = imagecolorallocate($this->canvas, 0, 0, 0);
 
-        $filepath = bb_agency_UPLOADPATH . '/' . $this->profile['ProfileGallery'] . '/' . $this->profile['ProfileMediaURL'];
+        $filepath = bb_agency_UPLOADPATH . $this->profile['ProfileGallery'] . '/' . $this->profile['ProfileMediaURL'];
 
         if (file_exists($filepath)) {
             $headshot = $this->image_resize( $filepath, 350, 500, true );
@@ -102,8 +103,8 @@ class ModelCard {
 
         $path = $this->filepath();
 
-        if (!@file_exists($path)) {
-            $this->debug( "Card not found at $path so creating it..." );
+        if (!@file_exists($path) || $this->debugging) {
+            $this->debug( __FUNCTION__ . " card not found at $path so creating it..." );
 
             if (!$this->save())
                 return $this->fatal('Failed to save image to '.$path);
@@ -122,15 +123,17 @@ class ModelCard {
 
     protected function print_model_details() {
 
-        if ($this->profile['ProfileType'] == 2) {
+        $this->debug(__FUNCTION__ . ' in parent class');
+
+        if ($this->get_profile_field('ProfileType') == 2) {
             // families
             $names = array();
 
-            if ($this->profile['mum_name'])
-                $names[] = $this->profile['mum_name'];
+            if ($mum = $this->get_profile_field('mum_name'))
+                $names[] = $mum;
 
-            if ($this->profile['dad_name'])
-                $names[] = $this->profile['dad_name'];
+            if ($dad = $this->get_profile_field('dad_name'))
+                $names[] = $dad;
            
             $this->print_text( implode( ' & ', $names ) );
             
@@ -139,41 +142,40 @@ class ModelCard {
             // print first name
             $name = $this->profile['ProfileContactNameFirst'];
             $this->print_text( $name );
-
         }
 
-        $this->text_y += 50;
+        $this->text_y += $this->line_height;
 
-        if (bb_agency_SITETYPE == 'children') {
+        if (bb_agency_SITETYPE == 'children' && $this->get_profile_field('ProfileType') != 2) {
             // children
             if ($age = $this->get_age()) {
                 $this->print_text( 'Age: ' . $age );
-                $this->text_y += 50;
+                $this->text_y += $this->line_height;
             }
 
             if ($this->profile['height']) {
                 $this->print_text( 'Height: ' . $this->get_height() );
-                $this->text_y += 50;
+                $this->text_y += $this->line_height;
             }
 
             if ($shoe_size = $this->get_shoe_size()) {
                 $this->print_text( 'Shoe size: ' . $shoe_size );
-                $this->text_y += 50;
+                $this->text_y += $this->line_height;
             }
 
-        } else {
+        } elseif (bb_agency_SITETYPE == 'bumps') {
             // pregnant women
             $this->print_text( 'Due date: ' . $this->get_date( $this->profile['ProfileDateDue'] ) );
-            $this->text_y += 50;
+            $this->text_y += $this->line_height;
 
             if ($this->profile['height']) {
                 $this->print_text( 'Height: ' . $this->get_height() );
-                $this->text_y += 50;
+                $this->text_y += $this->line_height;
             }
 
             if ($dress_size = $this->get_dress_size()) {
                 $this->print_text( 'Dress size: ' . $dress_size );
-                $this->text_y += 50;
+                $this->text_y += $this->line_height;
             } 
         }
     }
@@ -271,7 +273,7 @@ class ModelCard {
         if (empty($profile))
             $this->fatal( "Failed to get profile for model '$this->model' - " . mysql_error() );
 
-        $this->debug( print_r($profile, true) );
+        //$this->debug( print_r($profile, true) );
 
         $this->profile = $profile;
     }
@@ -398,12 +400,21 @@ class ModelCard {
 
         imagecopyresampled($new, $img, 0, 0, $x, 0, $width, $height, $w, $h);
 
-        $this->debug( "created image with width $width and height $height" );
+        $this->debug( __FUNCTION__ . " created image with width $width and height $height" );
 
         return $new;
     }
 
+    /**
+     *
+     * get profile field
+     *
+     * @param string $key
+     *
+     */
     protected function get_profile_field( $key ) {
+        $this->debug( __FUNCTION__ . ' ' . $key );
+
         if (empty($this->profile))
             $this->fatal( "Profile was not set." );
 
@@ -415,12 +426,12 @@ class ModelCard {
 
     protected function debug($message) {
         if ($this->debugging)
-            error_log(__CLASS__.' DEBUG: '.$message);
+            error_log(get_class().' DEBUG: '.$message);
     }
 
     protected function set_error($message) {
         $this->error = $message;
-        error_log(__CLASS__.' ERROR: '.$message);
+        error_log(get_class().' ERROR: '.$message);
         return false;
     }
 

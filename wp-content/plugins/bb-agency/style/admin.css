@@ -253,3 +253,20 @@ a.primary-link {
     font-weight: bold;
     color: #cc6600;
 }
+
+/* send email page */
+#wpbody-content .create-email,
+#wpbody-content .create-lbda-email {
+    position: relative;
+    float: left;
+    width: 500px;
+}
+#wpbody-content .create-lbda-email .logo {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    width: 165px;
+    height: 42px;
+    background-image: url('logos/LBDA_logo_small.jpg');
+    background-repeat: no-repeat;
+}

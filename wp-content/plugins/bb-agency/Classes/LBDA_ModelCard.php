@@ -3,17 +3,14 @@
 require_once(bb_agency_BASEPATH.'/Classes/ModelCard.php');
 
 class LBDA_ModelCard extends ModelCard {
+
+    protected $text_size = 13;
     
-    function __construct($model) {
-
-        parent::__construct($model);
-    }
-
     protected function print_model_details() {
 
         $this->debug(__FUNCTION__);
 
-        if ($this->profile['ProfileType'] == 2) {
+        if ($this->get_profile_field('ProfileType') == 2) {
 
             // families
             $names = array();
@@ -32,31 +29,31 @@ class LBDA_ModelCard extends ModelCard {
             $name = $this->profile['ProfileContactNameFirst'];
             $this->print_text( $name );
 
-            $this->text_y += 50;
+            $this->text_y += $this->line_height;
 
             // children
             if ($age = $this->get_age()) {
                 $this->print_text( 'Age: ' . $age );
-                $this->text_y += 50;
+                $this->text_y += $this->line_height;
             }
 
             if ($this->profile['height']) {
                 $this->print_text( 'Height: ' . $this->get_height() );
-                $this->text_y += 50;
+                $this->text_y += $this->line_height;
             }
 
             if ($talent = $this->get_talent()) {
                 $this->print_text( 'Talent: ' . $talent );
-                $this->text_y += 50;
+                $this->text_y += $this->line_height;
 
                 if ($genre = $this->get_genre()) {
                     $this->print_text( 'Genre: ' . $genre );
-                    $this->text_y += 50;
+                    $this->text_y += $this->line_height;
                 }
 
                 if ($ability = $this->get_ability()) {
                     $this->print_text( 'Ability: ' . $ability );
-                    $this->text_y += 50;
+                    $this->text_y += $this->line_height;
                 }
             }
 
@@ -65,6 +62,9 @@ class LBDA_ModelCard extends ModelCard {
     }
 
     protected function print_company_details() {
+        
+        $this->debug(__FUNCTION__);
+
         $this->text_y = 380;
 
         // print company logo

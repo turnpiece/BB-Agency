@@ -178,11 +178,11 @@ if (isset($_POST['action'])) {
 	 $dataSearchSavedMux = mysql_fetch_assoc($querySearch);
 
 	?>
-    <div style="width:500px; float:left;">
+    <div class="create-email">
         <?php if (!bb_agency_SEND_EMAILS) : ?>
         <p class="warning">WARNING: The site is currently in testing mode so any emails will be sent to <?php echo $bb_agency_option_agencyemail ?> rather than to the client.</p>
         <?php endif; ?>
-        <h2><?php echo __("Search Saved", bb_agency_TEXTDOMAIN); ?></h2>
+        <h2><?php echo __("Send a casting email", bb_agency_TEXTDOMAIN); ?></h2>
         <form method="post" enctype="multipart/form-data" action="<?php echo admin_url("admin.php?page=". $_GET['page'])."&amp;SearchID=".$_GET['SearchID']."&SearchMuxHash=".$_GET["SearchMuxHash"]; ?>">
       
             <div><label for="SearchMuxToName"><strong>Send to Name:</strong></label><br/><input style="width:300px;" type="text" id="SearchMuxToName" name="SearchMuxToName" value="<?php echo $dataSearchSavedMux["SearchMuxToName"]; ?>" /></div>
@@ -248,11 +248,12 @@ if (isset($_POST['action'])) {
     $dataSearchSavedMux = mysql_fetch_assoc($querySearch);
 
     ?>
-    <div style="width:500px; float:left;">
+    <div class="create-lbda-email">
         <?php if (!bb_agency_SEND_EMAILS) : ?>
         <p class="warning">WARNING: The site is currently in testing mode so any emails will be sent to <?php echo $bb_agency_option_agencyemail ?> rather than to the client.</p>
         <?php endif; ?>
-        <h2><?php echo __("Search Saved", bb_agency_TEXTDOMAIN); ?></h2>
+        <h2><?php echo __("Send an LBDA email", bb_agency_TEXTDOMAIN); ?></h2>
+        <div class="logo"></div>
         <form method="post" enctype="multipart/form-data" action="<?php echo admin_url("admin.php?page=". $_GET['page'])."&amp;SearchID=".$_GET['SearchID']."&SearchMuxHash=".$_GET["SearchMuxHash"]; ?>">
       
             <div><label for="SearchMuxToName"><strong>Send to Name:</strong></label><br/><input style="width:300px;" type="text" id="SearchMuxToName" name="SearchMuxToName" value="<?php echo $dataSearchSavedMux["SearchMuxToName"]; ?>" /></div>
@@ -263,7 +264,7 @@ if (isset($_POST['action'])) {
             </div>
             <p class="submit">
                 <input type="hidden" name="SearchID" value="<?php echo $SearchID; ?>" />
-                <input type="hidden" name="action" value="emailSend" />
+                <input type="hidden" name="action" value="LBDAemailSend" />
                 <input type="submit" name="submit" value="Send Email" class="button-primary" />
             </p>
         </form>
