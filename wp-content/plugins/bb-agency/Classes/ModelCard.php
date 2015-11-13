@@ -13,7 +13,7 @@ class ModelCard {
     protected $text_size = 13;
     protected $line_height = 30;
     protected $error = 'Unknown error';
-    protected $debugging = true;
+    protected $debugging = false;
     
     function __construct($model) {
         $this->model = $model;
@@ -106,7 +106,7 @@ class ModelCard {
         if (!@file_exists($path) || $this->debugging) {
             $this->debug( __FUNCTION__ . " card not found at $path so creating it..." );
 
-            if (!$this->save())
+            if (!$this->save(true))
                 return $this->fatal('Failed to save image to '.$path);
         }
 

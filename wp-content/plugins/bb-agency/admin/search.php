@@ -833,9 +833,9 @@ EOF;
                                      
                                     $DataTypes = $wpdb->get_results("SELECT * FROM ". table_agency_data_type);
                                     
-                                    foreach ($DataType as $type) : if (!in_array(strtolower($type->DataTypeTitle), $filter)) : ?>
+                                    if (!empty($DataTypes)) : foreach ($DataTypes as $type) : if (!in_array(strtolower($type->DataTypeTitle), $filter)) : ?>
                                     <option value="<?php echo $type->DataTypeID ?>" <?php selected(isset($_SESSION['ProfileType']) ? $_SESSION['ProfileType'] : false, $type->DataTypeID) ?>><?php echo $type->DataTypeTitle ?></option>
-                                    <?php endif; endforeach; ?>
+                                    <?php endif; endforeach; endif; ?>
                                     
                                 </select>
                             </td>
