@@ -456,7 +456,9 @@ if ($action) {
         ?>
         <h2 class="title">Search Results: <?php echo $count ?></h2>
         <?php
-        //echo "<pre>$query</pre>";
+
+        if (bb_agency_DEBUGGING)
+            echo "<pre>$query</pre>";
         
         if ($count > $bb_agency_option_persearch - 1 && !isset($_GET['limit']) && empty($_GET['limit'])) : ?>
             <div id="message" class="error">

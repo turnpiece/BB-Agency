@@ -270,3 +270,7 @@ a.primary-link {
     background-image: url('logos/LBDA_logo_small.jpg');
     background-repeat: no-repeat;
 }
+
+.form-table th {
+    width: 200px;
+}
