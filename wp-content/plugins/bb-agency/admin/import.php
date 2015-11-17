@@ -335,7 +335,8 @@ function bb_agency_import_users() {
 
                             unset( $new_user['ID'] );
 
-                            $message[] = '<pre>' . print_r($new_user) . '</pre>';
+                            if (bb_agency_DEBEUGGING)
+                                $message[] = '<pre>' . print_r($new_user, true) . '</pre>';
 
                             $user_id = wp_insert_user( $new_user );
 
