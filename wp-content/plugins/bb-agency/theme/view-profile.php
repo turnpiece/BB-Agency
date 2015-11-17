@@ -12,6 +12,9 @@ $CurrentUser = $current_user->id;
 // Get Profile
 $profileURL = get_query_var('target'); //$_REQUEST["profile"];
 
+if (!$profileURL)
+	wp_die( 'Invalid page request' );
+
 $bb_agency_option_agencyname = bb_agency_get_option('bb_agency_option_agencyname');
 $bb_agency_option_privacy = bb_agency_get_option('bb_agency_option_privacy');
 $bb_agency_option_unittype = bb_agency_get_option('bb_agency_option_unittype');

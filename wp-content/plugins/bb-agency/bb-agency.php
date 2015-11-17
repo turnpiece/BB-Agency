@@ -655,6 +655,9 @@ if ( is_admin() ){
 		$wpdb->query("DROP TABLE " . table_agency_data_gender);
 		$wpdb->query("DROP TABLE " . table_agency_rel_taxonomy);
 		$wpdb->query("DROP TABLE " . table_agency_data_type);
+		$wpdb->query("DROP TABLE " . table_agency_data_talent);
+		$wpdb->query("DROP TABLE " . table_agency_data_genre);
+		$wpdb->query("DROP TABLE " . table_agency_data_ability);
 		$wpdb->query("DROP TABLE " . table_agency_customfields);
 		$wpdb->query("DROP TABLE " . table_agency_customfield_mux);
 		$wpdb->query("DROP TABLE " . table_agency_searchsaved);

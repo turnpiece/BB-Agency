@@ -588,10 +588,15 @@ function bb_display_manage($ProfileID) {
 
     if (!empty($ProfileID) && $ProfileID > 0) {
 
-        $query = "SELECT * FROM `$t_profile` WHERE ProfileID = '$ProfileID'";
-        $results = mysql_query($query) or wp_die(__("Error, query failed", bb_agency_TEXTDOMAIN).': '.$query);
-        $count = mysql_num_rows($results);
+        $query = "SELECT p.*, dt.`DataTypeTalent` AS HasTalent FROM `$t_profile` p LEFT JOIN `$t_data_type` dt ON dt.`DataTypeID` = p.`ProfileType` WHERE ProfileID = '$ProfileID' LIMIT 1";
 
+        bb_agency_debug( $query );
+
+        $profile = $wpdb->get_row( $query );
+
+        $ProfileID = $profile->ProfileID;
+        $ProfileGallery = $profile->ProfileGallery;
+/*
         while ($data = mysql_fetch_array($results)) {
             $ProfileID = $data['ProfileID'];
             $ProfileUserLinked = $data['ProfileUserLinked'];
@@ -635,13 +640,16 @@ function bb_display_manage($ProfileID) {
             $ProfileIsPromoted = stripslashes($data['ProfileIsPromoted']);
             $ProfileStatHits = stripslashes($data['ProfileStatHits']);
             $ProfileDateViewLast = stripslashes($data['ProfileDateViewLast']);
+
+            // has talent?
+            $ProfileHasTalent = $data['HasTalent'] == 1;
             ?>    
             <h2 class="title"><?php _e("Edit", bb_agency_TEXTDOMAIN) ?> <?php echo LabelSingular ?> <a class="button-secondary" href="<?php echo admin_url("admin.php?page=" . $_GET['page']) ?>"><?php _e("Back to " . LabelSingular . " List", bb_agency_TEXTDOMAIN) ?></a> <a class="button-primary" href="<?php echo bb_agency_PROFILEDIR . $bb_agency_UPLOADDIR . $ProfileGallery . '/' ?>" target="_blank">Preview Profile</a></h2>
             <p>
                 <?php _e("Make changes in the form below to edit a", bb_agency_TEXTDOMAIN) ?> <?php echo strtolower(LabelSingular) ?>.<br /><strong><?php _e("Required fields are marked", bb_agency_TEXTDOMAIN) ?> *</strong>
             </p>
         <?php
-        }
+        } */
     } else {
         // Set default values for new records
         $ProfilesModelDate = $date;
@@ -670,7 +678,7 @@ function bb_display_manage($ProfileID) {
                 <tr valign="top">
                   <th scope="row"><?php _e("Display Name", bb_agency_TEXTDOMAIN) ?></th>
                   <td>
-                      <input class="regular-text" type="text" id="ProfileContactDisplay" name="ProfileContactDisplay" value="<?php echo $ProfileContactDisplay ? $ProfileContactDisplay : $ProfileContactNameFirst ?>" />
+                      <input class="regular-text" type="text" id="ProfileContactDisplay" name="ProfileContactDisplay" value="<?php echo $profile->ProfileContactDisplay ? $profile->ProfileContactDisplay : $profile->ProfileContactNameFirst ?>" />
                   </td>
                 </tr>
             <?php endif;
@@ -697,13 +705,13 @@ function bb_display_manage($ProfileID) {
             <tr valign="top" class="required">
               <th scope="row"><?php _e("First Name", bb_agency_TEXTDOMAIN) ?>*</th>
               <td>
-                  <input type="text" class="regular-text" id="ProfileContactNameFirst" name="ProfileContactNameFirst" value="<?php echo $ProfileContactNameFirst ?>" />
+                  <input type="text" class="regular-text" id="ProfileContactNameFirst" name="ProfileContactNameFirst" value="<?php echo $profile->ProfileContactNameFirst ?>" />
               </td>
             </tr>
             <tr valign="top" class="required">
               <th scope="row"><?php _e("Last Name", bb_agency_TEXTDOMAIN) ?>*</th>
               <td>
-                  <input type="text" class="regular-text" id="ProfileContactNameLast" name="ProfileContactNameLast" value="<?php echo $ProfileContactNameLast ?>" />
+                  <input type="text" class="regular-text" id="ProfileContactNameLast" name="ProfileContactNameLast" value="<?php echo $profile->ProfileContactNameLast ?>" />
               </td>
             </tr>
 
@@ -720,13 +728,13 @@ function bb_display_manage($ProfileID) {
                   <th scope="row"><?php _e("Password", bb_agency_TEXTDOMAIN) ?>*</th>
                   <td>
                       <input type="text" class="regular-text" id="ProfilePassword" name="ProfilePassword" />
-                      <input type="button" onclick="javascript:document.getElementById('ProfilePassword').value=Math.random().toString(36).substr(2,6);" value="Generate Password"  name="GeneratePassword" />
+                      <input type="button" onclick="javascript:document.getElementById('ProfilePassword').value=Math.random().toString(36).substr(2,6);" value="Generate Password" name="GeneratePassword" />
                   </td>
                 </tr>
                 <tr valign="top">
                   <th scope="row"><?php _e("Send Login details?", bb_agency_TEXTDOMAIN) ?></th>
                   <td>
-                      <input type="checkbox"  name="ProfileNotifyUser" /> Send login details to the new user and admin by email.
+                      <input type="checkbox" name="ProfileNotifyUser" /> Send login details to the new user and admin by email.
                   </td>
                 </tr>
             <?php endif;
@@ -739,13 +747,13 @@ function bb_display_manage($ProfileID) {
             <tr valign="top" class="required">
               <th scope="row"><?php _e("Email Address", bb_agency_TEXTDOMAIN) ?>*</th>
               <td>
-                  <input type="text" class="regular-text" id="ProfileContactEmail" name="ProfileContactEmail" value="<?php echo $ProfileContactEmail ?>" />
+                  <input type="text" class="regular-text" id="ProfileContactEmail" name="ProfileContactEmail" value="<?php echo $profile->ProfileContactEmail ?>" />
               </td>
             </tr>
             <tr valign="top">
               <th scope="row"><?php _e("Website", bb_agency_TEXTDOMAIN) ?></th>
               <td>
-                  <input type="text" class="regular-text" id="ProfileContactWebsite" name="ProfileContactWebsite" value="<?php echo $ProfileContactWebsite ?>" />
+                  <input type="text" class="regular-text" id="ProfileContactWebsite" name="ProfileContactWebsite" value="<?php echo $profile->ProfileContactWebsite ?>" />
               </td>
             </tr>
             <tr valign="top">
@@ -753,11 +761,11 @@ function bb_display_manage($ProfileID) {
               <td>
               <fieldset>
                   <label>Home:</label><br />
-                  <input type="text" id="ProfileContactPhoneHome" name="ProfileContactPhoneHome" value="<?php echo $ProfileContactPhoneHome ?>" /><br />
+                  <input type="text" id="ProfileContactPhoneHome" name="ProfileContactPhoneHome" value="<?php echo $profile->ProfileContactPhoneHome ?>" /><br />
                   <label>Mobile:</label><br />
-                  <input type="text" id="ProfileContactPhoneCell" name="ProfileContactPhoneCell" value="<?php echo $ProfileContactPhoneCell ?>" /><br />
+                  <input type="text" id="ProfileContactPhoneCell" name="ProfileContactPhoneCell" value="<?php echo $profile->ProfileContactPhoneCell ?>" /><br />
                   <label>Work:</label><br />
-                  <input type="text" id="ProfileContactPhoneWork" name="ProfileContactPhoneWork" value="<?php echo $ProfileContactPhoneWork ?>" /><br />
+                  <input type="text" id="ProfileContactPhoneWork" name="ProfileContactPhoneWork" value="<?php echo $profile->ProfileContactPhoneWork ?>" /><br />
               </fieldset>
               </td>
             </tr>
@@ -765,39 +773,39 @@ function bb_display_manage($ProfileID) {
             <tr valign="top">
               <th scope="row"><?php _e("Street", bb_agency_TEXTDOMAIN) ?></th>
               <td>
-                  <input type="text" class="regular-text" id="ProfileLocationStreet" name="ProfileLocationStreet" value="<?php echo $ProfileLocationStreet ?>" />
+                  <input type="text" class="regular-text" id="ProfileLocationStreet" name="ProfileLocationStreet" value="<?php echo $profile->ProfileLocationStreet ?>" />
               </td>
             </tr>
             <tr valign="top">
               <th scope="row"><?php _e("Town", bb_agency_TEXTDOMAIN) ?></th>
               <td>
-                  <input type="text" class="regular-text" id="ProfileLocationCity" name="ProfileLocationCity" value="<?php echo $ProfileLocationCity ?>" />
+                  <input type="text" class="regular-text" id="ProfileLocationCity" name="ProfileLocationCity" value="<?php echo $profile->ProfileLocationCity ?>" />
               </td>
             </tr>
             <tr valign="top">
               <th scope="row"><?php _e("County", bb_agency_TEXTDOMAIN) ?></th>
               <td>
-                  <input type="text" class="regular-text" id="ProfileLocationState" name="ProfileLocationState" value="<?php echo $ProfileLocationState ?>" />
+                  <input type="text" class="regular-text" id="ProfileLocationState" name="ProfileLocationState" value="<?php echo $profile->ProfileLocationState ?>" />
               </td>
             </tr>
             <tr valign="top">
               <th scope="row"><?php _e("Post code", bb_agency_TEXTDOMAIN) ?></th>
               <td>
-                  <input type="text" id="ProfileLocationZip" name="ProfileLocationZip" value="<?php echo $ProfileLocationZip ?>" />
+                  <input type="text" id="ProfileLocationZip" name="ProfileLocationZip" value="<?php echo $profile->ProfileLocationZip ?>" />
               </td>
             </tr>
             <tr valign="top">
               <th scope="row"><?php _e("Country", bb_agency_TEXTDOMAIN) ?></th>
               <td>
-                  <input type="text" class="regular-text" id="ProfileLocationCountry" name="ProfileLocationCountry" value="<?php echo $ProfileLocationCountry ?>" />
+                  <input type="text" class="regular-text" id="ProfileLocationCountry" name="ProfileLocationCountry" value="<?php echo $profile->ProfileLocationCountry ?>" />
               </td>
             </tr>
             <?php
             // display location map
-            if ($ProfileLocationLatitude != '' && $ProfileLocationLongitude != '') : ?>
+            if ($profile->ProfileLocationLatitude != '' && $profile->ProfileLocationLongitude != '') : ?>
                 <tr valign="top">
                     <td scope="row"><?php _e('Location', bb_agency_TEXTDOMAIN) ?></td>
-                    <td><?php bb_agency_map($ProfileLocationLatitude, $ProfileLocationLongitude, $ProfileContactDisplay) ?></td>
+                    <td><?php bb_agency_map($profile->ProfileLocationLatitude, $profile->ProfileLocationLongitude, $profile->ProfileContactDisplay) ?></td>
                 </tr>
             <?php endif;
 
@@ -828,7 +836,7 @@ function bb_display_manage($ProfileID) {
                 <td>
                     <select name="ProfileGender" id="ProfileGender">
                     <?php
-                    $ProfileGender1 = get_user_meta($ProfileUserLinked, 'bb_agency_interact_pgender', true);
+                    $ProfileGender1 = get_user_meta($profile->ProfileUserLinked, 'bb_agency_interact_pgender', true);
                    
                 	if ($ProfileGender=='') {
                 		$ProfileGender = $_GET["ProfileGender"];
@@ -922,37 +930,44 @@ function bb_display_manage($ProfileID) {
 
                 // Verify Record
                 $queryImgConfirm = "SELECT * FROM `$t_media` WHERE `ProfileID` =  '$ProfileID' AND `ProfileMediaID` =  '$deleteTargetID'";
-                $resultsImgConfirm = mysql_query($queryImgConfirm);
-                $countImgConfirm = mysql_num_rows($resultsImgConfirm);
-                while ($dataImgConfirm = mysql_fetch_array($resultsImgConfirm)) :
+                
+                $images = $wpdb->get_results( $queryImgConfirm );
+
+                if (!empty($images)) : foreach ($images as $image) :
                     $ProfileMediaID = $dataImgConfirm['ProfileMediaID'];
                     $ProfileMediaType = $dataImgConfirm['ProfileMediaType'];
                     $ProfileMediaURL = $dataImgConfirm['ProfileMediaURL'];
 
                     // Remove Record
-                    $delete = "DELETE FROM `$t_media` WHERE `ProfileID` =  '$ProfileID' AND `ProfileMediaID` = '$ProfileMediaID'";
+                    $delete = "DELETE FROM `$t_media` WHERE `ProfileID` =  '$ProfileID' AND `ProfileMediaID` = '$image->ProfileMediaID'";
                     $results = $wpdb->query($delete);
 
-                    if ($ProfileMediaType == "Demo Reel" || $ProfileMediaType == "Video Monologue" || $ProfileMediaType == "Video Slate") : ?>
-                        <div id="message" class="updated"><p>File <strong><?php echo $ProfileMediaURL ?></strong> <?php _e("successfully removed", bb_agency_TEXTDOMAIN) ?>.</p></div>
+                    if ($image->ProfileMediaType == "Demo Reel" || 
+                        $image->ProfileMediaType == "Video Monologue" || 
+                        $image->ProfileMediaType == "Video Slate") : ?>
+                        <div id="message" class="updated"><p>File <strong><?php echo $image->ProfileMediaURL ?></strong> <?php _e("successfully removed", bb_agency_TEXTDOMAIN) ?>.</p></div>
                     <?php else : 
                         // Remove File
                         $dirURL = bb_agency_UPLOADPATH . $ProfileGallery;
-                        if (!unlink($dirURL . '/' . $ProfileMediaURL)) : ?>
+                        if (!unlink($dirURL . '/' . $image->ProfileMediaURL)) : ?>
                             <div id="message" class="error">
-                                <p><?php _e("Error removing", bb_agency_TEXTDOMAIN) ?> <strong><?php echo $ProfileMediaURL ?></strong>. <?php _e("File did not exist.", bb_agency_TEXTDOMAIN) ?>.</p>
+                                <p><?php _e("Error removing", bb_agency_TEXTDOMAIN) ?> <strong><?php echo $image->ProfileMediaURL ?></strong>. <?php _e("File did not exist.", bb_agency_TEXTDOMAIN) ?>.</p>
                             </div>
                         <?php else : ?>
                             <div id="message" class="updated">
-                                <p>File <strong><?php echo $ProfileMediaURL ?></strong> <?php _e("successfully removed", bb_agency_TEXTDOMAIN) ?>.</p>
+                                <p>File <strong><?php echo $image->ProfileMediaURL ?></strong> <?php _e("successfully removed", bb_agency_TEXTDOMAIN) ?>.</p>
                             </div>
                         <?php endif;
                     endif;
-                endwhile; // is there record?
+                endforeach; endif; // is there record?
             endif;
 
             // Go about our biz-nazz
-            $queryImg = "SELECT * FROM `$t_media` WHERE `ProfileID` =  '$ProfileID' AND `ProfileMediaType` = 'Image' ORDER BY `ProfileMediaPrimary` DESC, `ProfileMediaID` DESC";
+            $queryImg = "SELECT * FROM `$t_media` WHERE `ProfileID` = '$ProfileID' AND `ProfileMediaType` = 'Image' ORDER BY `ProfileMediaPrimary` DESC, `ProfileMediaID` DESC";
+
+            bb_agency_debug($queryImg);
+
+            die($queryImg);
             $resultsImg = mysql_query($queryImg);
             $countImg = mysql_num_rows($resultsImg);
             while ($dataImg = mysql_fetch_array($resultsImg)) :
@@ -1079,7 +1094,7 @@ function bb_display_manage($ProfileID) {
                 </a>
             </p>
         </div>
-
+    <?php if ($ProfileHasTalent) : ?>
         <div>
             <h3>LBDA Card</h3>
             <p>
@@ -1088,6 +1103,7 @@ function bb_display_manage($ProfileID) {
                 </a>
             </p>
         </div>
+    <?php endif; ?>
     <?php
     }
     ?>
@@ -1401,9 +1417,9 @@ function bb_display_list() {
         $ProfileGender = (int)$_GET['ProfileGender'];
         if ($ProfileGender) {
             if(strpos($filter,'profile') > 0){
-                $filter .= " AND profile.`ProfileGender` = '".$ProfileGender."'";
+                $filter .= " AND profile.`ProfileGender` = '$ProfileGender'";
             } else {
-                $filter .= " profile.`ProfileGender` = '".$ProfileGender."'";
+                $filter .= " profile.`ProfileGender` = '$ProfileGender'";
             }
         }
     }
