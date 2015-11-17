@@ -1372,9 +1372,9 @@ function bb_display_list() {
         $selectedType = strtolower($_GET['ProfileType']);
         $query .= "&ProfileType=". $selectedType .'';
         if(strpos($filter,'profile') > 0){
-             $filter .= " AND profile.ProfileType LIKE '%". $selectedType ."%'";
+            $filter .= " AND profile.ProfileType = '$selectedType'";
         } else {
-              $filter .= " profile.ProfileType LIKE '%". $selectedType ."%'";
+            $filter .= " profile.ProfileType = '$selectedType'";
         }
     }
     if (!empty($_GET['ProfileTalent'])){
@@ -1415,7 +1415,9 @@ function bb_display_list() {
         $filter = '';
     }
 
-    
+    if (bb_agency_DEBUGGING)
+        echo "<pre>$filter</pre>";
+
     // Paginate
     $items = mysql_num_rows(mysql_query("SELECT * FROM `$t_profile` profile LEFT JOIN `$t_data_type` profiletype ON profile.`ProfileType` = profiletype.`DataTypeID` $filter")); // number of total rows in the database
 
