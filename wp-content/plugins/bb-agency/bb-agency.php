@@ -457,7 +457,7 @@ if ( is_admin() ){
 		}
 
 	add_action('wp_footer', 'bb_agency_wp_footer');
-	add_action( 'admin_print_footer_scripts', 'bb_agency_wp_footer', 100);
+	add_action( 'admin_print_scripts', 'bb_agency_wp_footer', 100);
 		function bb_agency_wp_footer() {
 			echo "<script type=\"text/javascript\">\n";
 			echo "jQuery(document).ready(function(){\n";
@@ -468,12 +468,12 @@ if ( is_admin() ){
 			echo "</script>\n";
 		}
 
-	add_action( 'admin_print_footer_scripts', 'bb_agency_admin_print_scripts', 100);
+	add_action( 'admin_print_scripts', 'bb_agency_admin_print_scripts', 100);
 		function bb_agency_admin_print_scripts() {
 			wp_enqueue_script('jquery-ui-script', plugins_url('js/jquery-ui-1.10.3.custom.min.js', __FILE__), array('jquery') );
 		}
 
-	add_action( 'admin_print_styles', 'bb_agency_admin_print_styles', 100);
+	add_action( 'init', 'bb_agency_admin_print_styles', 100);
 		function bb_agency_admin_print_styles() {
 			wp_enqueue_style('jquery-ui-style', plugins_url('js/jquery-ui-1.10.3.custom.min.css', __FILE__) );
 		}

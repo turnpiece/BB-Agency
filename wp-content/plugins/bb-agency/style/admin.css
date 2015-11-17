@@ -274,3 +274,15 @@ a.primary-link {
 .form-table th {
     width: 200px;
 }
+
+.halfwidth {
+    width: 46%;
+    padding: 10px 2%;
+}
+.alignleft {
+    float: left;
+}
+.alignright {
+    float: right;
+}
+}

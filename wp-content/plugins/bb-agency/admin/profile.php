@@ -1,4 +1,4 @@
-<?php
+dasdf<?php
 
 global $wpdb;
 define("LabelPlural", "Profiles");
@@ -596,60 +596,9 @@ function bb_display_manage($ProfileID) {
 
         $ProfileID = $profile->ProfileID;
         $ProfileGallery = $profile->ProfileGallery;
-/*
-        while ($data = mysql_fetch_array($results)) {
-            $ProfileID = $data['ProfileID'];
-            $ProfileUserLinked = $data['ProfileUserLinked'];
-            $ProfileGallery = stripslashes($data['ProfileGallery']);
-            $ProfileContactDisplay = stripslashes($data['ProfileContactDisplay']);
-            $ProfileContactNameFirst = stripslashes($data['ProfileContactNameFirst']);
-            $ProfileContactNameLast = stripslashes($data['ProfileContactNameLast']);
-            $ProfileUsername = stripslashes($data['ProfileUsername']);
-            $ProfileContactEmail = stripslashes($data['ProfileContactEmail']);
-            $ProfileContactWebsite = stripslashes($data['ProfileContactWebsite']);
-            $ProfileContactLinkFacebook = stripslashes($data['ProfileContactLinkFacebook']);
-            $ProfileContactLinkTwitter = stripslashes($data['ProfileContactLinkTwitter']);
-            $ProfileContactLinkYouTube = stripslashes($data['ProfileContactLinkYouTube']);
-            $ProfileContactLinkFlickr = stripslashes($data['ProfileContactLinkFlickr']);
-            $ProfileContactPhoneHome = stripslashes($data['ProfileContactPhoneHome']);
-            $ProfileContactPhoneCell = stripslashes($data['ProfileContactPhoneCell']);
-            $ProfileContactPhoneWork = stripslashes($data['ProfileContactPhoneWork']);
-            $ProfileGender = stripslashes($data['ProfileGender']);
-            $ProfileTypeArray = stripslashes($data['ProfileType']);
-            $ProfileTalentArray = stripslashes($data['ProfileTalent']);
-            $ProfileGenreArray = stripslashes($data['ProfileGenre']);
-			$ProfileDateBirth = stripslashes($data['ProfileDateBirth']);
-            if (bb_agency_SITETYPE == 'bumps') {
-                $ProfileDateDue = stripslashes($data['ProfileDateDue']);
-            }
-            $ProfileLocationStreet = stripslashes($data['ProfileLocationStreet']);
-            $ProfileLocationCity = stripslashes($data['ProfileLocationCity']);
-            $ProfileLocationState = stripslashes($data['ProfileLocationState']);
-            $ProfileLocationZip = stripslashes($data['ProfileLocationZip']);
-            $ProfileLocationCountry = stripslashes($data['ProfileLocationCountry']);
-            $ProfileLocationLatitude = stripslashes($data['ProfileLocationLatitude']);
-            $ProfileLocationLongitude = stripslashes($data['ProfileLocationLongitude']);
+        $ProfileType = $profile->ProfileType;
+        $ProfileGender = $profile->ProfileGender;
 
-            $ProfileDateUpdated = stripslashes($data['ProfileDateUpdated']);
-            $ProfileType = stripslashes($data['ProfileType']);
-            $ProfileTalent = isset($data['ProfileTalent']) ? stripslashes($data['ProfileTalent']) : null;
-            $ProfileGenre = isset($data['ProfileGenre']) ? stripslashes($data['ProfileGenre']) : null;
-            $ProfileAbility = isset($data['ProfileAbility']) ? stripslashes($data['ProfileAbility']) : null;
-            $ProfileIsActive = stripslashes($data['ProfileIsActive']);
-            $ProfileIsFeatured = stripslashes($data['ProfileIsFeatured']);
-            $ProfileIsPromoted = stripslashes($data['ProfileIsPromoted']);
-            $ProfileStatHits = stripslashes($data['ProfileStatHits']);
-            $ProfileDateViewLast = stripslashes($data['ProfileDateViewLast']);
-
-            // has talent?
-            $ProfileHasTalent = $data['HasTalent'] == 1;
-            ?>    
-            <h2 class="title"><?php _e("Edit", bb_agency_TEXTDOMAIN) ?> <?php echo LabelSingular ?> <a class="button-secondary" href="<?php echo admin_url("admin.php?page=" . $_GET['page']) ?>"><?php _e("Back to " . LabelSingular . " List", bb_agency_TEXTDOMAIN) ?></a> <a class="button-primary" href="<?php echo bb_agency_PROFILEDIR . $bb_agency_UPLOADDIR . $ProfileGallery . '/' ?>" target="_blank">Preview Profile</a></h2>
-            <p>
-                <?php _e("Make changes in the form below to edit a", bb_agency_TEXTDOMAIN) ?> <?php echo strtolower(LabelSingular) ?>.<br /><strong><?php _e("Required fields are marked", bb_agency_TEXTDOMAIN) ?> *</strong>
-            </p>
-        <?php
-        } */
     } else {
         // Set default values for new records
         $ProfilesModelDate = $date;
@@ -668,7 +617,7 @@ function bb_display_manage($ProfileID) {
     <?php else : ?>
         <form method="post" enctype="multipart/form-data" action="<?php echo admin_url("admin.php?page=" . $_GET['page']) ?>">
     <?php endif; ?>
-    <div style="float: left; width: 50%;">
+    <div class="halfwidth alignleft">
         <table class="form-table">
             <tbody>
             <tr colspan="2">
@@ -857,14 +806,14 @@ function bb_display_manage($ProfileID) {
             <tr valign="top">
                 <th scope="row"><?php _e("Birth date", bb_agency_TEXTDOMAIN) ?> <em>YYYY-MM-DD</em></th>
                 <td>
-                    <input class="bbdatepicker" type="text" id="ProfileDateBirth" name="ProfileDateBirth" value="<?php echo $ProfileDateBirth ?>" />
+                    <input class="bbdatepicker" type="text" id="ProfileDateBirth" name="ProfileDateBirth" value="<?php echo $profile->ProfileDateBirth ?>" />
                 </td>
             </tr>
             <?php if (bb_agency_SITETYPE == 'bumps') : ?>
                 <tr valign="top">
                     <th scope="row"><?php _e("Due date", bb_agency_TEXTDOMAIN) ?><em>YYYY-MM-DD</em></th>
                     <td>
-                        <input class="bbdatepicker" type="text" id="ProfileDateDue" name="ProfileDateDue" value="<?php echo $ProfileDateDue ?>" />
+                        <input class="bbdatepicker" type="text" id="ProfileDateDue" name="ProfileDateDue" value="<?php echo $profile->ProfileDateDue ?>" />
                     </td>
                 </tr>
             <?php endif;
@@ -873,16 +822,16 @@ function bb_display_manage($ProfileID) {
             // ProfileCustomView = 1 , Private
             if (isset($_GET["ProfileGender"])) {
                 $ProfileGender = $_GET["ProfileGender"];
-                bb_custom_fields(0, 0, $ProfileGender, true);
+                bb_custom_fields(0, 0, $ProfileGender, true, $ProfileType);
             } else {
-                bb_custom_fields(0, $ProfileID, $ProfileGender, true);
+                bb_custom_fields(0, $ProfileID, $ProfileGender, true, $ProfileType);
             }
             ?>
             </tbody>
         </table>
     </div>
 
-    <div id="profile-manage-media" style="float: left; width: 50%; ">
+    <div id="profile-manage-media" class="halfwidth alignright">
         <?php if (!empty($ProfileID) && $ProfileID > 0) { // Editing Record ?>
         <h3><?php _e("Gallery", bb_agency_TEXTDOMAIN) ?></h3>
         <script type="text/javascript">
@@ -967,7 +916,6 @@ function bb_display_manage($ProfileID) {
 
             bb_agency_debug($queryImg);
 
-            die($queryImg);
             $resultsImg = mysql_query($queryImg);
             $countImg = mysql_num_rows($resultsImg);
             while ($dataImg = mysql_fetch_array($resultsImg)) :
@@ -1094,7 +1042,7 @@ function bb_display_manage($ProfileID) {
                 </a>
             </p>
         </div>
-    <?php if ($ProfileHasTalent) : ?>
+    <?php if ($profile->HasTalent && $profile->ProfileTalent) : ?>
         <div>
             <h3>LBDA Card</h3>
             <p>
@@ -1121,11 +1069,12 @@ function bb_display_manage($ProfileID) {
                 <td>
                     <?php $types = $wpdb->get_results("SELECT * FROM `$t_data_type` ORDER BY `DataTypeTitle`");
 
-                    if (!empty($types)) : ?>
-                    <fieldset><?php
-                    $ProfileTypeArray = explode(",", $ProfileTypeArray);
+                    if (!empty($types)) : 
 
-                	foreach ($types as $type) : ?>
+                        $ProfileTypeArray = explode(',', $profile->ProfileType);
+                    ?>
+                    <fieldset>
+                    <?php foreach ($types as $type) : ?>
                         <input type="checkbox" name="ProfileType[]" id="ProfileType_<?php echo $type->DataTypeID ?>" value="<?php echo $type->DataTypeID ?>" class="profile-type <?php if ($type->DataTypeTalent) echo 'talent'; ?>" <?php echo (!empty($ProfileTypeArray) && in_array($type->DataTypeID, $ProfileTypeArray)) ? ' checked="checked"' : '' ?> /><?php echo $type->DataTypeTitle ?><br />
                     <?php endforeach; ?>
                     <script>
@@ -1158,7 +1107,7 @@ function bb_display_manage($ProfileID) {
                 <th scope="row"><?php _e("Talent", bb_agency_TEXTDOMAIN) ?></th>
                 <td>
                     <fieldset><?php
-                    $ProfileTalentArray = explode(",", $ProfileTalentArray);
+                    $ProfileTalentArray = explode(",", $profile->ProfileTalent);
 
                     foreach ($talents as $talent) : ?>
                         <input type="checkbox" name="ProfileTalent[]" id="ProfileTalent_<?php echo $talent->DataTalentID ?>" value="<?php echo $talent->DataTalentID ?>" <?php echo (!empty($ProfileTalentArray) && in_array($talent->DataTalentID, $ProfileTalentArray)) ? ' checked="checked"' : '' ?> /><?php echo $talent->DataTalentTitle ?><br />
@@ -1171,7 +1120,7 @@ function bb_display_manage($ProfileID) {
                 <th scope="row"><?php _e("Genre", bb_agency_TEXTDOMAIN) ?></th>
                 <td>
                     <fieldset><?php
-                    $ProfileGenreArray = explode(",", $ProfileGenreArray);
+                    $ProfileGenreArray = explode(",", $profile->ProfileGenre);
 
                     foreach ($genres as $genre) : ?>
                         <input type="checkbox" name="ProfileGenre[]" id="ProfileGenre_<?php echo $genre->DataGenreID ?>" value="<?php echo $genre->DataGenreID ?>" <?php echo (!empty($ProfileGenreArray) && in_array($genre->DataGenreID, $ProfileGenreArray)) ? ' checked="checked"' : '' ?> /><?php echo $genre->DataGenreTitle ?><br />
@@ -1188,7 +1137,7 @@ function bb_display_manage($ProfileID) {
                         <select name="ProfileAbility" size="1">
                             <option value=""> --- Ability --- </option>
                             <?php foreach ($abilities as $ability) : ?>
-                            <option id="ProfileAbility_<?php echo $ability->DataAbilityID ?>" value="<?php echo $ability->DataAbilityID ?>" <?php selected($ability->DataAbilityID, $ProfileAbility) ?>><?php echo $ability->DataAbilityTitle ?></option>
+                            <option id="ProfileAbility_<?php echo $ability->DataAbilityID ?>" value="<?php echo $ability->DataAbilityID ?>" <?php selected($ability->DataAbilityID, $profile->ProfileAbility) ?>><?php echo $ability->DataAbilityTitle ?></option>
                             <?php endforeach; ?>
                         </select>
                     </fieldset>
@@ -1200,25 +1149,25 @@ function bb_display_manage($ProfileID) {
                 <th scope="row"><?php _e("Status", bb_agency_TEXTDOMAIN) ?>:</th>
                 <td>
                     <select id="ProfileIsActive" name="ProfileIsActive">
-                        <option value="1" <?php selected(1, $ProfileIsActive) ?>><?php _e("Active", bb_agency_TEXTDOMAIN) ?></option>
-                        <option value="4" <?php selected(4, $ProfileIsActive) ?>><?php _e("Active - Not Visible On Website", bb_agency_TEXTDOMAIN) ?></option>
-                        <option value="0" <?php selected(0, $ProfileIsActive) ?>><?php _e("Inactive", bb_agency_TEXTDOMAIN) ?></option>
-                        <option value="2" <?php selected(2, $ProfileIsActive) ?>><?php _e("Archived", bb_agency_TEXTDOMAIN) ?></option>
-                        <option value="3" <?php selected(3, $ProfileIsActive) ?>><?php _e("Pending Approval", bb_agency_TEXTDOMAIN) ?></option>
+                        <option value="1" <?php selected(1, $profile->ProfileIsActive) ?>><?php _e("Active", bb_agency_TEXTDOMAIN) ?></option>
+                        <option value="4" <?php selected(4, $profile->ProfileIsActive) ?>><?php _e("Active - Not Visible On Website", bb_agency_TEXTDOMAIN) ?></option>
+                        <option value="0" <?php selected(0, $profile->ProfileIsActive) ?>><?php _e("Inactive", bb_agency_TEXTDOMAIN) ?></option>
+                        <option value="2" <?php selected(2, $profile->ProfileIsActive) ?>><?php _e("Archived", bb_agency_TEXTDOMAIN) ?></option>
+                        <option value="3" <?php selected(3, $profile->ProfileIsActive) ?>><?php _e("Pending Approval", bb_agency_TEXTDOMAIN) ?></option>
                     </select>
                 </td>
             </tr>
             <tr valign="top">
                 <th scope="row"><?php _e("Promotion", bb_agency_TEXTDOMAIN) ?>:</th>
                 <td>
-                    <input type="checkbox" name="ProfileIsFeatured" id="ProfileIsFeatured" value="1" <?php checked($ProfileIsFeatured, 1, false) ?> /> Featured<br />
+                    <input type="checkbox" name="ProfileIsFeatured" id="ProfileIsFeatured" value="1" <?php checked($profile->ProfileIsFeatured, 1, false) ?> /> Featured<br />
                 </td>
             </tr>
-            <?php if (isset($ProfileUserLinked) && $ProfileUserLinked > 0) : ?>
+            <?php if (isset($profile->ProfileUserLinked) && $profile->ProfileUserLinked > 0) : ?>
             <tr valign="top">
                 <th scope="row"><?php _e("WordPress User", bb_agency_TEXTDOMAIN) ?></th>
                 <td>
-                    <a href="<?php echo admin_url("user-edit.php") ?>?user_id=<?php echo $ProfileUserLinked ?>&wp_http_referer=%2Fwp-admin%2Fadmin.php%3Fpage%3Dbb_agency_profiles">ID# <?php echo $ProfileUserLinked ?></a>
+                    <a href="<?php echo admin_url("user-edit.php") ?>?user_id=<?php echo $ProfileUserLinked ?>&wp_http_referer=%2Fwp-admin%2Fadmin.php%3Fpage%3Dbb_agency_profiles">ID# <?php echo $profile->ProfileUserLinked ?></a>
     		      <input type='hidden' name='wpuserid' value="<?php echo $ProfileUserLinked ?>" />
                 </td>
             </tr>
@@ -1248,9 +1197,9 @@ function bb_display_manage($ProfileID) {
             <tr valign="top">
                 <th scope="row"></th>
                 <td>
-                    <input type="hidden" id="ProfileDateUpdated" name="ProfileDateUpdated" value="<?php echo $ProfileDateUpdated ?>" />
-                    <input type="hidden" id="ProfileStatHits" name="ProfileStatHits" value="<?php echo $ProfileStatHits ?>" />
-                    <input type="hidden" id="ProfileDateViewLast" name="ProfileDateViewLast" value="<?php echo $ProfileDateViewLast ?>" />
+                    <input type="hidden" id="ProfileDateUpdated" name="ProfileDateUpdated" value="<?php echo $profile->ProfileDateUpdated ?>" />
+                    <input type="hidden" id="ProfileStatHits" name="ProfileStatHits" value="<?php echo $profile->ProfileStatHits ?>" />
+                    <input type="hidden" id="ProfileDateViewLast" name="ProfileDateViewLast" value="<?php echo $profile->ProfileDateViewLast ?>" />
                 </td>
             </tr>
             <?php endif; ?>
@@ -1295,7 +1244,7 @@ function bb_display_manage($ProfileID) {
     <?php endif; ?>
 
     
-    <?php _e('Last updated on', bb_agency_TEXTDOMAIN) ?> <?php echo bb_agency_human_date($ProfileDateUpdated) ?>
+    <?php _e('Last updated on', bb_agency_TEXTDOMAIN) ?> <?php echo bb_agency_human_date($profile->ProfileDateUpdated) ?>
     <p class="submit">
         <input type="hidden" name="ProfileID" value="<?php echo $ProfileID ?>" />
         <input type="hidden" name="action" value="editRecord" />
@@ -1431,8 +1380,7 @@ function bb_display_list() {
         $filter = '';
     }
 
-    if (bb_agency_DEBUGGING)
-        echo "<pre>$filter</pre>";
+    bb_agency_debug( $filter );
 
     // Paginate
     $items = mysql_num_rows(mysql_query("SELECT * FROM `$t_profile` profile LEFT JOIN `$t_data_type` profiletype ON profile.`ProfileType` = profiletype.`DataTypeID` $filter")); // number of total rows in the database
