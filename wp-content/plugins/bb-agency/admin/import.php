@@ -277,10 +277,13 @@ function bb_agency_import_users() {
 
     global $wpdb;
 
-    // get profiles without an attached user
-    $t_profiles = table_agency_profile;
+    if (bb_agency_DEBEUGGING)
+        $wpdb->show_errors( true );
 
-    $profiles = $wpdb->get_results( "SELECT * FROM `$t_profiles` WHERE `ProfileUserLinked` IS NULL OR `ProfileUserLinked` = 0" );
+    // get profiles without an attached user
+    $t_profile = table_agency_profile;
+
+    $profiles = $wpdb->get_results( "SELECT * FROM `$t_profile` WHERE `ProfileUserLinked` IS NULL OR `ProfileUserLinked` = 0" );
 
     echo "<p>Found ".count($profiles)." unlinked profiles.</p>";
 
@@ -299,7 +302,7 @@ function bb_agency_import_users() {
             $message = array( $profile->ProfileContactDisplay.' has no linked user account...' );
 
             // look for external profile with same gallery name
-            $sql = "SELECT * FROM `$t_profiles` WHERE `ProfileGallery` = '$profile->ProfileGallery'";
+            $sql = "SELECT * FROM `$t_profile` WHERE `ProfileGallery` = '$profile->ProfileGallery'";
 
             $rs = mysqli_query($conn, $sql);
 
@@ -366,7 +369,7 @@ function bb_agency_import_users() {
                         ) !== false)
                             $linked++;
                         else
-                            wp_die( "ERROR: Failed to update profile with linked account $user_id" );
+                            wp_die( "ERROR: Failed to update $t_profile with linked account $user_id - ".$wpdb->print_error() );
 
                     } else {
 
