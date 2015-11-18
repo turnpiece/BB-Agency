@@ -9,109 +9,166 @@
     $start = isset($_REQUEST['profile_start']) ? $_REQUEST['profile_start'] : 0;
 
     ?>
-    <h2><?php _e('Import from another site', bb_agency_TEXTDOMAIN) ?></h2>
-    <?php 
-        if ($_POST) {
-            // process form
-            if ($_POST && $_POST['import_type'] && $_POST['import_type'] == 'users') {
-                $profiles = bb_agency_import_users();
+    <div class="halfwidth alignleft">
+        <h2><?php _e('Import from another site', bb_agency_TEXTDOMAIN) ?></h2>
+        <?php 
+            if ($_POST) {
+                // process form
+                if ($_POST && $_POST['import_type'] && $_POST['import_type'] == 'users') {
+                    $profiles = bb_agency_import_users();
 
-                bb_log_message( "Linked $profiles profiles to user accounts." );
+                    bb_log_message( "Linked $profiles profiles to user accounts." );
 
-            } else {
+                } else {
 
-                $profiles = bb_agency_import_profiles( $start, $number );
-                
-                if ($profiles) {
-                    bb_log_message( "Transferred $profiles profiles." );
-                    $start += $profiles;
+                    $profiles = bb_agency_import_profiles( $start, $number );
+                    
+                    if ($profiles) {
+                        bb_log_message( "Transferred $profiles profiles." );
+                        $start += $profiles;
+                    }
+                    else
+                        bb_log_message( "Did not transfer any profiles." );
+                    
                 }
-                else
-                    bb_log_message( "Did not transfer any profiles." );
-                
-            }
-        } 
-    ?>
-    <form id="import_form" action="" method="post">
-        <input type="hidden" name="profile_start" value="<?php echo $start ?>" />
-        <table class="form-table">
-            <tr>
-                <th><label for="import_type"><?php _e('Import type') ?></label></th>
-                <td>
-                    <select name="import_type" id="import_type">
-                        <option value="profiles" <?php selected($_post['user_type'], 'profiles') ?>><?php _e('Profiles', bb_agency_TEXTDOMAIN) ?></option>
-                        <option value="users" <?php selected($_post['user_type'], 'users') ?>><?php _e('Users', bb_agency_TEXTDOMAIN) ?></option>
-                    </select>
-                    <script>
-                        jQuery(document).ready(function($) {
+            } 
+        ?>
+        <form id="import_form" action="" method="post">
+            <input type="hidden" name="profile_start" value="<?php echo $start ?>" />
+            <table class="form-table">
+                <tr>
+                    <th><label for="import_type"><?php _e('Import type') ?></label></th>
+                    <td>
+                        <select name="import_type" id="import_type">
+                            <option value="profiles" <?php selected($_post['user_type'], 'profiles') ?>><?php _e('Profiles', bb_agency_TEXTDOMAIN) ?></option>
+                            <option value="users" <?php selected($_post['user_type'], 'users') ?>><?php _e('Users', bb_agency_TEXTDOMAIN) ?></option>
+                        </select>
+                        <script>
+                            jQuery(document).ready(function($) {
 
-                            var type = $('#import_form').find('select#import_type');
+                                var type = $('#import_form').find('select#import_type');
 
-                            type.on('change', function() {
+                                type.on('change', function() {
+                                    toggleForm();
+                                });
+
+                                function toggleForm() {
+                                    var profile_fields = $('#import_form').find('.profiles-only');
+
+                                    if (type.val() == 'users')
+                                        profile_fields.hide();
+                                    else
+                                        profile_fields.show();        
+                                }
+
                                 toggleForm();
                             });
+                        </script>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="db_name"><?php _e( "Database name", bb_agency_TEXTDOMAIN ) ?></label></th>
+                    <td><input type="text" name="db_name" value="<?php echo $_POST ? $_POST['db_name'] : '' ?>" /></td>
+                </tr>
+                <tr>
+                    <th><label for="db_user"><?php _e( "Database user", bb_agency_TEXTDOMAIN ) ?></label></th>
+                    <td><input type="text" name="db_user" value="<?php echo $_POST ? $_POST['db_user'] : '' ?>" /></td>
+                </tr>
+                <tr>
+                    <th><label for="db_pass"><?php _e( "Database password", bb_agency_TEXTDOMAIN ) ?></label></th>
+                    <td><input type="password" name="db_pass" value="<?php echo $_POST ? $_POST['db_pass'] : '' ?>" /></td>
+                </tr>
+                <tr>
+                    <th><label for="db_host"><?php _e( "Database host", bb_agency_TEXTDOMAIN ) ?></label></th>
+                    <td><input type="text" name="db_host" value="<?php echo $_POST ? $_POST['db_host'] : '' ?>" /></td>
+                </tr>
+                <tr class="profiles-only">
+                    <th><label for="ExtProfileType"><?php _e( "Profile Type ID on source site", bb_agency_TEXTDOMAIN ) ?></label></th>
+                    <td><input type="text" name="ExtProfileType" value="<?php echo $_POST ? $_POST['ExtProfileType'] : '' ?>" /></td>
+                </tr>
+                <?php $dataTypes = bb_agency_get_datatypes(false); if (!empty($dataTypes)) : ?>
+                <tr class="profiles-only">
+                    <th><label for="ProfileType"><?php _e( 'Profile type to import into on this site', bb_agency_TEXTDOMAIN ) ?></label></th>
+                    <td>
+                        <select name="ProfileType" id="ProfileType">               
+                            <?php foreach ($dataTypes as $type) : ?>
+                            <option value="<?php echo $type->DataTypeID ?>" <?php echo selected($type->DataTypeID, $_POST['ProfileType']) ?>><?php echo $type->DataTypeTitle ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </td>
+                </tr>
+                <?php endif; ?>
+                <tr class="profiles-only">
+                    <th><label for="media_dir"><?php _e( "External media directory", bb_agency_TEXTDOMAIN ) ?></label></th>
+                    <td><input type="text" name="media_dir" value="<?php echo $_POST ? $_POST['media_dir'] : '' ?>" /></td>
+                </tr>
+            </table>
+            <p>
+                <input type="submit" value="Import Now" class="button-primary">
+            </p>
+        </form>
+    </div>
+    <div class="halfwidth alignright">
+        <h2><?php _e('Duplicates', bb_agency_TEXTDOMAIN) ?></h2>
+    <?php if ($galleries = bb_agency_get_duplicate_profiles( 'ProfileGallery' )) : ?>
+        <p>Found <?php echo count($galleries) ?> profiles with duplicate profile gallery folders. A profile's gallery folder should be unique so these duplicate profiles should be deleted.</p>
 
-                            function toggleForm() {
-                                var profile_fields = $('#import_form').find('.profiles-only');
-
-                                if (type.val() == 'users')
-                                    profile_fields.hide();
-                                else
-                                    profile_fields.show();        
-                            }
-
-                            toggleForm();
-                        });
-                    </script>
-                </td>
-            </tr>
+        <table class="data-table">
+        <?php foreach ($galleries as $gallery) : if ($profiles = bb_agency_get_profiles_by_gallery( $gallery )) : ?>
             <tr>
-                <th><label for="db_name"><?php _e( "Database name", bb_agency_TEXTDOMAIN ) ?></label></th>
-                <td><input type="text" name="db_name" value="<?php echo $_POST ? $_POST['db_name'] : '' ?>" /></td>
-            </tr>
-            <tr>
-                <th><label for="db_user"><?php _e( "Database user", bb_agency_TEXTDOMAIN ) ?></label></th>
-                <td><input type="text" name="db_user" value="<?php echo $_POST ? $_POST['db_user'] : '' ?>" /></td>
-            </tr>
-            <tr>
-                <th><label for="db_pass"><?php _e( "Database password", bb_agency_TEXTDOMAIN ) ?></label></th>
-                <td><input type="password" name="db_pass" value="<?php echo $_POST ? $_POST['db_pass'] : '' ?>" /></td>
-            </tr>
-            <tr>
-                <th><label for="db_host"><?php _e( "Database host", bb_agency_TEXTDOMAIN ) ?></label></th>
-                <td><input type="text" name="db_host" value="<?php echo $_POST ? $_POST['db_host'] : '' ?>" /></td>
-            </tr>
-            <tr class="profiles-only">
-                <th><label for="ExtProfileType"><?php _e( "Profile Type ID on source site", bb_agency_TEXTDOMAIN ) ?></label></th>
-                <td><input type="text" name="ExtProfileType" value="<?php echo $_POST ? $_POST['ExtProfileType'] : '' ?>" /></td>
-            </tr>
-            <?php $dataTypes = bb_agency_get_datatypes(false); if (!empty($dataTypes)) : ?>
-            <tr class="profiles-only">
-                <th><label for="ProfileType"><?php _e( 'Profile type to import into on this site', bb_agency_TEXTDOMAIN ) ?></label></th>
+                <th><?php echo $profile->ProfileGallery ?></th>
                 <td>
-                    <select name="ProfileType" id="ProfileType">               
-                        <?php foreach ($dataTypes as $type) : ?>
-                        <option value="<?php echo $type->DataTypeID ?>" <?php echo selected($type->DataTypeID, $_POST['ProfileType']) ?>><?php echo $type->DataTypeTitle ?></option>
-                        <?php endforeach; ?>
-                    </select>
+                <?php foreach ($profiles as $profile) : ?>
+                    <a href="<?php echo admin_url('admin.php?page=bb_agency_profiles&amp;action=deleteDuplicateRecord&amp;ProfileID='. $profile->ProfileID) ?>" title="Delete this profile"><?php printf( __('Profile ID %d', bb_agency_TEXTDOMAIN), $profile->ProfileID) ?></a><br />
+                <?php endforeach; ?>
                 </td>
             </tr>
-            <?php endif; ?>
-            <tr class="profiles-only">
-                <th><label for="media_dir"><?php _e( "External media directory", bb_agency_TEXTDOMAIN ) ?></label></th>
-                <td><input type="text" name="media_dir" value="<?php echo $_POST ? $_POST['media_dir'] : '' ?>" /></td>
-            </tr>
+        <?php endif; endforeach; ?>
         </table>
-        <p>
-            <input type="submit" value="Import Now" class="button-primary">
-        </p>
-    </form>
+    <?php else : ?>
+        <p>No gallery duplicates were found.</p>
+    <?php endif; ?>
+
+    <?php if ($users = bb_agency_get_duplicate_profiles( 'ProfileUserLinked' )) : ?>
+        <p>Found <?php echo count($users) ?> profiles with duplicate user accounts. A profile's user account should be unique so these duplicate profiles should be deleted.</p>
+
+        <table class="data-table">
+        <?php foreach ($users as $user) : if ($profiles = bb_agency_get_profiles_by_user( $user )) : ?>
+            <tr>
+                <th><?php echo $profile->ProfileGallery ?></th>
+                <td>
+                <?php foreach ($profiles as $profile) : ?>
+                    <a href="<?php echo admin_url('admin.php?page=bb_agency_profiles&amp;action=deleteDuplicateRecord&amp;ProfileID='. $profile->ProfileID) ?>" title="Delete this profile"><?php printf( __('Profile ID %d', bb_agency_TEXTDOMAIN), $profile->ProfileID) ?></a><br />
+                <?php endforeach; ?>
+                </td>
+            </tr>
+        <?php endif; endforeach; ?>
+        </table>
+    <?php else : ?>
+        <p>No user account duplicates were found.</p>
+    <?php endif; ?>
+    </div>
 </div>
 <?php
 
 
 
 /******************************************************************************************/
+
+function bb_agency_get_duplicate_profiles( $field = 'ProfileGallery' ) {
+    global $wpdb;
+    return $wpdb->get_col( "SELECT `$field` FROM ".table_agency_profile." GROUP BY `$field` HAVING COUNT(`$field`) > 1" );
+}
+
+function bb_agency_get_profiles_by_gallery( $gallery ) {
+    global $wpdb;
+    return $wpdb->get_results( "SELECT * FROM ".table_agency_profile." WHERE `ProfileGallery` = '$gallery'" );
+}
+
+function bb_agency_get_profiles_by_user( $user ) {
+    global $wpdb;
+    return $wpdb->get_results( "SELECT * FROM ".table_agency_profile." WHERE `ProfileUserLinked` = '$user'" );
+}
 
 function bb_agency_import_profiles( $start, $number ) {
 

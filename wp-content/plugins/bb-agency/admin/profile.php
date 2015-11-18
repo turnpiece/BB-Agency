@@ -451,8 +451,6 @@ if (isset($_POST['action'])) {
         case 'deleteRecord':
             foreach ($_POST as $ProfileID) {
 
-
-
                 // Verify Record
                 $queryDelete = "SELECT * FROM `$t_profile` WHERE `ProfileID` = '$ProfileID'";
                 $resultsDelete = mysql_query($queryDelete);
@@ -506,7 +504,7 @@ if (isset($_POST['action'])) {
 }
 // *************************************************************************************************** //
 // Delete Single
-elseif ($_GET['action'] == "deleteRecord") {
+elseif ($_GET['action'] == "deleteRecord" || $_GET['action'] == "deleteDuplicateRecord") {
 
     $ProfileID = $_GET['ProfileID'];
     // Verify Record
@@ -522,25 +520,27 @@ elseif ($_GET['action'] == "deleteRecord") {
         $delete = "DELETE FROM `$t_media` WHERE `ProfileID` =  '$ProfileID'";
         $results = $wpdb->query($delete);
 
-        if (isset($ProfileGallery)) {
-            // Remove Folder
-            $dir = bb_agency_UPLOADPATH . $ProfileGallery . "/";
-            $mydir = @opendir($dir);
-            while (false !== ($file = @readdir($mydir))) {
-                if ($file != "." && $file != "..") {
-                    @unlink($dir . $file) or DIE("couldn't delete $dir$file<br />");
+        if ($_GET['action'] == "deleteRecord") {
+            if (isset($ProfileGallery)) {
+                // Remove Folder
+                $dir = bb_agency_UPLOADPATH . $ProfileGallery . "/";
+                $mydir = @opendir($dir);
+                while (false !== ($file = @readdir($mydir))) {
+                    if ($file != "." && $file != "..") {
+                        @unlink($dir . $file) or DIE("couldn't delete $dir$file<br />");
+                    }
                 }
+                // remove dir
+                if (is_dir($dir)) {
+                    rmdir($dir) or DIE("couldn't delete $dir$file folder not exist<br />");
+                }
+                closedir($mydir);
+            } else {
+                echo __("No valid record found.", bb_agency_TEXTDOMAIN);
             }
-            // remove dir
-            if (is_dir($dir)) {
-                rmdir($dir) or DIE("couldn't delete $dir$file folder not exist<br />");
-            }
-            closedir($mydir);
-        } else {
-            echo __("No valid record found.", bb_agency_TEXTDOMAIN);
-        }
 
-        wp_delete_user($dataDelete["ProfileUserLinked"]);
+            wp_delete_user($dataDelete["ProfileUserLinked"]);
+        }
         echo ('<div id="message" class="updated"><p>' . __("Profile deleted successfully!", bb_agency_TEXTDOMAIN) . '</p></div>');
     } // is there record?
     bb_display_list();
