@@ -13,11 +13,11 @@ class ModelCard {
     protected $text_size = 13;
     protected $line_height = 30;
     protected $error = 'Unknown error';
-    protected $debugging = false;
+    protected $debugging = true;
     
     function __construct($model) {
         $this->model = $model;
-
+        $this->debugging = $this->debugging && bb_agency_DEBUGGING;
         $this->set_profile();
     }
 
@@ -141,6 +141,9 @@ class ModelCard {
 
             for ($i = 1; $i <= 4; $i++) {
                 if ($name = $this->get_profile_field('child'.$i.'_name')) {
+                    if ($age = $this->get_age( $this->get_profile_field('child'.$i.'_dob') )) {
+                        $name .= " ($age)";
+                    }
                     $this->print_text( $name );
                     $this->text_y += $this->line_height;
                 }
@@ -156,7 +159,7 @@ class ModelCard {
 
         if (bb_agency_SITETYPE == 'children' && $this->get_profile_field('ProfileType') != 2) {
             // children
-            if ($age = $this->get_age()) {
+            if ($age = $this->get_age( $this->profile['ProfileDateBirth'] )) {
                 $this->print_text( 'Age: ' . $age );
                 $this->text_y += $this->line_height;
             }
@@ -258,7 +261,11 @@ class ModelCard {
                 child1.`ProfileCustomValue` AS child1_name,
                 child2.`ProfileCustomValue` AS child2_name,
                 child3.`ProfileCustomValue` AS child3_name,
-                child4.`ProfileCustomValue` AS child4_name
+                child4.`ProfileCustomValue` AS child4_name,
+                child1_dob.`ProfileCustomValue` AS child1_dob,
+                child2_dob.`ProfileCustomValue` AS child2_dob,
+                child3_dob.`ProfileCustomValue` AS child3_dob,
+                child4_dob.`ProfileCustomValue` AS child4_dob
             FROM $t_profile AS p
             LEFT JOIN $t_datatype AS dt ON dt.`DataTypeID` = p.`ProfileType`
             LEFT JOIN $t_media AS m ON m.`ProfileID` = p.`ProfileID` AND m.`ProfileMediaPrimary` = 1 AND m.`ProfileMediaType` = 'Image'
@@ -294,11 +301,17 @@ class ModelCard {
         imagettftext($this->canvas, $this->text_size, 0, $this->text_x, $this->text_y, $this->text_colour, $this->fontfile, $string);
     }
 
-    protected function get_age() {
-        if (!$this->profile['ProfileDateBirth'] || strpos($this->profile['ProfileDateBirth'], '0') == 0)
-            return false;
+    /**
+     *
+     * get age
+     *
+     * @param string $dob
+     * @return string
+     *
+     */
+    protected function get_age( $dob ) {
 
-        $birthday = new DateTime($this->profile['ProfileDateBirth']);
+        $birthday = new DateTime($dob);
         $interval = $birthday->diff(new DateTime);
         if ($interval->y > 1)
             return $interval->y;
@@ -453,6 +466,6 @@ class ModelCard {
 
     protected function fatal($message) {
         $this->set_error( $message );
-        return false;
+        die( $message );
     }
 }

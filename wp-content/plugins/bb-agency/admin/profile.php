@@ -1,4 +1,4 @@
-dasdf<?php
+<?php
 
 global $wpdb;
 define("LabelPlural", "Profiles");
@@ -8,9 +8,8 @@ $bb_agency_option_agencyimagemaxheight = bb_agency_get_option('bb_agency_option_
 if (empty($bb_agency_option_agencyimagemaxheight) || $bb_agency_option_agencyimagemaxheight < 500) {
     $bb_agency_option_agencyimagemaxheight = 800;
 }
-//$bb_agency_option_profilenaming = (int) bb_agency_get_option('bb_agency_option_profilenaming');
-$bb_agency_option_locationtimezone = (int) bb_agency_get_option('bb_agency_option_locationtimezone');
 
+$bb_agency_option_locationtimezone = (int) bb_agency_get_option('bb_agency_option_locationtimezone');
 
 if (function_exists('bb_agencyinteract_approvemembers')) {
     // Load Interact Settings
@@ -94,7 +93,6 @@ if (isset($_POST['action'])) {
 
     // Notify User and Admin
     $ProfileNotifyUser = $_POST["ProfileNotifyUser"];
-		
 
     // Error checking
     $error = '';
@@ -299,6 +297,7 @@ if (isset($_POST['action'])) {
                             $value = implode(",", $value);
                         }
                         $insert1 = "INSERT INTO `$t_custom` (ProfileID,ProfileCustomID,ProfileCustomValue)" . "VALUES ('" . $ProfileID . "','" . $ProfileCustomID . "','" . $value . "')";
+                        bb_agency_debug( $insert1 );
                         $results1 = $wpdb->query($insert1);
                     }
                 }
@@ -1346,9 +1345,9 @@ function bb_display_list() {
         $selectedTalent = strtolower($_GET['ProfileTalent']);
         $query .= "&ProfileTalent=". $selectedTalent .'';
         if(strpos($filter,'profile') > 0){
-             $filter .= " AND profile.ProfileTalent LIKE '%". $selectedTalent ."%'";
+             $filter .= " AND {$selectedTalent} IN (profile.ProfileTalent)";
         } else {
-              $filter .= " profile.ProfileTalent LIKE '%". $selectedTalent ."%'";
+              $filter .= " {$selectedTalent} IN (profile.ProfileTalent)";
         }
     }
     if (isset($_GET['ProfileVisible'])){
@@ -1424,7 +1423,7 @@ function bb_display_list() {
                             ?>
                             <p>
                             <?php if (!empty($queryGenderResult)) : foreach ($queryGenderResult as $gender) : ?>
-                                <a class="button-primary" href="<?php echo admin_url("admin.php?page=" . $_GET['page']) ?>&action=addRecord&ProfileGender=<?php echo $fetchGender["GenderID"] ?>"><?php _e("Create New " . ucfirst($gender["GenderTitle"]), bb_agency_TEXTDOMAIN) ?></a>
+                                <a class="button-primary" href="<?php echo admin_url("admin.php?page=" . $_GET['page']) ?>&amp;action=addRecord&amp;ProfileGender=<?php echo $fetchGender["GenderID"] ?>"><?php _e("Create New " . ucfirst($gender["GenderTitle"]), bb_agency_TEXTDOMAIN) ?></a>
                             <?php endforeach; ?>
                             </p>
                             <?php else : ?>
