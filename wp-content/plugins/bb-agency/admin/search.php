@@ -424,6 +424,7 @@ if ($action) {
         }
 
         // Search Results   
+/*
         $query = "
              SELECT 
              profile.*,
@@ -446,6 +447,25 @@ if ($action) {
                         AS customfield_mux 
                     ON profile.ProfileID = customfield_mux.ProfileID  
                     ".$filter." ".$cartQuery."   
+            GROUP BY profile.ProfileID ".
+            (empty($having) ? '' : 'HAVING '.implode(' AND ', $having))." 
+            ORDER BY $sort $dir $limit";
+*/
+        $query = "
+            SELECT 
+            profile.*,
+            CONCAT(profile.`ProfileContactNameFirst`,' ',profile.`ProfileContactNameLast`) AS `ProfileContactName`,
+            profile.ProfileID as pID, 
+            customfield_mux.*,
+            media.ProfileMediaURL".
+            (!empty($select) ? implode(', ', $select).', ' : '')." 
+            FROM ".table_agency_profile." AS profile ".
+            (empty($joins) ? '' : implode(' ', $joins))." 
+            LEFT JOIN ". table_agency_profile_media ." AS media 
+            ON profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1
+            LEFT JOIN ". table_agency_customfield_mux ." AS customfield_mux 
+            ON profile.ProfileID = customfield_mux.ProfileID  
+            ".$filter." ".$cartQuery."   
             GROUP BY profile.ProfileID ".
             (empty($having) ? '' : 'HAVING '.implode(' AND ', $having))." 
             ORDER BY $sort $dir $limit";
