@@ -44,14 +44,16 @@
 				$d = '';
 			}
 
-			if (defined('bb_agencyinteract_ALLOW_UPLOADS') && bb_agencyinteract_ALLOW_UPLOADS) :
-			if ( ($_SERVER["REQUEST_URI"]) == "/profile-member/media/") { $tabclass = "active"; } else { $tabclass = "inactive"; }
+			if ( ($_SERVER["REQUEST_URI"]) == "/profile-member/media/") { 
+				$tabclass = "active"; 
+			} else { 
+				$tabclass = "inactive"; 
+			}
 			echo ' 		<div class="tab-inner tab-'. $tabclass .'" style="'.$d.'">';
 			echo " 			<a href=\"". get_bloginfo("wpurl") ."/profile-member/media/\">\n";
-			echo " 			  <div class=\"subMenuTabBG\"><div class=\"subMenuTabBorders\"><div class=\"subMenuTabText\">".__("My Media", bb_agencyinteract_TEXTDOMAIN) ."</div></div></div>\n";
+			echo " 			  <div class=\"subMenuTabBG\"><div class=\"subMenuTabBorders\"><div class=\"subMenuTabText\">".__("My Photos", bb_agencyinteract_TEXTDOMAIN) ."</div></div></div>\n";
 			echo " 			</a>\n";
 			echo " 		</div>\n";
-			endif;
 		}
                 
 		$bb_agencyinteract_options_arr = get_option('bb_agencyinteract_options');

@@ -1,4 +1,4 @@
-<?php 
+<?php if (defined('bb_agencyinteract_ALLOW_UPLOADS') && bb_agencyinteract_ALLOW_UPLOADS) :
 
 	$ProfileID					= $profile->ProfileID;
 	$ProfileGallery				= stripslashes($profile->ProfileGallery);
@@ -14,7 +14,7 @@
 	if ( !empty($ProfileID) && ($ProfileID > 0) ) { // Editing Record
 		echo "	<div class=\"manage-section gallery\">\n";
 
-		if (defined('bb_agencyinteract_ALLOW_UPLOADS') && bb_agencyinteract_ALLOW_UPLOADS && !empty($UploadMedia))
+		if (!empty($UploadMedia))
 		{
 			echo "<div id=\"message\" class=\"uploaded\">";
 			foreach ($UploadMedia as $mediaFile) {
@@ -185,3 +185,10 @@
 	endif;
 
 	echo "</form>\n";
+
+else: ?>
+	<p><?php printf( __("Please ensure that your profile is kept up to date with recent pictures by emailing them to <a href=\"%s\">%s</a>", bb_agencyinteract_TEXTDOMAIN), 'jessica@kiddiwinksagency.co.uk', 'jessica@kiddiwinksagency.co.uk' ) ?></p>
+
+	<p><?php printf( __("Photos need to be clear and against a plain background, with no hats/sunglasses on. If you would like professional pictures done, please contact <a href=\"%s\">%s</a> for information on our next studio day.", bb_agencyinteract_TEXTDOMAIN), 'carla@kiddiwinksagency.co.uk', 'carla@kiddiwinksagency.co.uk') ?></p>
+
+<?php endif;
