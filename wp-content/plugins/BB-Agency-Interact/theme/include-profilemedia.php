@@ -187,8 +187,8 @@
 	echo "</form>\n";
 
 else: ?>
-	<p><?php printf( __("Please ensure that your profile is kept up to date with recent pictures by emailing them to <a href=\"%s\">%s</a>", bb_agencyinteract_TEXTDOMAIN), 'jessica@kiddiwinksagency.co.uk', 'jessica@kiddiwinksagency.co.uk' ) ?></p>
+	<p><?php printf( __("Please ensure that your profile is kept up to date with recent pictures by emailing them to <a href=\"%s\">%s</a>", bb_agencyinteract_TEXTDOMAIN), $bb_agencyinteract_EMAIL_PHOTOS, $bb_agencyinteract_EMAIL_PHOTOS ) ?></p>
 
-	<p><?php printf( __("Photos need to be clear and against a plain background, with no hats/sunglasses on. If you would like professional pictures done, please contact <a href=\"%s\">%s</a> for information on our next studio day.", bb_agencyinteract_TEXTDOMAIN), 'carla@kiddiwinksagency.co.uk', 'carla@kiddiwinksagency.co.uk') ?></p>
+	<p><?php printf( __("Photos need to be clear and against a plain background, with no hats/sunglasses on. If you would like professional pictures done, please contact <a href=\"%s\">%s</a> for information on our next studio day.", bb_agencyinteract_TEXTDOMAIN), $bb_agencyinteract_EMAIL, $bb_agencyinteract_EMAIL) ?></p>
 
 <?php endif;

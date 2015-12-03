@@ -33,6 +33,8 @@ add_action( 'the_post', 'bbagency_interact_the_post_action' );
 	define("bb_agencyinteract_VERSION", $bb_agencyinteract_VERSION); // e.g. 1.0
 	define("bb_agencyinteract_BASENAME", plugin_basename(__FILE__) );  // bb-agency/bb-agency.php
 	$bb_agencyinteract_WPURL = get_bloginfo("wpurl"); // http://domain.com/wordpress
+	$bb_agencyinteract_EMAIL = get_bloginfo('admin_email');
+	$bb_agencyinteract_EMAIL_PHOTOS = preg_replace('/^\w+@/', 'jessica@', $bb_agencyinteract_EMAIL);
 	$bb_agencyinteract_WPUPLOADARRAY = wp_upload_dir(); // Array  $bb_agencyinteract_WPUPLOADARRAY['baseurl'] $bb_agencyinteract_WPUPLOADARRAY['basedir']
 	define("bb_agencyinteract_BASEDIR", get_bloginfo("wpurl") ."/". PLUGINDIR ."/". dirname( plugin_basename(__FILE__) ) ."/" );  // http://domain.com/wordpress/wp-content/plugins/bb-agency-interact/
 	define("bb_agencyinteract_UPLOADDIR", $bb_agencyinteract_WPUPLOADARRAY['baseurl'] ."/profile-media/" );  // http://domain.com/wordpress/wp-content/uploads/profile-media/
