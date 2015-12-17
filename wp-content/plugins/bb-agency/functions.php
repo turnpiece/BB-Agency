@@ -3553,6 +3553,25 @@ function is_client_profiletype() {
 
 /**
  *
+ * get height in cms
+ *
+ * @param int $i
+ * @return int
+ *
+ */
+function bb_agency_get_height($i) {
+	$units =  bb_agency_get_option('bb_agency_option_unittype');
+	switch ($units) {
+		case 1 :
+			return $i;
+
+		case 0 :
+			return intval(2.54 * $i);
+	}
+}
+
+/**
+ *
  * convert inches to feet and inches or inches to cms
  *
  * @param int $i

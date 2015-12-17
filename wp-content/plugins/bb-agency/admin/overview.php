@@ -3,7 +3,6 @@
     // Include Admin Menu
     include ("admin-menu.php");
 
-	$bb_agency_option_unittype = bb_agency_get_option('bb_agency_option_unittype');
 	get_currentuserinfo(); 
 	global $user_level, $wpdb;
 
