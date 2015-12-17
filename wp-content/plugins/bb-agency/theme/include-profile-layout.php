@@ -48,23 +48,9 @@
 				</li>
 			<?php endif; endif; // end of talent
 
-				if (!empty($ProfileStatHeight)) :
-
-				if ($bb_agency_option_unittype == 0) : // Metric ?>
-
-					<li><strong><?php _e("Height", bb_agency_TEXTDOMAIN) ?><span class="divider">:</span></strong> <?php echo $ProfileStatHeight ." ". __("cm", bb_agency_TEXTDOMAIN) ?></li>
-
-				<?php else : // Imperial
-
-					$heightraw = $ProfileStatHeight;
-					$heightfeet = floor($heightraw/12);
-					$heightinch = $heightraw - floor($heightfeet*12);
-					?>
-					<li><strong><?php _e("Height", bb_agency_TEXTDOMAIN) ?><span class="divider">:</span></strong> <?php echo $heightfeet ." ". __("ft", bb_agency_TEXTDOMAIN). " ". $heightinch ." ". __("in", bb_agency_TEXTDOMAIN) ?></li>
-
-				<?php endif;
-
-				endif; // end of height
+				if (!empty($ProfileStatHeight)) : ?>
+				<li><strong><?php _e("Height", bb_agency_TEXTDOMAIN) ?>asdf<span class="divider">:</span></strong> <?php echo bb_agency_display_height($ProfileStatHeight) ?></li>
+				<?php endif; // end of height
 
 				if (bb_agency_SITETYPE == 'bumps') :
 
@@ -77,69 +63,67 @@
 
 				endif;
 
-	// Insert Custom Fields
-	bb_agency_getProfileCustomFields($ProfileID, $ProfileGender);
+			// Insert Custom Fields
+			bb_agency_getProfileCustomFields($ProfileID, $ProfileGender);
 
-	if($bb_agency_option_showcontactpage==1){
-
-		echo "<li class=\"rel\"><strong>". __("Contact: ", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> <a href=\"". get_bloginfo("wpurl") ."/profile/".$ProfileGallery	."/contact/\">Click Here</a></li>\n";
-
-	}
-	?>
-		</ul>
-	</div>	
-	<div id="links" class="col_3 column">
-		<h3><?php echo $AgencyName ." ". $ProfileClassification ?></h3>
-		<?php
-			// Social Link
-			bb_agency_getSocialLinks();
-		?>
-		<ul>
-			<div class="profile-actions-favorited">	
-			<?php
-			$cl1 = ""; 
-			$cl2 = ""; 
-			$tl1 = "Add to Favorites"; 
-			$tl2 = "Add to Casting Cart";
-
-			if (is_permitted("casting")) {
-
-					$query_castingcart = mysql_query("SELECT * FROM ". table_agency_castingcart."  WHERE CastingCartTalentID='".$ProfileID."'  AND CastingCartProfileID = '".bb_agency_get_current_userid()."'" ) or die("error");
-
-					$count_castingcart = mysql_num_rows($query_castingcart);
-
-					if ($count_castingcart>0) { 
-						$cl2 = "cart_bg"; $tl2="Remove from Casting Cart"; 
-					}
-
-					echo '<li><a title="'.$tl2.'" href="javascript:;" class="save_cart '.$cl2.' bb_button" id="'.$ProfileID.'">'.$tl2.'</a></li>';
-
-			}
-			
-			if (is_permitted("favorite")) {
-
-					$query_favorite = mysql_query("SELECT * FROM ".table_agency_savedfavorite." WHERE SavedFavoriteTalentID='".$ProfileID."'  AND SavedFavoriteProfileID = '".bb_agency_get_current_userid()."'" ) or die("error");
-
-					$count_favorite = mysql_num_rows($query_favorite);
-
-					$datas_favorite = mysql_fetch_assoc($query_favorite);				
-
-					if($count_favorite>0){ $cl1 = "fav_bg"; $tl1="Remove from Favorites"; }
-
-					echo '<li class=\"favorite\"><a title="'.$tl1.'" href="javascript:;" id="mycart" class="save_fav '.$cl1.' bb_button">'.$tl1.'</a></li>';
-
+			if ($bb_agency_option_showcontactpage == 1){
+				echo "<li class=\"rel\"><strong>". __("Contact: ", bb_agency_TEXTDOMAIN). "<span class=\"divider\">:</span></strong> <a href=\"". get_bloginfo("wpurl") ."/profile/".$ProfileGallery	."/contact/\">Click Here</a></li>\n";
 			}
 			?>
-		</ul>
-	</div>
+			</ul>
+		</div>	
+		<div id="links" class="col_3 column">
+			<h3><?php echo $AgencyName ." ". $ProfileClassification ?></h3>
+			<?php
+				// Social Link
+				bb_agency_getSocialLinks();
+			?>
+			<ul>
+				<div class="profile-actions-favorited">	
+				<?php
+				$cl1 = ""; 
+				$cl2 = ""; 
+				$tl1 = "Add to Favorites"; 
+				$tl2 = "Add to Casting Cart";
 
-	<div id="resultsGoHereAddtoCart"></div>
+				if (is_permitted("casting")) {
 
-    <div id="view_casting_cart" style="<?php if($tl2=="Add to Casting Cart"){?>display:none;<?php }else{?>display:block;<?php }?>"><li class="casting"><a class="bb_button" href="<?php echo get_bloginfo('url')?>/profile-casting/"><?php echo __("View Casting Cart", bb_agency_TEXTDOMAIN);?></a></li></div>
+						$query_castingcart = mysql_query("SELECT * FROM ". table_agency_castingcart."  WHERE CastingCartTalentID='".$ProfileID."'  AND CastingCartProfileID = '".bb_agency_get_current_userid()."'" ) or die("error");
 
-    <div id="view_favorite" style="<?php if($tl1=="Add to Favorites"){?>display:none;<?php }else{?>display:block;<?php }?>"><li class="favorite"><a class="bb_button" href="<?php echo get_bloginfo('url')?>/profile-favorite/"><?php echo __("View favorite", bb_agency_TEXTDOMAIN);?></a></li></div>
+						$count_castingcart = mysql_num_rows($query_castingcart);
 
-    <?php
+						if ($count_castingcart>0) { 
+							$cl2 = "cart_bg"; $tl2="Remove from Casting Cart"; 
+						}
+
+						echo '<li><a title="'.$tl2.'" href="javascript:;" class="save_cart '.$cl2.' bb_button" id="'.$ProfileID.'">'.$tl2.'</a></li>';
+
+				}
+				
+				if (is_permitted("favorite")) {
+
+						$query_favorite = mysql_query("SELECT * FROM ".table_agency_savedfavorite." WHERE SavedFavoriteTalentID='".$ProfileID."'  AND SavedFavoriteProfileID = '".bb_agency_get_current_userid()."'" ) or die("error");
+
+						$count_favorite = mysql_num_rows($query_favorite);
+
+						$datas_favorite = mysql_fetch_assoc($query_favorite);				
+
+						if($count_favorite>0){ $cl1 = "fav_bg"; $tl1="Remove from Favorites"; }
+
+						echo '<li class=\"favorite\"><a title="'.$tl1.'" href="javascript:;" id="mycart" class="save_fav '.$cl1.' bb_button">'.$tl1.'</a></li>';
+
+				}
+				?>
+			</ul>
+		</div>
+
+		<div id="resultsGoHereAddtoCart"></div>
+
+	    <div id="view_casting_cart" style="<?php if($tl2=="Add to Casting Cart"){?>display:none;<?php }else{?>display:block;<?php }?>"><li class="casting"><a class="bb_button" href="<?php echo get_bloginfo('url')?>/profile-casting/"><?php echo __("View Casting Cart", bb_agency_TEXTDOMAIN);?></a></li></div>
+
+	    <div id="view_favorite" style="<?php if($tl1=="Add to Favorites"){?>display:none;<?php }else{?>display:block;<?php }?>"><li class="favorite"><a class="bb_button" href="<?php echo get_bloginfo('url')?>/profile-favorite/"><?php echo __("View favorite", bb_agency_TEXTDOMAIN);?></a></li></div>
+
+	    <?php
 
 				// Resume
 

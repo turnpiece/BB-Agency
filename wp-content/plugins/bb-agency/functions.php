@@ -2390,10 +2390,11 @@ function bb_agency_getProfileCustomFields($ProfileID, $ProfileGender) {
 
 	global $wpdb;
 	global $bb_agency_option_unittype;
-	
-	$resultsCustom = $wpdb->get_results("SELECT c.`ProfileCustomID`,c.`ProfileCustomTitle`,c.`ProfileCustomType`,c.`ProfileCustomOptions`, c.`ProfileCustomOrder`, cx.`ProfileCustomValue` FROM `". table_agency_customfield_mux ."` cx LEFT JOIN `". table_agency_customfields ."` c ON c.`ProfileCustomID` = cx.`ProfileCustomID` WHERE c.`ProfileCustomView` = 0 AND cx.`ProfileID` = $ProfileID GROUP BY cx.`ProfileCustomID` ORDER BY c.`ProfileCustomOrder` ASC");
+
+	$resultsCustom = $wpdb->get_results("SELECT c.`ProfileCustomID`, c.`ProfileCustomTitle`, c.`ProfileCustomType`, c.`ProfileCustomOptions`, c.`ProfileCustomOrder`, cx.`ProfileCustomValue` FROM `". table_agency_customfield_mux ."` cx LEFT JOIN `". table_agency_customfields ."` c ON c.`ProfileCustomID` = cx.`ProfileCustomID` WHERE c.`ProfileCustomView` = 0 AND cx.`ProfileID` = $ProfileID GROUP BY cx.`ProfileCustomID` ORDER BY c.`ProfileCustomOrder` ASC");
+
 	foreach ($resultsCustom as $resultCustom) {
-		if (!empty($resultCustom->ProfileCustomValue )) {
+		if (!empty($resultCustom->ProfileCustomValue)) {
 			if ($resultCustom->ProfileCustomType == 7) { //measurements field type
 			   	if ($bb_agency_option_unittype == 0) { // 0 = Metrics(ft/kg)
 					if ($resultCustom->ProfileCustomOptions == 1) {
@@ -2419,11 +2420,14 @@ function bb_agency_getProfileCustomFields($ProfileID, $ProfileGender) {
 			$measurements_label = '';
 		 
 			if (bb_agency_filterfieldGender($resultCustom->ProfileCustomID, $ProfileGender)) {
-				if ($resultCustom->ProfileCustomType == 7) {
-					if ($resultCustom->ProfileCustomOptions == 1) {
+				if ($resultCustom->ProfileCustomType == 7 || 
+					$resultCustom->ProfileCustomType == 3) {
+					if ($resultCustom->ProfileCustomTitle == 'Height') {
 						echo "<li><strong>". $resultCustom->ProfileCustomTitle.":</strong> ".bb_agency_display_height($resultCustom->ProfileCustomValue);
 					} elseif ($resultCustom->ProfileCustomOptions == 3) {
-					   	$heightraw = $resultCustom->ProfileCustomValue; $heightfeet = floor($heightraw/12); $heightinch = $heightraw - floor($heightfeet*12);
+					   	$heightraw = $resultCustom->ProfileCustomValue; 
+					   	$heightfeet = floor($heightraw/12); 
+					   	$heightinch = $heightraw - floor($heightfeet*12);
 					   	echo "<li><strong>". $resultCustom->ProfileCustomTitle .$measurements_label.":</strong> ".$heightfeet."ft ".$heightinch." in</li>\n";
 					} else {
 					   	echo "<li><strong>". $resultCustom->ProfileCustomTitle .$measurements_label.":</strong> ". $resultCustom->ProfileCustomValue ."</li>\n";
@@ -3560,7 +3564,9 @@ function is_client_profiletype() {
  *
  */
 function bb_agency_get_height($i) {
-	$units =  bb_agency_get_option('bb_agency_option_unittype');
+	$i = intval($i);
+	$units =  (int)bb_agency_get_option('bb_agency_option_unittype');
+
 	switch ($units) {
 		case 1 :
 			return $i;
@@ -3579,7 +3585,9 @@ function bb_agency_get_height($i) {
  *
  */
 function bb_agency_display_height($i) {
-	$units =  bb_agency_get_option('bb_agency_option_unittype');
+	$i = intval($i);
+	$units =  (int)bb_agency_get_option('bb_agency_option_unittype');
+
 	switch ($units) {
 		case 1 :
 			$feet = floor($i/12);
