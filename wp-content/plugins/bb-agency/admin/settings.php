@@ -123,17 +123,17 @@ switch ($ConfigID) {
         <p><?php _e("You have full control over all drop downs and ability to add new custom fields of your own.", bb_agency_TEXTDOMAIN) ?></p>
         <div class="boxlink">
             <h3><?php _e("Profile Categories", bb_agency_TEXTDOMAIN) ?></h3>
-            <a class="button-primary" href="?page=<?php echo $_GET["page"] ?>&amp;ConfigID=6=" title="<?php _e("Profile Categories", bb_agency_TEXTDOMAIN) ?>"><?php _e("Profile Categories", bb_agency_TEXTDOMAIN) ?></a><br />
+            <a class="button-primary" href="?page=<?php echo $_GET["page"] ?>&amp;ConfigID=6" title="<?php _e("Profile Categories", bb_agency_TEXTDOMAIN) ?>"><?php _e("Profile Categories", bb_agency_TEXTDOMAIN) ?></a><br />
             <p><?php _e("Choose custom category types to classify profiles", bb_agency_TEXTDOMAIN) ?></p>
         </div>
         <div class="boxlink">
             <h3><?php _e("Custom Fields", bb_agency_TEXTDOMAIN) ?></h3>
-            <a class="button-primary" href="?page=<?php echo $_GET["page"] ?>&amp;ConfigID=7=" title="<?php _e("Custom Fields", bb_agency_TEXTDOMAIN) ?>"><?php _e("Custom Fields", bb_agency_TEXTDOMAIN) ?></a><br />
+            <a class="button-primary" href="?page=<?php echo $_GET["page"] ?>&amp;ConfigID=7" title="<?php _e("Custom Fields", bb_agency_TEXTDOMAIN) ?>"><?php _e("Custom Fields", bb_agency_TEXTDOMAIN) ?></a><br />
             <p><?php _e("Add public and private custom fields", bb_agency_TEXTDOMAIN) ?></p>
         </div>
         <div class="boxlink">
             <h3><?php _e("Gender", bb_agency_TEXTDOMAIN) ?></h3>
-            <a class="button-primary" href="?page=<?php echo $_GET["page"] ?>&amp;ConfigID=5=" title="<?php _e("Gender", bb_agency_TEXTDOMAIN) ?>"><?php _e("Gender", bb_agency_TEXTDOMAIN) ?></a><br />
+            <a class="button-primary" href="?page=<?php echo $_GET["page"] ?>&amp;ConfigID=5" title="<?php _e("Gender", bb_agency_TEXTDOMAIN) ?>"><?php _e("Gender", bb_agency_TEXTDOMAIN) ?></a><br />
             <p><?php _e("Manage preset Gender choices", bb_agency_TEXTDOMAIN) ?></p>
         </div>
     </div>
@@ -144,7 +144,7 @@ switch ($ConfigID) {
         <h2><?php _e("Uninstall", bb_agency_TEXTDOMAIN) ?></h2>
         <p><?php _e("Uninstall BB Agency software and completely remove all data", bb_agency_TEXTDOMAIN) ?></p>
         <div class="boxlink">
-            <a class="button-secondary=" href="?page=<?php echo $_GET["page"] ?>&amp;ConfigID=99=" title="<?php _e("Uninstall", bb_agency_TEXTDOMAIN) ?>"><?php _e("Uninstall", bb_agency_TEXTDOMAIN) ?></a><br />
+            <a class="button-secondary=" href="?page=<?php echo $_GET["page"] ?>&amp;ConfigID=99" title="<?php _e("Uninstall", bb_agency_TEXTDOMAIN) ?>"><?php _e("Uninstall", bb_agency_TEXTDOMAIN) ?></a><br />
         </div>
     </div>
 <?php
@@ -1735,21 +1735,21 @@ EOF;
 	      
 		}
     } else {
-			$ProfileCustomID			=	0;
-			$ProfileCustomTitle		=	"";
-			$ProfileCustomType		=	"";
-			$ProfileCustomOptions		=	"";
-			$ProfileCustomView		=	0;
-			$ProfileCustomOrder		=	0;
-			$ProfileCustomShowGender	=	0;
-			$ProfileCustomShowProfile	=	0;
-			$ProfileCustomShowSearch	=	0;
-			$ProfileCustomShowLogged	=	0;
-			$ProfileCustomShowRegistration=	0;
-			$ProfileCustomShowAdmin		=	0;
+			$ProfileCustomID		= 0;
+			$ProfileCustomTitle		= "";
+			$ProfileCustomType		= "";
+			$ProfileCustomOptions	= "";
+			$ProfileCustomView		= 0;
+			$ProfileCustomOrder		= 0;
+			$ProfileCustomShowGender	= 0;
+			$ProfileCustomShowProfile	= 0;
+			$ProfileCustomShowSearch	= 0;
+			$ProfileCustomShowLogged	= 0;
+			$ProfileCustomShowRegistration = 0;
+			$ProfileCustomShowAdmin		= 0;
 		?>
 		<h3 style="width:430px;"><?php printf(__("Create New %1$s", bb_agency_TEXTDOMAIN), LabelPlural) ?></h3>
-		<div class="postbox ="  style="width:430px;float:left;border:0px solid black;">
+		<div class="postbox">
     		<h3 class="hndle" style="margin:10px;font-size:11px;">
                 <span ><?php _e("Make changes in the form below to edit a ", bb_agency_TEXTDOMAIN) ?> <?php echo LabelSingular ?>. 
                 <strong><?php _e("Required fields are marked", bb_agency_TEXTDOMAIN) ?> *</strong>
@@ -1759,7 +1759,7 @@ EOF;
         <?php
   	}
 
-	if(isset($_GET["action"]) == "editRecord") : ?>
+	if (isset($_GET["action"]) == "editRecord") : ?>
 		<form method="post" enctype="multipart/form-data" action="<?php echo admin_url("admin.php?page=". $_GET['page']) ."&amp;action=editRecord&ProfileCustomID=".$_GET["ProfileCustomID"]."&amp;ConfigID=".$_GET["ConfigID"] ?>">
 	<?php else : ?>
 		<form method="post" enctype="multipart/form-data" action="<?php echo admin_url('admin.php?page='. $_GET['page']) ?>">
@@ -1798,17 +1798,17 @@ EOF;
         					</tr>
         					<tr>
         						<td valign="top">Visibility*:</td>
-        						<td style="font-size:13px;">
-        						<input type="radio" name="ProfileCustomView" value="0" checked=="checked" />Show Everywhere(Front-end &amp; Back-end)&nbsp;<br/>
-        						<input type="radio" name="ProfileCustomView" value="1" />Private(Only show in Admin CRM)&nbsp;<br/>
-        						<input type="radio" name="ProfileCustomView" value="2" />Custom(Used in Custom Views)&nbsp;
+        						<td>
+            						<input type="radio" name="ProfileCustomView" value="0" checked=="checked" />Show Everywhere(Front-end &amp; Back-end)&nbsp;<br/>
+            						<input type="radio" name="ProfileCustomView" value="1" />Private(Only show in Admin CRM)&nbsp;<br/>
+            						<input type="radio" name="ProfileCustomView" value="2" />Custom(Used in Custom Views)&nbsp;
         						</td>
         						<td></td>
         						<td></td>
         					</tr>
         					<tr>
         						<td valign="top">Custom Views:</td>
-        						<td style="font-size:13px;">
+        						<td>
                                     <input type="checkbox" name="ProfileCustomShowProfile" value="1" checked=="checked" /> Manage Profile (Back-end)&nbsp; <br/>
                                     <input type="checkbox" name="ProfileCustomShowSearch" value="1"  checked=="checked" /> Search Form (Back-end)&nbsp; <br/>  
                                     <input type="checkbox" name="ProfileCustomShowRegistration" value="1"  checked=="checked" /> Profile Registration Form 			                                     &nbsp; <br/>
@@ -1816,20 +1816,20 @@ EOF;
         				 	</tr>
         				 	<tr>
         						<td valign="top">Privacy:</td>
-        						<td style="font-size:13px;">
-        						<input type="radio" name="ProfileCustomPrivacy" value="1"  /> User must be logged in to see It &nbsp;<br/>
-        						<input type="radio" name="ProfileCustomPrivacy" value="2" /> User must be an admin to see It<br/>
-        						<input type="radio" name="ProfileCustomPrivacy" value="3" /> Visible to Public 
+        						<td>
+            						<input type="radio" name="ProfileCustomPrivacy" value="1"  /> User must be logged in to see It &nbsp;<br/>
+            						<input type="radio" name="ProfileCustomPrivacy" value="2" /> User must be an admin to see It<br/>
+            						<input type="radio" name="ProfileCustomPrivacy" value="3" /> Visible to Public 
         						</td>
         						<td></td>
         						<td></td>
         					</tr>
         					<tr>
         						<td valign="top">Gender*:</td>
-        						<td valign="top"	 style="font-size:13px;">
-        						$query = "SELECT GenderID, GenderTitle FROM " .  table_agency_data_gender . " GROUP BY GenderTitle ";
+        						<td valign="top">
+        						<?php $query = "SELECT GenderID, GenderTitle FROM " .  table_agency_data_gender . " GROUP BY GenderTitle "; ?>
         						<select name="ProfileCustomShowGender">
-        						<option value="=">All Gender</option>
+        						<option value="">All Genders</option>
                                 <?php
         						$queryShowGender = mysql_query($query);
         						while($dataShowGender = mysql_fetch_assoc($queryShowGender)){
@@ -1848,7 +1848,7 @@ EOF;
         					</tr>
         					<tr>
         					<td valign="top">Profile Type:</td>
-        					<td style="font-size:13px;">
+        					<td>
         					<?php
         					/*
         					* get the proper fields on
@@ -1874,7 +1874,7 @@ EOF;
         					</tr>
         					<tr>
         						<td valign="top">Custom Order:</td>
-        						<td style="font-size:13px;">
+        						<td>
                                     <input type="text" name="ProfileCustomOrder" value="0" />
         						</td>
         						<td></td>
@@ -1946,7 +1946,7 @@ EOF;
                         <table>
     						<tr>
     							<td valign="top">Visibility*:</td>
-    							<td style="font-size:13px;">
+    							<td>
     								<input type="radio" name="ProfileCustomView" value="0" <?php echo ($data1["ProfileCustomView"] == 0 ? 'checked="checked"' : '') ?> />Show Everywhere(Front-end & Back-end)&nbsp;<br/>
     								<input type="radio" name="ProfileCustomView" value="1" <?php echo ($data1["ProfileCustomView"] == 1 ? 'checked="checked"' : '') ?> />Private(Only show in Admin CRM)&nbsp;<br/>
     								<input type="radio" name="ProfileCustomView" value="2" <?php echo ($data1["ProfileCustomView"] == 2 ? 'checked="checked"' : '') ?>/>Custom(Used in Custom Views)&nbsp;
@@ -1956,7 +1956,7 @@ EOF;
     						</tr>
     						<tr>
     							<td valign="top">Custom View*:</td>
-    							<td style="font-size:13px;">
+    							<td>
                                     <input type="checkbox" name="ProfileCustomShowProfile" value="1" <?php echo ($data1["ProfileCustomShowProfile"] == 1 ? 'checked="checked"' : '') ?> /> Manage Profile (Back-end)&nbsp; <br/>
                                     <input type="checkbox" name="ProfileCustomShowSearch" value="1" <?php echo ($data1["ProfileCustomShowSearch"] == 1 ? 'checked="checked"' : '') ?> /> Search Form (Back-end)&nbsp;  <br/>
                                     <input type="checkbox" <?php echo ($ProfileCustomType==4 ? "" : "") ?> name="ProfileCustomShowRegistration" value="1" <?php echo ($data1["ProfileCustomShowRegistration"] == 1 ? 'checked="checked"' : '') ?> /> Profile Registration Form &nbsp; <br/>
@@ -1964,7 +1964,7 @@ EOF;
         					</tr>
 							<tr>
 								<td valign="top">Privacy*:</td>
-								<td style="font-size:13px;">
+								<td>
                                     <input type="radio" name="ProfileCustomPrivacy" value="1" <?php echo ($data1["ProfileCustomShowLogged"] == 1 ? 'checked="checked"' : '') ?> /> User must be logged in to see It &nbsp;<br/>
                                     <input type="radio" name="ProfileCustomPrivacy" value="2" <?php echo ($data1["ProfileCustomShowAdmin"] == 1 ? 'checked="checked"' : '') ?> /> User must be an admin to see It<br/>
                                     <input type="radio" name="ProfileCustomPrivacy" value="3" <?php echo ($data1["ProfileCustomShowAdmin"] == 0 && $data1["ProfileCustomShowLogged"] == 0 ? 'checked="checked"':'') ?> /> Visible to Public 
@@ -1974,7 +1974,7 @@ EOF;
 							</tr>
 							<tr>
 								<td valign="top">Gender*:</td>
-								<td valign="top" style="font-size:13px;">
+								<td valign="top">
 									<?php
 									$query= "SELECT GenderID, GenderTitle FROM " .  table_agency_data_gender . " GROUP BY GenderTitle";
                                     ?>
@@ -1994,7 +1994,7 @@ EOF;
 
 								<tr>
 									<td valign="top">Profile Type:</td>
-									<td style="font-size:13px;"> ";
+									<td>
 								<?php
 								$get_types = "SELECT * FROM ". table_agency_data_type;
 							
@@ -2217,27 +2217,24 @@ EOF;
 						
 
 			if ( $ProfileCustomID > 0) : ?>
-			<p class="submit">
-			<input type="hidden" name="ProfileCustomID" value="<?php echo  $ProfileCustomID  ?>" />
-			<input type="hidden" name="ConfigID" value="<?php echo $ConfigID ?>" />
-			<input type="hidden" name="action" value="editRecord" />
-			<input type="submit" name="submit" value="<?php _e("Update Record", bb_agency_TEXTDOMAIN) ?>" class="button-primary" />
-			</p>
-			<?php else : ?>
-			<p class="submit">
-			<input type="hidden" name="action" value="addRecord" />
-			<input type="hidden" name="ConfigID" value="<?php echo $ConfigID ?>" />
-			<input type="submit" name="submit" value="<?php _e("Create Record", bb_agency_TEXTDOMAIN) ?>" class="button-primary" />
-			</p>
-			<?php endif; ?>
-			</form>
-    ?>
-          
+    			<p class="submit">
+        			<input type="hidden" name="ProfileCustomID" value="<?php echo  $ProfileCustomID  ?>" />
+        			<input type="hidden" name="ConfigID" value="<?php echo $ConfigID ?>" />
+        			<input type="hidden" name="action" value="editRecord" />
+        			<input type="submit" name="submit" value="<?php _e("Update Record", bb_agency_TEXTDOMAIN) ?>" class="button-primary" />
+    			</p>
+    		<?php else : ?>
+    			<p class="submit">
+        			<input type="hidden" name="action" value="addRecord" />
+        			<input type="hidden" name="ConfigID" value="<?php echo $ConfigID ?>" />
+        			<input type="submit" name="submit" value="<?php _e("Create Record", bb_agency_TEXTDOMAIN) ?>" class="button-primary" />
+    			</p>
+    		<?php endif; ?>
+    			</form>
             </div>
         </div>
-        <div class="all-custom_fields" style="width:700px;float:left;border:0px solid black;margin-left:15px;">
+        <div class="all-custom_fields">
 
-        	
             <h3 class="title"><?php _e("All Records", bb_agency_TEXTDOMAIN) ?></h3>
         	<?php   
         		/******** Sort Order ************/

@@ -285,4 +285,10 @@ a.primary-link {
 .alignright {
     float: right;
 }
+
+.all-custom_fields {
+    width: 700px;
+    float: left;
+    border: 0px solid black;
+    margin-left: 15px;
 }
