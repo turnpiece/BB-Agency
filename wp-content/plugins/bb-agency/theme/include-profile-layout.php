@@ -49,7 +49,7 @@
 			<?php endif; endif; // end of talent
 
 				if (!empty($ProfileStatHeight)) : ?>
-				<li><strong><?php _e("Height", bb_agency_TEXTDOMAIN) ?>asdf<span class="divider">:</span></strong> <?php echo bb_agency_display_height($ProfileStatHeight) ?></li>
+				<li><strong><?php _e("Height", bb_agency_TEXTDOMAIN) ?><span class="divider">:</span></strong> <?php echo bb_agency_display_height($ProfileStatHeight) ?></li>
 				<?php endif; // end of height
 
 				if (bb_agency_SITETYPE == 'bumps') :
