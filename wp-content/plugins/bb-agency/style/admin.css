@@ -50,7 +50,10 @@ hr { border: none; }
 #filter-profiles span input[type="text"],
 #filter-profiles span select { width: 95%; }
 #filter-profiles span input[type="submit"] { margin-top: 17px; }
+
+.postbox { width:430px; float:left; border: 0px solid black; }
 .postbox .inside { overflow: hidden; }
+.postbox .hndle { margin:10px;font-size:11px; }
 
 .boxblock { background-color:#FFFFFF; border-color:#DFDFDF; -moz-border-radius:6px 6px 6px 6px; border-style:solid; border-width:1px; line-height:1; margin-bottom:20px; min-width:255px; position:relative; width:99.5%;}
 .boxblock .inner { padding: 10px; }
@@ -285,4 +288,10 @@ a.primary-link {
 .alignright {
     float: right;
 }
+
+.all-custom_fields {
+    width: 700px;
+    float: left;
+    border: 0px solid black;
+    margin-left: 15px;
 }
