@@ -1985,10 +1985,6 @@ EOF;
         						<td style="width:50px;">Title:</td>
         						<td><input type="text" name="ProfileCustomTitle" value="<?php echo $data1['ProfileCustomTitle'] ?>"/></td>
         					</tr>
-        					<tr>
-        						<td align=="right" style="width:50px;">Value*:</td>
-        					    <td><input type="text" name="ProfileCustomOptions" value="<?php echo $data1["ProfileCustomOptions"] ?>" /></td>
-        					</tr>
 
         				<?php elseif($data1["ProfileCustomType"] == 3) :	 // Dropdown ?>
         					<tr>
@@ -2048,10 +2044,6 @@ EOF;
         							<td>Title:</td>
         							<td><input type="text" name="ProfileCustomTitle" value="<?php echo $data1['ProfileCustomTitle'] ?>"/></td>
         						</tr>
-        				        <tr>
-        							<td valign="top"><?php _e('Value', bb_agency_TEXTDOMAIN) ?>:</td>
-        							<td><textarea name="ProfileCustomOptions" style="width:400px;"><?php echo $data1["ProfileCustomOptions"] ?></textarea></td>
-        						</tr>    
         					
         				<?php elseif($data1["ProfileCustomType"] == 5) :	 //checkbox
         				 
