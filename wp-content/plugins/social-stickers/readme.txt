@@ -1,10 +1,10 @@
 === Social Stickers ===
 Contributors: ZeroCool51
-Donate link: http://gum.co/social-stickers
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=SKMW3BAC8KE52
 Tags: social profile, social icons, social, social widget, facebook, twitter, social widget
 Requires at least: 3.0
-Tested up to: 3.8
-Stable tag: 2.2.3
+Tested up to: 4.3
+Stable tag: 2.2.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -28,7 +28,7 @@ Currently supports over 70 social networks.
 
 **WANT MORE?**
 
-**[GO PRO](https://gum.co/social-stickers-pro).**
+**[GO PRO](http://bostjan.gets-it.net/plugin/social-stickers-pro).**
 
 Features:
 
@@ -56,6 +56,24 @@ None at the moment.
 4. Plugin settings page (advanced plugin mode settings)
 
 == Changelog ==
+
+= 2.2.9 =
+* [Bufix] Typo in method call. Please update immediately.
+
+= 2.2.8 =
+* [Bugfix] Replaced deprecated widget call. Please update if using WordPress 4.3 or newer.
+
+= 2.2.7 =
+* [Bugfix] Fixed constructor for widget.
+
+= 2.2.6 =
+* [Important bugfix] Widget not showing in some cases, an IMPORTANT update.
+
+= 2.2.5 =
+* [Fix] Update method fixes.
+
+= 2.2.4 =
+* [Fix] Changed purchase link for pro version.
 
 = 2.2.3 =
 * [New] Added SpecificFeeds network.
@@ -219,10 +237,6 @@ All themes, their authors and links are respectfully credited in the plugin itse
 == Author ==
 
 The author of this plugin is Bostjan Cigan, visit the [homepage](http://bostjan.gets-it.net "homepage").
-
-== Homepage ==
-
-Visit the [homepage](http://wpplugz.is-leet.com "homepage of social stickers") of the plugin.
 
 == Donators ==
 
