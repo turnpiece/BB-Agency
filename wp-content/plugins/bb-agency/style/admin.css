@@ -258,13 +258,19 @@ a.primary-link {
 }
 
 /* send email page */
-#wpbody-content .create-email,
-#wpbody-content .create-lbda-email {
+#wpbody-content .create-email {
     position: relative;
     float: left;
     width: 500px;
 }
-#wpbody-content .create-lbda-email .logo {
+#wpbody-content .create-email input,
+#wpbody-content .create-email textarea {
+    width: 100%;
+}
+#wpbody-content .create-email textarea {
+    height: 300px;
+}
+#wpbody-content .create-email.create-lbda-email .logo {
     position: absolute;
     right: 20px;
     top: 20px;

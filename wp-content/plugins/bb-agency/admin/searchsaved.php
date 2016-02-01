@@ -73,6 +73,7 @@ if (isset($_POST['action'])) {
 				$SearchMuxHash			= bb_agency_random(8);
 			}
 			
+            $FromEmail              = !empty($_POST['FromEmail']) ? stripslashes($_POST['FromEmail']) : $bb_agency_option_agencyemail;
 			$SearchMuxToName		= stripslashes($_POST['SearchMuxToName']);
 			$SearchMuxToEmail		= stripslashes($_POST['SearchMuxToEmail']);
 			$SearchMuxSubject		= stripslashes($_POST['SearchMuxSubject']);
@@ -103,7 +104,7 @@ if (isset($_POST['action'])) {
 
 			$headers  = 'MIME-Version: 1.0' . "\r\n";
 			$headers .= 'Content-type: text/html; charset='. bb_agency_CHARSET . "\r\n";
-			$headers .= 'From: '. $bb_agency_option_agencyname .' <'. $bb_agency_option_agencyemail .'>' . "\r\n";
+			$headers .= 'From: '. $bb_agency_option_agencyname .' <'. $FromEmail .'>' . "\r\n";
 
             // attachments
             $attachments = array();
@@ -185,12 +186,24 @@ if (isset($_POST['action'])) {
         <h2><?php echo __("Send a casting email", bb_agency_TEXTDOMAIN); ?></h2>
         <form method="post" enctype="multipart/form-data" action="<?php echo admin_url("admin.php?page=". $_GET['page'])."&amp;SearchID=".$_GET['SearchID']."&SearchMuxHash=".$_GET["SearchMuxHash"]; ?>">
       
-            <div><label for="SearchMuxToName"><strong>Send to Name:</strong></label><br/><input style="width:300px;" type="text" id="SearchMuxToName" name="SearchMuxToName" value="<?php echo $dataSearchSavedMux["SearchMuxToName"]; ?>" /></div>
-            <div><label for="SearchMuxToEmail"><strong>Send to Email:</strong></label><br/><input  style="width:300px;" type="text" id="SearchMuxToEmail" name="SearchMuxToEmail" value="<?php echo $dataSearchSavedMux["SearchMuxToEmail"]; ?>" /></div>
-            <div><label for="SearchMuxSubject"><strong>Subject:</strong></label><br/><input  style="width:300px;" type="text" id="SearchMuxSubject" name="SearchMuxSubject" value="<?php echo $bb_agency_option_agencyname; ?> Casting Cart" /></div>
-            <div><label for="SearchMuxMessage"><strong>Message:</strong></label><br/>
+            <p>
+                <label for="SearchMuxFromEmail"><strong>Send from email:</strong></label><br/>
+                <input type="text" id="SearchMuxToEmail" name="SearchMuxFromEmail" value="<?php echo $bb_agency_option_agencyemail ?>" />
+            </p>
+            <p>
+                <label for="SearchMuxToName"><strong>Send to name:</strong></label><br/><input style="width:300px;" type="text" id="SearchMuxToName" name="SearchMuxToName" value="<?php echo $dataSearchSavedMux["SearchMuxToName"]; ?>" />
+            </p>
+            <p>
+                <label for="SearchMuxToEmail"><strong>Send to email:</strong></label><br/><input type="text" id="SearchMuxToEmail" name="SearchMuxToEmail" value="<?php echo $dataSearchSavedMux["SearchMuxToEmail"]; ?>" />
+            </p>
+            <p>
+                <label for="SearchMuxSubject"><strong>Subject:</strong></label><br/>
+                <input type="text" id="SearchMuxSubject" name="SearchMuxSubject" value="<?php echo $bb_agency_option_agencyname; ?> Casting Cart" />
+            </p>
+            <p>
+                <label for="SearchMuxMessage"><strong>Message:</strong></label><br/>
 		        <textarea id="SearchMuxMessage" name="SearchMuxMessage" style="width: 500px; height: 300px; "><?php if (!isset($_GET["SearchMuxHash"]) && isset($dataSearchSavedMux["SearchMuxMessage"])) echo $dataSearchSavedMux["SearchMuxMessage"]; ?></textarea>
-            </div>
+            </p>
             <p class="submit">
                 <input type="hidden" name="SearchID" value="<?php echo $SearchID; ?>" />
                 <input type="hidden" name="action" value="emailSend" />
@@ -248,7 +261,7 @@ if (isset($_POST['action'])) {
     $dataSearchSavedMux = mysql_fetch_assoc($querySearch);
 
     ?>
-    <div class="create-lbda-email">
+    <div class="create-email create-lbda-email">
         <?php if (!bb_agency_SEND_EMAILS) : ?>
         <p class="warning">WARNING: The site is currently in testing mode so any emails will be sent to <?php echo $bb_agency_option_agencyemail ?> rather than to the client.</p>
         <?php endif; ?>
@@ -256,12 +269,25 @@ if (isset($_POST['action'])) {
         <div class="logo"></div>
         <form method="post" enctype="multipart/form-data" action="<?php echo admin_url("admin.php?page=". $_GET['page'])."&amp;SearchID=".$_GET['SearchID']."&SearchMuxHash=".$_GET["SearchMuxHash"]; ?>">
       
-            <div><label for="SearchMuxToName"><strong>Send to Name:</strong></label><br/><input style="width:300px;" type="text" id="SearchMuxToName" name="SearchMuxToName" value="<?php echo $dataSearchSavedMux["SearchMuxToName"]; ?>" /></div>
-            <div><label for="SearchMuxToEmail"><strong>Send to Email:</strong></label><br/><input  style="width:300px;" type="text" id="SearchMuxToEmail" name="SearchMuxToEmail" value="<?php echo $dataSearchSavedMux["SearchMuxToEmail"]; ?>" /></div>
-            <div><label for="SearchMuxSubject"><strong>Subject:</strong></label><br/><input  style="width:300px;" type="text" id="SearchMuxSubject" name="SearchMuxSubject" value="<?php echo $bb_agency_option_agencyname; ?> Casting Cart" /></div>
-            <div><label for="SearchMuxMessage"><strong>Message:</strong></label><br/>
+            <p>
+                <label for="SearchMuxFromEmail"><strong>Send from email:</strong></label><br/>
+                <input type="text" id="SearchMuxFromEmail" name="SearchMuxFromEmail" value="<?php echo $bb_agency_option_agencyemail ?>" />
+            </p>
+            <p>
+                <label for="SearchMuxToName"><strong>Send to name:</strong></label><br/>
+                <input type="text" id="SearchMuxToName" name="SearchMuxToName" value="<?php echo $dataSearchSavedMux["SearchMuxToName"]; ?>" />
+            </p>
+            <p>
+                <label for="SearchMuxToEmail"><strong>Send to email:</strong></label><br/>
+                <input type="text" id="SearchMuxToEmail" name="SearchMuxToEmail" value="<?php echo $dataSearchSavedMux["SearchMuxToEmail"]; ?>" />
+            </p>
+            <p>
+                <label for="SearchMuxSubject"><strong>Subject:</strong></label><br/><input type="text" id="SearchMuxSubject" name="SearchMuxSubject" value="<?php echo $bb_agency_option_agencyname; ?> Casting Cart" />
+            </p>
+            <p>
+                <label for="SearchMuxMessage"><strong>Message:</strong></label><br/>
                 <textarea id="SearchMuxMessage" name="SearchMuxMessage" style="width: 500px; height: 300px; "><?php if (!isset($_GET["SearchMuxHash"]) && isset($dataSearchSavedMux["SearchMuxMessage"])) echo $dataSearchSavedMux["SearchMuxMessage"]; ?></textarea>
-            </div>
+            </p>
             <p class="submit">
                 <input type="hidden" name="SearchID" value="<?php echo $SearchID; ?>" />
                 <input type="hidden" name="action" value="LBDAemailSend" />
