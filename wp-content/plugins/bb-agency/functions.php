@@ -2353,8 +2353,7 @@ function bb_agency_getNewProfileCustomFields($ProfileID, $ProfileGender, $LabelT
 			if (bb_agency_filterfieldGender($resultCustom->ProfileCustomID, $ProfileGender)) {
 				if ($resultCustom->ProfileCustomType == 7) { 
 					if ($resultCustom->ProfileCustomOptions == 3) { 
-					   	$heightraw = $resultCustom->ProfileCustomValue; $heightfeet = floor($heightraw/12); $heightinch = $heightraw - floor($heightfeet*12);
-					   	echo "<li><".$LabelTag.">". $resultCustom->ProfileCustomTitle .$measurements_label.":</".$LabelTag."> ".$heightfeet."ft ".$heightinch." in</li>\n";
+					   	echo "<li><".$LabelTag.">". $resultCustom->ProfileCustomTitle .$measurements_label.":</".$LabelTag."> ".bb_agency_get_imperial_height($resultCustom->ProfileCustomValue)."</li>\n";
 					} else {
 					   	echo "<li><".$LabelTag.">". $resultCustom->ProfileCustomTitle .$measurements_label.":</".$LabelTag."> ". $resultCustom->ProfileCustomValue ."</li>\n";
 					}
@@ -2365,8 +2364,7 @@ function bb_agency_getNewProfileCustomFields($ProfileID, $ProfileGender, $LabelT
 			} elseif ($resultCustom->ProfileCustomView == "2") {
 				if ($resultCustom->ProfileCustomType == 7) {
 				  	if ($resultCustom->ProfileCustomOptions == 3) {
-					 	$heightraw = $resultCustom->ProfileCustomValue; $heightfeet = floor($heightraw/12); $heightinch = $heightraw - floor($heightfeet*12);
-					   	echo "<li><".$LabelTag.">". $resultCustom->ProfileCustomTitle .$measurements_label.":</".$LabelTag."> ".$heightfeet."ft ".$heightinch." in</li>\n";
+					   	echo "<li><".$LabelTag.">". $resultCustom->ProfileCustomTitle .$measurements_label.":</".$LabelTag."> ".bb_agency_get_imperial_height($resultCustom->ProfileCustomValue)."</li>\n";
 				  	} else {
 						echo "<li><".$LabelTag.">". $resultCustom->ProfileCustomTitle .$measurements_label.":</".$LabelTag."> ". $resultCustom->ProfileCustomValue ."</li>\n";
 				  	}
@@ -2425,10 +2423,7 @@ function bb_agency_getProfileCustomFields($ProfileID, $ProfileGender) {
 					if ($resultCustom->ProfileCustomTitle == 'Height') {
 						echo "<li><strong>". $resultCustom->ProfileCustomTitle.":</strong> ".bb_agency_display_height($resultCustom->ProfileCustomValue);
 					} elseif ($resultCustom->ProfileCustomOptions == 3) {
-					   	$heightraw = $resultCustom->ProfileCustomValue; 
-					   	$heightfeet = floor($heightraw/12); 
-					   	$heightinch = $heightraw - floor($heightfeet*12);
-					   	echo "<li><strong>". $resultCustom->ProfileCustomTitle .$measurements_label.":</strong> ".$heightfeet."ft ".$heightinch." in</li>\n";
+					   	echo "<li><strong>". $resultCustom->ProfileCustomTitle .$measurements_label.":</strong> ".bb_agency_get_imperial_height($resultCustom->ProfileCustomValue)."</li>\n";
 					} else {
 					   	echo "<li><strong>". $resultCustom->ProfileCustomTitle .$measurements_label.":</strong> ". $resultCustom->ProfileCustomValue ."</li>\n";
 					}
@@ -2443,8 +2438,7 @@ function bb_agency_getProfileCustomFields($ProfileID, $ProfileGender) {
 			} elseif ($resultCustom->ProfileCustomView == "2") {
 				if ($resultCustom->ProfileCustomType == 7) {
 				  	if ($resultCustom->ProfileCustomOptions == 3) {
-					 	$heightraw = $resultCustom->ProfileCustomValue; $heightfeet = floor($heightraw/12); $heightinch = $heightraw - floor($heightfeet*12);
-					   	echo "<li><strong>". $resultCustom->ProfileCustomTitle .$measurements_label.":</strong> ".$heightfeet."ft ".$heightinch." in</li>\n";
+					   	echo "<li><strong>". $resultCustom->ProfileCustomTitle .$measurements_label.":</strong> ".bb_agency_get_imperial_height($resultCustom->ProfileCustomValue)."</li>\n";
 				  	} else {
 						echo "<li><strong>". $resultCustom->ProfileCustomTitle .$measurements_label.":</strong> ". $resultCustom->ProfileCustomValue ."</li>\n";
 				  	}
@@ -2497,8 +2491,7 @@ function bb_agency_getProfileCustomFieldsExTitle($ProfileID, $ProfileGender, $ti
 				if (bb_agency_filterfieldGender($resultCustom->ProfileCustomID, $ProfileGender)) {
 					if ($resultCustom->ProfileCustomType == 7) {
 						if ($resultCustom->ProfileCustomOptions == 3) {
-						   	$heightraw = $resultCustom->ProfileCustomValue; $heightfeet = floor($heightraw/12); $heightinch = $heightraw - floor($heightfeet*12);
-						   	echo "<li><strong>". $resultCustom->ProfileCustomTitle .$measurements_label.":</strong> ".$heightfeet."ft ".$heightinch." in</li>\n";
+						   	echo "<li><strong>". $resultCustom->ProfileCustomTitle .$measurements_label.":</strong> ".bb_agency_get_imperial_height($resultCustom->ProfileCustomValue)."</li>\n";
 						} else {
 						  	echo "<li><strong>". $resultCustom->ProfileCustomTitle .$measurements_label.":</strong> ". $resultCustom->ProfileCustomValue ."</li>\n";
 						}
@@ -2513,8 +2506,7 @@ function bb_agency_getProfileCustomFieldsExTitle($ProfileID, $ProfileGender, $ti
 				} elseif ($resultCustom->ProfileCustomView == "2") {
 					if ($resultCustom->ProfileCustomType == 7) {
 					  	if ($resultCustom->ProfileCustomOptions == 3) {
-						 	$heightraw = $resultCustom->ProfileCustomValue; $heightfeet = floor($heightraw/12); $heightinch = $heightraw - floor($heightfeet*12);
-						   	echo "<li><strong>". $resultCustom->ProfileCustomTitle .$measurements_label.":</strong> ".$heightfeet."ft ".$heightinch." in</li>\n";
+						   	echo "<li><strong>". $resultCustom->ProfileCustomTitle .$measurements_label.":</strong> ".bb_agency_get_imperial_height($resultCustom->ProfileCustomValue)."</li>\n";
 					  	} else {
 							echo "<li><strong>". $resultCustom->ProfileCustomTitle .$measurements_label.":</strong> ". $resultCustom->ProfileCustomValue ."</li>\n";
 					  	}
@@ -2592,8 +2584,7 @@ function bb_agency_getProfileCustomFieldsEcho($ProfileID, $ProfileGender,$exclud
 				
 				if ($resultCustom->ProfileCustomType == 7) {
 					if ($resultCustom->ProfileCustomOptions == 3) {
-					   	$heightraw = $resultCustom->ProfileCustomValue; $heightfeet = floor($heightraw/12); $heightinch = $heightraw - floor($heightfeet*12);
-					   echo "<li><label>". $resultCustom->ProfileCustomTitle .$measurements_label."</label><span>".$heightfeet."ft ".$heightinch." in</span></li>\n";
+					   	echo "<li><label>". $resultCustom->ProfileCustomTitle .$measurements_label."</label><span>".bb_agency_get_imperial_height($resultCustom->ProfileCustomValue)."</span></li>\n";
 					} else {
 					   	echo  "<li><label>". $resultCustom->ProfileCustomTitle .$measurements_label."</label><span>". $resultCustom->ProfileCustomValue ."</span></li>\n";
 					}
@@ -2607,8 +2598,7 @@ function bb_agency_getProfileCustomFieldsEcho($ProfileID, $ProfileGender,$exclud
 			} elseif ($resultCustom->ProfileCustomView == "2") {
 				if ($resultCustom->ProfileCustomType == 7) {
 				  	if ($resultCustom->ProfileCustomOptions == 3) {
-					 	$heightraw = $resultCustom->ProfileCustomValue; $heightfeet = floor($heightraw/12); $heightinch = $heightraw - floor($heightfeet*12);
-					   	echo "<li><label>". $resultCustom->ProfileCustomTitle .$measurements_label."</label><span>".$heightfeet."ft ".$heightinch." in</span></li>\n";
+					   	echo "<li><label>". $resultCustom->ProfileCustomTitle .$measurements_label."</label><span>".bb_agency_get_imperial_height($resultCustom->ProfileCustomValue)."</span></li>\n";
 				  	} else {
 						echo "<li><label>". $resultCustom->ProfileCustomTitle .$measurements_label."</label><span>". $resultCustom->ProfileCustomValue ."</span></li>\n";
 				  	}
@@ -2662,8 +2652,7 @@ function bb_agency_getProfileCustomFieldsCustom($ProfileID, $ProfileGender,$echo
 				
 				if ($resultCustom->ProfileCustomType == 7) {
 					if ($resultCustom->ProfileCustomOptions == 3) {
-					   	$heightraw = $resultCustom->ProfileCustomValue; $heightfeet = floor($heightraw/12); $heightinch = $heightraw - floor($heightfeet*12);
-					   	$return.="<li><label>". $resultCustom->ProfileCustomTitle .$measurements_label."</label><span>".$heightfeet."ft ".$heightinch." in</span></li>\n";
+					   	$return.="<li><label>". $resultCustom->ProfileCustomTitle .$measurements_label."</label><span>".bb_agency_get_imperial_height($resultCustom->ProfileCustomValue)."</span></li>\n";
 					} else {
 					   	$return.="<li><label>". $resultCustom->ProfileCustomTitle .$measurements_label."</label><span>". $resultCustom->ProfileCustomValue ."</span></li>\n";
 					}
@@ -2677,8 +2666,7 @@ function bb_agency_getProfileCustomFieldsCustom($ProfileID, $ProfileGender,$echo
 			} elseif ($resultCustom->ProfileCustomView == "2") {
 				if ($resultCustom->ProfileCustomType == 7) {
 				  	if ($resultCustom->ProfileCustomOptions == 3) {
-					 	$heightraw = $resultCustom->ProfileCustomValue; $heightfeet = floor($heightraw/12); $heightinch = $heightraw - floor($heightfeet*12);
-					   	$return.="<li><label>". $resultCustom->ProfileCustomTitle .$measurements_label."</label><span>".$heightfeet."ft ".$heightinch." in</span></li>\n";
+					   	$return.="<li><label>". $resultCustom->ProfileCustomTitle .$measurements_label."</label><span>".bb_agency_get_imperial_height($resultCustom->ProfileCustomValue)."</span></li>\n";
 				  	} else {
 						$return.="<li><label>". $resultCustom->ProfileCustomTitle .$measurements_label."</label><span>". $resultCustom->ProfileCustomValue ."</span></li>\n";
 				  	}
@@ -3939,6 +3927,21 @@ function bb_agency_save_modelcard( $gallery, $lbda = false ) {
         return $Card->filepath();
     
     bb_agency_adminmessage_former('Error saving model card: '.$Card->get_error(), true);
+}
+
+/**
+ *
+ * get imperial height
+ *
+ * @param int $height
+ * @return string
+ *
+ */
+function bb_agency_get_imperial_height( $height ) {
+   	$heightfeet = floor($height/12); 
+   	$heightinch = $height - floor($heightfeet*12);
+
+   	return "$heightfeet ft $heightinch in";
 }
 
 /**

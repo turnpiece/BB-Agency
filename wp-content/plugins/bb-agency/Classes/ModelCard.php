@@ -74,7 +74,7 @@ class ModelCard {
             $success = @imagejpeg($this->canvas, $this->filepath(), $this->quality);
         
         if (!$success)
-            $this->fatal("Unable to write to ".$this->filepath());
+            return $this->fatal("Unable to write to ".$this->filepath());
 
         // Free up memory
         imagedestroy($this->canvas);
@@ -290,7 +290,7 @@ class ModelCard {
         $profile = $wpdb->get_row( $wpdb->prepare( $query, $this->model ), ARRAY_A );
 
         if (empty($profile))
-            $this->fatal( "Failed to get profile for model '$this->model' - " . mysql_error() );
+            return $this->fatal( "Failed to get profile for model '$this->model' - " . mysql_error() );
 
         $this->debug( print_r($profile, true) );
 
@@ -329,6 +329,9 @@ class ModelCard {
 
         $height = intval($this->profile['height']);
 
+        if (preg_match('/cm$/', $height))
+            return $height;
+        
         if (bb_agency_get_option('bb_agency_option_unittype') == 0)
             return $height.' '.__('cm', bb_agency_TEXTDOMAIN);
 
@@ -367,7 +370,7 @@ class ModelCard {
             break;
 
             default:
-                return $this->fatal('File "'.$filename.'" is not valid jpg, png or gif image.');
+                return $this->set_error('File "'.$filename.'" is not valid jpg, png or gif image.');
             break;
         }
     }
@@ -376,6 +379,8 @@ class ModelCard {
 
         if ((!list($w, $h) = getimagesize($src)) || $w == 0 || $h == 0)
             return $this->set_error("$src is an unsupported picture type");
+
+        $this->debug( __FUNCTION__ . " resizing image $src" );
 
         $type = strtolower(substr(strrchr($src, "."), 1));
         
@@ -400,7 +405,7 @@ class ModelCard {
         }
 
         if (empty($img))
-            return $this->set_error("Failed to read image ".basename($src));
+            return $this->set_error("Failed to read $type image ".basename($src));
 
         // resize
         if ($crop){
@@ -425,7 +430,7 @@ class ModelCard {
 
         imagecopyresampled($new, $img, 0, 0, $x, 0, $width, $height, $w, $h);
 
-        $this->debug( __FUNCTION__ . " created image with width $width and height $height" );
+        $this->debug( __FUNCTION__ . " created $type image with width $width and height $height" );
 
         return $new;
     }
@@ -441,7 +446,7 @@ class ModelCard {
         $this->debug( __FUNCTION__ . ' ' . $key );
 
         if (empty($this->profile))
-            $this->fatal( "Profile was not set." );
+            return $this->set_error( "Profile was not set." );
 
         if (!isset($this->profile[$key]))
             return $this->set_error( "Profile field $key was not set" );
@@ -466,6 +471,7 @@ class ModelCard {
 
     protected function fatal($message) {
         $this->set_error( $message );
-        die( $message );
+
+        wp_die( $message );
     }
 }

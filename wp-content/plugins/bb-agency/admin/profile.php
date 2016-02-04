@@ -433,7 +433,7 @@ if (isset($_POST['action'])) {
                 /* --------------------------------------------------------- CLEAN THIS UP -------------- */
                 ?>
                 <div id="message" class="updated">
-                    <p><?php _e("Profile updated successfully", bb_agency_TEXTDOMAIN) ?>! <a href="<?php echo admin_url("admin.php?page=" . $_GET['page']) ?>&action=editRecord&ProfileID=<?php echo $ProfileID ?>"><?php _e("Continue editing the record", bb_agency_TEXTDOMAIN) ?>?</a>
+                    <p><?php _e("Profile updated successfully", bb_agency_TEXTDOMAIN) ?>! <a href="<?php echo admin_url("admin.php?page=" . $_GET['page']) ?>&amp;action=editRecord&amp;ProfileID=<?php echo $ProfileID ?>"><?php _e("Continue editing the record", bb_agency_TEXTDOMAIN) ?>?</a>
                     </p>
                 </div>
             <?php else : ?>

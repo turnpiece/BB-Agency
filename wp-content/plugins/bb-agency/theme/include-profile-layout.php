@@ -88,29 +88,29 @@
 
 				if (is_permitted("casting")) {
 
-						$query_castingcart = mysql_query("SELECT * FROM ". table_agency_castingcart."  WHERE CastingCartTalentID='".$ProfileID."'  AND CastingCartProfileID = '".bb_agency_get_current_userid()."'" ) or die("error");
+					$query_castingcart = mysql_query("SELECT * FROM ". table_agency_castingcart."  WHERE CastingCartTalentID='".$ProfileID."'  AND CastingCartProfileID = '".bb_agency_get_current_userid()."'" ) or die("error");
 
-						$count_castingcart = mysql_num_rows($query_castingcart);
+					$count_castingcart = mysql_num_rows($query_castingcart);
 
-						if ($count_castingcart>0) { 
-							$cl2 = "cart_bg"; $tl2="Remove from Casting Cart"; 
-						}
+					if ($count_castingcart>0) { 
+						$cl2 = "cart_bg"; $tl2="Remove from Casting Cart"; 
+					}
 
-						echo '<li><a title="'.$tl2.'" href="javascript:;" class="save_cart '.$cl2.' bb_button" id="'.$ProfileID.'">'.$tl2.'</a></li>';
+					echo '<li><a title="'.$tl2.'" href="javascript:;" class="save_cart '.$cl2.' bb_button" id="'.$ProfileID.'">'.$tl2.'</a></li>';
 
 				}
 				
 				if (is_permitted("favorite")) {
 
-						$query_favorite = mysql_query("SELECT * FROM ".table_agency_savedfavorite." WHERE SavedFavoriteTalentID='".$ProfileID."'  AND SavedFavoriteProfileID = '".bb_agency_get_current_userid()."'" ) or die("error");
+					$query_favorite = mysql_query("SELECT * FROM ".table_agency_savedfavorite." WHERE SavedFavoriteTalentID='".$ProfileID."'  AND SavedFavoriteProfileID = '".bb_agency_get_current_userid()."'" ) or die("error");
 
-						$count_favorite = mysql_num_rows($query_favorite);
+					$count_favorite = mysql_num_rows($query_favorite);
 
-						$datas_favorite = mysql_fetch_assoc($query_favorite);				
+					$datas_favorite = mysql_fetch_assoc($query_favorite);				
 
-						if($count_favorite>0){ $cl1 = "fav_bg"; $tl1="Remove from Favorites"; }
+					if($count_favorite>0){ $cl1 = "fav_bg"; $tl1="Remove from Favorites"; }
 
-						echo '<li class=\"favorite\"><a title="'.$tl1.'" href="javascript:;" id="mycart" class="save_fav '.$cl1.' bb_button">'.$tl1.'</a></li>';
+					echo '<li class=\"favorite\"><a title="'.$tl1.'" href="javascript:;" id="mycart" class="save_fav '.$cl1.' bb_button">'.$tl1.'</a></li>';
 
 				}
 				?>
@@ -363,23 +363,15 @@ jQuery(document).ready(function(){
 
 				} else if(type == "casting"){
 
-				
-
 					var action_function = "bb_agency_save_castingcart";
 
-					
-
-				
-
 				}
-
-				
 
 				jQuery.ajax({type: 'POST',url: '<?php echo get_bloginfo('url') ?>/wp-admin/admin-ajax.php',
 
 		
 
-							 data: {action: action_function,  'talentID': <?php echo $ProfileID ?>},
+						data: {action: action_function,  'talentID': <?php echo $ProfileID ?>},
 
 		
 
@@ -397,11 +389,7 @@ jQuery(document).ready(function(){
 
 								} else { 
 
-		
-
 									  if(type == "favorite"){
-
-							             
 
 										 if(Obj.hasClass('fav_bg')){
 

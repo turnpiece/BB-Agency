@@ -1710,16 +1710,16 @@ EOF;
 			$count = mysql_num_rows($results);
 			while ($data = mysql_fetch_array($results)) {
 				$ProfileCustomID			=	$data['ProfileCustomID'];
-				$ProfileCustomTitle		=	stripslashes($data['ProfileCustomTitle']);
-				$ProfileCustomType		=	$data['ProfileCustomType'];
+				$ProfileCustomTitle		    =	stripslashes($data['ProfileCustomTitle']);
+				$ProfileCustomType		    =	$data['ProfileCustomType'];
 				$ProfileCustomOptions		=	$data['ProfileCustomOptions'];
-				$ProfileCustomView		=	$data['ProfileCustomView'];
-				$ProfileCustomOrder		=	$data['ProfileCustomOrder'];
+				$ProfileCustomView		    =	$data['ProfileCustomView'];
+				$ProfileCustomOrder		    =	$data['ProfileCustomOrder'];
 				$ProfileCustomShowGender	=	$data['ProfileCustomShowGender'];
 				$ProfileCustomShowProfile	=	$data['ProfileCustomShowProfile'];
 				$ProfileCustomShowSearch	=	$data['ProfileCustomShowSearch'];
 				$ProfileCustomShowLogged	=	$data['ProfileCustomShowLogged'];
-				$ProfileCustomShowRegistration=	$data['ProfileCustomShowRegistration'];
+				$ProfileCustomShowRegistration =	$data['ProfileCustomShowRegistration'];
 				$ProfileCustomShowAdmin		=	$data['ProfileCustomShowAdmin'];
 			} 
             ?>
@@ -1861,7 +1861,11 @@ EOF;
         					<td>
                                 <input type="text" name="ProfileCustomOrder" value="0" />
         					</td>
-        				</tr>		
+        				</tr>
+                        <tr>
+                            <td valign="top">Title:</td>
+                            <td><input type="text" name="ProfileCustomTitle" value=""/></td>
+                        </tr>  		
         		
                     <?php else : //Edit/Update Field
             			$query1 = "SELECT ProfileCustomID, ProfileCustomTitle, ProfileCustomType, ProfileCustomOptions,  ProfileCustomOrder, ProfileCustomView,  ProfileCustomShowGender, ProfileCustomShowProfile, ProfileCustomShowSearch, ProfileCustomShowLogged, ProfileCustomShowAdmin, ProfileCustomShowRegistration FROM ". table_agency_customfields ." WHERE ProfileCustomID = ".$_GET["ProfileCustomID"];
