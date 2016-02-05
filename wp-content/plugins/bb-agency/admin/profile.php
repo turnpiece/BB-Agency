@@ -302,7 +302,7 @@ if (isset($_POST['action'])) {
                     }
                 }
  
-                bb_agency_checkdir($ProfileGallery);  // Check Directory - create directory if does not exist
+                $ProfileGallery = bb_agency_checkdir($ProfileGallery);  // Check Directory - create directory if does not exist
                 
                 // Upload Image & Add to Database
                 $i = 1;
@@ -643,7 +643,7 @@ function bb_display_manage($ProfileID) {
                     <?php else : ?>
                     <input type="text" id="ProfileGallery" name="ProfileGallery" value="<?php echo $ProfileGallery ?>" />
                     <div id="message">
-                        <span class="error"><?php _e("No Folder Exists", bb_agency_TEXTDOMAIN) ?></span>
+                        <span class="error"><?php printf(__("No %s folder exists", bb_agency_TEXTDOMAIN), $ProfileGallery) ?></span>
                     <?php endif; ?>
                     </div>
                   </td>

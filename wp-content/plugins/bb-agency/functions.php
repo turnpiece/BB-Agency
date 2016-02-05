@@ -3573,7 +3573,12 @@ function bb_agency_get_height($i) {
  *
  */
 function bb_agency_display_height($i) {
+
+	if (!is_numeric($i) && preg_match('/cm$/', $i))
+		return $i; // fix when height is set directly as 123cm
+
 	$i = intval($i);
+
 	$units =  (int)bb_agency_get_option('bb_agency_option_unittype');
 
 	switch ($units) {
@@ -3918,7 +3923,7 @@ function bb_agency_save_modelcard( $gallery, $lbda = false ) {
 	require_once(bb_agency_BASEPATH.'/Classes/ModelCard.php');
 
 	// check gallery directory exists
-    bb_agency_checkdir($gallery);
+    $gallery = bb_agency_checkdir($gallery);
 
     // instantiate model card class
     $Card = new ModelCard($gallery);
@@ -3956,7 +3961,7 @@ function bb_agency_save_lbda_modelcard( $gallery ) {
 	require_once(bb_agency_BASEPATH.'/Classes/LBDA_ModelCard.php');
 
 	// check gallery directory exists
-    bb_agency_checkdir($gallery);
+    $gallery = bb_agency_checkdir($gallery);
 
     // instantiate model card class
     $Card = new LBDA_ModelCard($gallery);
