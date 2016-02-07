@@ -2,156 +2,164 @@
 
 $siteurl = get_option('siteurl');
 
-global $wpdb;
+global $wpdb, $bb_agency_option_agencyemail, $bb_agency_option_agencyname, $bb_agency_option_agencyheader;
+
 $bb_options = bb_agency_get_option();
 
-	$bb_agency_option_agencyname		= bb_agency_get_option('bb_agency_option_agencyname');
+$bb_agency_option_agencyname = bb_agency_get_option('bb_agency_option_agencyname');
+$bb_agency_option_agencyemail = bb_agency_get_option('bb_agency_option_agencyemail');	
+$bb_agency_option_agencyheader = bb_agency_get_option('bb_agency_option_agencyheader');
 
-	$bb_agency_option_agencyemail	= bb_agency_get_option('bb_agency_option_agencyemail');	
-    $bb_agency_option_agencyheader	= bb_agency_get_option('bb_agency_option_agencyheader');
+function bb_agency_searchsaved_set_email_from() {
+    global $bb_agency_option_agencyemail;
+    return !empty($_POST['FromEmail']) ? stripslashes($_POST['FromEmail']) : $bb_agency_option_agencyemail;
+}
 
-	$SearchMuxHash			= $_GET["SearchMuxHash"]; // Set Hash
+$SearchMuxHash			= $_GET["SearchMuxHash"]; // Set Hash
 
 if (isset($_POST['action'])) {
 	$SearchID			= $_POST['SearchID'];
-
 	$SearchTitle		= $_POST['SearchTitle'];
-
 	$SearchType			= $_POST['SearchType'];
-
 	$SearchProfileID	= $_POST['SearchProfileID'];
-
 	$SearchOptions		= $_POST['SearchOptions'];
+
 	$action = $_POST['action'];
 
 	switch($action) {
 
-	// Add
+    	// Add
 
-	case 'addRecord':
+    	case 'addRecord':
 
-		if (!empty($SearchTitle)) {
-			// Create Record
-			$insert = "INSERT INTO " . table_agency_searchsaved .
-			" (SearchTitle,SearchType,SearchProfileID,SearchOptions)" .
-			"VALUES ('" . $wpdb->escape($SearchTitle) . "','" . $wpdb->escape($SearchType) . "','" . $wpdb->escape($SearchProfileID) . "','" . $wpdb->escape($SearchOptions) . "')";
+    		if (!empty($SearchTitle)) {
+    			// Create Record
+    			$insert = "INSERT INTO " . table_agency_searchsaved .
+    			" (SearchTitle,SearchType,SearchProfileID,SearchOptions)" .
+    			"VALUES ('" . $wpdb->escape($SearchTitle) . "','" . $wpdb->escape($SearchType) . "','" . $wpdb->escape($SearchProfileID) . "','" . $wpdb->escape($SearchOptions) . "')";
 
-		    $results = $wpdb->query($insert);
+    		    $results = $wpdb->query($insert);
 
-			$lastid = $wpdb->insert_id;
-			echo ('<div id="message" class="updated"><p>Search saved successfully! <a href="'. admin_url("admin.php?page=". $_GET['page']) .'&amp;action=emailCompose&amp;SearchID='. $lastid .'">Send Email</a></p></div>'); 
+    			$lastid = $wpdb->insert_id;
+    			echo ('<div id="message" class="updated"><p>Search saved successfully! <a href="'. admin_url("admin.php?page=". $_GET['page']) .'&amp;action=emailCompose&amp;SearchID='. $lastid .'">Send Email</a></p></div>'); 
 
-		} else {
-       	    echo ('<div id="message" class="error"><p>Error creating record, please ensure you have filled out all required fields.</p></div>'); 
-		}
+    		} else {
+           	    echo ('<div id="message" class="error"><p>Error creating record, please ensure you have filled out all required fields.</p></div>'); 
+    		}
 
-	break;
+    	   break;
 
-	// Delete bulk
+    	// Delete bulk
 
-	case 'deleteRecord':
+    	case 'deleteRecord':
 
-		foreach ($_POST as $SearchID) {
-			mysql_query("DELETE FROM " . table_agency_searchsaved . " WHERE SearchID= $SearchID");
-		}
+    		foreach ($_POST as $SearchID) {
+    			mysql_query("DELETE FROM " . table_agency_searchsaved . " WHERE SearchID= $SearchID");
+    		}
 
-		echo ('<div id="message" class="updated"><p>Profile deleted successfully!</p></div>');
+    		echo ('<div id="message" class="updated"><p>Profile deleted successfully!</p></div>');
 
-	break;
-	// Email
+    	   break;
 
-    case 'LBDAemailSend':
-	case 'emailSend':
+    	// Email
 
-		if (!empty($SearchID)) :
+        case 'LBDAemailSend':
+    	case 'emailSend':
 
-			$SearchID				= $_GET['SearchID'];
+    		if (!empty($SearchID)) :
 
-            $lbda = ( $_POST['action'] == 'LBDAemailSend' );
+    			$SearchID				= $_GET['SearchID'];
 
-			if (trim($_GET["SearchMuxHash"]) == '') {
-				$SearchMuxHash			= bb_agency_random(8);
-			}
-			
-            $FromEmail              = !empty($_POST['FromEmail']) ? stripslashes($_POST['FromEmail']) : $bb_agency_option_agencyemail;
-			$SearchMuxToName		= stripslashes($_POST['SearchMuxToName']);
-			$SearchMuxToEmail		= stripslashes($_POST['SearchMuxToEmail']);
-			$SearchMuxSubject		= stripslashes($_POST['SearchMuxSubject']);
-			$SearchMuxMessage		= stripslashes($_POST['SearchMuxMessage']);
-			$SearchMuxCustomValue	= $_POST['SearchMuxCustomValue'];
-			
-			$link = get_bloginfo("url") ."/client-view/".$SearchMuxHash;
-			
-            $SearchMuxMessage = str_ireplace("[link-place-holder]", "<a href='$link'>$link</a>", $SearchMuxMessage);
+                $lbda = ( $_POST['action'] == 'LBDAemailSend' );
 
-            // add terms link
-            if (bb_agency_TERMS) {
-                $SearchMuxMessage .= "\n\r\n\r\n\r" . sprintf(__('Any work undertaken is governed by our <a href="%s">Terms &amp; Conditions</a>', bb_agency_TEXTDOMAIN), bb_agency_TERMS);
-            }
+    			if (trim($_GET["SearchMuxHash"]) == '') {
+    				$SearchMuxHash			= bb_agency_random(8);
+    			}
+    			
+                $FromEmail              = !empty($_POST['FromEmail']) ? stripslashes($_POST['FromEmail']) : $bb_agency_option_agencyemail;
+    			$SearchMuxToName		= stripslashes($_POST['SearchMuxToName']);
+    			$SearchMuxToEmail		= stripslashes($_POST['SearchMuxToEmail']);
+    			$SearchMuxSubject		= stripslashes($_POST['SearchMuxSubject']);
+    			$SearchMuxMessage		= stripslashes($_POST['SearchMuxMessage']);
+    			$SearchMuxCustomValue	= $_POST['SearchMuxCustomValue'];
+    			
+    			$link = get_bloginfo("url") ."/client-view/".$SearchMuxHash;
+    			
+                $SearchMuxMessage = str_ireplace("[link-place-holder]", "<a href='$link'>$link</a>", $SearchMuxMessage);
 
-			// Create Record
+                // add terms link
+                if (bb_agency_TERMS) {
+                    $SearchMuxMessage .= "\n\r\n\r\n\r" . sprintf(__('Any work undertaken is governed by our <a href="%s">Terms &amp; Conditions</a>', bb_agency_TEXTDOMAIN), bb_agency_TERMS);
+                }
 
-			$insert = "INSERT INTO " . table_agency_searchsaved_mux .
-			" (SearchID,SearchMuxHash,SearchMuxToName,SearchMuxToEmail,SearchMuxSubject,SearchMuxMessage,SearchMuxCustomValue)" .
-			"VALUES ('" . $wpdb->escape($SearchID) . "','" . $wpdb->escape($SearchMuxHash) . "','" . $wpdb->escape($SearchMuxToName) . "','" . $wpdb->escape($SearchMuxToEmail) . "','" . $wpdb->escape($SearchMuxSubject) . "','" . $wpdb->escape($SearchMuxMessage) . "','" . $wpdb->escape($SearchMuxCustomValue) . "')";
+    			// Create Record
 
-		    $results = $wpdb->query($insert);
+    			$insert = "INSERT INTO " . table_agency_searchsaved_mux .
+    			" (SearchID,SearchMuxHash,SearchMuxToName,SearchMuxToEmail,SearchMuxSubject,SearchMuxMessage,SearchMuxCustomValue)" .
+    			"VALUES ('" . $wpdb->escape($SearchID) . "','" . $wpdb->escape($SearchMuxHash) . "','" . $wpdb->escape($SearchMuxToName) . "','" . $wpdb->escape($SearchMuxToEmail) . "','" . $wpdb->escape($SearchMuxSubject) . "','" . $wpdb->escape($SearchMuxMessage) . "','" . $wpdb->escape($SearchMuxCustomValue) . "')";
 
-			$lastid = $wpdb->insert_id;
-			// To send HTML mail, the Content-type header must be set
-            
-			// Mail it
+    		    $results = $wpdb->query($insert);
 
-			$headers  = 'MIME-Version: 1.0' . "\r\n";
-			$headers .= 'Content-type: text/html; charset='. bb_agency_CHARSET . "\r\n";
-			$headers .= 'From: '. $bb_agency_option_agencyname .' <'. $FromEmail .'>' . "\r\n";
+    			$lastid = $wpdb->insert_id;
+    			
+                // To send HTML mail, the Content-type header must be set
+    			// Mail it
+    			$headers  = 'MIME-Version: 1.0' . "\r\n";
+    			$headers .= 'Content-type: text/html; charset='. bb_agency_CHARSET . "\r\n";
+                $headers .= 'From: '. $bb_agency_option_agencyname .' <'. $FromEmail .'>' . "\r\n";
 
-            // attachments
-            $attachments = array();
+                add_filter( 'wp_mail_from', 'bb_agency_searchsaved_set_email_from' );
 
-            $query = "SELECT `SearchProfileID` FROM " . table_agency_searchsaved ." WHERE `SearchID` = ".$SearchID;
+                // attachments
+                $attachments = array();
 
-            $pID = $wpdb->get_var($query);
+                $query = "SELECT `SearchProfileID` FROM " . table_agency_searchsaved ." WHERE `SearchID` = ".$SearchID;
 
-            if (empty($pID))
-                wp_die('Failed to find that saved search.');
-                
-            $query = "SELECT * FROM ". table_agency_profile ." WHERE `ProfileID` IN (".$pID.") ORDER BY `ProfileContactNameFirst` ASC";
+                $pID = $wpdb->get_var($query);
 
-            $profiles = $wpdb->get_results($query);
+                if (empty($pID))
+                    wp_die('Failed to find that saved search.');
+                    
+                $query = "SELECT * FROM ". table_agency_profile ." WHERE `ProfileID` IN (".$pID.") ORDER BY `ProfileContactNameFirst` ASC";
 
-            foreach ($profiles AS $profile) {
-                if ($path = bb_agency_save_modelcard($profile->ProfileGallery, $lbda))
-                    $attachments[] = $path;
-            }
+                $profiles = $wpdb->get_results($query);
 
-			$isSent = wp_mail(
-                bb_agency_SEND_EMAILS ? $SearchMuxToEmail : $bb_agency_option_agencyemail, 
-                $SearchMuxSubject, 
-                nl2br($SearchMuxMessage), 
-                $headers,
-                $attachments
-            );
+                foreach ($profiles AS $profile) {
+                    if ($path = bb_agency_save_modelcard($profile->ProfileGallery, $lbda))
+                        $attachments[] = $path;
+                }
 
-			if ($isSent) : ?>   			
-                <div style="margin:15px;">
-        			<div id="message" class="updated">
-        			     <?php echo $lbda ? 'LBDA email' : 'Email' ?> successfully sent from <strong><?php echo $bb_agency_option_agencyemail ?></strong> to <strong><?php echo (bb_agency_SEND_EMAILS ? $SearchMuxToEmail : $bb_agency_option_agencyemail.'(would have gone to: '.$SearchMuxToEmail.')') ?></strong><br />
-                        <?php if (!empty($attachments)) : ?>
-                        <?php echo $lbda ? 'LBDA model' : 'Model' ?> card attachments:
-                        <ul>
-                        <?php foreach ($attachments as $attachment) : ?>
-                            <li><a href="<?php echo str_replace(bb_agency_UPLOADPATH, bb_agency_UPLOADDIR, $attachment) ?>"><?php echo basename($attachment) ?></a></li>
-                        <?php endforeach; ?>
-                        </ul>
-                        <?php endif; ?>
-        			</div>
-        		</div>				
-            <?php endif;
-		endif;
-	break;
+    			$isSent = wp_mail(
+                    bb_agency_SEND_EMAILS ? $SearchMuxToEmail : $bb_agency_option_agencyemail, 
+                    $SearchMuxSubject, 
+                    nl2br($SearchMuxMessage), 
+                    $headers,
+                    $attachments
+                );
+
+                remove_filter( 'wp_mail_from', 'bb_agency_searchsaved_set_email_from' );
+
+    			if ($isSent) : ?>   			
+                    <div style="margin:15px;">
+            			<div id="message" class="updated">
+            			     <?php echo $lbda ? 'LBDA email' : 'Email' ?> successfully sent from <strong><?php echo $FromEmail ?></strong> to <strong><?php echo (bb_agency_SEND_EMAILS ? $SearchMuxToEmail : $bb_agency_option_agencyemail.'(would have gone to: '.$SearchMuxToEmail.')') ?></strong><br />
+                            <?php if (!empty($attachments)) : ?>
+                            <?php echo $lbda ? 'LBDA model' : 'Model' ?> card attachments:
+                            <ul>
+                            <?php foreach ($attachments as $attachment) : ?>
+                                <li><a href="<?php echo str_replace(bb_agency_UPLOADPATH, bb_agency_UPLOADDIR, $attachment) ?>"><?php echo basename($attachment) ?></a></li>
+                            <?php endforeach; ?>
+                            </ul>
+                            <?php endif; ?>
+            			</div>
+            		</div>				
+                <?php endif;
+    		endif;
+    	   
+            break;
 
 	}
+
 } elseif ($_GET['action'] == "deleteRecord") {
 
 	$SearchID = $_GET['SearchID'];
@@ -187,8 +195,8 @@ if (isset($_POST['action'])) {
         <form method="post" enctype="multipart/form-data" action="<?php echo admin_url("admin.php?page=". $_GET['page'])."&amp;SearchID=".$_GET['SearchID']."&SearchMuxHash=".$_GET["SearchMuxHash"]; ?>">
       
             <p class="form-input">
-                <label for="SearchMuxFromEmail"><strong>Send from email:</strong></label><br/>
-                <input type="text" id="SearchMuxToEmail" name="SearchMuxFromEmail" value="<?php echo $bb_agency_option_agencyemail ?>" />
+                <label for="FromEmail"><strong>Send from email:</strong></label><br/>
+                <input type="text" id="FromEmail" name="FromEmail" value="<?php echo $bb_agency_option_agencyemail ?>" />
             </p>
             <p class="form-input">
                 <label for="SearchMuxToName"><strong>Send to name:</strong></label><br/><input style="width:300px;" type="text" id="SearchMuxToName" name="SearchMuxToName" value="<?php echo $dataSearchSavedMux["SearchMuxToName"]; ?>" />
@@ -606,12 +614,10 @@ if (isset($_POST['action'])) {
 		<?php
 
 		}
-
 			mysql_free_result($results2);
 
 			if ($count2 < 1) {
 				if (isset($filter)) { 
-
 		?>
 		<tr>
 

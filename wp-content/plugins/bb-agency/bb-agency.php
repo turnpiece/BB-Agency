@@ -48,7 +48,7 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 	define('bb_agency_PLUGIN_TITLE', 'BB Agency'. (bb_agency_SITETYPE == 'children' ? ' (Kiddiwinks)' : ''));
 	define('bb_agency_PHONE', bb_agency_SITETYPE == 'children' ? '020 3051 8894' : '020 3355 8743');
 	define('bb_agency_LOGOPATH', ABSPATH . '/wp-content/uploads/' . (bb_agency_SITETYPE == 'children' ? '2014/07/Kiddiwinks-Logo.png' : '2013/07/Beautiful_Bumps_Logo1.jpg'));
-	define('bb_agency_DEBUGGING', false); // debugging
+	define('bb_agency_DEBUGGING', true); // debugging
 	
 	//define('bb_agency_TESTING', true);
 	define('bb_agency_TERMS', get_bloginfo('url').'/clients-standard-terms-conditions');
@@ -627,13 +627,13 @@ if ( is_admin() ){
 	}
 
 	add_filter ('wp_mail_from', 'bb_agency_set_mail_from');
-	function bb_agency_set_mail_from() {
-		return bb_agency_get_option('bb_agency_option_agencyemail');
+	function bb_agency_set_mail_from( $email = null ) {
+		return is_null($email) ? bb_agency_get_option('bb_agency_option_agencyemail') : $email;
 	}
 		
 	add_filter ('wp_mail_from_name', 'bb_agency_set_mail_from_name');
-	function bb_agency_set_mail_from_name() {
-		return bb_agency_get_option('bb_agency_option_agencyname');
+	function bb_agency_set_mail_from_name( $name = null ) {
+		return is_null($name) ? bb_agency_get_option('bb_agency_option_agencyname') : $name;
 	}
 
 

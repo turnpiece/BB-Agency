@@ -585,29 +585,57 @@
      * @param string $ProfileGallery
      */
     function bb_agency_checkdir($ProfileGallery) {
+
+    	bb_agency_debug( __FUNCTION__ . " input $ProfileGallery" );
 	      	
-		if (!is_dir(bb_agency_UPLOADPATH . $ProfileGallery)) {
-			mkdir(bb_agency_UPLOADPATH . $ProfileGallery, 0755);
-			chmod(bb_agency_UPLOADPATH . $ProfileGallery, 0777);
-		} else {
+		if (! bb_agency_have_profile_dir( $ProfileGallery ) ) {
+			bb_agency_create_profile_dir( $ProfileGallery );
+		} 
+
+		if (! bb_agency_have_profile_dir( $ProfileGallery ) ) {
 			$finished = false;      
 			$pos = 0;                 // we're not finished yet (we just started)
 			while ( ! $finished ):                   // while not finished
 			 	$pos++;
 			  	$NewProfileGallery = $ProfileGallery ."-".$pos;   // output folder name
-			  	if ( ! is_dir(bb_agency_UPLOADPATH . $NewProfileGallery) ):        // if folder DOES NOT exist...
-					mkdir(bb_agency_UPLOADPATH . $NewProfileGallery, 0755);
-					chmod(bb_agency_UPLOADPATH . $NewProfileGallery, 0777);
+			  	if ( ! bb_agency_have_profile_dir( $NewProfileGallery ) ) :  // if folder DOES NOT exist...
+					bb_agency_create_profile_dir( $NewProfileGallery );
 					$ProfileGallery = $NewProfileGallery;  // Set it to the new  thing
 					$finished = true;                    // ...we are finished
 			  	endif;
 			endwhile;
 		}
+
+		bb_agency_debug( __FUNCTION__ . " return $ProfileGallery" );
+
 		return $ProfileGallery;			
     }
 
+    /**
+     *
+     * Do we have a profile gallery?
+     *
+     * @param string $ProfileGallery
+     * @return boolean
+     *
+     */
+	function bb_agency_have_profile_dir( $ProfileGallery ) {
+		return is_dir(bb_agency_UPLOADPATH . $ProfileGallery);
+	}
 
-   /**
+    /**
+     *
+     * Create profile gallery?
+     *
+     * @param string $ProfileGallery
+     *
+     */
+    function bb_agency_create_profile_dir( $ProfileGallery ) {
+    	mkdir(bb_agency_UPLOADPATH . $ProfileGallery, 0755);
+		chmod(bb_agency_UPLOADPATH . $ProfileGallery, 0777);
+    }
+
+    /**
      * Check directory (do not create, just check)
      *
      * @param string $ProfileGallery
