@@ -5,7 +5,7 @@
   Description: Forked from RB Agency plugin and adapted for the Beautiful Bumps agency. With this plugin you can easily manage models' profiles and information.
   Author: Paul Jenkins
   Author URI: http://turnpiece.com/
-  Version: 0.0.5
+  Version: 0.0.6
 */
 
 $bb_agency_VERSION = "2.0.0"; // starter
@@ -48,7 +48,7 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 	define('bb_agency_PLUGIN_TITLE', 'BB Agency'. (bb_agency_SITETYPE == 'children' ? ' (Kiddiwinks)' : ''));
 	define('bb_agency_PHONE', bb_agency_SITETYPE == 'children' ? '020 3051 8894' : '020 3355 8743');
 	define('bb_agency_LOGOPATH', ABSPATH . '/wp-content/uploads/' . (bb_agency_SITETYPE == 'children' ? '2014/07/Kiddiwinks-Logo.png' : '2013/07/Beautiful_Bumps_Logo1.jpg'));
-	define('bb_agency_DEBUGGING', true); // debugging
+	define('bb_agency_DEBUGGING', false); // debugging
 	
 	//define('bb_agency_TESTING', true);
 	define('bb_agency_TERMS', get_bloginfo('url').'/clients-standard-terms-conditions');
@@ -457,7 +457,7 @@ if ( is_admin() ){
 		}
 
 	add_action('wp_footer', 'bb_agency_wp_footer');
-	add_action( 'admin_print_footer_scripts', 'bb_agency_wp_footer', 100);
+	add_action( 'admin_print_scripts', 'bb_agency_wp_footer', 100);
 		function bb_agency_wp_footer() {
 			echo "<script type=\"text/javascript\">\n";
 			echo "jQuery(document).ready(function(){\n";
@@ -468,12 +468,12 @@ if ( is_admin() ){
 			echo "</script>\n";
 		}
 
-	add_action( 'admin_print_footer_scripts', 'bb_agency_admin_print_scripts', 100);
+	add_action( 'admin_print_scripts', 'bb_agency_admin_print_scripts', 100);
 		function bb_agency_admin_print_scripts() {
 			wp_enqueue_script('jquery-ui-script', plugins_url('js/jquery-ui-1.10.3.custom.min.js', __FILE__), array('jquery') );
 		}
 
-	add_action( 'admin_print_styles', 'bb_agency_admin_print_styles', 100);
+	add_action( 'init', 'bb_agency_admin_print_styles', 100);
 		function bb_agency_admin_print_styles() {
 			wp_enqueue_style('jquery-ui-style', plugins_url('js/jquery-ui-1.10.3.custom.min.css', __FILE__) );
 		}
@@ -627,13 +627,13 @@ if ( is_admin() ){
 	}
 
 	add_filter ('wp_mail_from', 'bb_agency_set_mail_from');
-	function bb_agency_set_mail_from() {
-		return bb_agency_get_option('bb_agency_option_agencyemail');
+	function bb_agency_set_mail_from( $email = null ) {
+		return is_null($email) ? bb_agency_get_option('bb_agency_option_agencyemail') : $email;
 	}
 		
 	add_filter ('wp_mail_from_name', 'bb_agency_set_mail_from_name');
-	function bb_agency_set_mail_from_name() {
-		return bb_agency_get_option('bb_agency_option_agencyname');
+	function bb_agency_set_mail_from_name( $name = null ) {
+		return is_null($name) ? bb_agency_get_option('bb_agency_option_agencyname') : $name;
 	}
 
 
@@ -655,6 +655,9 @@ if ( is_admin() ){
 		$wpdb->query("DROP TABLE " . table_agency_data_gender);
 		$wpdb->query("DROP TABLE " . table_agency_rel_taxonomy);
 		$wpdb->query("DROP TABLE " . table_agency_data_type);
+		$wpdb->query("DROP TABLE " . table_agency_data_talent);
+		$wpdb->query("DROP TABLE " . table_agency_data_genre);
+		$wpdb->query("DROP TABLE " . table_agency_data_ability);
 		$wpdb->query("DROP TABLE " . table_agency_customfields);
 		$wpdb->query("DROP TABLE " . table_agency_customfield_mux);
 		$wpdb->query("DROP TABLE " . table_agency_searchsaved);

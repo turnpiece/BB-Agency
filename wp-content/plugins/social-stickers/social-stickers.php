@@ -2,11 +2,11 @@
 
 	/* 
 		Plugin Name: Social Stickers
-		Plugin URI: http://wpplugz.is-leet.com
+		Plugin URI: http://bostjan-cigan.com/plugins
 		Description: A simple plugin that shows the social networks you use.
-		Version: 2.2.3
+		Version: 2.2.9
 		Author: Bostjan Cigan
-		Author URI: http://bostjan.gets-it.net
+		Author URI: http://bostjan-cigan.com
 		License: GPL v2
 	*/ 
 	
@@ -26,6 +26,7 @@
 	add_action('admin_init', 'social_stickers_scripts'); // Add javascript for sorting but only in admin area
 	add_shortcode('social_stickers', 'social_stickers_shortcode_handler');
 	add_action('wp_ajax_social_stickers_reload_admin_theme', 'social_stickers_theme_reload');
+	add_filter('widget_text', 'do_shortcode');
 
 	function social_stickers_theme_reload() {
 		ob_start();
@@ -67,7 +68,7 @@
 	// The installation array, also used for the update procedure
 	global $social_stickers_options_install;
 	$social_stickers_options_install = array(
-		'version' => '2.23',
+		'version' => '2.29',
 		'powered_by_msg' => false,
 		'mode' => 0, // Mode of output - 0 is 32x32 icon, 1 is 64x64 icon, 2 is 128x128 icon, 3 is small icon and text
 		'theme' => 'default',
@@ -562,7 +563,7 @@
 	// Update script ...
 	$options = get_option('social_stickers_settings');
 	if(is_array($options)) {
-		if(((float)$options['version']) < 2.23) {
+		if(((float)$options['version']) < 2.26) {
 			update_social_stickers();
 		}	
 	}
@@ -578,7 +579,7 @@
 		global $social_stickers_options_install;
 		$options = get_option('social_stickers_settings');
 		
-		if(((float) $options['version']) < 2.23) {
+		if(((float) $options['version']) < 2.29) {
 
 			unset($options['prefix']); // These two are deprecated in v2.0
 			unset($options['suffix']);
@@ -634,7 +635,7 @@
 					}
 			}
 
-			$options['version'] = '2.23';
+			$options['version'] = '2.29';
 			update_option('social_stickers_settings', $options);
 			
 		}
@@ -987,9 +988,8 @@
 			<tr>
 				<th scope="row"><img src="<?php echo plugin_dir_url(__FILE__).'images/main.png'; ?>" height="96px" width="96px" /></th>
 				<td>
-					<p>Thank you for using this plugin. If you like the plugin, you can <a href="http://gum.co/social-stickers" target="_blank">buy me a cup of coffee</a> :)</p>
-					<p><strong>Want more features</strong> like <strong>drag and drop theme uploading</strong>, <strong>multisite</strong> compatibility, <strong>statistics</strong> tracking, shortcode generation? <strong><a href="https://gum.co/social-stickers-pro">GO PRO.</a></strong><script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
-					<p>You can visit the official website and download more themes @ <a href="http://wpplugz.is-leet.com">wpPlugz</a>.</p>
+					<p>Thank you for using this plugin. If you like the plugin, you can <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=SKMW3BAC8KE52" target="_blank">buy me a cup of coffee</a> :)</p>
+					<p><strong>Want more features</strong> like <strong>drag and drop theme uploading</strong>, <strong>multisite</strong> compatibility, <strong>statistics</strong> tracking, shortcode generation? <strong><a href="http://bostjan-cigan.com/plugin/social-stickers-pro">GO PRO.</a></strong></p>
 					<p>This plugin uses icons from <a href="http://www.visualpharm.com/">VisualPharm</a> in the settings pages and the <a href="https://github.com/themattharris/tmhOAuth">tmhOAuth</a> library by Matt Harris.</p>
 				</td>
 			</tr>
@@ -1741,7 +1741,7 @@
 		else if(!$sortable && !$options['custom_html']) { // Default mode
 			$output = social_stickers_general_html_show($options);
 		}
-		
+
 		if($options['powered_by_msg']) {
 			$output = $output.'<br /><br />Powered by <a href="http://wpplugz.is-leet.com">wpPlugz</a>.';
 		}
@@ -1791,7 +1791,7 @@
 		
 		function social_stickers_widget() {
 			$widget_ops = array('classname' => 'social_stickers_widget', 'description' => 'Display the social networks you use!' );			
-			$this->WP_Widget('social_stickers_widget', 'Social Stickers', $widget_ops);
+			parent::__construct('social_stickers_widget', 'Social Stickers', $widget_ops);
 		}
 		
 		function widget($args, $instance) {
@@ -1805,9 +1805,10 @@
 				echo $before_title . $title . $after_title;
 			}
 			
-			// The widget code and the widgeet output
+			// The widget code and the widget output
 			
-			display_social_stickers();
+			$output = display_social_stickers(false, true, false);
+			echo $output;
 			
 			// End of widget output
 			

@@ -233,16 +233,20 @@ if (is_user_logged_in()) {
 			
 			/* Check if the user is regsitered *****************************************/ 
 			// Verify Record
-			$sql = "SELECT ProfileID FROM ". table_agency_profile ." WHERE ProfileUserLinked =  ". $current_user->ID ."";
-			$results = mysql_query($sql);
-			$count = mysql_num_rows($results);
-			if ($count > 0) {
-			  	while ($data =@mysql_fetch_array($results)) {
-			
+
+			$ProfileUserLinked = $current_user->id;
+
+			$query = "SELECT * FROM " . table_agency_profile . " WHERE `ProfileUserLinked` = $ProfileUserLinked LIMIT 1";
+
+			bb_agency_debug($query);
+
+			$profile = $wpdb->get_row( $query );
+
+			if ($profile) {
+
 				// Manage Profile
-				include("include-profilemedia.php"); 	
+				include 'include-profilemedia.php'; 	
 						
-			  	} // is there record?
 			} else {
 				
 				// No Record Exists, register them

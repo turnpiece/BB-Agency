@@ -175,51 +175,6 @@
 		}
 
 
-	/*
-
-	OBSOLETE  Just use for reference
-
-	add_filter("registration_redirect", "bb_agencyinteract_register_redirect");
-		function bb_agencyinteract_register_redirect() {
-			return "/profile-member/";
-		}
-	add_filter('register', 'bb_agencyinteract_register_movepage');
-		function bb_agencyinteract_register_movepage($link) {
-			if(!is_user_logged_in()) {
-				$link = '<a href="/profile-register/">' . __('Register') . '</a>';
-			}
-			$link = str_replace(site_url("wp-login.php?action=register"), "/profile-member/", $link );
-			return $link;
-		}
-	add_filter('site_url',  'wplogin_filter', 10, 3);
-		function wplogin_filter( $url, $path, $orig_scheme) {
-			$old  = array( "/(wp-login\.php)/");
-			$new  = array( "/profile-login/");
-			return preg_replace( $old, $new, $url, 1);
-		}
-	// Redirect after Registration
-	add_filter("register_redirect", "bb_agencyinteract_register_redirect");
-		function bb_agencyinteract_register_redirect() {
-			return "/profile-member/";
-		}
-		
-
-	// Change Login URL
-	// Change Registration Form Submit Titles
-	add_filter('register', 'change_admin');
-		function change_admin($link) {
-			$link = str_replace("Site Admin", "Your Account", $link);
-			return $link;
-		}
-	add_filter('register', 'bb_agencyinteract_register_changenames');
-		function bb_agencyinteract_register_changenames($link) {
-			$link = str_replace(">Register<", ">Sign up<", $link);
-			return $link;
-		}
-	*/
-
-
-
     // function for checking male and female filter
 	if ( !function_exists('gender_filter') ) {  
 		function gender_filter($gender=0) {

@@ -17,7 +17,7 @@ class ModelCard {
     
     function __construct($model) {
         $this->model = $model;
-
+        $this->debugging = $this->debugging && bb_agency_DEBUGGING;
         $this->set_profile();
     }
 
@@ -74,7 +74,7 @@ class ModelCard {
             $success = @imagejpeg($this->canvas, $this->filepath(), $this->quality);
         
         if (!$success)
-            $this->fatal("Unable to write to ".$this->filepath());
+            return $this->fatal("Unable to write to ".$this->filepath());
 
         // Free up memory
         imagedestroy($this->canvas);
@@ -106,7 +106,7 @@ class ModelCard {
         if (!@file_exists($path) || $this->debugging) {
             $this->debug( __FUNCTION__ . " card not found at $path so creating it..." );
 
-            if (!$this->save())
+            if (!$this->save(true))
                 return $this->fatal('Failed to save image to '.$path);
         }
 
@@ -141,6 +141,9 @@ class ModelCard {
 
             for ($i = 1; $i <= 4; $i++) {
                 if ($name = $this->get_profile_field('child'.$i.'_name')) {
+                    if ($age = $this->get_age( $this->get_profile_field('child'.$i.'_dob') )) {
+                        $name .= " ($age)";
+                    }
                     $this->print_text( $name );
                     $this->text_y += $this->line_height;
                 }
@@ -156,7 +159,7 @@ class ModelCard {
 
         if (bb_agency_SITETYPE == 'children' && $this->get_profile_field('ProfileType') != 2) {
             // children
-            if ($age = $this->get_age()) {
+            if ($age = $this->get_age( $this->profile['ProfileDateBirth'] )) {
                 $this->print_text( 'Age: ' . $age );
                 $this->text_y += $this->line_height;
             }
@@ -258,7 +261,11 @@ class ModelCard {
                 child1.`ProfileCustomValue` AS child1_name,
                 child2.`ProfileCustomValue` AS child2_name,
                 child3.`ProfileCustomValue` AS child3_name,
-                child4.`ProfileCustomValue` AS child4_name
+                child4.`ProfileCustomValue` AS child4_name,
+                child1_dob.`ProfileCustomValue` AS child1_dob,
+                child2_dob.`ProfileCustomValue` AS child2_dob,
+                child3_dob.`ProfileCustomValue` AS child3_dob,
+                child4_dob.`ProfileCustomValue` AS child4_dob
             FROM $t_profile AS p
             LEFT JOIN $t_datatype AS dt ON dt.`DataTypeID` = p.`ProfileType`
             LEFT JOIN $t_media AS m ON m.`ProfileID` = p.`ProfileID` AND m.`ProfileMediaPrimary` = 1 AND m.`ProfileMediaType` = 'Image'
@@ -283,7 +290,7 @@ class ModelCard {
         $profile = $wpdb->get_row( $wpdb->prepare( $query, $this->model ), ARRAY_A );
 
         if (empty($profile))
-            $this->fatal( "Failed to get profile for model '$this->model' - " . mysql_error() );
+            return $this->fatal( "Failed to get profile for model '$this->model' - " . mysql_error() );
 
         $this->debug( print_r($profile, true) );
 
@@ -294,11 +301,17 @@ class ModelCard {
         imagettftext($this->canvas, $this->text_size, 0, $this->text_x, $this->text_y, $this->text_colour, $this->fontfile, $string);
     }
 
-    protected function get_age() {
-        if (!$this->profile['ProfileDateBirth'] || strpos($this->profile['ProfileDateBirth'], '0') == 0)
-            return false;
+    /**
+     *
+     * get age
+     *
+     * @param string $dob
+     * @return string
+     *
+     */
+    protected function get_age( $dob ) {
 
-        $birthday = new DateTime($this->profile['ProfileDateBirth']);
+        $birthday = new DateTime($dob);
         $interval = $birthday->diff(new DateTime);
         if ($interval->y > 1)
             return $interval->y;
@@ -316,6 +329,9 @@ class ModelCard {
 
         $height = intval($this->profile['height']);
 
+        if (preg_match('/cm$/', $height))
+            return $height;
+        
         if (bb_agency_get_option('bb_agency_option_unittype') == 0)
             return $height.' '.__('cm', bb_agency_TEXTDOMAIN);
 
@@ -354,7 +370,7 @@ class ModelCard {
             break;
 
             default:
-                return $this->fatal('File "'.$filename.'" is not valid jpg, png or gif image.');
+                return $this->set_error('File "'.$filename.'" is not valid jpg, png or gif image.');
             break;
         }
     }
@@ -363,6 +379,8 @@ class ModelCard {
 
         if ((!list($w, $h) = getimagesize($src)) || $w == 0 || $h == 0)
             return $this->set_error("$src is an unsupported picture type");
+
+        $this->debug( __FUNCTION__ . " resizing image $src" );
 
         $type = strtolower(substr(strrchr($src, "."), 1));
         
@@ -387,7 +405,7 @@ class ModelCard {
         }
 
         if (empty($img))
-            return $this->set_error("Failed to read image ".basename($src));
+            return $this->set_error("Failed to read $type image ".basename($src));
 
         // resize
         if ($crop){
@@ -412,7 +430,7 @@ class ModelCard {
 
         imagecopyresampled($new, $img, 0, 0, $x, 0, $width, $height, $w, $h);
 
-        $this->debug( __FUNCTION__ . " created image with width $width and height $height" );
+        $this->debug( __FUNCTION__ . " created $type image with width $width and height $height" );
 
         return $new;
     }
@@ -428,7 +446,7 @@ class ModelCard {
         $this->debug( __FUNCTION__ . ' ' . $key );
 
         if (empty($this->profile))
-            $this->fatal( "Profile was not set." );
+            return $this->set_error( "Profile was not set." );
 
         if (!isset($this->profile[$key]))
             return $this->set_error( "Profile field $key was not set" );
@@ -453,6 +471,7 @@ class ModelCard {
 
     protected function fatal($message) {
         $this->set_error( $message );
-        return false;
+
+        wp_die( $message );
     }
 }

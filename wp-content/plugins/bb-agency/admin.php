@@ -35,6 +35,7 @@ function bb_agency_init() {
         add_action('admin_menu', 'bb_agency_addsettingspage');
     }
 }
+
 function bb_agency_on_load() {
     add_filter( 'plugin_action_links_' . bb_agency_BASENAME, 'bb_agency_filter_plugin_meta', 10, 2 );  
 }

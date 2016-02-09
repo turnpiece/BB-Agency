@@ -12,10 +12,11 @@
 
     $cusFields = array("Suit","Bust","Shirt","Dress","Height");  //for custom fields min and max
 
-    $bb_agency_option_unittype =  bb_agency_get_option('bb_agency_option_unittype');
     $bb_agency_option_persearch = (int)bb_agency_get_option('bb_agency_option_persearch');
     $bb_agency_option_agencyemail = (int)bb_agency_get_option('bb_agency_option_agencyemail');
-    if ($bb_agency_option_persearch <= 1) { $bb_agency_option_persearch = 100; }
+    if ($bb_agency_option_persearch <= 1) { 
+        $bb_agency_option_persearch = 100; 
+    }
 
     echo "<script>function redirectSearch(){ window.location.href = 'admin.php?page=bb_agency_search';}</script>"; 
 
@@ -423,29 +424,19 @@ if ($action) {
             $filter .= ' AND '.implode(" \nAND ", $where);
         }
 
-        // Search Results   
+        // Search Results
         $query = "
-             SELECT 
-             profile.*,
-             CONCAT(profile.`ProfileContactNameFirst`,' ',profile.`ProfileContactNameLast`) AS `ProfileContactName`,
-             profile.ProfileID as pID, 
-             customfield_mux.*, ".
-             (!empty($select) ? implode(', ', $select).', ' : '')."
-                    (
-                      SELECT media.ProfileMediaURL 
-                              FROM ". table_agency_profile_media ." media 
-                      WHERE profile.ProfileID = media.ProfileID 
-                            AND 
-                            media.ProfileMediaType = \"Image\" 
-                            AND 
-                            media.ProfileMediaPrimary = 1
-                    ) 
-                    AS ProfileMediaURL FROM ". table_agency_profile ." profile ".
+            SELECT 
+            profile.*,
+            CONCAT(profile.`ProfileContactNameFirst`,' ',profile.`ProfileContactNameLast`) AS `ProfileContactName`,
+            profile.ProfileID as pID, 
+            media.ProfileMediaURL".
+            (!empty($select) ? implode(', ', $select).', ' : '')." 
+            FROM ".table_agency_profile." AS profile ".
             (empty($joins) ? '' : implode(' ', $joins))." 
-            LEFT JOIN ". table_agency_customfield_mux ." 
-                        AS customfield_mux 
-                    ON profile.ProfileID = customfield_mux.ProfileID  
-                    ".$filter." ".$cartQuery."   
+            LEFT JOIN ". table_agency_profile_media ." AS media 
+            ON profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1 
+            ".$filter." ".$cartQuery."   
             GROUP BY profile.ProfileID ".
             (empty($having) ? '' : 'HAVING '.implode(' AND ', $having))." 
             ORDER BY $sort $dir $limit";
@@ -456,7 +447,9 @@ if ($action) {
         ?>
         <h2 class="title">Search Results: <?php echo $count ?></h2>
         <?php
-        //echo "<pre>$query</pre>";
+
+        if (bb_agency_DEBUGGING)
+            echo "<pre>$query</pre>";
         
         if ($count > $bb_agency_option_persearch - 1 && !isset($_GET['limit']) && empty($_GET['limit'])) : ?>
             <div id="message" class="error">
@@ -833,9 +826,9 @@ EOF;
                                      
                                     $DataTypes = $wpdb->get_results("SELECT * FROM ". table_agency_data_type);
                                     
-                                    foreach ($DataType as $type) : if (!in_array(strtolower($type->DataTypeTitle), $filter)) : ?>
+                                    if (!empty($DataTypes)) : foreach ($DataTypes as $type) : if (!in_array(strtolower($type->DataTypeTitle), $filter)) : ?>
                                     <option value="<?php echo $type->DataTypeID ?>" <?php selected(isset($_SESSION['ProfileType']) ? $_SESSION['ProfileType'] : false, $type->DataTypeID) ?>><?php echo $type->DataTypeTitle ?></option>
-                                    <?php endif; endforeach; ?>
+                                    <?php endif; endforeach; endif; ?>
                                     
                                 </select>
                             </td>
@@ -1010,6 +1003,9 @@ EOF;
                             */
                             
                             if ($type == 7) { //measurements field type
+
+                                $bb_agency_option_unittype = (int)bb_agency_get_option('bb_agency_option_unittype');
+                                
                                 switch ($bb_agency_option_unittype) {
                                     case 0:
                                     switch ($options) {
@@ -1061,14 +1057,14 @@ EOF;
                             <?php    
                             if (in_array($title, $cusFields)) : // use alternative inputs for custom fields defined at top of this page
 
-                                if ($title == 'Height') : $limit = (bb_agency_SITETYPE == 'children' ? 60 : 90); ?>
+                                if ($title == 'Height') : $limit = 90; ?>
                                     <fieldset class="bbselect">
                                         <div>
                                             <label>Min</label>
                                             <select name="<?php echo $field ?>_min">
                                                 <option value="">--</option>
                                             <?php for ($i = 12; $i <= $limit; $i++) : // display height options ?>
-                                                <option value="<?php echo $i ?>" <?php selected(isset($_GET[$field.'_min']) ? $_GET[$field.'_min'] : false, $i) ?>><?php echo bb_agency_display_height($i) ?></option>
+                                                <option value="<?php echo bb_agency_get_height($i) ?>" <?php selected(isset($_GET[$field.'_min']) ? $_GET[$field.'_min'] : false, $i) ?>><?php echo bb_agency_display_height($i) ?></option>
                                             <?php endfor; ?>
                                             </select>
                                         </div>
@@ -1077,7 +1073,7 @@ EOF;
                                             <select name="<?php echo $field ?>_max">
                                                 <option value="">--</option>
                                             <?php for ($i = 12; $i <= $limit; $i++) : // display height options ?>
-                                                <option value="<?php echo $i ?>" <?php selected(isset($_GET[$field.'_max']) ? $_GET[$field.'_max'] : false, $i) ?>><?php echo bb_agency_display_height($i) ?></option>
+                                                <option value="<?php echo bb_agency_get_height($i) ?>" <?php selected(isset($_GET[$field.'_max']) ? $_GET[$field.'_max'] : false, $i) ?>><?php echo bb_agency_display_height($i) ?></option>
                                             <?php endfor; ?>
                                             </select>
                                         </div>
@@ -1235,7 +1231,7 @@ EOF;
                                      
                                     list($min_val, $max_val) =  @explode(",", $_SESSION[$field]);
 
-                                    if ($title == 'Height' && $bb_agency_option_unittype == 1) : ?>
+                                    if ($title == 'Height') : ?>
                                         <fieldset class="bbselect">
                                             <div>
                                                 <label>Min</label>
@@ -1243,7 +1239,7 @@ EOF;
                                                     <option value="">--</option>
                                         
                                                 <?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
-                                                    <option value="<?php echo $i ?>" <?php echo selected($min_val, $i) ?>><?php echo bb_agency_display_height($i) ?></option>
+                                                    <option value="<?php echo bb_agency_get_height($i) ?>" <?php echo selected($min_val, $i) ?>><?php echo bb_agency_display_height($i) ?></option>
                                                 <?php endfor; ?>
                                                 </select>
                                             </div>
@@ -1253,7 +1249,7 @@ EOF;
                                                 <select name="<?php echo $field ?>_max">
                                                     <option value="">--</option>
                                                 <?php for ($i = 12; $i <= 90; $i++) : // display height options ?>
-                                                    <option value="<?php echo $i ?>" <?php echo selected($max_val, $i) ?>><?php echo bb_agency_display_height($i) ?></option>
+                                                    <option value="<?php echo bb_agency_get_height($i) ?>" <?php echo selected($max_val, $i) ?>><?php echo bb_agency_display_height($i) ?></option>
                                                 <?php endfor; ?>
                                                 </select>
                                             </div>
