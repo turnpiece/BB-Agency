@@ -2011,10 +2011,10 @@ function bb_custom_fields($visibility = 0, $ProfileID, $ProfileGender, $ProfileG
 	global $wpdb;
 				
 	$query = 'SELECT * FROM '. table_agency_customfields .' WHERE `ProfileCustomView` = '.$visibility;
-	
+	/*
 	if (!is_null($ProfileType))
-		$query .= ' AND (`ProfileType` = '.$ProfileType.' OR `ProfileType` IS NULL)';
-
+		$query .= ' AND (`ProfileCustomType` = '.$ProfileType.' OR `ProfileCustomType` IS NULL)';
+	*/
 	$query .= ' ORDER BY `ProfileCustomOrder`';
 
 	bb_agency_debug( $query );
