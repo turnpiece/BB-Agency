@@ -333,7 +333,7 @@ class ModelCard {
             return $height;
         
         if (bb_agency_get_option('bb_agency_option_unittype') == 0)
-            return $height.' '.__('cm', bb_agency_TEXTDOMAIN);
+            return intval(2.54 * $height).' '.__('cm', bb_agency_TEXTDOMAIN);
 
         else {
             $feet = floor(intval($height) / 12);

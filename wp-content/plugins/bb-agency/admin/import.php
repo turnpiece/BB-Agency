@@ -114,17 +114,20 @@
         <p>Found <?php echo count($galleries) ?> profiles with duplicate profile gallery folders. A profile's gallery folder should be unique so these duplicate profiles should be deleted.</p>
 
         <table class="data-table">
-        <?php foreach ($galleries as $gallery) : if ($profiles = bb_agency_get_profiles_by_gallery( $gallery )) : ?>
+        <?php $sql = array(); foreach ($galleries as $gallery) : if ($profiles = bb_agency_get_profiles_by_gallery( $gallery )) : ?>
             <tr>
                 <th><?php echo $gallery ?></th>
                 <td>
-                <?php foreach ($profiles as $p) : ?>
+                <?php $first = true; foreach ($profiles as $p) : if (!$first) : $sql[] = "DELETE FROM `".table_agency_profile."` WHERE `ProfileID` =  '$p->ProfileID';"; $sql[] = "DELETE FROM `".table_agency_profile_media."` WHERE `ProfileID` =  '$p->ProfileID';"; ?>
                     <a href="<?php echo admin_url('admin.php?page=bb_agency_profiles&amp;action=deleteDuplicateRecord&amp;ProfileID='. $p->ProfileID) ?>" title="Delete this profile"><?php printf( __('Profile ID %d', bb_agency_TEXTDOMAIN), $p->ProfileID) ?></a><br />
-                <?php endforeach; ?>
+                <?php else : $first = false; endif; endforeach; ?>
                 </td>
             </tr>
         <?php endif; endforeach; ?>
         </table>
+        <?php if (!empty($sql)) : ?>
+        <p><textarea><?php echo implode("\n", $sql) ?></textarea></p>
+        <?php endif; ?>
     <?php else : ?>
         <p>No gallery duplicates were found.</p>
     <?php endif; ?>
@@ -137,9 +140,9 @@
             <tr>
                 <th><?php echo $user ?></th>
                 <td>
-                <?php foreach ($profiles as $p) : ?>
+                <?php $first = true; foreach ($profiles as $p) : if (!$first) : ?>
                     <a href="<?php echo admin_url('admin.php?page=bb_agency_profiles&amp;action=deleteDuplicateRecord&amp;ProfileID='. $p->ProfileID) ?>" title="Delete this profile"><?php printf( __('Profile ID %d', bb_agency_TEXTDOMAIN), $p->ProfileID) ?></a><br />
-                <?php endforeach; ?>
+                <?php else : $first = false; endif; endforeach; ?>
                 </td>
             </tr>
         <?php endif; endforeach; ?>
