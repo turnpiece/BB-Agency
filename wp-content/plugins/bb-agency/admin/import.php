@@ -116,10 +116,10 @@
         <table class="data-table">
         <?php foreach ($galleries as $gallery) : if ($profiles = bb_agency_get_profiles_by_gallery( $gallery )) : ?>
             <tr>
-                <th><?php echo $profile->ProfileGallery ?></th>
+                <th><?php echo $gallery ?></th>
                 <td>
-                <?php foreach ($profiles as $profile) : ?>
-                    <a href="<?php echo admin_url('admin.php?page=bb_agency_profiles&amp;action=deleteDuplicateRecord&amp;ProfileID='. $profile->ProfileID) ?>" title="Delete this profile"><?php printf( __('Profile ID %d', bb_agency_TEXTDOMAIN), $profile->ProfileID) ?></a><br />
+                <?php foreach ($profiles as $p) : ?>
+                    <a href="<?php echo admin_url('admin.php?page=bb_agency_profiles&amp;action=deleteDuplicateRecord&amp;ProfileID='. $p->ProfileID) ?>" title="Delete this profile"><?php printf( __('Profile ID %d', bb_agency_TEXTDOMAIN), $p->ProfileID) ?></a><br />
                 <?php endforeach; ?>
                 </td>
             </tr>
@@ -133,12 +133,12 @@
         <p>Found <?php echo count($users) ?> profiles with duplicate user accounts. A profile's user account should be unique so these duplicate profiles should be deleted.</p>
 
         <table class="data-table">
-        <?php foreach ($users as $user) : if ($profiles = bb_agency_get_profiles_by_user( $user )) : ?>
+        <?php foreach ($users as $user) : if ($user > 0 && ($profiles = bb_agency_get_profiles_by_user( $user ))) : ?>
             <tr>
-                <th><?php echo $profile->ProfileGallery ?></th>
+                <th><?php echo $user ?></th>
                 <td>
-                <?php foreach ($profiles as $profile) : ?>
-                    <a href="<?php echo admin_url('admin.php?page=bb_agency_profiles&amp;action=deleteDuplicateRecord&amp;ProfileID='. $profile->ProfileID) ?>" title="Delete this profile"><?php printf( __('Profile ID %d', bb_agency_TEXTDOMAIN), $profile->ProfileID) ?></a><br />
+                <?php foreach ($profiles as $p) : ?>
+                    <a href="<?php echo admin_url('admin.php?page=bb_agency_profiles&amp;action=deleteDuplicateRecord&amp;ProfileID='. $p->ProfileID) ?>" title="Delete this profile"><?php printf( __('Profile ID %d', bb_agency_TEXTDOMAIN), $p->ProfileID) ?></a><br />
                 <?php endforeach; ?>
                 </td>
             </tr>
