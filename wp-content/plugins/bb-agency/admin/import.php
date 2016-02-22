@@ -405,9 +405,9 @@ function bb_agency_import_users() {
                             // now put in usermeta
                             $usermeta_sql = "SELECT * FROM `$wpdb->usermeta` WHERE `user_id` = $ext_user_id";
 
-                            $usermeta_rs = mysqli_query( $usermeta_sql );
+                            $usermeta_rs = mysqli_query( $conn, $usermeta_sql );
 
-                            if (mysqli_num_rows( $usermeta_rs )) {
+                            if (mysqli_num_rows( $conn, $usermeta_rs )) {
 
                                 while( $item = mysqli_fetch_array( $usermeta_rs ) ) {
                                     add_user_meta( $user_id, $item['meta_key'], $item['meta_value'], !is_serialized($item['meta_value']) );
