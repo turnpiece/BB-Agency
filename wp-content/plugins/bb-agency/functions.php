@@ -2115,16 +2115,16 @@ function bb_custom_fields_template($visibility = 0, $ProfileID, $data) {
 		 
 		} elseif ($ProfileCustomType == 3) {  // Drop Down
 			
-			list($option1,$option2) = explode(":",$data['ProfileCustomOptions']);	
+			list($option1,$option2) = explode(":",$data['ProfileCustomOptions']);
 				
-			$data = explode("|",$option1);
-			$data2 = explode("|",$option2);
+			$options = explode("|",$option1);
+			$options2 = explode("|",$option2);
 			
-			echo "<label class=\"dropdown\">".$data[0]."</label>";
+			echo "<label class=\"dropdown\">".$options[0]."</label>";
 			echo "<select name=\"ProfileCustomID". $data['ProfileCustomID'] ."[]\">\n";
 			echo "<option value=\"\">--</option>";
 				$pos = 0;
-				foreach ($data as $val1) {
+				foreach ($options as $val1) {
 					
 					if ($val1 != end($data) && $val1 != $data[0]) {
 					
@@ -2138,15 +2138,14 @@ function bb_custom_fields_template($visibility = 0, $ProfileID, $data) {
 				}
 			echo "</select>\n";
 				
-				
-			if (!empty($data2) && !empty($option2)) {
+			if (!empty($options2) && !empty($option2)) {
 				echo "<label class=\"dropdown\">".$data2[0]."</label>";
 			
 					$pos2 = 0;
 					echo "11<select name=\"ProfileCustomID". $data['ProfileCustomID'] ."[]\">\n";
 					echo "<option value=\"\">--</option>";
-					foreach ($data2 as $val2) {
-							if ($val2 != end($data2) && $val2 !=  $data2[0]) {
+					foreach ($options2 as $val2) {
+							if ($val2 != end($options2) && $val2 !=  $options2[0]) {
 								echo "<option value=\"".$val2."\" ". selected($val2, $ProfileCustomValue) ." >".$val2."</option>";
 							}
 						}
