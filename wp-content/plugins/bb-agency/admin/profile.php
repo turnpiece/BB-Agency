@@ -1166,8 +1166,8 @@ function bb_display_manage($ProfileID) {
             <tr valign="top">
                 <th scope="row"><?php _e("WordPress User", bb_agency_TEXTDOMAIN) ?></th>
                 <td>
-                    <a href="<?php echo admin_url("user-edit.php") ?>?user_id=<?php echo $ProfileUserLinked ?>&wp_http_referer=%2Fwp-admin%2Fadmin.php%3Fpage%3Dbb_agency_profiles">ID# <?php echo $profile->ProfileUserLinked ?></a>
-    		      <input type='hidden' name='wpuserid' value="<?php echo $ProfileUserLinked ?>" />
+                    <a href="<?php echo admin_url("user-edit.php") ?>?user_id=<?php echo $profile->ProfileUserLinked ?>&wp_http_referer=%2Fwp-admin%2Fadmin.php%3Fpage%3Dbb_agency_profiles">ID# <?php echo $profile->ProfileUserLinked ?></a>
+    		      <input type='hidden' name='wpuserid' value="<?php echo $profile->ProfileUserLinked ?>" />
                 </td>
             </tr>
             <?php endif;
@@ -1177,19 +1177,19 @@ function bb_display_manage($ProfileID) {
             <tr valign="top">
                 <th scope="row"><?php _e("Date Updated", bb_agency_TEXTDOMAIN) ?></th>
                 <td>
-                    <input type="text" id="ProfileDateUpdated" name="ProfileDateUpdated" value="<?php echo $ProfileDateUpdated ?>" />
+                    <input type="text" id="ProfileDateUpdated" name="ProfileDateUpdated" value="<?php echo $profile->ProfileDateUpdated ?>" />
                 </td>
             </tr>
             <tr valign="top">
                 <th scope="row"><?php _e("Profile Views", bb_agency_TEXTDOMAIN) ?></th>
                 <td>
-                    <input type="text" id="ProfileStatHits" name="ProfileStatHits" value="<?php echo $ProfileStatHits ?>" />
+                    <input type="text" id="ProfileStatHits" name="ProfileStatHits" value="<?php echo $profile->ProfileStatHits ?>" />
                 </td>
             </tr>
             <tr valign="top">
                 <th scope="row"><?php _e("Profile Viewed Last", bb_agency_TEXTDOMAIN) ?></th>
                 <td>
-                    <input type="text" id="ProfileDateViewLast" name="ProfileDateViewLast" value="<?php echo $ProfileDateViewLast ?>" />
+                    <input type="text" id="ProfileDateViewLast" name="ProfileDateViewLast" value="<?php echo $profile->ProfileDateViewLast ?>" />
                 </td>
             </tr>
             <?php else : ?>
