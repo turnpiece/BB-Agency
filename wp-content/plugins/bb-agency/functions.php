@@ -1047,7 +1047,7 @@
                                     $_SESSION[$key] = $val;
                                 }
                             }	
-							mysql_free_result($q);
+							
 					} // if not empty
 				}  // end if
 		    } // end for each
