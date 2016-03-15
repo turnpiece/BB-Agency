@@ -3879,7 +3879,7 @@ function bb_agency_recategorize_profile($id, $type) {
  */
 function bb_agency_get_datatypes($public = true) {
 	global $wpdb;
-	return $wpdb->get_results('SELECT * FROM '. table_agency_data_type . ($public ? ' WHERE DataTypeID <> '.bb_agency_CLIENTS_ID : '').' ORDER BY `DataTypeTitle` ASC');
+	return $wpdb->get_results('SELECT * FROM '. table_agency_data_type . ($public ? ' WHERE `DataTypeID` <> '.bb_agency_CLIENTS_ID : '').' ORDER BY `DataTypeTitle` ASC');
 }
 
 /**

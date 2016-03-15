@@ -813,7 +813,7 @@ EOF;
                         <tr>
                             <th scope="row"><?php _e('Classification', bb_agency_TEXTDOMAIN) ?>:</th>
                             <td>
-                                <select name="ProfileType" id="ProfileType">               
+                                <select name="ProfileType" id="ProfileType">          
                                     <option value="">--</option>
                                     <?php
                                     /* 
@@ -821,11 +821,9 @@ EOF;
                                      * to block the following profile types 
                                      * in search
                                      */
-                                    
                                     $filter = array( 'agents', 'agent', 'producer', 'producers' );
                                      
                                     $DataTypes = $wpdb->get_results("SELECT * FROM ". table_agency_data_type);
-                                    
                                     if (!empty($DataTypes)) : foreach ($DataTypes as $type) : if (!in_array(strtolower($type->DataTypeTitle), $filter)) : ?>
                                     <option value="<?php echo $type->DataTypeID ?>" <?php selected(isset($_SESSION['ProfileType']) ? $_SESSION['ProfileType'] : false, $type->DataTypeID) ?>><?php echo $type->DataTypeTitle ?></option>
                                     <?php endif; endforeach; endif; ?>
