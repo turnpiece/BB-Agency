@@ -103,7 +103,7 @@ if ($profilesearch_layout == "condensed" || $profilesearch_layout == "simple") :
 	    <div>
 	        <label for="age_from"><?php _e("From", bb_agency_TEXTDOMAIN) ?></label>
 	        <select name="age_from">
-	        <?php for ($i = 0; $i <= 12; $i++) : ?>
+	        <?php for ($i = 0; $i <= bb_agency_MAX_AGE; $i++) : ?>
 	        	<option value="<?php echo $i ?>" <?php selected($i, $_SESSION['ProfileAge_min']) ?>><?php echo $i ?></option>
 	        <?php endfor; ?>
 	        </select>
@@ -111,7 +111,7 @@ if ($profilesearch_layout == "condensed" || $profilesearch_layout == "simple") :
 	    <div>
 	    	<label for="age_to"><?php _e("To", bb_agency_TEXTDOMAIN) ?></label>
 	       	<select name="age_to">
-	        <?php for ($i = 0; $i <= 12; $i++) : ?>
+	        <?php for ($i = 0; $i <= bb_agency_MAX_AGE; $i++) : ?>
 	        	<option value="<?php echo $i ?>" <?php selected($i, $_SESSION['ProfileAge_max']) ?>><?php echo $i ?></option>
 	        <?php endfor; ?>
 	        </select>
