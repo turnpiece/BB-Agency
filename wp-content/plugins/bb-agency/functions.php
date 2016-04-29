@@ -2177,7 +2177,7 @@ function bb_custom_fields_template($visibility = 0, $ProfileID, $data) {
 				echo "</fieldset>";
 			}
 		} elseif ($ProfileCustomType == 7) { //Imperial/Metrics 
-			$limit = (bb_agency_SITETYPE == 'children' ? 60 : 90);
+			$limit = 80; // 
 			?>
             <select name="ProfileCustomID<?php echo $data['ProfileCustomID'] ?>">
                 <option value="">--</option>
