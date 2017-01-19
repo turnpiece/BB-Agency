@@ -126,119 +126,114 @@
 	    <?php
 
 				// Resume
-
 				$resultsMedia = mysql_query("SELECT * FROM ". table_agency_profile_media ." media WHERE ProfileID =  \"". $ProfileID ."\" AND ProfileMediaType = \"Resume\"");
 
-				$countMedia = mysql_num_rows($resultsMedia);
+				if ($resultsMedia) {
+					$countMedia = mysql_num_rows($resultsMedia);
+					if ($countMedia > 0) {
+					  	while ($dataMedia = mysql_fetch_array($resultsMedia)) {
+							echo "<li class=\"item resume\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"bb_button\">Download Resume</a></li>\n";
 
-				if ($countMedia > 0) {
-
-				  while ($dataMedia = mysql_fetch_array($resultsMedia)) {
-
-				echo "<li class=\"item resume\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"bb_button\">Download Resume</a></li>\n";
-
-				  }
-
+					  	}
+					}
 				}
 
 				// Comp Card
 
 				$resultsMedia = mysql_query("SELECT * FROM ". table_agency_profile_media ." media WHERE ProfileID =  \"". $ProfileID ."\" AND ProfileMediaType = \"Comp Card\"");
 
-				$countMedia = mysql_num_rows($resultsMedia);
+				if ($resultsMedia) {
+					$countMedia = mysql_num_rows($resultsMedia);
 
-				if ($countMedia > 0) {
+					if ($countMedia > 0) {
 
-				  while ($dataMedia = mysql_fetch_array($resultsMedia)) {
+					  	while ($dataMedia = mysql_fetch_array($resultsMedia)) {
 
-				echo "<li class=\"item compcard\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"bb_button\">Download Comp Card</a></li>\n";
-
-				  }
-
+							echo "<li class=\"item compcard\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"bb_button\">Download Comp Card</a></li>\n";
+					  	}
+					}
 				}
 
 				// Headshots
 
 				$resultsMedia = mysql_query("SELECT * FROM ". table_agency_profile_media ." media WHERE ProfileID =  \"". $ProfileID ."\" AND ProfileMediaType = \"Headshot\"");
 
-				$countMedia = mysql_num_rows($resultsMedia);
+				if ($resultsMedia) {
+					$countMedia = mysql_num_rows($resultsMedia);
 
-				if ($countMedia > 0) {
+					if ($countMedia > 0) {
 
-				  while ($dataMedia = mysql_fetch_array($resultsMedia)) {
+					  	while ($dataMedia = mysql_fetch_array($resultsMedia)) {
 
-				echo "<li class=\"item headshot\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"bb_button\">Download Headshot</a></li>\n";
+							echo "<li class=\"item headshot\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"bb_button\">Download Headshot</a></li>\n";
 
-				  }
-
+					  	}
+					}
 				}
 
 				//Voice Demo
 
 				$resultsMedia = mysql_query("SELECT * FROM ". table_agency_profile_media ." media WHERE ProfileID =  \"". $ProfileID ."\" AND ProfileMediaType = \"VoiceDemo\"");
 
-				$countMedia = mysql_num_rows($resultsMedia);
+				if ($resultsMedia) {
+					$countMedia = mysql_num_rows($resultsMedia);
 
-				if ($countMedia > 0) {
+					if ($countMedia > 0) {
 
-				  while ($dataMedia = mysql_fetch_array($resultsMedia)) {
+					  	while ($dataMedia = mysql_fetch_array($resultsMedia)) {
 
-				echo "<li class=\"item voice\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"bb_button\">Listen to Voice Demo</a></li>\n";
+							echo "<li class=\"item voice\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"bb_button\">Listen to Voice Demo</a></li>\n";
 
-				  }
-
+					  	}
+					}
 				}
 
 				//Video Slate
 
 				$resultsMedia = mysql_query("SELECT * FROM ". table_agency_profile_media ." media WHERE ProfileID =  \"". $ProfileID ."\" AND ProfileMediaType = \"Video Slate\"");
 
-				$countMedia = mysql_num_rows($resultsMedia);
+				if ($resultsMedia) {
+					$countMedia = mysql_num_rows($resultsMedia);
 
-				if ($countMedia > 0) {
+					if ($countMedia > 0) {
 
-				  while ($dataMedia = mysql_fetch_array($resultsMedia)) {
+					  	while ($dataMedia = mysql_fetch_array($resultsMedia)) {
 
-					 $profileVideoEmbed = $dataMedia['ProfileMediaURL'];
+						 	$profileVideoEmbed = $dataMedia['ProfileMediaURL'];
 
-				echo "		<li class=\"item video slate\"><a href=\"http://www.youtube.com/watch?v=". $dataMedia['ProfileMediaURL'] ."\" target=\"_blank\" class=\"bb_button\">Watch Video Slate</a></li>\n";
-
-				  }
-
+							echo "<li class=\"item video slate\"><a href=\"http://www.youtube.com/watch?v=". $dataMedia['ProfileMediaURL'] ."\" target=\"_blank\" class=\"bb_button\">Watch Video Slate</a></li>\n";
+					  	}
+					}
 				}
 
 				//Video Monologue
-
 				$resultsMedia = mysql_query("SELECT * FROM ". table_agency_profile_media ." media WHERE ProfileID =  \"". $ProfileID ."\" AND ProfileMediaType = \"Video Monologue\"");
 
-				$countMedia = mysql_num_rows($resultsMedia);
+				if ($resultsMedia) {
+					$countMedia = mysql_num_rows($resultsMedia);
 
-				if ($countMedia > 0) {
+					if ($countMedia > 0) {
 
-				  while ($dataMedia = mysql_fetch_array($resultsMedia)) {
+					  	while ($dataMedia = mysql_fetch_array($resultsMedia)) {
 
-				echo "		<li class=\"item video monologue\"><a href=\"http://www.youtube.com/watch?v=". $dataMedia['ProfileMediaURL'] ."\" target=\"_blank\" class=\"bb_button\">Watch Video Monologue</a></li>\n";
-
-				  }
-
+							echo "<li class=\"item video monologue\"><a href=\"http://www.youtube.com/watch?v=". $dataMedia['ProfileMediaURL'] ."\" target=\"_blank\" class=\"bb_button\">Watch Video Monologue</a></li>\n";
+					  	}
+					}
 				}
 
 				//Demo Reel
-
 				$resultsMedia = mysql_query("SELECT * FROM ". table_agency_profile_media ." media WHERE ProfileID =  \"". $ProfileID ."\" AND ProfileMediaType = \"Demo Reel\"");
 
-				$countMedia = mysql_num_rows($resultsMedia);
+				if ($resultsMedia) {
+					$countMedia = mysql_num_rows($resultsMedia);
 
-				if ($countMedia > 0) {
+					if ($countMedia > 0) {
 
-				  while ($dataMedia = mysql_fetch_array($resultsMedia)) {
-
-				echo "		<li class=\"item video demoreel\"><a href=\"http://www.youtube.com/watch?v=". $dataMedia['ProfileMediaURL'] ."\" target=\"_blank\" class=\"bb_button\">Watch Demo Reel</a></li>\n";
-
-				  }
-
+					  	while ($dataMedia = mysql_fetch_array($resultsMedia)) {
+							echo "<li class=\"item video demoreel\"><a href=\"http://www.youtube.com/watch?v=". $dataMedia['ProfileMediaURL'] ."\" target=\"_blank\" class=\"bb_button\">Watch Demo Reel</a></li>\n";
+					  	}
+					}
 				}
-
 
 
 				// Other Media Type not the 
@@ -251,25 +246,20 @@
 
 											 ");
 
-				$countMedia = mysql_num_rows($resultsMedia);
+				if ($resultsMedia) {
+					$countMedia = mysql_num_rows($resultsMedia);
 
-				if ($countMedia > 0) {
-
-				  	while ($dataMedia = mysql_fetch_array($resultsMedia)) {
-
-                        echo "<li class=\"item video demoreel\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"bb_button\">".$dataMedia['ProfileMediaType']. "</a></li>\n";
-
-				  	}
-
+					if ($countMedia > 0) {
+					  	while ($dataMedia = mysql_fetch_array($resultsMedia)) {
+	                        echo "<li class=\"item video demoreel\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"bb_button\">".$dataMedia['ProfileMediaType']. "</a></li>\n";
+					  	}
+					}
 				}
-
-                                
+                
 
 				// Is Logged?
 
 				if (is_user_logged_in()) { 
-
-			
 
 					if(bb_agency_get_option('bb_agency_option_profilelist_castingcart')==1){
 
