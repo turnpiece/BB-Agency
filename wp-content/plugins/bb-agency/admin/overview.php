@@ -109,15 +109,18 @@
 						if ($user_level >= 7) {
 							// Recently Updated
 							$query = "SELECT `ProfileID`, `ProfileContactDisplay`, `ProfileDateUpdated` FROM ". table_agency_profile ." ORDER BY `ProfileDateUpdated` DESC LIMIT 0,20";
-							$results = mysql_query($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ).': '.mysql_error());
-							$count = mysql_num_rows($results);
-							while ($data = mysql_fetch_array($results)) : ?>
+
+							$results = $wpdb->get_results($query);
+
+							$count = count($results);
+
+							foreach ($results as $result) : ?>
 								<li>
-									<a href="?page=bb_agency_profiles&action=editRecord&ProfileID=<?php echo $data['ProfileID']; ?>"><?php echo stripslashes($data['ProfileContactDisplay']) ?></a>
-							    	<span class="add-new-h2">Updated <?php echo bb_agency_makeago(bb_agency_convertdatetime($data['ProfileDateUpdated'])); ?></span>
+									<a href="?page=bb_agency_profiles&action=editRecord&ProfileID=<?php echo $data['ProfileID']; ?>"><?php echo stripslashes($result->ProfileContactDisplay) ?></a>
+							    	<span class="add-new-h2">Updated <?php echo bb_agency_makeago(bb_agency_convertdatetime($result->ProfileDateUpdated)); ?></span>
 								</li><?php
-							endwhile;
-							mysql_free_result($results);
+							endforeach;
+
 							if ($count < 1) {
 								_e("There are currently no profiles", bb_agency_TEXTDOMAIN);
 							}
@@ -136,18 +139,18 @@
 						if ($user_level >= 7) {
 							// Recently Viewed
 							$query = "SELECT `ProfileID`, `ProfileContactDisplay`, `ProfileDateViewLast`, `ProfileStatHits` FROM ". table_agency_profile ." ORDER BY `ProfileDateViewLast` DESC LIMIT 0,10";
-							$results = mysql_query($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ).': '.mysql_error());
-							$count = mysql_num_rows($results);
-							while ($data = mysql_fetch_array($results)) { 
-								//$data['ProfileDateViewLast']
+							$results = $wpdb->get_results($query);
+
+							$count = count($results);
+							foreach ($results as $result) { 
 								?>
 								<li>
-									<a href="?page=bb_agency_profiles&action=editRecord&ProfileID=<?php echo $data['ProfileID']; ?>"><?php echo stripslashes($data['ProfileContactDisplay']) ?></a>
+									<a href="?page=bb_agency_profiles&action=editRecord&ProfileID=<?php echo $data['ProfileID']; ?>"><?php echo stripslashes($result->ProfileContactDisplay) ?></a>
 							    	<span class="add-new-h2"><?php echo $data['ProfileStatHits']; ?> <?php echo __("Views", bb_agency_TEXTDOMAIN ) ?></span>
-							    	<span class="add-new-h2">Last viewed <?php echo bb_agency_makeago(bb_agency_convertdatetime($data['ProfileDateViewLast'])); ?></span>
+							    	<span class="add-new-h2">Last viewed <?php echo bb_agency_makeago(bb_agency_convertdatetime($result->ProfileDateViewLast)); ?></span>
 								</li><?php
 							}
-							mysql_free_result($results);
+
 							if ($count < 1) {
 								_e("There are currently no profiles", bb_agency_TEXTDOMAIN);
 							}

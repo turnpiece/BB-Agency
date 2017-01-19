@@ -981,26 +981,26 @@ function bb_display_manage($ProfileID) {
             <p><?php _e("The following files (pdf, audio file, etc.) are associated with this record", bb_agency_TEXTDOMAIN) ?>.</p>
             <?php
             $queryMedia = "SELECT * FROM `$t_media` WHERE `ProfileID` =  '$ProfileID' AND `ProfileMediaType` <> 'Image'";
-            $resultsMedia = mysql_query($queryMedia);
-            $countMedia = mysql_num_rows($resultsMedia);
-            while ($dataMedia = mysql_fetch_array($resultsMedia)) :
-                $deleteLink = '<a href="javascript:confirmDelete(\'' . $dataMedia['ProfileMediaID'] . '\',\'' . ($dataMedia['ProfileMediaType'] == 'Private' ? 'private file' : strtolower($dataMedia['ProfileMediaType'])) . '\')">DELETE</a>';
-                $galleryDir = bb_agency_UPLOADDIR . $ProfileGallery . '/' . $dataMedia['ProfileMediaURL'];
-                if ($dataMedia['ProfileMediaType'] == "Demo Reel" || 
-                    $dataMedia['ProfileMediaType'] == "Video Monologue" || 
-                    $dataMedia['ProfileMediaType'] == "Video Slate") : ?>
+            $resultsMedia = $wpdb->get_results($queryMedia);
+            $countMedia = count($resultsMedia);
+            foreach ($resultsMedia as $dataMedia) :
+                $deleteLink = '<a href="javascript:confirmDelete(\'' . $dataMedia->ProfileMediaID . '\',\'' . ($dataMedia['ProfileMediaType'] == 'Private' ? 'private file' : strtolower($dataMedia->ProfileMediaType)) . '\')">DELETE</a>';
+                $galleryDir = bb_agency_UPLOADDIR . $ProfileGallery . '/' . $dataMedia->ProfileMediaURL;
+                if ($dataMedia->ProfileMediaType == "Demo Reel" || 
+                    $dataMedia->ProfileMediaType == "Video Monologue" || 
+                    $dataMedia->ProfileMediaType == "Video Slate") : ?>
                     <div style="float: left; width: 120px; text-align: center; padding: 10px;">
-                        <?php echo $dataMedia['ProfileMediaType'] ?><br />
-                        <?php echo bb_agency_get_videothumbnail($dataMedia['ProfileMediaURL']) ?><br />
-                        <a href="http://www.youtube.com/watch?v=<?php echo $dataMedia['ProfileMediaURL'] ?>" target="_blank">Link to Video</a><br />
+                        <?php echo $dataMedia->ProfileMediaType ?><br />
+                        <?php echo bb_agency_get_videothumbnail($dataMedia->ProfileMediaURL) ?><br />
+                        <a href="http://www.youtube.com/watch?v=<?php echo $dataMedia->ProfileMediaURL ?>" target="_blank">Link to Video</a><br />
                         [<?php echo $deleteLink ?>]
                     </div>
                 <?php else : ?>
                     <div>
-                        <?php echo $dataMedia['ProfileMediaType'] ?>: <a href="<?php echo $galleryDir ?>" target="_blank"><?php echo $dataMedia['ProfileMediaTitle'] ?></a> [<?php echo $deleteLink ?>]
+                        <?php echo $dataMedia->ProfileMediaType ?>: <a href="<?php echo $galleryDir ?>" target="_blank"><?php echo $dataMedia->ProfileMediaTitle ?></a> [<?php echo $deleteLink ?>]
                     </div>
                 <?php endif;
-            endwhile;
+            endforeach;
 
         if ($countMedia < 1) : ?>
             <div>
@@ -1382,29 +1382,32 @@ function bb_display_list() {
     bb_agency_debug( $filter );
 
     // Paginate
-    $items = mysql_num_rows(mysql_query("SELECT * FROM `$t_profile` profile LEFT JOIN `$t_data_type` profiletype ON profile.`ProfileType` = profiletype.`DataTypeID` $filter")); // number of total rows in the database
+    $rs = $wpdb->get_results("SELECT * FROM `$t_profile` profile LEFT JOIN `$t_data_type` profiletype ON profile.`ProfileType` = profiletype.`DataTypeID` $filter");
 
-    if ($items > 0) {
-        $p = new bb_agency_pagination;
-        $p->items($items);
-        $p->limit(50); // Limit entries per page
-        $p->target("admin.php?page=" . $_GET['page'] . $query);
-        $p->currentPage($_GET[$p->paging]); // Gets and validates the current page
-        $p->calculate(); // Calculates what to show
-        $p->parameterName('paging');
-        $p->adjacents(1); //No. of page away from the current page
+    if ($rs) {
+        $items = count( $rs ); // number of total rows in the database
 
-        if (!isset($_GET['paging'])) {
-            $p->page = 1;
+        if ($items > 0) {
+            $p = new bb_agency_pagination;
+            $p->items($items);
+            $p->limit(50); // Limit entries per page
+            $p->target("admin.php?page=" . $_GET['page'] . $query);
+            $p->currentPage($_GET[$p->paging]); // Gets and validates the current page
+            $p->calculate(); // Calculates what to show
+            $p->parameterName('paging');
+            $p->adjacents(1); //No. of page away from the current page
+
+            if (!isset($_GET['paging'])) {
+                $p->page = 1;
+            } else {
+                $p->page = $_GET['paging'];
+            }
+
+            //Query for limit paging
+            $limit = "LIMIT " . ($p->page - 1) * $p->limit . ", " . $p->limit;
         } else {
-            $p->page = $_GET['paging'];
+            $limit = '';
         }
-
-        //Query for limit paging
-        $limit = "LIMIT " . ($p->page - 1) * $p->limit . ", " . $p->limit;
-    } else {
-        $limit = '';
-    }
 
     // Add New Records
     
@@ -1460,11 +1463,11 @@ function bb_display_list() {
                                     <option value=""><?php _e("Any Category", bb_agency_TEXTDOMAIN) ?></option>
                                     <?php
                                     $query = "SELECT DataTypeID, DataTypeTitle FROM `$t_data_type` ORDER BY DataTypeTitle ASC";
-                                    $results = mysql_query($query);
-                                    $count = mysql_num_rows($results);
-                                    while ($data = mysql_fetch_array($results)) : ?>
-                                    <option value="<?php echo $data['DataTypeID'] ?>" <?php selected($_GET['ProfileType'], $data["DataTypeID"]) ?>><?php echo $data['DataTypeTitle'] ?></option>
-                                    <?php endwhile; ?>
+                                    $results = $wpdb->get_results($query);
+                                    $count = count($results);
+                                    foreach ($results as $data) : ?>
+                                    <option value="<?php echo $data->DataTypeID ?>" <?php selected($_GET['ProfileType'], $data->DataTypeID) ?>><?php echo $data->DataTypeTitle ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </span>
                           <span><?php _e("Status", bb_agency_TEXTDOMAIN) ?>:
@@ -1480,8 +1483,8 @@ function bb_display_list() {
                                 <option value=""><?php _e("Any Location", bb_agency_TEXTDOMAIN) ?></option>
                                 <?php
                                 $query = "SELECT DISTINCT ProfileLocationCity, ProfileLocationState FROM `$t_profile` ORDER BY ProfileLocationState, ProfileLocationCity ASC";
-                                $results = mysql_query($query);
-                                $count = mysql_num_rows($results);
+                                $results = $wpdb->get_results($query);
+                                $count = count($results);
                                 while ($data = mysql_fetch_array($results)) :
                                     if (isset($data['ProfileLocationCity']) && !empty($data['ProfileLocationCity'])) : ?>
                                         <option value="<?php echo $data['ProfileLocationCity'] ?>" <?php selected($selectedCity, $data["ProfileLocationCity"]) ?>><?php echo $data['ProfileLocationCity'] ?></option>
@@ -1560,82 +1563,80 @@ function bb_display_list() {
                     <tbody>
                     <?php
                     $query = "SELECT * FROM `$t_profile` profile LEFT JOIN `$t_data_type` profiletype ON profile.`ProfileType` = profiletype.`DataTypeID` $filter  ORDER BY $sort $dir $limit";
-                    $results2 = mysql_query($query);
-                    $count = mysql_num_rows($results2);
-                    while ($data = mysql_fetch_array($results2)) {
+                    $results2 = $wpdb->get_results($query);
+                    $count = count($results2);
+                    foreach ($results2 as $data) {
 
-                        $ProfileID = $data['ProfileID'];
-                        $ProfileGallery = stripslashes($data['ProfileGallery']);
-                        $ProfileContactNameFirst = stripslashes($data['ProfileContactNameFirst']);
-                        $ProfileContactNameLast = stripslashes($data['ProfileContactNameLast']);
-                        $ProfileLocationCity = bb_agency_strtoproper(stripslashes($data['ProfileLocationCity']));
-                        $ProfileLocationState = stripslashes($data['ProfileLocationState']);
-                        $ProfileGender = stripslashes($data['ProfileGender']);
-                        $ProfileDateDue = stripslashes($data['ProfileDateDue']);
-                        $ProfileDateBirth = stripslashes($data['ProfileDateBirth']);
-                        $ProfileStatHits = stripslashes($data['ProfileStatHits']);
-                        $ProfileDateViewLast = stripslashes($data['ProfileDateViewLast']);
-                        if ($data['ProfileIsActive'] == 0) {
+                        $ProfileID = $data->ProfileID;
+                        $ProfileGallery = stripslashes($data->ProfileGallery);
+                        $ProfileContactNameFirst = stripslashes($data->ProfileContactNameFirst);
+                        $ProfileContactNameLast = stripslashes($data->ProfileContactNameLast);
+                        $ProfileLocationCity = bb_agency_strtoproper(stripslashes($data->ProfileLocationCity));
+                        $ProfileLocationState = stripslashes($data->ProfileLocationState);
+                        $ProfileGender = stripslashes($data->ProfileGender);
+                        $ProfileDateDue = stripslashes($data->ProfileDateDue);
+                        $ProfileDateBirth = stripslashes($data->ProfileDateBirth);
+                        $ProfileStatHits = stripslashes($data->ProfileStatHits);
+                        $ProfileDateViewLast = stripslashes($data->ProfileDateViewLast);
+                        if ($data->ProfileIsActive == 0) {
                             // Inactive
                             $rowColor = ' style="background: #FFEBE8"';
-                        } elseif ($data['ProfileIsActive'] == 1) {
+                        } elseif ($data->ProfileIsActive == 1) {
                             // Active
                             $rowColor = '';
-                        } elseif ($data['ProfileIsActive'] == 2) {
+                        } elseif ($data->ProfileIsActive == 2) {
                             // Archived
                             $rowColor = ' style="background: #dadada"';
-                        } elseif ($data['ProfileIsActive'] == 3) {
+                        } elseif ($data->ProfileIsActive == 3) {
                             // Pending Approval
                             $rowColor = ' style="background: #DD4B39"';
                         }
 
                         // check if she's given birth
-                        if (bb_agency_SITETYPE == 'bumps' && bb_agency_ismumtobe($data['ProfileType']) && bb_agency_datepassed($ProfileDateDue)) {
+                        if (bb_agency_SITETYPE == 'bumps' && bb_agency_ismumtobe($data->ProfileType) && bb_agency_datepassed($ProfileDateDue)) {
 
                             // switch category
-                            $ptypes = explode(',', $data['ProfileType']);
+                            $ptypes = explode(',', $data->ProfileType);
                             for($i = 0; $i < count($ptypes); $i++){
                                 if ($ptypes[$i] == bb_agency_MUMSTOBE_ID)
                                     $ptypes[$i] = bb_agency_AFTERBIRTH_ID;
                             }
 
-                            $data['ProfileType'] = implode(',', $ptypes);
+                            $data->ProfileType = implode(',', $ptypes);
                             
                             // recategorize as family
-                            bb_agency_recategorize_profile($data['ProfileID'], $data['ProfileType']);              
+                            bb_agency_recategorize_profile($data->ProfileID, $data->ProfileType);              
                         }
                         
                         // Get Data Type Title
-                        if (strpos($data['ProfileType'], ",") > 0){
-                            $title = explode(",",$data['ProfileType']);
+                        if (strpos($data->ProfileType, ",") > 0){
+                            $title = explode(",",$data->ProfileType);
                             $new_title = '';
                             foreach($title as $t){
                                 $id = (int)$t;
                                 $get_title = "SELECT DataTypeTitle FROM " . table_agency_data_type .  
                                              " WHERE DataTypeID = " . $id;   
-                                $resource = mysql_query($get_title);             
-                                $get = mysql_fetch_assoc($resource);
-                                if (mysql_num_rows($resource) > 0 ){
-                                    $new_title .= "," . $get['DataTypeTitle']; 
+                                $title = $wpdb->get_var($get_title); 
+                                if ($title) {            
+                                    $new_title .= "," . $title; 
                                 }
                             }
                             $new_title = substr($new_title,1);
                         } else {
                             $new_title = '';
-                            $id = (int)$data['ProfileType'];
+                            $id = (int)$data->ProfileType;
                             $get_title = "SELECT DataTypeTitle FROM " . table_agency_data_type .  
                                          " WHERE DataTypeID = " . $id;   
-                            $resource = mysql_query($get_title);             
-                            $get = mysql_fetch_assoc($resource);
-                            if (mysql_num_rows($resource) > 0 ){
-                                $new_title = $get['DataTypeTitle']; 
+                            $title = $wpdb->get_var($get_title);             
+
+                            if ($title){
+                                $new_title = $title; 
                             }
                         }
                         
                         $DataTypeTitle = stripslashes($new_title);
 
-                        $resultImageCount = mysql_query("SELECT * FROM `$t_media` WHERE `ProfileID` = '$ProfileID' AND `ProfileMediaType` = 'Image'");
-                        $profileImageCount = mysql_num_rows($resultImageCount);
+                        $profileImageCount = $wpdb->get_var("SELECT COUNT(*) FROM `$t_media` WHERE `ProfileID` = '$ProfileID' AND `ProfileMediaType` = 'Image'");
 
                         ?>
                         <tr"<?php echo $rowColor ?>">
@@ -1663,7 +1664,7 @@ function bb_display_list() {
                         </tr>
                         <?php
                     }
-                    mysql_free_result($results2);
+
                     if ($count < 1) {
                         if (isset($filter)) : ?>
                             <tr>
@@ -1700,6 +1701,7 @@ function bb_display_list() {
             </form>
     </div>
 <?php
+    }
 }
 
 function bb_agency_get_profile_fields() {
