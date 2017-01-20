@@ -83,8 +83,11 @@ function bb_agency_add_custom_box() {
 
 /* Prints the inner fields for the custom post/page section */
 function bb_agency_inner_custom_box() {
-  // Use nonce for verification
-  echo '<input type="hidden" name="bb_agency_noncename" id="bb_agency_noncename" value="'. wp_create_nonce( plugin_basename(__FILE__) ) . '" />';
+
+    global $wpdb;
+
+    // Use nonce for verification
+    echo '<input type="hidden" name="bb_agency_noncename" id="bb_agency_noncename" value="'. wp_create_nonce( plugin_basename(__FILE__) ) . '" />';
 
     echo "<div class=\"submitbox\" id=\"add_ticket_box\">";
     ?><script type="text/javascript">
@@ -143,9 +146,9 @@ function bb_agency_inner_custom_box() {
     $query= "SELECT GenderID, GenderTitle FROM " .  table_agency_data_gender . " GROUP BY GenderTitle ";
         
         echo "<option value=\"\">All Gender</option>";
-        $queryShowGender = mysql_query($query);
-        while($dataShowGender = mysql_fetch_assoc($queryShowGender)){
-            echo "<option value=\"".$dataShowGender["GenderID"]."\" >".$dataShowGender["GenderTitle"]."</option>";
+        $dataShowGender = $wpdb->get_row($query);
+        if ($dataShowGender) {
+            echo "<option value=\"".$dataShowGender->GenderID."\" >".$dataShowGender->GenderTitle."</option>";
          }
     echo "</select>";
     echo "</td></tr>\n";
