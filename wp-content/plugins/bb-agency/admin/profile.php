@@ -915,15 +915,15 @@ function bb_display_manage($ProfileID) {
 
             bb_agency_debug($queryImg);
 
-            $resultsImg = mysql_query($queryImg);
-            $countImg = mysql_num_rows($resultsImg);
-            while ($dataImg = mysql_fetch_array($resultsImg)) :
-                if ($dataImg['ProfileMediaPrimary']) {
+            $resultsImg = $wpdb->get_results($queryImg);
+            $countImg = count($resultsImg);
+            foreach ($resultsImg as $dataImg) :
+                if ($dataImg->ProfileMediaPrimary) {
                     $styleBackground = "#900000";
                     $isChecked = " checked";
                     $isCheckedText = " Primary";
                     if ($countImg == 1) {
-                        $toDelete = '<div class="delete"><a href="javascript:confirmDelete(\'' . $dataImg['ProfileMediaID'] . '\',\'' . $dataImg['ProfileMediaType'] . '\')"><span>Delete</span> &raquo;</a></div>';
+                        $toDelete = '<div class="delete"><a href="javascript:confirmDelete(\'' . $dataImg->ProfileMediaID . '\',\'' . $dataImg->ProfileMediaType . '\')"><span>Delete</span> &raquo;</a></div>';
                     } else {
                         $toDelete = '';
                         $massDelete = '';
@@ -932,20 +932,20 @@ function bb_display_manage($ProfileID) {
                     $styleBackground = "#000000";
                     $isChecked = '';
                     $isCheckedText = " Select";
-                    $toDelete = '<div class="delete"><a href="javascript:confirmDelete(\'' . $dataImg['ProfileMediaID'] . '\',\'' . $dataImg['ProfileMediaType'] . '\')"><span>Delete</span> &raquo;</a></div>';
-                    $massDelete = '<input type="checkbox" name="massgaldel" value="' . $dataImg['ProfileMediaID'] . '"> <span style="color:#FFFFFF">Delete</span>';
+                    $toDelete = '<div class="delete"><a href="javascript:confirmDelete(\'' . $dataImg->ProfileMediaID . '\',\'' . $dataImg->ProfileMediaType . '\')"><span>Delete</span> &raquo;</a></div>';
+                    $massDelete = '<input type="checkbox" name="massgaldel" value="' . $dataImg->ProfileMediaID . '"> <span style="color:#FFFFFF">Delete</span>';
                 }
                 ?>
                 <div class="profileimage" style="background: <?php echo $styleBackground ?>">
                     <?php echo $toDelete ?>
-                    <img src="<?php echo bb_agency_UPLOADDIR . $ProfileGallery . '/' . $dataImg['ProfileMediaURL'] ?>" style="width: 100px; z-index: 1; \" />
+                    <img src="<?php echo bb_agency_UPLOADDIR . $ProfileGallery . '/' . $dataImg->ProfileMediaURL ?>" style="width: 100px; z-index: 1; \" />
                     <div class="primary" style="background: <?php echo $styleBackground ?>">
-                        <input type="radio" name="ProfileMediaPrimary" value="<?php echo  $dataImg['ProfileMediaID'] ?>" <?php echo $isChecked ?> /><?php echo $isCheckedText ?>
+                        <input type="radio" name="ProfileMediaPrimary" value="<?php echo  $dataImg->ProfileMediaID ?>" <?php echo $isChecked ?> /><?php echo $isCheckedText ?>
                         <div><?php echo $massDelete ?></div>
                     </div>
                 </div>
                 <?php
-            endwhile;
+            endforeach;
 
             if ($countImg < 1) : ?>
                 <div><?php _e("There are no images loaded for this profile yet.", bb_agency_TEXTDOMAIN) ?></div>
