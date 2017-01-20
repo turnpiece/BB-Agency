@@ -2122,27 +2122,26 @@ function bb_custom_fields_template($visibility = 0, $ProfileID, $data) {
 		 
 		} elseif ($ProfileCustomType == 3) {  // Drop Down
 			
-			list($option1,$option2) = explode(":",$data->ProfileCustomOptions);
+			list($option1,$option2) = explode(":", $data->ProfileCustomOptions);
 				
-			$options = explode("|",$option1);
-			$options2 = explode("|",$option2);
+			$options = explode("|", $option1);
+			$options2 = explode("|", $option2);
 			
 			echo "<label class=\"dropdown\">".$options[0]."</label>";
 			echo "<select name=\"ProfileCustomID". $data->ProfileCustomID ."[]\">\n";
 			echo "<option value=\"\">--</option>";
-				$pos = 0;
-				foreach ($options as $val1) {
-					
-					if ($val1 != end($data) && $val1 != $data[0]) {
-					
-						if ($val1 == $ProfileCustomValue ) {
-							$isSelected = "selected=\"selected\"";
-							echo "<option value=\"".$val1."\" ".$isSelected .">".$val1."</option>";
-						} else {
-							echo "<option value=\"".$val1."\" >".$val1."</option>";
-						}					
-					}
+			$pos = 0;
+			foreach ($options as $val1) {
+				
+				if ($val1 != $data->ProfileID) {
+					if ($val1 == $ProfileCustomValue ) {
+						$isSelected = "selected=\"selected\"";
+						echo "<option value=\"".$val1."\" ".$isSelected .">".$val1."</option>";
+					} else {
+						echo "<option value=\"".$val1."\" >".$val1."</option>";
+					}					
 				}
+			}
 			echo "</select>\n";
 				
 			if (!empty($options2) && !empty($option2)) {
@@ -2704,16 +2703,6 @@ function bb_agency_getProfileCustomFieldsCustom($ProfileID, $ProfileGender,$echo
 	if ($echo=="dontecho") {return $return;}else{echo $return;}
 }
   
-  
-
-
-
-
-
-
-
-
-
 
 
 
@@ -2806,70 +2795,70 @@ function bb_agency_getProfileCustomFieldsCustom($ProfileID, $ProfileGender,$echo
 //****************************************************************************************************//
 // Add / Handles Ajax Request ===== Add To Casting Cart
 		    
-			$bb_agency_option_profilelist_castingcart  = bb_agency_get_option('bb_agency_option_profilelist_castingcart');
+$bb_agency_option_profilelist_castingcart  = bb_agency_get_option('bb_agency_option_profilelist_castingcart');
 	
-	function bb_agency_save_castingcart() {
-				global $wpdb;
-			
-				if (is_user_logged_in()) { 
-					if (isset($_POST["talentID"])) { 
-						$castingCart = $wpdb->get_row("SELECT * FROM ". table_agency_castingcart."  WHERE CastingCartTalentID='".$_POST["talentID"]."'  AND CastingCartProfileID = '".bb_agency_get_current_userid()."'" ) or die("error");
-						 
-						if ($castingCart) { //if not exist insert favorite!
+function bb_agency_save_castingcart() {
+	global $wpdb;
+
+	if (is_user_logged_in()) { 
+		if (isset($_POST["talentID"])) { 
+			$castingCart = $wpdb->get_row("SELECT * FROM ". table_agency_castingcart."  WHERE CastingCartTalentID='".$_POST["talentID"]."'  AND CastingCartProfileID = '".bb_agency_get_current_userid()."'" ) or die("error");
+			 
+			if ($castingCart) { //if not exist insert favorite!
+                                        
+                $wpdb->insert(table_agency_castingcart, array('CastingCartProfileID'=>bb_agency_get_current_userid(), 'CastingCartTalentID'=>$_POST["talentID"]));
                                                     
-                            $wpdb->insert(table_agency_castingcart, array('CastingCartProfileID'=>bb_agency_get_current_userid(), 'CastingCartTalentID'=>$_POST["talentID"]));
-                                                                
-						} else { // favourite model exists, now delete!
-							 
-							$wpdb->query("DELETE FROM  ". table_agency_castingcart."  WHERE CastingCartTalentID='".$_POST["talentID"]."'  AND CastingCartProfileID = '".bb_agency_get_current_userid()."'");							 
-						}						
-					}					
-				}
-				else {
-					echo "not_logged";
-				}
-				die();
-			}	  
+			} else { // favourite model exists, now delete!
+				 
+				$wpdb->query("DELETE FROM  ". table_agency_castingcart."  WHERE CastingCartTalentID='".$_POST["talentID"]."'  AND CastingCartProfileID = '".bb_agency_get_current_userid()."'");							 
+			}						
+		}					
+	}
+	else {
+		echo "not_logged";
+	}
+	die();
+}	  
 		
-		function bb_agency_save_castingcart_javascript() {
-		?>
-				<!--BB Agency CastingCart -->
-				<script type="text/javascript" >
-					jQuery(document).ready(function($) { 
-						$("div[class=castingcart] a").click(function() {
-							var Obj = $(this);jQuery.ajax({type: 'POST',url: '<?php echo admin_url('admin-ajax.php'); ?>',data: {action: 'bb_agency_save_castingcart',  'talentID': $(this).attr("id")},
-								success: function(results) {   
-									if (results=='error') { Obj.fadeOut().empty().html("Error in query. Try again").fadeIn();  } 
-									else if (results==-1) { Obj.fadeOut().empty().html("<span style=\"color:red;font-size:11px;\">You're not signed in.</span><a href=\"<?php echo get_bloginfo("wpurl"); ?>/profile-member/\">Sign In</a>.").fadeIn();  
-											setTimeout(function() {   
-												if (Obj.attr("class")=="save_castingcart") {  
-													Obj.fadeOut().empty().html("").fadeIn();
-												}else{  
-													Obj.fadeOut().empty().html("").fadeIn();  } 
-											 }, 2000);  }
-									else{ if (Obj.attr("class")=="save_castingcart") {
-										Obj.empty().fadeOut().html("").fadeIn();  
-										Obj.attr("class","saved_castingcart"); 
-										Obj.attr('title', 'Remove from Casting Cart'); 
-									} else { 
-									Obj.empty().fadeOut().html("").fadeIn();  
-									Obj.attr("class","save_castingcart"); 
-									Obj.attr('title', 'Add to Casting Cart');   
-									$(this).find("a[class=view_all_castingcart]").remove();  
-									<?php  if (get_query_var( 'type' )=="favorite" || get_query_var( 'type' )=="castingcart") {  
-												 
-												$bb_agency_option_layoutprofilelist = bb_agency_get_option('bb_agency_option_layoutprofilelist'); ?> 
-												if ($("input[type=hidden][name=castingcart]").val() == 1) {
-													Obj.closest("div[class=profile-list-layout0]").fadeOut();  } <?php } ?> } }}}) });});</script>
-				 <!--END BB Agency CastingCart -->
- 
-           <?php
-		}
-   if (isset($bb_agency_option_profilelist_castingcart)) {
-	
-	  	add_action('wp_ajax_bb_agency_save_castingcart', 'bb_agency_save_castingcart');
-	  	add_action('wp_footer', 'bb_agency_save_castingcart_javascript');
-   }
+function bb_agency_save_castingcart_javascript() {
+?>
+		<!--BB Agency CastingCart -->
+		<script type="text/javascript" >
+			jQuery(document).ready(function($) { 
+				$("div[class=castingcart] a").click(function() {
+					var Obj = $(this);jQuery.ajax({type: 'POST',url: '<?php echo admin_url('admin-ajax.php'); ?>',data: {action: 'bb_agency_save_castingcart',  'talentID': $(this).attr("id")},
+						success: function(results) {   
+							if (results=='error') { Obj.fadeOut().empty().html("Error in query. Try again").fadeIn();  } 
+							else if (results==-1) { Obj.fadeOut().empty().html("<span style=\"color:red;font-size:11px;\">You're not signed in.</span><a href=\"<?php echo get_bloginfo("wpurl"); ?>/profile-member/\">Sign In</a>.").fadeIn();  
+									setTimeout(function() {   
+										if (Obj.attr("class")=="save_castingcart") {  
+											Obj.fadeOut().empty().html("").fadeIn();
+										}else{  
+											Obj.fadeOut().empty().html("").fadeIn();  } 
+									 }, 2000);  }
+							else{ if (Obj.attr("class")=="save_castingcart") {
+								Obj.empty().fadeOut().html("").fadeIn();  
+								Obj.attr("class","saved_castingcart"); 
+								Obj.attr('title', 'Remove from Casting Cart'); 
+							} else { 
+							Obj.empty().fadeOut().html("").fadeIn();  
+							Obj.attr("class","save_castingcart"); 
+							Obj.attr('title', 'Add to Casting Cart');   
+							$(this).find("a[class=view_all_castingcart]").remove();  
+							<?php  if (get_query_var( 'type' )=="favorite" || get_query_var( 'type' )=="castingcart") {  
+										 
+										$bb_agency_option_layoutprofilelist = bb_agency_get_option('bb_agency_option_layoutprofilelist'); ?> 
+										if ($("input[type=hidden][name=castingcart]").val() == 1) {
+											Obj.closest("div[class=profile-list-layout0]").fadeOut();  } <?php } ?> } }}}) });});</script>
+		 <!--END BB Agency CastingCart -->
+
+   <?php
+}
+
+if (isset($bb_agency_option_profilelist_castingcart)) {
+  	add_action('wp_ajax_bb_agency_save_castingcart', 'bb_agency_save_castingcart');
+  	add_action('wp_footer', 'bb_agency_save_castingcart_javascript');
+}
 
 /*/
 * ======================== Get ProfileID by UserLinkedID ===============
@@ -2892,10 +2881,12 @@ function bb_agency_getProfileIDByUserLinked($ProfileUserLinked) {
 /*/
 function bb_agency_getMediaCategories($GenderID) {
 
+	global $wpdb;
+	
 	$results = $wpdb->get_results("SELECT `MediaCategoryID`, `MediaCategoryTitle`, `MediaCategoryGender`, `MediaCategoryOrder` FROM  ".table_agency_mediacategory." ORDER BY `MediaCategoryOrder`");
 
 	if ($results) {
-		while($results as $f) {
+		foreach ($results as $f) {
 			if ($f->MediaCategoryGender == $GenderID || $f->MediaCategoryGender == 0) {
 				echo "<option value=\"".$f->MediaCategoryTitle."\">".$f->MediaCategoryTitle."</option>";	 
 			}
