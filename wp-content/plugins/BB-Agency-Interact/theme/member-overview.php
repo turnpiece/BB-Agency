@@ -53,8 +53,8 @@ get_header();
 			 * Set Media to not show to
 			 * client/s, agents, producers,
 			 */
-                        $ptype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
-	                $ptype = retrieve_title($ptype);
+            $ptype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
+	        $ptype = retrieve_title($ptype);
 			$restrict = array('client','clients','agents','agent','producer','producers');
 			if(in_array(strtolower($ptype),$restrict)){
 				echo "<div id=\"profile-steps\">Profile Setup: Step 1 of 2</div>\n";
@@ -66,16 +66,14 @@ get_header();
 				
 			/* Check if the user is regsitered *****************************************/ 
 			$sql = "SELECT ProfileID FROM ". table_agency_profile ." WHERE ProfileUserLinked =  ". $current_user->ID ."";
-			$results = mysql_query($sql);
-			$count = mysql_num_rows($results);
-			if ($count > 0) {
+			$profileID = $wpdb->get_var($sql);
 
-			// Menu
-			include("include-menu.php"); 	
-			echo " <div class=\"manage-overview manage-content\">\n";
-			  
-			$data = mysql_fetch_array($results);  // is there record?
-				  
+			if ($profileID) {
+
+				// Menu
+				include("include-menu.php"); 	
+				echo " <div class=\"manage-overview manage-content\">\n";
+					  
 				echo "	 <div class=\"manage-section welcome\">\n";			
 				echo "	 <h1>". __("Welcome Back", bb_agencyinteract_TEXTDOMAIN) ." ". $current_user->first_name ."!</h1>";
 				// Record Exists
@@ -96,8 +94,8 @@ get_header();
 				echo " </div>\n";
 			  	echo " </div>\n"; // .welcome
 			  	echo " </div>\n"; // .profile-manage-inner
-			  
-			// No Record Exists, register them
+				  
+				// No Record Exists, register them
 			} else {
 					
 				echo "<h1>". __("Welcome", bb_agencyinteract_TEXTDOMAIN) ." ". $current_user->first_name ."!</h1>";

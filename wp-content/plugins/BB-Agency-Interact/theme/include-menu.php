@@ -1,5 +1,7 @@
 <?php
 
+global $wpdb;
+
 		echo " <div class=\"profile-manage-menu\">\n";
 		echo "   <div id=\"subMenuTab\">\n";
 					if ( ($_SERVER["REQUEST_URI"]) == "/profile-member/") { $tabclass = "active"; } else { $tabclass = "inactive"; }
@@ -61,18 +63,18 @@
 
 		if ($bb_agencyinteract_option_subscribeupsell) {
 			// Is there a subscription?
-			$sql = "SELECT SubscriberDateExpire FROM ". table_agencyinteract_subscription ." WHERE SubscriberDateExpire >= NOW() AND ProfileID =  ". $current_user->ID ." ORDER BY SubscriberDateExpire DESC LIMIT 1";
-			$results = mysql_query($sql);
-			$count = mysql_num_rows($results);
-			if ($count > 0) {
-			  while ($data = mysql_fetch_array($results)) {
-				$SubscriberDateExpire = $data["SubscriberDateExpire"];
-				echo " 		<div class=\"tab-right tab-". $tabclass ."\">\n";
-				echo " 			<a href=\"". get_bloginfo("wpurl") ."/profile-member/subscription/\">\n";
-				echo " 			  <div class=\"subMenuTabBG\"><div class=\"subMenuTabBorders\"><div class=\"subMenuTabText\">".__("My Subscription", bb_agencyinteract_TEXTDOMAIN) ."</div></div></div>\n";
-				echo " 			</a>\n";
-				echo " 		</div>\n";
-			  } // is there record?
+			$sql = "SELECT `SubscriberDateExpire` FROM ". table_agencyinteract_subscription ." WHERE SubscriberDateExpire >= NOW() AND ProfileID =  ". $current_user->ID ." ORDER BY SubscriberDateExpire DESC LIMIT 1";
+			$results = $wpdb->get_results($sql);
+
+			if (!empty($results)) {
+			  	foreach ($results as $data) {
+					$SubscriberDateExpire = $data->SubscriberDateExpire;
+					echo " 		<div class=\"tab-right tab-". $tabclass ."\">\n";
+					echo " 			<a href=\"". get_bloginfo("wpurl") ."/profile-member/subscription/\">\n";
+					echo " 			  <div class=\"subMenuTabBG\"><div class=\"subMenuTabBorders\"><div class=\"subMenuTabText\">".__("My Subscription", bb_agencyinteract_TEXTDOMAIN) ."</div></div></div>\n";
+					echo " 			</a>\n";
+					echo " 		</div>\n";
+			  	} // is there record?
 			} else {
 				$SubscriberDateExpire = NULL;
 				echo " 		<div class=\"tab-right tab-". $tabclass ."\">\n";

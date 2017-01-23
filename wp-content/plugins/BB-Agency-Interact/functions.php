@@ -209,22 +209,22 @@
 			 if($ID != 0){
 					 
 				if($type == "dropdown"){
-					$result = mysql_query("SELECT ProfileCustomValue FROM "
+					$result = $wpdb->get_results("SELECT ProfileCustomValue FROM "
 							. table_agency_customfield_mux .
 							" WHERE ProfileCustomID = ". $customID .
 							" AND ProfileCustomValue = '" . $val . "' "
 							." AND ProfileID = "
 							. $ID);
 				} else {
-					$result = mysql_query("SELECT ProfileCustomValue FROM "
+					$result = $wpdb->get_results("SELECT ProfileCustomValue FROM "
 							. table_agency_customfield_mux .
 							" WHERE ProfileCustomID = ". $customID ." AND ProfileID = "
 							. $ID);
 				}
 
-				while($row = mysql_fetch_assoc($result)){
+				foreach($result as $row){
 					if($type == "textbox"){
-					 return $row["ProfileCustomValue"];
+					 return $row->ProfileCustomValue;
 					} elseif($type == "dropdown") {
 					 return "selected";
 					}
@@ -252,17 +252,15 @@
 	if ( !function_exists('retrieve_title') ) {  
 		function retrieve_title($id=0) {
 		   global $wpdb;
+		   
 		   /* 
 		    * return title
 			*/
-            $check_type = "SELECT DataTypeTitle FROM ". table_agency_data_type ." WHERE DataTypeID = " . $id;
-			$check_query = mysql_query($check_type) OR die(mysql_error());
-			if(mysql_num_rows($check_query) > 0){
-				$fetch = mysql_fetch_assoc($check_query);
-				return $fetch['DataTypeTitle'];
-			} else {
-				return false;
-			}
+            $type = $wpdb->get_var( "SELECT DataTypeTitle FROM ". table_agency_data_type ." WHERE DataTypeID = " . $id );
+
+            if ($type)
+            	return $type;
+
 		}
 	}
 

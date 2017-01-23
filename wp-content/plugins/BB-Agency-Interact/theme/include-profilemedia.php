@@ -1,5 +1,7 @@
 <?php if (defined('bb_agencyinteract_ALLOW_UPLOADS') && bb_agencyinteract_ALLOW_UPLOADS) :
 
+	global $wpdb;
+
 	$ProfileID					= $profile->ProfileID;
 	$ProfileGallery				= stripslashes($profile->ProfileGallery);
 
@@ -73,10 +75,10 @@
 	}
 	// Go about our biz-nazz
 	$queryImg = "SELECT * FROM ". table_agency_profile_media ." WHERE `ProfileID` = $ProfileID AND `ProfileMediaType` = 'Image' ORDER BY `ProfileMediaPrimary` DESC, `ProfileMediaID` DESC";
-	$resultsImg = mysql_query($queryImg);
-	$countImg = mysql_num_rows($resultsImg);
-	while ($profileImg = mysql_fetch_array($resultsImg)) {
-		if ($profileImg['ProfileMediaPrimary']) {
+	$resultsImg = $wpdb->get_results($queryImg);
+	$countImg = count($resultsImg);
+	foreach ($resultsImg as $profileImg) {
+		if ($profileImg->ProfileMediaPrimary) {
 			$styleClass = "primary-picture";
 			$isChecked = " checked";
 			$isCheckedText = " Primary";
@@ -85,13 +87,13 @@
 		  	$styleBackground = "#000000";
 		  	$isChecked = "";
 		  	$isCheckedText = " Select";
-		  	$toDelete = "  <div class=\"delete\"><a href=\"javascript:;\" class=\"btn-small-red\" onclick=\"confirmDelete('". $profileImg['ProfileMediaID'] ."','".$profileImg['ProfileMediaType']."');\"><span>Delete</span> &raquo;</a></div>\n";
+		  	$toDelete = "  <div class=\"delete\"><a href=\"javascript:;\" class=\"btn-small-red\" onclick=\"confirmDelete('". $profileImg->ProfileMediaID ."','".$profileImg->ProfileMediaType."');\"><span>Delete</span> &raquo;</a></div>\n";
 		}
 		echo "<div class=\"profileimage\" class=\"". $styleClass ."\">\n". $toDelete ."";
 		echo '<input type="hidden" name="pgallery" value="'.$ProfileGallery.'">';					
-		echo '<input type="hidden" name="pmedia_url" value="'.$profileImg['ProfileMediaURL'].'">';					
-		echo "  <img src=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $profileImg['ProfileMediaURL'] ."\" style=\"width: 100px; z-index: 1; \" />\n";
-		echo "  <div class=\"". $styleClass ." primary bb_button\"><label><input type=\"radio\" name=\"ProfileMediaPrimary\" value=\"". $profileImg['ProfileMediaID'] ."\" class=\"button-primary\"". $isChecked ." /> ". $isCheckedText ."</label></div>\n";
+		echo '<input type="hidden" name="pmedia_url" value="'.$profileImg->ProfileMediaURL.'">';					
+		echo "  <img src=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $profileImg->ProfileMediaURL ."\" style=\"width: 100px; z-index: 1; \" />\n";
+		echo "  <div class=\"". $styleClass ." primary bb_button\"><label><input type=\"radio\" name=\"ProfileMediaPrimary\" value=\"". $profileImg->ProfileMediaID ."\" class=\"button-primary\"". $isChecked ." /> ". $isCheckedText ."</label></div>\n";
 
 		echo "</div>\n";
 	}

@@ -3408,22 +3408,22 @@ function featured_homepage() {
 	 AND profile.ProfileIsFeatured = 1  
 	 ORDER BY RAND() LIMIT 0,$count";						
 
-	$r = mysql_query($q);
+	$rs = $wpdb->get_results($q);
 	
-	$countList = mysql_num_rows($r);
+	$countList = count($rs);
 	
 	$array_data = array();
 	
-	while ($row = mysql_fetch_assoc($r)) {
+	foreach ($rs as $row) {
 		
 		/*
 		 * Get From Custom Fields
 		 * per profile
 		 */
 		$get_custom = 'SELECT * FROM ' . table_agency_customfield_mux .
-					  ' WHERE ProfileID = ' . $row["ProfileID"]; 
+					  ' WHERE ProfileID = ' . $row->ProfileID; 
 					  
-		$result = mysql_query($get_custom);
+		$result = $wpdb->get_results($get_custom);
 		
 		$desc_list = array('shoes', 'eyes', 'shoes', 'skin');
 		
@@ -3436,39 +3436,37 @@ function featured_homepage() {
 		$a_female = array('bust', 'waist', 'hips', 'dress',
 							  'shoe size','hair', 'eye color');
         
-		$name = ucfirst($row["ProfileContactNameFirst"]) ." ". strtoupper($row["ProfileContactNameLast"][0]); ;
+		$name = ucfirst($row->ProfileContactNameFirst) ." ". strtoupper($row->ProfileContactNameLast); ;
 		
-		while ($custom = mysql_fetch_assoc($result)) {
+		foreach ($result as $custom) {
              
 			 $get_title = 'SELECT ProfileCustomTitle FROM ' . table_agency_customfields .
-			 ' WHERE ProfileCustomID = ' . $custom["ProfileCustomID"] ; 
+			 ' WHERE ProfileCustomID = ' . $custom->ProfileCustomID; 
 			 
-			 $result2 = mysql_query($get_title);
+			 $custom2 = $wpdb->get_row($get_title);
 			 
-			 $custom2 = mysql_fetch_assoc($result2);
-			 
-			 if (strtolower(bb_agency_getGenderTitle($row['ProfileGender'])) == "male") {
+			 if (strtolower(bb_agency_getGenderTitle($row->ProfileGender)) == "male") {
 				 
-				 if (in_array(strtolower($custom2['ProfileCustomTitle']),$a_male)) {
-					 $array_male[$custom2['ProfileCustomTitle']] = $custom['ProfileCustomValue'];
+				 if (in_array(strtolower($custom2->ProfileCustomTitle), $a_male)) {
+					 $array_male[$custom2->ProfileCustomTitle] = $custom->ProfileCustomValue;
 				 }
 			 
-			 } else if (strtolower(bb_agency_getGenderTitle($row['ProfileGender'])) == "female") {
+			 } else if (strtolower(bb_agency_getGenderTitle($row->ProfileGender)) == "female") {
 				 
-				 if (in_array(strtolower($custom2['ProfileCustomTitle']),$a_female)) {
-					 $array_female[$custom2['ProfileCustomTitle']] = $custom['ProfileCustomValue'];
+				 if (in_array(strtolower($custom2->ProfileCustomTitle), $a_female)) {
+					 $array_female[$custom2->ProfileCustomTitle] = $custom->ProfileCustomValue;
 				 }				 
 			 }
 		
 		}
 		
-		if (strtolower(bb_agency_getGenderTitle($row['ProfileGender'])) == "male") {
+		if (strtolower(bb_agency_getGenderTitle($row->ProfileGender)) == "male") {
 			
-			$array_data = array($name,'male',$array_male,$row["ProfileGallery"],$row["ProfileMediaURL"]);
+			$array_data = array($name, 'male', $array_male,$row->ProfileGallery, $row->ProfileMediaURL);
 			
-		} else if (strtolower(bb_agency_getGenderTitle($row['ProfileGender'])) == "female") {
+		} else if (strtolower(bb_agency_getGenderTitle($row->ProfileGender)) == "female") {
 			
-			$array_data = array($name,'female',$array_female,$row["ProfileGallery"],$row["ProfileMediaURL"]);
+			$array_data = array($name, 'female', $array_female, $row->ProfileGallery, $row->ProfileMediaURL);
 					 
 		}
 		
@@ -3487,7 +3485,7 @@ function featured_homepage() {
 		$profilesearch_layout = "simple";
 		include("theme/include-profile-search.php"); 	
 	}
-
+/*
 // 5/15/2013 sverma@ Home page
 function featured_homepage_profile($count) {
 	global $wpdb;
@@ -3503,16 +3501,16 @@ function featured_homepage_profile($count) {
 	 AND profile.ProfileIsFeatured = 1  
 	 ORDER BY RAND() LIMIT 0,".$count;						
 
-	$result = mysql_query($query);
-	$i=0;
-	while ($row = mysql_fetch_assoc($result)) {
+	$result = $wpdb->get_results($query);
+	$i = 0;
+	foreach ($result as $row) {
 		$row[$i] = $row ;
 		$i++;
 	}
 	return $row ;
 
 }
-
+*/
 function primary_class() {
 	return $class = "col_8";
 }
@@ -3566,22 +3564,14 @@ function is_permitted($type) {
  * Check if profilet type ID is "Client" type
  */
 function is_client_profiletype() {
+	global $wpdb;
+
+	$query = "SELECT `ProfileType` FROM ". table_agency_profile ." WHERE `ProfileUserLinked` = ". bb_agency_get_current_userid();
 	
-	$query = "SELECT ProfileType FROM ". table_agency_profile ." WHERE ProfileUserLinked = ". bb_agency_get_current_userid();
-	$results = mysql_query($query);
-	
-	if (mysql_num_rows($results)) {
-		$id = mysql_fetch_assoc($results);
-		$id = $id['ProfileType'];
-		$queryList = "SELECT DataTypeTitle FROM ". table_agency_data_type ." WHERE DataTypeID = ". $id;
-		$resultsList = mysql_query($queryList);
-		while ($d = mysql_fetch_array($resultsList)) {
-			if (strtolower($d["DataTypeTitle"]) == "client") {
-				return true;
-			}
-		}	
-	}	
-	return false;
+	$type = $wpdb->get_var($query);
+	$title = $wpdb->get_var("SELECT `DataTypeTitle` FROM ". table_agency_data_type ." WHERE DataTypeID = ". $type);
+
+	return (strtolower($title) == "client");
 }
 
 /**
