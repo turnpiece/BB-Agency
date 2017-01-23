@@ -3,7 +3,7 @@
 Plugin Name: Slimbox
 Plugin URI: http://wordpress.org/extend/plugins/slimbox/
 Description: Enables <a href="http://www.digitalia.be/software/slimbox2">slimbox 2</a> on all image links including BMP, GIF, JPG, JPEG, and PNG links.
-Version: 1.0.7
+Version: 1.0.8
 Author: Kevin Sylvestre
 Author URI: http://ksylvest.com
 */

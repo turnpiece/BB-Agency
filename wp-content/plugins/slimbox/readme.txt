@@ -2,8 +2,8 @@
 Contributors: Kevin Sylvestre
 Tags: javascript, images, lightbox, slimbox
 Requires at least: 2.7
-Tested up to: 3.5
-Stable tag: 1.0.7
+Tested up to: 4.6.1
+Stable tag: 1.0.8
 
 Enables slimbox 2.03 on all image links including BMP, GIF, JPG, JPEG, and PNG links.
 

@@ -2,7 +2,7 @@
 /**
  * Author: Alin Marcu
  * Author URI: https://deconf.com
- * Copyright 2013 Alin Marcu 
+ * Copyright 2013 Alin Marcu
  * License: GPLv2 or later
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
@@ -49,8 +49,10 @@ class GADWP_Install {
 			$options['ga_crossdomain_list'] = '';
 			$options['ga_author_dimindex'] = 0;
 			$options['ga_category_dimindex'] = 0;
+			$options['ga_tag_dimindex'] = 0;
 			$options['ga_user_dimindex'] = 0;
 			$options['ga_pubyear_dimindex'] = 0;
+			$options['ga_pubyearmonth_dimindex'] = 0;
 			$options['ga_aff_tracking'] = 0;
 			$options['ga_event_affiliates'] = '/out/';
 			$options['automatic_updates_minorversion'] = 1;
@@ -61,6 +63,9 @@ class GADWP_Install {
 			$options['ga_cookiedomain'] = '';
 			$options['ga_cookiename'] = '';
 			$options['ga_cookieexpires'] = '';
+			$option['pagetitle_404'] = 'Page Not Found';
+			$option['maps_api_key'] = '';
+
 		} else {
 			$options = array();
 			$options['ga_dash_clientid'] = get_option( 'ga_dash_clientid' );
@@ -98,8 +103,10 @@ class GADWP_Install {
 			$options['ga_crossdomain_list'] = '';
 			$options['ga_author_dimindex'] = 0;
 			$options['ga_category_dimindex'] = 0;
+			$options['ga_tag_dimindex'] = 0;
 			$options['ga_user_dimindex'] = 0;
 			$options['ga_pubyear_dimindex'] = 0;
+			$options['ga_pubyearmonth_dimindex'] = 0;
 			$options['ga_event_affiliates'] = '/out/';
 			$options['ga_aff_tracking'] = 0;
 			$options['automatic_updates_minorversion'] = 1;
@@ -110,7 +117,9 @@ class GADWP_Install {
 			$options['ga_cookiedomain'] = '';
 			$options['ga_cookiename'] = '';
 			$options['ga_cookieexpires'] = '';
-			
+			$option['pagetitle_404'] = 'Page Not Found';
+			$option['maps_api_key'] = '';
+
 			delete_option( 'ga_dash_clientid' );
 			delete_option( 'ga_dash_clientsecret' );
 			delete_option( 'ga_dash_access' );

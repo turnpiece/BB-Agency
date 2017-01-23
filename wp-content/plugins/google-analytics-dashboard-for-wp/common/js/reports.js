@@ -1,8 +1,15 @@
-/**
- * Author: Alin Marcu Author URI: https://deconf.com Copyright 2013 Alin Marcu License: GPLv2 or later License URI: http://www.gnu.org/licenses/gpl-2.0.html
+/*-
+ * Author: Alin Marcu 
+ * Author URI: https://deconf.com 
+ * Copyright 2013 Alin Marcu 
+ * License: GPLv2 or later 
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
 "use strict";
+
+google.charts.load('current', {mapsApiKey: gadwpItemData.mapsApiKey, 'packages':['corechart', 'table', 'orgchart', 'geochart']});
+google.charts.setOnLoadCallback( GADWPReportLoad );
 
 // Get the numeric ID
 gadwpItemData.getID = function ( item ) {
@@ -113,11 +120,7 @@ jQuery.fn.extend( {
 				}
 
 				if ( !tools.getCookie( 'default_metric' ) || !tools.getCookie( 'default_dimension' ) ) {
-					if ( gadwpItemData.scope == 'admin-widgets' ) {
-						defaultMetric = 'sessions';
-					} else {
-						defaultMetric = 'uniquePageviews';
-					}
+					defaultMetric = 'sessions';
 					defaultDimension = '30daysAgo';
 				} else {
 					defaultMetric = tools.getCookie( 'default_metric' );
@@ -171,7 +174,9 @@ jQuery.fn.extend( {
 		}
 
 		reports = {
+			oldViewPort: 0,	
 			orgChartTableChartData : '',
+			tableChartData : '',
 			orgChartPieChartsData : '',
 			geoChartTableChartData : '',
 			areaChartBottomStatsData : '',
@@ -321,6 +326,26 @@ jQuery.fn.extend( {
 				NProgress.done();
 			},
 
+			tableChart : function ( response ) {
+				reports.tableChartData = response
+				if ( jQuery.isArray( response ) ) {
+					if ( !jQuery.isNumeric( response[ 0 ] ) ) {
+						if ( jQuery.isArray( response[ 0 ] ) ) {
+							jQuery( '#gadwp-reports' + slug ).show();
+							reports.drawTableChart( response[ 0 ] );
+						} else {
+							reports.throwDebug( response[ 0 ] );
+						}
+					} else {
+						jQuery( '#gadwp-reports' + slug ).show();
+						reports.throwError( '#gadwp-tablechart' + slug, response[ 0 ], "125px" );
+					}
+				} else {
+					reports.throwDebug( response );
+				}
+				NProgress.done();
+			},			
+			
 			drawTableChart : function ( data ) {
 				var chartData, options, chart;
 
@@ -363,7 +388,7 @@ jQuery.fn.extend( {
 						height : '80%'
 					},
 					title : title,
-					pieSliceText: 'value',
+					pieSliceText : 'value',
 					colors : gadwpItemData.colorVariations
 				};
 				chart = new google.visualization.PieChart( document.getElementById( 'gadwp-' + id + slug ) );
@@ -430,12 +455,12 @@ jQuery.fn.extend( {
 			},
 
 			drawBottomStats : function ( data ) {
-				jQuery( "#gdsessions" + slug ).text( data[ 0 ] );
-				jQuery( "#gdusers" + slug ).text( data[ 1 ] );
-				jQuery( "#gdpageviews" + slug ).text( data[ 2 ] );
-				jQuery( "#gdbouncerate" + slug ).text( data[ 3 ] + "%" );
-				jQuery( "#gdorganicsearch" + slug ).text( data[ 4 ] );
-				jQuery( "#gdpagespervisit" + slug ).text( data[ 5 ] );
+				jQuery( "#gdsessions" + slug ).html( data[ 0 ] );
+				jQuery( "#gdusers" + slug ).html( data[ 1 ] );
+				jQuery( "#gdpageviews" + slug ).html( data[ 2 ] );
+				jQuery( "#gdbouncerate" + slug ).html( data[ 3 ] + "%" );
+				jQuery( "#gdorganicsearch" + slug ).html( data[ 4 ] );
+				jQuery( "#gdpagespervisit" + slug ).html( data[ 5 ] );
 			},
 
 			rtOnlyUniqueValues : function ( value, index, self ) {
@@ -689,6 +714,17 @@ jQuery.fn.extend( {
 				if ( response == '-24' ) {
 					jQuery( "#gadwp-status" + slug ).html( gadwpItemData.i18n[ 15 ] );
 				} else {
+					jQuery( "#gadwp-reports" + slug ).css( {
+						"background-color" : "#F7F7F7",
+						"height" : "auto",
+						"margin-top" : "10px",
+						"padding-top" : "50px",
+						"padding-bottom" : "50px",
+						"color" : "#000",
+						"text-align" : "center"
+					} );
+					jQuery( "#gadwp-reports" + slug ).html ( response );
+					jQuery( "#gadwp-reports" + slug ).show();
 					jQuery( "#gadwp-status" + slug ).html( gadwpItemData.i18n[ 11 ] );
 					console.log( "\n********************* GADWP Log ********************* \n\n" + response );
 					postData = {
@@ -868,7 +904,19 @@ jQuery.fn.extend( {
 						jQuery.post( gadwpItemData.ajaxurl, postData, function ( response ) {
 							reports.orgChartTableChart( response );
 						} );
+					} else if ( query == '404errors' ) {	
+						tpl = '<div id="gadwp-404tablechart' + slug + '">';	
+						tpl += '<div id="gadwp-tablechart' + slug + '"></div>';
+						tpl += '</div>';
 
+						jQuery( '#gadwp-reports' + slug ).html( tpl );
+						jQuery( '#gadwp-reports' + slug ).hide();
+
+						postData.query = query;
+
+						jQuery.post( gadwpItemData.ajaxurl, postData, function ( response ) {
+							reports.tableChart( response );
+						} );
 					} else if ( query == 'trafficdetails' || query == 'technologydetails' ) {
 
 						tpl = '<div id="gadwp-orgchartpiecharts' + slug + '">';
@@ -957,6 +1005,9 @@ jQuery.fn.extend( {
 				if ( jQuery( '#gadwp-orgcharttablechart' + slug ).length > 0 && jQuery.isArray( reports.orgChartTableChartData ) ) {
 					reports.orgChartTableChart( reports.orgChartTableChartData );
 				}
+				if ( jQuery( '#gadwp-404tablechart' + slug ).length > 0 && jQuery.isArray( reports.tableChartData ) ) {
+					reports.tableChart( reports.tableChartData );
+				}				
 			},
 
 			init : function () {
@@ -982,7 +1033,11 @@ jQuery.fn.extend( {
 				reports.render( jQuery( '#gadwp-sel-view' + slug ).val(), jQuery( '#gadwp-sel-period' + slug ).val(), jQuery( '#gadwp-sel-report' + slug ).val() );
 
 				jQuery( window ).resize( function () {
-					reports.refresh();
+					var diff = jQuery(window).width() - reports.oldViewPort; 
+					if ( ( diff < -5 ) || ( diff > 5 ) ) {
+						reports.oldViewPort = jQuery(window).width();
+						reports.refresh(); //refresh only on over 5px viewport width changes
+					}
 				} );
 			}
 		}
@@ -1028,7 +1083,7 @@ jQuery.fn.extend( {
 	}
 } );
 
-jQuery( function () {
+function GADWPReportLoad () {
 	if ( gadwpItemData.scope == 'admin-widgets' ) {
 		jQuery( '#gadwp-window-1' ).gadwpItemReport( 1 );
 	} else {
@@ -1049,4 +1104,4 @@ jQuery( function () {
 	jQuery( document ).on( "dialogopen", ".ui-dialog", function ( event, ui ) {
 		gadwpItemData.responsiveDialog();
 	} );
-} );
+}

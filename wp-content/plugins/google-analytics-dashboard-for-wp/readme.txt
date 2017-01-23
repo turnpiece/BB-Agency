@@ -3,8 +3,8 @@ Contributors: deconf
 Donate link: https://deconf.com/donate/
 Tags: google,analytics,google analytics,dashboard,analytics dashboard,google analytics dashboard,google analytics plugin,google analytics widget,tracking,universal google analytics,realtime,multisite,gadwp
 Requires at least: 3.5
-Tested up to: 4.4.1
-Stable tag: 4.9.2
+Tested up to: 4.7
+Stable tag: 4.9.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,7 +30,7 @@ Google Analytics reports, in real-time, in your dashboard screen:
 The Google Analytics reports you need, on your dashboard, in your All Posts and All Pages screens, and on site's frontend:  
 
 - Sessions, organic searches, page views, bounce rate analytics reports
-- Locations, pages, referrers, keywords analytics reports
+- Locations, pages, referrers, keywords, 404 errors analytics reports
 - Traffic channels, social networks, traffic mediums, search engines analytics reports
 - Device categories, browsers, operating systems, screen resolutions, mobile brands analytics reports 
 - User access control over analytics reports
@@ -64,7 +64,9 @@ With Google Analytics Dashboard for WP you can use custom dimensions to track:
 
 - Authors
 - Publication year
+- Publication month
 - Categories
+- Tags
 - User engagement
 
 = Google Analytics Dashboard for WP on Multisite =
@@ -133,57 +135,27 @@ Google Analytics Dashboard for WP it's released under the GPLv2, you can use it 
 
 == Upgrade Notice ==
 
-= 4.9.2 =
-In case of errors refresh your page or clear your browser cache, as a first step. The Frontend Widget can be re-enabled from Appearance -> Widgets screen.
-
 == Changelog ==
 
-= 4.9.2 =
-* Enhancements: 
-	* improved loading speed for charts
-	* add autoloading for Charts Library to allow dequeue on conflicts
-	* removed API Key option, since is not needed anymore
-	* display session values in Pie Chart slices
-	* improved data accuracy for Pie Charts 
-
+= 4.9.5 =
 * Bug Fixes:
-	* multiple fixes for frontend widget
-	* page title missing in Realtime report
+	* correction of some files with mixed endings, props by [Edward Dekker](http://www.github.com/edwarddekker) 
+	* only load the necessary resources for frontend widget
+	* corrected a JavaScript error on frontend sidebar widget
+* Enhancements:
+	* introducing the <strong>gadwp_curl_options</strong> filter to allow changes on CURL options for the Google_IO_Curl class, props by [Alexandre Simard](https://github.com/brocheafoin)  	
 
+= 4.9.4 =
+* Enhancements: 
+	* always load analytics.js over SSL
+	* gadwp_backenditem_uri filter passes post ID as an additional variable
+	* option to use a Google Maps API key for the Locations report
 * New Features:
-	* brand new Technology Reports with details about Device Categories, Browsers, Operating Systems, Screen Resolutions and Device Brands  
-
-= 4.9.1.2 =
-- Bug Fix: multiple CSS fixes for frontend widget
-- Bug Fix: clean-up output for View selection list
-- Bug Fix: try to fix Google Charts conflicts with other plugins
-- Bug Fix: prevent PHP warnings during authorization and while revoking tokens
-
-= 4.9.1.1 =
-- Bug Fix: focusFlag preventing Real-Time reports from refreshing properly
-- Bug Fix: date format is not properly localized in daily/monthly reports
-- Bug Fix: reports loading issues on WordPress 4.4
-
-= 4.9.1 =
-- Bug Fix: clear_cache method is generating PHP warnings on certain conditions 
-- Bug Fix: make sure Google charts libraries are loaded before rendering
-
-= 4.9.0.1 =
-- Bug Fix: Pages report missing from admin dashboard widget
-- Bug Fix: Invalid response with a -31 error when using a certain combination of backend settings
-
-= 4.9 =
-- Bug Fix: add an unique class to jQuery UI Tooltips to avoid conflicts
-- Bug Fix: multiple CSS improvements
-- Bug Fix: invalid localized date formats
-- Bug Fix: switching between multisite modes doesn't propagate the new network status on all sites
-- Bug Fix: Location Settings ignored in posts/pages reports
-- Enhancement: unset cookies while revoking the authorization or clearing the cache 
-- Enhancement: no more page re-loads on admin dashboard widget when switching between reports
-- Enhancement: unified reporting system with real-time capabilities
-- Enhancement: new tracking options enabling you to customize cookieName, cookieDomain, cookieExpires; props by [Martins Sipenko](https://github.com/martinssipenko) 
-- Enhancement: display update notices only to admins and only on dashboard
-- Enhancement: force language packs updates for all available languages on a Network
-- Enhancement: added View switch capabilities
+	* a new year-month dimension is now available, to allow further segmentation of the most successful publication years, by month; props by [Antoine Girard](https://github.com/thetoine)
+	* a new 404 Errors report designed to analyze and easily identify the source of 404 errors
+* Bug Fixes:
+	* switch to get_sites() while maintaining compatibility with older WP installs
+	* fix for multisite installs, Properties/Views Settings list was not properly displayed on PHP7
+	* prevent autoloading of reports' cache entries; props by [Alex Bradaric](https://github.com/bradaric)
 
 The full changelog is [available here](https://deconf.com/changelog-google-analytics-dashboard-for-wp/).

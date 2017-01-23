@@ -19,7 +19,7 @@ if ( ! class_exists( 'GADWP_Backend_Setup' ) ) {
 
 		public function __construct() {
 			$this->gadwp = GADWP();
-			
+
 			// Styles & Scripts
 			add_action( 'admin_enqueue_scripts', array( $this, 'load_styles_scripts' ) );
 			// Site Menu
@@ -69,34 +69,30 @@ if ( ! class_exists( 'GADWP_Backend_Setup' ) ) {
 		 */
 		public function load_styles_scripts( $hook ) {
 			$new_hook = explode( '_page_', $hook );
-			
+
 			if ( isset( $new_hook[1] ) ) {
 				$new_hook = '_page_' . $new_hook[1];
 			} else {
 				$new_hook = $hook;
 			}
-			
-			$lang = get_bloginfo( 'language' );
-			$lang = explode( '-', $lang );
-			$lang = $lang[0];
-			
+
 			/*
 			 * GADWP main stylesheet
 			 */
 			wp_enqueue_style( 'gadwp', GADWP_URL . 'admin/css/gadwp.css', null, GADWP_CURRENT_VERSION );
-			
+
 			/*
 			 * GADWP UI
 			 */
-			
+
 			if ( GADWP_Tools::get_cache( 'gapi_errors' ) ) {
 				$ed_bubble = '!';
 			} else {
 				$ed_bubble = '';
 			}
-			
+
 			wp_enqueue_script( 'gadwp-backend-ui', plugins_url( 'js/ui.js', __FILE__ ), array( 'jquery' ), GADWP_CURRENT_VERSION, true );
-			
+
 			/* @formatter:off */
 			wp_localize_script( 'gadwp-backend-ui', 'gadwp_ui_data', array(
 				'ajaxurl' => admin_url( 'admin-ajax.php' ),
@@ -105,7 +101,7 @@ if ( ! class_exists( 'GADWP_Backend_Setup' ) ) {
 			)
 			);
 			/* @formatter:on */
-			
+
 			if ( $this->gadwp->config->options['switch_profile'] && count( $this->gadwp->config->options['ga_dash_profile_list'] ) > 1 ) {
 				$views = array();
 				foreach ( $this->gadwp->config->options['ga_dash_profile_list'] as $items ) {
@@ -116,15 +112,15 @@ if ( ! class_exists( 'GADWP_Backend_Setup' ) ) {
 			} else {
 				$views = false;
 			}
-			
+
 			/*
 			 * Main Dashboard Widgets Styles & Scripts
 			 */
 			$widgets_hooks = array( 'index.php' );
-			
+
 			if ( in_array( $new_hook, $widgets_hooks ) ) {
 				if ( GADWP_Tools::check_roles( $this->gadwp->config->options['ga_dash_access_back'] ) && $this->gadwp->config->options['dashboard_widget'] ) {
-					
+
 					if ( $this->gadwp->config->options['ga_target_geomap'] ) {
 						$country_codes = GADWP_Tools::get_countrycodes();
 						if ( isset( $country_codes[$this->gadwp->config->options['ga_target_geomap']] ) ) {
@@ -135,25 +131,23 @@ if ( ! class_exists( 'GADWP_Backend_Setup' ) ) {
 					} else {
 						$region = false;
 					}
-					
+
 					wp_enqueue_style( 'gadwp-nprogress', GADWP_URL . 'common/nprogress/nprogress.css', null, GADWP_CURRENT_VERSION );
-					
+
 					wp_enqueue_style( 'gadwp-backend-item-reports', GADWP_URL . 'admin/css/admin-widgets.css', null, GADWP_CURRENT_VERSION );
-					
+
 					wp_register_style( 'jquery-ui-tooltip-html', GADWP_URL . 'common/realtime/jquery.ui.tooltip.html.css' );
-					
+
 					wp_enqueue_style( 'jquery-ui-tooltip-html' );
-					
+
 					wp_register_script( 'jquery-ui-tooltip-html', GADWP_URL . 'common/realtime/jquery.ui.tooltip.html.js' );
-					
-					if ( ! wp_script_is( 'googlejsapi' ) ) {
-						wp_register_script( 'googlejsapi', 'https://www.google.com/jsapi?autoload=%7B%22modules%22%3A%5B%7B%22name%22%3A%22visualization%22%2C%22version%22%3A%221%22%2C%22language%22%3A%22' . $lang . '%22%2C%22packages%22%3A%5B%22corechart%22%2C%20%22table%22%2C%20%22orgchart%22%2C%20%22geochart%22%5D%7D%5D%7D%27', array(), null );
-					}
-					
+
+					wp_register_script( 'googlecharts', 'https://www.gstatic.com/charts/loader.js', array(), null );
+
 					wp_enqueue_script( 'gadwp-nprogress', GADWP_URL . 'common/nprogress/nprogress.js', array( 'jquery' ), GADWP_CURRENT_VERSION );
-					
-					wp_enqueue_script( 'gadwp-backend-dashboard-reports', GADWP_URL . 'common/js/reports.js', array( 'jquery', 'googlejsapi', 'gadwp-nprogress', 'jquery-ui-tooltip', 'jquery-ui-core', 'jquery-ui-position', 'jquery-ui-tooltip-html' ), GADWP_CURRENT_VERSION );
-					
+
+					wp_enqueue_script( 'gadwp-backend-dashboard-reports', GADWP_URL . 'common/js/reports.js', array( 'jquery', 'googlecharts', 'gadwp-nprogress', 'jquery-ui-tooltip', 'jquery-ui-core', 'jquery-ui-position', 'jquery-ui-tooltip-html' ), GADWP_CURRENT_VERSION, true );
+
 					/* @formatter:off */
 					wp_localize_script( 'gadwp-backend-dashboard-reports', 'gadwpItemData', array(
 						'ajaxurl' => admin_url( 'admin-ajax.php' ),
@@ -181,6 +175,7 @@ if ( ! class_exists( 'GADWP_Backend_Setup' ) ) {
 							'searches' => __( "Searches", 'google-analytics-dashboard-for-wp' ),
 							'trafficdetails' => __( "Traffic", 'google-analytics-dashboard-for-wp' ),
 							'technologydetails' => __( "Technology", 'google-analytics-dashboard-for-wp' ),
+							'404errors' => __( "404 Errors", 'google-analytics-dashboard-for-wp' ),
 						),
 						'i18n' => array(
 							__( "A JavaScript Error is blocking plugin resources!", 'google-analytics-dashboard-for-wp' ), //0
@@ -194,7 +189,7 @@ if ( ! class_exists( 'GADWP_Backend_Setup' ) ) {
 							__( "Bounce Rate", 'google-analytics-dashboard-for-wp' ),
 							__( "Organic Search", 'google-analytics-dashboard-for-wp' ),
 							__( "Pages/Session", 'google-analytics-dashboard-for-wp' ),
-							__( "Invalid response, more details in JavaScript Console (F12).", 'google-analytics-dashboard-for-wp' ),
+							__( "Invalid response", 'google-analytics-dashboard-for-wp' ),
 							__( "Not enough data collected", 'google-analytics-dashboard-for-wp' ),
 							__( "This report is unavailable", 'google-analytics-dashboard-for-wp' ),
 							__( "report generated by", 'google-analytics-dashboard-for-wp' ), //14
@@ -213,6 +208,7 @@ if ( ! class_exists( 'GADWP_Backend_Setup' ) ) {
 						'rtLimitPages' => $this->gadwp->config->options['ga_realtime_pages'],
 						'colorVariations' => GADWP_Tools::variations( $this->gadwp->config->options['ga_dash_style'] ),
 						'region' => $region,
+						'mapsApiKey' => $this->gadwp->config->options['maps_api_key'],
 						'language' => get_bloginfo( 'language' ),
 						'viewList' => $views,
 						'scope' => 'admin-widgets',
@@ -221,14 +217,14 @@ if ( ! class_exists( 'GADWP_Backend_Setup' ) ) {
 					/* @formatter:on */
 				}
 			}
-			
+
 			/*
 			 * Posts/Pages List Styles & Scripts
 			 */
 			$contentstats_hooks = array( 'edit.php' );
 			if ( in_array( $hook, $contentstats_hooks ) ) {
 				if ( GADWP_Tools::check_roles( $this->gadwp->config->options['ga_dash_access_back'] ) && $this->gadwp->config->options['backend_item_reports'] ) {
-					
+
 					if ( $this->gadwp->config->options['ga_target_geomap'] ) {
 						$country_codes = GADWP_Tools::get_countrycodes();
 						if ( isset( $country_codes[$this->gadwp->config->options['ga_target_geomap']] ) ) {
@@ -239,21 +235,19 @@ if ( ! class_exists( 'GADWP_Backend_Setup' ) ) {
 					} else {
 						$region = false;
 					}
-					
+
 					wp_enqueue_style( 'gadwp-nprogress', GADWP_URL . 'common/nprogress/nprogress.css', null, GADWP_CURRENT_VERSION );
-					
+
 					wp_enqueue_style( 'gadwp-backend-item-reports', GADWP_URL . 'admin/css/item-reports.css', null, GADWP_CURRENT_VERSION );
-					
+
 					wp_enqueue_style( "wp-jquery-ui-dialog" );
-					
-					if ( ! wp_script_is( 'googlejsapi' ) ) {
-						wp_register_script( 'googlejsapi', 'https://www.google.com/jsapi?autoload=%7B%22modules%22%3A%5B%7B%22name%22%3A%22visualization%22%2C%22version%22%3A%221%22%2C%22language%22%3A%22' . $lang . '%22%2C%22packages%22%3A%5B%22corechart%22%2C%20%22table%22%2C%20%22orgchart%22%2C%20%22geochart%22%5D%7D%5D%7D%27', array(), null );
-					}
-					
+
+					wp_register_script( 'googlecharts', 'https://www.gstatic.com/charts/loader.js', array(), null );
+
 					wp_enqueue_script( 'gadwp-nprogress', GADWP_URL . 'common/nprogress/nprogress.js', array( 'jquery' ), GADWP_CURRENT_VERSION );
-					
-					wp_enqueue_script( 'gadwp-backend-item-reports', GADWP_URL . 'common/js/reports.js', array( 'gadwp-nprogress', 'googlejsapi', 'jquery', 'jquery-ui-dialog' ), GADWP_CURRENT_VERSION );
-					
+
+					wp_enqueue_script( 'gadwp-backend-item-reports', GADWP_URL . 'common/js/reports.js', array( 'gadwp-nprogress', 'googlecharts', 'jquery', 'jquery-ui-dialog' ), GADWP_CURRENT_VERSION, true );
+
 					/* @formatter:off */
 					wp_localize_script( 'gadwp-backend-item-reports', 'gadwpItemData', array(
 						'ajaxurl' => admin_url( 'admin-ajax.php' ),
@@ -269,7 +263,7 @@ if ( ! class_exists( 'GADWP_Backend_Setup' ) ) {
 							'1095daysAgo' =>  sprintf( _n( "%s Year", "%s Years", 3, 'google-analytics-dashboard-for-wp' ), __('Three', 'google-analytics-dashboard-for-wp') ),
 						),
 						'reportList' => array(
-							'uniquePageviews' => __( "Unique Views", 'google-analytics-dashboard-for-wp' ),
+							'sessions' => __( "Sessions", 'google-analytics-dashboard-for-wp' ),
 							'users' => __( "Users", 'google-analytics-dashboard-for-wp' ),
 							'organicSearches' => __( "Organic", 'google-analytics-dashboard-for-wp' ),
 							'pageviews' => __( "Page Views", 'google-analytics-dashboard-for-wp' ),
@@ -286,13 +280,13 @@ if ( ! class_exists( 'GADWP_Backend_Setup' ) ) {
 							__( "Visitor Type", 'google-analytics-dashboard-for-wp' ),
 							__( "Social Networks", 'google-analytics-dashboard-for-wp' ),
 							__( "Search Engines", 'google-analytics-dashboard-for-wp' ),
-							__( "Unique Views", 'google-analytics-dashboard-for-wp' ),
+							__( "Sessions", 'google-analytics-dashboard-for-wp' ),
 							__( "Users", 'google-analytics-dashboard-for-wp' ),
 							__( "Page Views", 'google-analytics-dashboard-for-wp' ),
 							__( "Bounce Rate", 'google-analytics-dashboard-for-wp' ),
 							__( "Organic Search", 'google-analytics-dashboard-for-wp' ),
 							__( "Pages/Session", 'google-analytics-dashboard-for-wp' ),
-							__( "Invalid response, more details in JavaScript Console (F12).", 'google-analytics-dashboard-for-wp' ),
+							__( "Invalid response", 'google-analytics-dashboard-for-wp' ),
 							__( "Not enough data collected", 'google-analytics-dashboard-for-wp' ),
 							__( "This report is unavailable", 'google-analytics-dashboard-for-wp' ),
 							__( "report generated by", 'google-analytics-dashboard-for-wp' ), //14
@@ -304,6 +298,7 @@ if ( ! class_exists( 'GADWP_Backend_Setup' ) ) {
 						),
 						'colorVariations' => GADWP_Tools::variations( $this->gadwp->config->options['ga_dash_style'] ),
 						'region' => $region,
+						'mapsApiKey' => $this->gadwp->config->options['maps_api_key'],
 						'language' => get_bloginfo( 'language' ),
 						'viewList' => false,
 						'scope' => 'admin-item',
@@ -312,17 +307,17 @@ if ( ! class_exists( 'GADWP_Backend_Setup' ) ) {
 					/* @formatter:on */
 				}
 			}
-			
+
 			/*
 			 * Settings Styles & Scripts
 			 */
 			$settings_hooks = array( '_page_gadash_settings', '_page_gadash_backend_settings', '_page_gadash_frontend_settings', '_page_gadash_tracking_settings', '_page_gadash_errors_debugging' );
-			
+
 			if ( in_array( $new_hook, $settings_hooks ) ) {
 				wp_enqueue_style( 'wp-color-picker' );
 				wp_enqueue_script( 'wp-color-picker' );
 				wp_enqueue_script( 'wp-color-picker-script-handle', plugins_url( 'js/wp-color-picker-script.js', __FILE__ ), array( 'wp-color-picker' ), false, true );
-				wp_enqueue_script( 'gadwp-settings', plugins_url( 'js/settings.js', __FILE__ ), array( 'jquery' ), GADWP_CURRENT_VERSION );
+				wp_enqueue_script( 'gadwp-settings', plugins_url( 'js/settings.js', __FILE__ ), array( 'jquery' ), GADWP_CURRENT_VERSION, true );
 			}
 		}
 
@@ -344,11 +339,11 @@ if ( ! class_exists( 'GADWP_Backend_Setup' ) ) {
 		 */
 		function admin_notice() {
 			$currentScreen = get_current_screen();
-			
+
 			if ( ! current_user_can( 'manage_options' ) || $currentScreen->base != 'dashboard' ) {
 				return;
 			}
-			
+
 			if ( get_option( 'gadwp_got_updated' ) ) :
 				?>
 <div id="gadwp-notice" class="notice is-dismissible">
