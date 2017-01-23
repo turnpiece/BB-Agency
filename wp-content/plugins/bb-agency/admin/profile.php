@@ -841,74 +841,100 @@ function bb_display_manage($ProfileID) {
             }
         </script>
         <?php
-            //mass delete
-            if ($_GET["actionsub"] == "massphotodelete" && is_array($_GET['targetids'])) {
-                $massmediaids = '';
-                $massmediaids = implode(",", $_GET['targetids']);
-                //get all the images
+            if (isset($_GET['actionsub'])) { // process submitted form
 
-                $queryImgConfirm = "SELECT ProfileMediaID,ProfileMediaURL FROM `$t_media` WHERE ProfileID = $ProfileID AND ProfileMediaID IN ($massmediaids) AND ProfileMediaType = 'Image'";
-                $resultsImgConfirm = mysql_query($queryImgConfirm);
-                $countImgConfirm = mysql_num_rows($resultsImgConfirm);
-                $mass_image_data = array();
-                while ($dataImgConfirm = mysql_fetch_array($resultsImgConfirm)) {
-                    $mass_image_data[$dataImgConfirm['ProfileMediaID']] = $dataImgConfirm['ProfileMediaURL'];
-                }
-                //delete all the images from database
-                $massmediaids = implode(",", array_keys($mass_image_data));
-                $queryMassImageDelete = "DELETE FROM `$t_media` WHERE ProfileID = $ProfileID AND ProfileMediaID IN ($massmediaids) AND ProfileMediaType = 'Image'";
-                $resultsMassImageDelete = $wpdb->query($queryMassImageDelete);
-                //delete images on the disk
-                $dirURL = bb_agency_UPLOADPATH . $ProfileGallery;
-                foreach ($mass_image_data as $mid => $ProfileMediaURL) {
-                    if (!@unlink($dirURL . '/' . $ProfileMediaURL)) : ?>
-                        <div id="message" class="error">
-                            <p><?php _e("Error removing", bb_agency_TEXTDOMAIN) ?> <strong><?php echo $ProfileMediaURL ?></strong>: <?php _e("file did not exist.", bb_agency_TEXTDOMAIN) ?>.</p></div>
-                    <?php else : ?>
-                        <div id="message" class="updated">
-                            <p>File <strong><?php echo $ProfileMediaURL ?></strong> <?php _e("successfully removed", bb_agency_TEXTDOMAIN) ?>.</p>
-                        </div>
-                    <?php endif;
+                switch( $_GET['actionsub'] ) {
+
+                    case 'massphotodelete' :
+
+                        $ids = '';
+                        $ids = implode(",", $_GET['targetids']);
+                        //get all the images
+
+                        $queryImgConfirm = "SELECT `ProfileMediaID`, `ProfileMediaURL` FROM `$t_media` WHERE `ProfileID` = $ProfileID AND `ProfileMediaID` IN ($ids) AND `ProfileMediaType` = 'Image'";
+                        $resultsImgConfirm = $wpdb->get_results($queryImgConfirm);
+                        $countImgConfirm = count($resultsImgConfirm);
+                        $mass_image_data = array();
+                        foreach ($resultsImgConfirm as $dataImgConfirm) {
+                            $mass_image_data[$dataImgConfirm->ProfileMediaID] = $dataImgConfirm->ProfileMediaURL;
+                        }
+                        //delete all the images from database
+                        $massmediaids = implode(",", array_keys($mass_image_data));
+                        $queryMassImageDelete = "DELETE FROM `$t_media` WHERE ProfileID = $ProfileID AND ProfileMediaID IN ($massmediaids) AND ProfileMediaType = 'Image'";
+                        $resultsMassImageDelete = $wpdb->query($queryMassImageDelete);
+
+                        //delete images on the disk
+                        $dirURL = bb_agency_UPLOADPATH . $ProfileGallery;
+                        foreach ($mass_image_data as $mid => $ProfileMediaURL) {
+                            if (!@unlink($dirURL . '/' . $ProfileMediaURL)) : ?>
+                                <div id="message" class="error">
+                                    <p><?php _e("Error removing", bb_agency_TEXTDOMAIN) ?> <strong><?php echo $ProfileMediaURL ?></strong>: <?php _e("file did not exist.", bb_agency_TEXTDOMAIN) ?>.</p></div>
+                            <?php else : ?>
+                                <div id="message" class="updated">
+                                    <p>File <strong><?php echo $ProfileMediaURL ?></strong> <?php _e("successfully removed", bb_agency_TEXTDOMAIN) ?>.</p>
+                                </div>
+                            <?php endif;
+                        }
+                        break;
+
+                    case 'photodelete' :
+                        $deleteTargetID = $_GET["targetid"];
+
+                        // Verify Record
+                        $queryImgConfirm = "SELECT * FROM `$t_media` WHERE `ProfileID` =  '$ProfileID' AND `ProfileMediaID` =  '$deleteTargetID'";
+                        
+                        $images = $wpdb->get_results( $queryImgConfirm );
+
+                        if (!empty($images)) : foreach ($images as $image) :
+
+                            // Remove Record
+                            $delete = "DELETE FROM `$t_media` WHERE `ProfileID` =  '$ProfileID' AND `ProfileMediaID` = '$image->ProfileMediaID'";
+                            $results = $wpdb->query($delete);
+
+                            if ($image->ProfileMediaType == "Demo Reel" || 
+                                $image->ProfileMediaType == "Video Monologue" || 
+                                $image->ProfileMediaType == "Video Slate") : ?>
+                                <div id="message" class="updated"><p>File <strong><?php echo $image->ProfileMediaURL ?></strong> <?php _e("successfully removed", bb_agency_TEXTDOMAIN) ?>.</p></div>
+                            <?php else : 
+                                // Remove File
+                                $dirURL = bb_agency_UPLOADPATH . $ProfileGallery;
+                                if (!unlink($dirURL . '/' . $image->ProfileMediaURL)) : ?>
+                                    <div id="message" class="error">
+                                        <p><?php _e("Error removing", bb_agency_TEXTDOMAIN) ?> <strong><?php echo $image->ProfileMediaURL ?></strong>. <?php _e("File did not exist.", bb_agency_TEXTDOMAIN) ?>.</p>
+                                    </div>
+                                <?php else : ?>
+                                    <div id="message" class="updated">
+                                        <p>File <strong><?php echo $image->ProfileMediaURL ?></strong> <?php _e("successfully removed", bb_agency_TEXTDOMAIN) ?>.</p>
+                                    </div>
+                                <?php endif;
+                            endif;
+                        endforeach; endif; // is there record?
+                        break;
+
+                    case 'massphotoshow' :
+                    case 'massphotohide' :
+
+                        $ids = implode(",", $_GET['targetids']);
+                        //get all the images
+
+                        $queryImgConfirm = "SELECT `ProfileMediaID`, `ProfileMediaURL` FROM `$t_media` WHERE `ProfileID` = $ProfileID AND `ProfileMediaID` IN ($ids) AND `ProfileMediaType` = 'Image'";
+
+                        $resultsImgConfirm = $wpdb->get_results($queryImgConfirm);
+                        $countImgConfirm = count($resultsImgConfirm);
+                        $mass_image_data = array();
+                        
+                        foreach ($resultsImgConfirm as $dataImgConfirm) {
+                            $mass_image_data[$dataImgConfirm->ProfileMediaID] = $dataImgConfirm->ProfileMediaURL;
+                        }
+                        
+                        // update database
+                        $ids = implode(",", array_keys($mass_image_data));
+                        $set = $_GET['actionsub'] == 'massphotoshow' ? 1 : 0;
+                        $wpdb->query( "UPDATE `$t_media` SET `ProfileMediaLive` = $set WHERE `ProfileID` = $ProfileID AND `ProfileMediaID` IN ($ids) AND `ProfileMediaType` = 'Image'" );
+
+                        break;
                 }
             }
-
-            // Are we deleting?
-            if ($_GET["actionsub"] == "photodelete") :
-                $deleteTargetID = $_GET["targetid"];
-
-                // Verify Record
-                $queryImgConfirm = "SELECT * FROM `$t_media` WHERE `ProfileID` =  '$ProfileID' AND `ProfileMediaID` =  '$deleteTargetID'";
-                
-                $images = $wpdb->get_results( $queryImgConfirm );
-
-                if (!empty($images)) : foreach ($images as $image) :
-                    $ProfileMediaID = $dataImgConfirm['ProfileMediaID'];
-                    $ProfileMediaType = $dataImgConfirm['ProfileMediaType'];
-                    $ProfileMediaURL = $dataImgConfirm['ProfileMediaURL'];
-
-                    // Remove Record
-                    $delete = "DELETE FROM `$t_media` WHERE `ProfileID` =  '$ProfileID' AND `ProfileMediaID` = '$image->ProfileMediaID'";
-                    $results = $wpdb->query($delete);
-
-                    if ($image->ProfileMediaType == "Demo Reel" || 
-                        $image->ProfileMediaType == "Video Monologue" || 
-                        $image->ProfileMediaType == "Video Slate") : ?>
-                        <div id="message" class="updated"><p>File <strong><?php echo $image->ProfileMediaURL ?></strong> <?php _e("successfully removed", bb_agency_TEXTDOMAIN) ?>.</p></div>
-                    <?php else : 
-                        // Remove File
-                        $dirURL = bb_agency_UPLOADPATH . $ProfileGallery;
-                        if (!unlink($dirURL . '/' . $image->ProfileMediaURL)) : ?>
-                            <div id="message" class="error">
-                                <p><?php _e("Error removing", bb_agency_TEXTDOMAIN) ?> <strong><?php echo $image->ProfileMediaURL ?></strong>. <?php _e("File did not exist.", bb_agency_TEXTDOMAIN) ?>.</p>
-                            </div>
-                        <?php else : ?>
-                            <div id="message" class="updated">
-                                <p>File <strong><?php echo $image->ProfileMediaURL ?></strong> <?php _e("successfully removed", bb_agency_TEXTDOMAIN) ?>.</p>
-                            </div>
-                        <?php endif;
-                    endif;
-                endforeach; endif; // is there record?
-            endif;
 
             // Go about our biz-nazz
             $queryImg = "SELECT * FROM `$t_media` WHERE `ProfileID` = '$ProfileID' AND `ProfileMediaType` = 'Image' ORDER BY `ProfileMediaPrimary` DESC, `ProfileMediaID` DESC";
@@ -929,19 +955,22 @@ function bb_display_manage($ProfileID) {
                         $massDelete = '';
                     }
                 } else {
-                    $styleBackground = "#000000";
+                    $styleBackground = $dataImg->ProfileMediaLive ? "#000000" : "#888888";
                     $isChecked = '';
-                    $isCheckedText = " Select";
+                    $isCheckedText = __( 'Primary', bb_agency_TEXTDOMAIN );
+/*
                     $toDelete = '<div class="delete"><a href="javascript:confirmDelete(\'' . $dataImg->ProfileMediaID . '\',\'' . $dataImg->ProfileMediaType . '\')"><span>Delete</span> &raquo;</a></div>';
-                    $massDelete = '<input type="checkbox" name="massgaldel" value="' . $dataImg->ProfileMediaID . '"> <span style="color:#FFFFFF">Delete</span>';
+*/
+                    $massSelect = '<input type="checkbox" name="massgalsel" value="' . $dataImg->ProfileMediaID . '"> <span style="color:#FFFFFF">'.__('Select', bb_agency_TEXTDOMAIN).'</span>';
                 }
                 ?>
-                <div class="profileimage" style="background: <?php echo $styleBackground ?>">
+                <div class="profileimage" style="background: <?php echo $styleBackground ?>" class="<?php echo $dataImg->ProfileMediaLive ? 'showing' : 'hidden' ?>">
                     <?php echo $toDelete ?>
+                    <?php echo $toShowHide ?>
                     <img src="<?php echo bb_agency_UPLOADDIR . $ProfileGallery . '/' . $dataImg->ProfileMediaURL ?>" style="width: 100px; z-index: 1; \" />
                     <div class="primary" style="background: <?php echo $styleBackground ?>">
-                        <input type="radio" name="ProfileMediaPrimary" value="<?php echo  $dataImg->ProfileMediaID ?>" <?php echo $isChecked ?> /><?php echo $isCheckedText ?>
-                        <div><?php echo $massDelete ?></div>
+                        <input type="radio" name="ProfileMediaPrimary" value="<?php echo  $dataImg->ProfileMediaID ?>" <?php echo $isChecked ?> /> <?php echo $isCheckedText ?>
+                        <div><?php echo $massSelect ?></div>
                     </div>
                 </div>
                 <?php
@@ -951,8 +980,17 @@ function bb_display_manage($ProfileID) {
                 <div><?php _e("There are no images loaded for this profile yet.", bb_agency_TEXTDOMAIN) ?></div>
             <?php endif; ?>
             <div style="clear: both;"></div>
-            <a href="javascript:confirm_mass_gallery_delete();">Delete Selected Images</a>
+                <p>
+                    <a id="mass_gallery_delete" href="#"><?php _e('Delete Selected Images') ?></a>
+                </p>
+                <p>
+                    <a id="mass_gallery_show" href="#"><?php _e('Show Selected Images') ?></a>
+                </p>
+                <p>
+                    <a id="mass_gallery_hide" href="#"><?php _e('Hide Selected Images') ?></a>
+                </p>
             <script language="javascript">
+            /*
                 function confirm_mass_gallery_delete() {
                     jQuery(document).ready(function() {
                         var mas_del_ids = '&';
@@ -974,6 +1012,50 @@ function bb_display_manage($ProfileID) {
                         }
                     });
                 }
+            */
+                jQuery(document).ready(function($) {
+
+                    var pID = <?php echo $ProfileID ?>;
+                    var adminUrl = '<?php echo admin_url('admin.php?page='.$_GET['page']) ?>';
+
+                    function getIds() {
+                        var ids = '&';
+                        $("input:checkbox[name=massgalsel]:checked").each(function() {
+                            if(ids != '&'){
+                                ids += '&';
+                            }
+                            ids += 'targetids[]='+$(this).val();
+                        });
+                        return ids;
+                    }
+
+                    $('#mass_gallery_delete').on( 'click', function() {
+                        mass_gallery_action( 'delete' )     
+                    })
+
+                    $('#mass_gallery_show').on( 'click', function() {
+                        mass_gallery_action( 'show' )  
+                    })
+
+                    $('#mass_gallery_hide').on( 'click', function() {
+                        mass_gallery_action( 'hide' )  
+                    })
+
+                    function mass_gallery_action( type ) {
+                        var ids = getIds();
+
+                        if( ids != '&'){
+                            if(confirm("Do you want to "+type+" all the selected images?")){
+                                var url = adminUrl + "&action=editRecord&ProfileID=" + pID + "&actionsub=massphoto" + type + ids;
+                                document.location = url;
+                            }
+                        }
+                        else{
+                            alert("You have to select images to "+type);
+                        }  
+                    }
+                })
+
             </script>
 
             <br /><br />

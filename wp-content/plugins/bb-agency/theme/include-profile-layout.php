@@ -5,7 +5,7 @@
 
 			// images
 			global $wpdb;
-			$queryImg = "SELECT * FROM ". table_agency_profile_media ." media WHERE `ProfileID` =  \"". $ProfileID ."\" AND `ProfileMediaType` = \"Image\" ORDER BY $orderBy";
+			$queryImg = "SELECT * FROM ". table_agency_profile_media ." media WHERE `ProfileID` =  \"". $ProfileID ."\" AND `ProfileMediaType` = \"Image\" AND `ProfileMediaLive` = 1 ORDER BY $orderBy";
 			$resultsImg = $wpdb->get_results($queryImg);
 			$countImg = count($resultsImg);
 			$path = bb_agency_UPLOADPATH . $ProfileGallery .'/';
