@@ -389,7 +389,7 @@ function bb_agency_client_dropdown($name, $value = null) {
     $t_profile = table_agency_profile;
     $client_id = bb_agency_CLIENTS_ID;
     $sql = <<<EOF
-SELECT `ProfileID` AS id, `ProfileContactDisplay` AS name 
+SELECT `ProfileID` AS id, IF(`ProfileContactDisplay`, `ProfileContactDisplay`, CONCAT(`ProfileContactNameFirst`, ' ', `ProfileContactNameLast`)) AS name 
 FROM $t_profile 
 WHERE `ProfileType` = '$client_id' 
 AND `ProfileIsActive` = '1' 
@@ -402,7 +402,7 @@ EOF;
     foreach ($clients as $client) {
         $option[] = '<option value="'.$client->id.'" '.selected($client->id, $value, false).'>'.$client->name.'</option>';
     }
-    return '<select name="'.$name.'" size="1">'.implode("\n", $option).'</select>';
+    return '<select name="'.$name.'" size="1" class="client-select">'.implode("\n", $option).'</select>';
 }
 
 function bb_agency_get_job($id) {

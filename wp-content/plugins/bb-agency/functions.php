@@ -2204,6 +2204,8 @@ function bb_custom_fields_template($visibility = 0, $ProfileID, $data) {
 /*/   
 function bb_agency_getGenderTitle($ProfileGenderID) {
  
+ 	global $wpdb;
+ 	
 	$query = "SELECT GenderTitle FROM ". table_agency_data_gender ." WHERE GenderID='".$ProfileGenderID."'";
 	$title = $wpdb->get_var($query);
 

@@ -442,10 +442,10 @@ if ($action) {
             ORDER BY $sort $dir $limit";
 
         // Search Results
-        $results2 = mysql_query($query);
-        $count = mysql_num_rows($results2);
+        $results2 = $wpdb->get_results($query);
+        $count = count($results2);
         ?>
-        <h2 class="title">Search Results: <?php echo $count ?></h2>
+        <h2 class="title"><?php printf( __( 'Found %d models', bb_agency_TEXTDOMAIN ), $count ) ?></h2>
         <?php
 
         if (bb_agency_DEBUGGING)
@@ -493,10 +493,10 @@ if ($action) {
                 </tfoot>
                 <tbody>
                 <?php 
-                while ($data = mysql_fetch_array($results2)) :
-                    $ProfileID = $data['pID'];
-                    $isInactive = $data['ProfileIsActive'] == 0;
-                    $isInactiveDisable = $data['ProfileIsActive'] ? '' : 'disabled="disabled"';  
+                if (!empty($results2)) : foreach ($results2 as $data) :
+                    $ProfileID = $data->pID;
+                    $isInactive = $data->ProfileIsActive == 0;
+                    $isInactiveDisable = $data->ProfileIsActive ? '' : 'disabled="disabled"';  
                 ?>
                     <tr class="<?php echo $isInactive ? 'inactive' : 'active' ?>">
                         <th class="check-column" scope="row" >
@@ -505,17 +505,17 @@ if ($action) {
                         <td class="ProfileID column-ProfileID"><?php echo $ProfileID ?></td>
                         <td class="ProfileContact column-ProfileContact">
                             <div class="title">
-                                <h2><?php echo $data['ProfileContactName'] ?></h2>
+                                <h2><?php echo $data->ProfileContactName ?></h2>
                             </div>
                             <div class="row-actions">
                                 <span class="edit">
                                     <a href="<?php echo admin_url('admin.php?page=bb_agency_profiles&amp;action=editRecord&amp;ProfileID='. $ProfileID) ?>" title="Edit this profile"><?php _e('Edit', bb_agency_TEXTDOMAIN) ?></a> | 
                                 </span>
                                 <span class="review">
-                                    <a href="<?php echo bb_agency_PROFILEDIR . $data['ProfileGallery'] ?>" target="_blank"><?php _e('View', bb_agency_TEXTDOMAIN) ?></a> | 
+                                    <a href="<?php echo bb_agency_PROFILEDIR . $data->ProfileGallery ?>" target="_blank"><?php _e('View', bb_agency_TEXTDOMAIN) ?></a> | 
                                 </span>
                                 <span class="delete">
-                                    <a class="submitdelete" title="Remove this profile" href="<?php echo admin_url('admin.php?page=bb_agency_profiles&amp;deleteRecord&amp;ProfileID='. $ProfileID) ?>" onclick="if ( confirm('You are about to delete the model '<?php echo $data['ProfileContactName'] ?>') ) { return true; } return false;"><?php _e('Delete', bb_agency_TEXTDOMAIN) ?></a>
+                                    <a class="submitdelete" title="Remove this profile" href="<?php echo admin_url('admin.php?page=bb_agency_profiles&amp;deleteRecord&amp;ProfileID='. $ProfileID) ?>" onclick="if ( confirm('You are about to delete the model '<?php echo $data->ProfileContactName ?>') ) { return true; } return false;"><?php _e('Delete', bb_agency_TEXTDOMAIN) ?></a>
                                 </span>
                             </div>
                         <?php if (!empty($isInactiveDisable)) : ?>
@@ -527,39 +527,39 @@ if ($action) {
                 
                        <!-- private info -->
                         <td class="ProfileStats column-ProfileStats">
-                        <?php if (!empty($data['ProfileContactEmail'])) : ?>
+                        <?php if (!empty($data->ProfileContactEmail)) : ?>
                             <div>
-                                <strong><?php _e('Email', bb_agency_TEXTDOMAIN) ?>:</strong> <?php echo $data['ProfileContactEmail'] ?>
+                                <strong><?php _e('Email', bb_agency_TEXTDOMAIN) ?>:</strong> <?php echo $data->ProfileContactEmail ?>
                             </div>
                         <?php endif; ?>
-                        <?php if (!empty($data['ProfileLocationStreet']) || !empty($data['ProfileLocationCity']) || !empty($data['ProfileLocationState']) || !empty($data['ProfileLocationZip'])) : ?>
+                        <?php if (!empty($data->ProfileLocationStreet) || !empty($data->ProfileLocationCity) || !empty($data->ProfileLocationState) || !empty($data->ProfileLocationZip)) : ?>
                             <div>
-                                <strong><?php _e('Address', bb_agency_TEXTDOMAIN) ?>:</strong> <?php echo implode(', ', array($data['ProfileLocationStreet'], $data['ProfileLocationCity'], $data['ProfileLocationState'], $data['ProfileLocationZip'])) ?>
+                                <strong><?php _e('Address', bb_agency_TEXTDOMAIN) ?>:</strong> <?php echo implode(', ', array($data->ProfileLocationStreet, $data->ProfileLocationCity, $data->ProfileLocationState, $data->ProfileLocationZip)) ?>
                             </div>
                         <?php endif; ?>    
-                        <?php if (!empty($data['ProfileLocationCountry'])) : ?>
+                        <?php if (!empty($data->ProfileLocationCountry)) : ?>
                             <div>
-                                <strong><?php _e('Country', bb_agency_TEXTDOMAIN) ?>:</strong> <?php echo $data['ProfileLocationCountry'] ?>
+                                <strong><?php _e('Country', bb_agency_TEXTDOMAIN) ?>:</strong> <?php echo $data->ProfileLocationCountry ?>
                             </div>
                         <?php endif; ?>
-                        <?php if (!empty($data['distance'])) : ?>
+                        <?php if (!empty($data->distance)) : ?>
                             <div>
-                                <strong><?php _e('Distance', bb_agency_TEXTDOMAIN) ?>:</strong> <?php echo number_format((float)$data['distance'], 1, '.', '') ?> miles
+                                <strong><?php _e('Distance', bb_agency_TEXTDOMAIN) ?>:</strong> <?php echo number_format((float)$data->distance, 1, '.', '') ?> miles
                             </div>
                         <?php endif; ?>
 
-                        <?php if (bb_agency_SITETYPE == 'bumps' && defined('bb_agency_MUMSTOBE_ID') && bb_agency_MUMSTOBE_ID && bb_agency_ismumtobe($data['ProfileType']) && !empty($data['ProfileDateDue'])) : ?>                             
+                        <?php if (bb_agency_SITETYPE == 'bumps' && defined('bb_agency_MUMSTOBE_ID') && bb_agency_MUMSTOBE_ID && bb_agency_ismumtobe($data->ProfileType) && !empty($data->ProfileDateDue)) : ?>                             
                         <div>
-                            <strong><?php _e('Due date', bb_agency_TEXTDOMAIN) ?>:</strong> <?php echo $data['ProfileDateDue'] ?></div>
+                            <strong><?php _e('Due date', bb_agency_TEXTDOMAIN) ?>:</strong> <?php echo $data->ProfileDateDue ?></div>
                         </div>
                         <?php endif;
 
                         foreach (array(
-                            __('Birth date', bb_agency_TEXTDOMAIN) => $data['ProfileDateBirth'],
-                            __('Website', bb_agency_TEXTDOMAIN) => $data['ProfileContactWebsite'],
-                            __('Phone Home', bb_agency_TEXTDOMAIN) => $data['ProfileContactPhoneHome'],
-                            __('Phone Cell', bb_agency_TEXTDOMAIN) => $data['ProfileContactPhoneCell'],
-                            __('Phone Work', bb_agency_TEXTDOMAIN) => $data['ProfileContactPhoneWork']
+                            __('Birth date', bb_agency_TEXTDOMAIN) => $data->ProfileDateBirth,
+                            __('Website', bb_agency_TEXTDOMAIN) => $data->ProfileContactWebsite,
+                            __('Phone Home', bb_agency_TEXTDOMAIN) => $data->ProfileContactPhoneHome,
+                            __('Phone Cell', bb_agency_TEXTDOMAIN) => $data->ProfileContactPhoneCell,
+                            __('Phone Work', bb_agency_TEXTDOMAIN) => $data->ProfileContactPhoneWork
                             ) as $label => $value) : if ($value) : ?>
                             <div>
                                 <strong><?php echo $label ?>:</strong> <?php echo $value ?></div>
@@ -578,9 +578,9 @@ if ($action) {
                        <!-- public info -->
                         <td class="ProfileDetails column-ProfileDetails">
 
-                        <?php if (!empty($data['ProfileGender'])) : ?>
+                        <?php if (!empty($data->ProfileGender)) : ?>
                             <div>
-                                <strong><?php _e('Gender', bb_agency_TEXTDOMAIN) ?>:</strong> <?php echo bb_agency_getGenderTitle($data['ProfileGender']) ?bb_agency_getGenderTitle($data['ProfileGender']) : '--' ?>
+                                <strong><?php _e('Gender', bb_agency_TEXTDOMAIN) ?>:</strong> <?php echo bb_agency_getGenderTitle($data->ProfileGender) ?bb_agency_getGenderTitle($data->ProfileGender) : '--' ?>
                             </div>
                         <?php endif;
 
@@ -593,19 +593,16 @@ if ($action) {
 
                         </td>
                         <td class="ProfileImage column-ProfileImage">
-                        <?php if (isset($data['ProfileMediaURL']) && !empty($data['ProfileMediaURL'])) : ?>
+                        <?php if (isset($data->ProfileMediaURL) && !empty($data->ProfileMediaURL)) : ?>
                             <div class="image">
-                                <img style="width: 150px;" src="<?php echo bb_agency_UPLOADDIR . $data['ProfileGallery'] .'/'. $data['ProfileMediaURL'] ?>" />
+                                <img style="width: 150px;" src="<?php echo bb_agency_UPLOADDIR . $data->ProfileGallery .'/'. $data->ProfileMediaURL ?>" />
                             </div>
                         <?php else : ?>
                             <div class="image no-image">NO IMAGE</div>
                         <?php endif; ?>
                         </td>
                     </tr>
-                <?php endwhile;
-            
-                // clear mysql 
-                mysql_free_result($results2);
+                <?php endforeach; endif;
 
                 // check for no results
                 if ($count < 1) : ?>
@@ -681,31 +678,31 @@ EOF;
             } else {
                 $cartAction = "cartRemove";
             }
-            while ($data = mysql_fetch_array($results)) : $ProfileDateUpdated = $data['ProfileDateUpdated']; ?>
+            foreach ($results as $data) : $ProfileDateUpdated = $data->ProfileDateUpdated; ?>
                 <div class="profile">
-                    <h3><?php echo stripslashes($data['ProfileContactDisplay']) ?></h3>
-                    <?php if ($data['ProfileMediaURL']) : ?>
+                    <h3><?php echo stripslashes($data->ProfileContactDisplay) ?></h3>
+                    <?php if ($data->ProfileMediaURL) : ?>
                     <div class="image">
-                        <img src="<?php echo bb_agency_UPLOADDIR . $data['ProfileGallery'] .'/'. $data['ProfileMediaURL'] ?>">
+                        <img src="<?php echo bb_agency_UPLOADDIR . $data->ProfileGallery .'/'. $data->ProfileMediaURL ?>">
                     </div>
                     <?php endif; ?>
                     <div class="details">
-                    <?php if (!empty($data['ProfileDateBirth']) && substr($data['ProfileDateBirth'], 0, 4) !== '0000') : ?>
-                        <strong>Age:</strong> <?php echo bb_agency_get_age($data['ProfileDateBirth']) ?><br />
+                    <?php if (!empty($data->ProfileDateBirth) && substr($data->ProfileDateBirth, 0, 4) !== '0000') : ?>
+                        <strong>Age:</strong> <?php echo bb_agency_get_age($data->ProfileDateBirth) ?><br />
                     <?php endif; ?>
 
-                    <?php if (bb_agency_SITETYPE == 'bumps' && defined('bb_agency_MUMSTOBE_ID') && bb_agency_MUMSTOBE_ID && bb_agency_ismumtobe($data['ProfileType']) && !empty($data['ProfileDateDue'])) : ?>
-                        <strong>Due date:</strong> <?php echo bb_agency_get_due_date($data['ProfileDateDue']) ?><br />
+                    <?php if (bb_agency_SITETYPE == 'bumps' && defined('bb_agency_MUMSTOBE_ID') && bb_agency_MUMSTOBE_ID && bb_agency_ismumtobe($data->ProfileType) && !empty($data->ProfileDateDue)) : ?>
+                        <strong>Due date:</strong> <?php echo bb_agency_get_due_date($data->ProfileDateDue) ?><br />
                     <?php endif; ?>
                     </div>
                     <div class="actions">
-                        <a href="<?php echo admin_url('admin.php?page='. $_GET['page'] .'&action='. $cartAction .'&RemoveID='. $data['ProfileID']) ?>" title="<?php _e('Remove from Cart', bb_agency_TEXTDOMAIN) ?>">
+                        <a href="<?php echo admin_url('admin.php?page='. $_GET['page'] .'&action='. $cartAction .'&RemoveID='. $data->ProfileID) ?>" title="<?php _e('Remove from Cart', bb_agency_TEXTDOMAIN) ?>">
                             <img class="remove" src="<?php echo bb_agency_BASEDIR ?>style/remove.png" alt="<?php _e('Remove from Cart', bb_agency_TEXTDOMAIN) ?>" />
                         </a>
                     </div>
                     <div style="clear: both; "></div>
                 </div>
-            <?php endwhile; mysql_free_result($results); ?>
+            <?php endforeach; ?>
                 <div style="clear: both;"></div>
             </div>
             
@@ -752,8 +749,8 @@ EOF;
         $recipient = "";            
         while ($data = mysql_fetch_array($results2)) {
             $pos ++;
-            $ProfileID = $data['ProfileID'];
-            $recipient .=$data['ProfileContactEmail'];
+            $ProfileID = $data->ProfileID;
+            $recipient .=$data->ProfileContactEmail;
             if ($count != $pos) {
                 $recipient .=", ";     
             }    
@@ -804,6 +801,12 @@ EOF;
                 <input type="hidden" name="action" value="search" />
                 <table cellspacing="0" class="widefat fixed">
                     <thead>
+                        <tr>
+                            <th scope="row"><?php _e('Date', bb_agency_TEXTDOMAIN) ?>:</th>
+                            <td>
+                                <input type="text" id="Date" name="Date" value="<?php echo isset($_REQUEST['Date']) ? $_REQUEST['Date'] : '' ?>" class="bbdatepicker" />               
+                            </td>
+                        </tr>
                         <tr>
                             <th scope="row"><?php _e('Name', bb_agency_TEXTDOMAIN) ?>:</th>
                             <td>
@@ -972,7 +975,9 @@ EOF;
                         </tr>
                         <?php
                             //bb_custom_fields(0, $ProfileID, $ProfileGender,false);
+
                             $query1 = "SELECT ProfileCustomID, ProfileCustomTitle, ProfileCustomType, ProfileCustomOptions, ProfileCustomOrder, ProfileCustomView, ProfileCustomShowGender, ProfileCustomShowProfile, ProfileCustomShowSearch, ProfileCustomShowLogged, ProfileCustomShowAdmin FROM ". table_agency_customfields ." WHERE ProfileCustomView IN('0','1')  AND ProfileCustomID != 39 AND ProfileCustomID != 48 ORDER BY ProfileCustomOrder ASC";
+
                             $results1 = $wpdb->get_results($query1);
                             $count1 = count($results1);
                             $pos = 0;
@@ -983,8 +988,13 @@ EOF;
                                 $type = $data1->ProfileCustomType;
                                 $options = $data1->ProfileCustomOptions;
                                 $field = 'ProfileCustomID'.$id;
+                                $date = isset($_REQUEST['Date']) && $_REQUEST['Date'] ? trim($_REQUEST['Date']) : false;
+
+                                // check this model is available on this date
+                                $booked = $date ? $wpdb->get_var( "SELECT COUNT(*) FROM ".table_agency_job." WHERE `JobDate` = `JobModelBooked` = $id OR `JobModelBooked` REGEXP '\b$id\b'" ) : false;
+                                
                         ?>
-                        <tr>
+                        <tr class="<?php echo $booked ? 'booked' : 'available' ?>">
                         <?php
                             // SET Label for Measurements
                             // Imperial(in/lb), Metrics(ft/kg)
