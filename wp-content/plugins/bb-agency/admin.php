@@ -189,6 +189,7 @@ function set_bb_agency_menu(){
     add_submenu_page("bb_agency_menu", __("Saved Searches", bb_agency_TEXTDOMAIN), __("Saved Searches", bb_agency_TEXTDOMAIN), 7,"bb_agency_searchsaved","bb_agency_searchsaved");
     add_submenu_page("bb_agency_menu", __("Manage Jobs", bb_agency_TEXTDOMAIN), __("Manage Jobs", bb_agency_TEXTDOMAIN), 7,"bb_agency_jobs","bb_agency_jobs");
     add_submenu_page("bb_agency_menu", __("Search Jobs", bb_agency_TEXTDOMAIN), __("Search Jobs", bb_agency_TEXTDOMAIN), 7,"bb_agency_jobsearch","bb_agency_jobsearch");
+    add_submenu_page("bb_agency_menu", __("Manage Bookings", bb_agency_TEXTDOMAIN), __("Manage Bookings", bb_agency_TEXTDOMAIN), 7,"bb_agency_bookings","bb_agency_bookings");
     add_submenu_page("bb_agency_menu", __("Import", bb_agency_TEXTDOMAIN), __("Import", bb_agency_TEXTDOMAIN), 7,"bb_agency_import","bb_agency_import");
     add_submenu_page("bb_agency_menu", __("Edit Settings", bb_agency_TEXTDOMAIN), __("Settings", bb_agency_TEXTDOMAIN), 7,"bb_agency_settings","bb_agency_settings");
 }
@@ -289,6 +290,9 @@ function bb_agency_search(){
 function bb_agency_jobs(){
     include_once('admin/job.php');
 }
+function bb_agency_bookings(){
+    include_once('admin/booking.php');
+}
 function bb_agency_jobsearch(){
     include_once('admin/job/search.php');
 }
@@ -321,7 +325,7 @@ function bb_agency_have_cart() {
 // return casting cart
 function bb_agency_get_cart() {
     if (bb_agency_have_cart())
-        return $_SESSION['cartArray'];
+        return $_SESSION['cartArray']; 
 }
 
 function bb_agency_the_cart_string() {
