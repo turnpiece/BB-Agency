@@ -61,8 +61,6 @@ if ($_POST) {
                     $sqlData[] = "`$field` = '$value'";
                 }
 
-                $sqlData[] = '`BookedDateUpdated` = NOW()';
-
                 if ($action == 'add') {
                     $sql = "INSERT INTO $t_booking SET ". implode(', ', $sqlData);
                 } else {

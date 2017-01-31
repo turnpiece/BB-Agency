@@ -10,13 +10,13 @@
                     <tr valign="top">
                         <th scope="row"><?php _e('Start Date', bb_agency_TEXTDOMAIN) ?>*</th>
                         <td>
-                            <input type="text" class="bbdatepicker" id="BookedFrom" name="BookedFrom" value="<?php bb_agency_posted_value('JobDate', isset($Booked) ? $Booked : null) ?>" />
+                            <input type="text" class="bbdatepicker" id="BookedFrom" name="BookedFrom" value="<?php bb_agency_posted_value('BookedFrom', isset($Booked) ? $Booked : null) ?>" />
                         </td>
                     </tr>
                     <tr valign="top">
                         <th scope="row"><?php _e('End Date', bb_agency_TEXTDOMAIN) ?>*</th>
                         <td>
-                            <input type="text" class="bbdatepicker" id="BookedTo" name="BookedTo" value="<?php bb_agency_posted_value('JobDate', isset($Booked) ? $Booked : null) ?>" />
+                            <input type="text" class="bbdatepicker" id="BookedTo" name="BookedTo" value="<?php bb_agency_posted_value('BookedTo', isset($Booked) ? $Booked : null) ?>" />
                         </td>
                     </tr>
                 </tbody>
@@ -47,8 +47,6 @@
         </div>
     </div>
     <?php if ($action == 'edit') : ?>
-
-    <p><?php _e("Last updated on", bb_agency_TEXTDOMAIN) ?> <?php echo $Booked['BookedDateUpdated'] ?></p>
 
     <p class="submit">
          <input type="hidden" name="BookedID" value="<?php echo $_REQUEST['BookedID'] ?>" />
