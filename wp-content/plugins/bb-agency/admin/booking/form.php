@@ -1,7 +1,7 @@
 <h2 class="title"><?php $action == 'edit' ? _e("Edit", bb_agency_TEXTDOMAIN) : _e("Add", bb_agency_TEXTDOMAIN) ?> job 
-    <a class="button-secondary" href="<?php echo admin_url('admin.php?page=' . $_GET['page']) ?>"><?php _e("Back to job list", bb_agency_TEXTDOMAIN) ?></a> 
+    <a class="button-secondary" href="<?php echo admin_url('admin.php?page=' . $_GET['page']) ?>"><?php _e("Back to bookings list", bb_agency_TEXTDOMAIN) ?></a> 
 </h2>
-<p><?php _e("Make changes in the form below to edit a job", bb_agency_TEXTDOMAIN) ?> <strong><?php _e("Required fields are marked", bb_agency_TEXTDOMAIN) ?>*</strong></p>
+<p><?php _e("Make changes in the form below to edit a booking", bb_agency_TEXTDOMAIN) ?> <strong><?php _e("Required fields are marked", bb_agency_TEXTDOMAIN) ?>*</strong></p>
 <form method="post" action="<?php echo admin_url('admin.php?page=' . $_GET['page']) ?>">
     <div class="form-container">
         <div class="boxblock-container left-half">
@@ -32,10 +32,10 @@
                     <tr valign="top">
                         <th scope="row"><?php _e("Model", bb_agency_TEXTDOMAIN) ?></th>
                         <td>
-                            <select id="BookedModel" name="BookedModel" size="1">
+                            <select id="ProfileID" name="ProfileID" size="1">
                                 <option value="">--</option>
                                 <?php
-                                    $booked = bb_agency_get_posted_value('BookedModel', isset($Booked) ? $Booked : null, true);
+                                    $booked = bb_agency_get_posted_value('ProfileID', isset($Booked) ? $Booked : null, true);
                                     foreach ($models as $model) : ?>
                                 <option value="<?php echo $model->ID ?>"><?php echo $model->name ?></option>
                                 <?php endforeach; ?>

@@ -3845,10 +3845,10 @@ function bb_agency_get_models($type = null, $output = OBJECT) {
 	// get models
     $t_profiles = table_agency_profile;
     
-    $sql = "SELECT p.`ProfileID` AS ID, p.`ProfileContactDisplay` AS name, p.* FROM $t_profiles p";
+    $sql = "SELECT p.`ProfileID` AS ID, IF(p.`ProfileContactDisplay`, p.`ProfileContactDisplay`, CONCAT(P.`ProfileContactNameFirst`, ' ', p.`ProfileContactNameLast`)) AS name, p.* FROM $t_profiles p WHERE `ProfileType` <> " . bb_agency_CLIENTS_ID;
     
     if (!is_null($type))
-    	$sql .= " WHERE p.`ProfileType` = '$type'";
+    	$sql .= " AND p.`ProfileType` = '$type'";
 
     $sql .= " ORDER BY p.`ProfileContactDisplay` ASC";
 

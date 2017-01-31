@@ -49,7 +49,7 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 	define('bb_agency_PLUGIN_TITLE', 'BB Agency'. (bb_agency_SITETYPE == 'children' ? ' (Kiddiwinks)' : ''));
 	define('bb_agency_PHONE', bb_agency_SITETYPE == 'children' ? '020 3051 8894' : '020 3355 8743');
 	define('bb_agency_LOGOPATH', ABSPATH . '/wp-content/uploads/' . (bb_agency_SITETYPE == 'children' ? '2014/07/Kiddiwinks-Logo.png' : '2013/07/Beautiful_Bumps_Logo1.jpg'));
-	define('bb_agency_DEBUGGING', false); // debugging
+	define('bb_agency_DEBUGGING', true); // debugging
 	
 	//define('bb_agency_TESTING', true);
 	define('bb_agency_TERMS', get_bloginfo('url').'/clients-standard-terms-conditions');
@@ -92,10 +92,8 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 		define('table_agency_profile', "bb_agency_profile");
 	if (!defined("table_agency_job"))
 		define('table_agency_job', "bb_agency_job");
-	if (!defined("table_agency_invoice"))
-		define('table_agency_job', "bb_agency_invoice");
-	if (!defined("table_agency_invoice_item"))
-		define('table_agency_job', "bb_agency_invoice_item");
+	if (!defined("table_agency_booking"))
+		define('table_agency_booking', "bb_agency_booking");
 	if (!defined("table_agency_profile_media"))
 		define('table_agency_profile_media', "bb_agency_profile_media");
 	if (!defined("table_agency_data_ethnicity"))
