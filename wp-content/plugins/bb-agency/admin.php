@@ -189,9 +189,9 @@ function set_bb_agency_menu(){
     add_submenu_page("bb_agency_menu", __("Saved Searches", bb_agency_TEXTDOMAIN), __("Saved Searches", bb_agency_TEXTDOMAIN), 7,"bb_agency_searchsaved","bb_agency_searchsaved");
     add_submenu_page("bb_agency_menu", __("Manage Jobs", bb_agency_TEXTDOMAIN), __("Manage Jobs", bb_agency_TEXTDOMAIN), 7,"bb_agency_jobs","bb_agency_jobs");
     add_submenu_page("bb_agency_menu", __("Search Jobs", bb_agency_TEXTDOMAIN), __("Search Jobs", bb_agency_TEXTDOMAIN), 7,"bb_agency_jobsearch","bb_agency_jobsearch");
-    add_submenu_page("bb_agency_menu", __("Manage Bookings", bb_agency_TEXTDOMAIN), __("Manage Bookings", bb_agency_TEXTDOMAIN), 7,"bb_agency_bookings","bb_agency_bookings");
+    add_submenu_page("bb_agency_menu", __("Bookings", bb_agency_TEXTDOMAIN), __("Bookings", bb_agency_TEXTDOMAIN), 7,"bb_agency_bookings","bb_agency_bookings");
     add_submenu_page("bb_agency_menu", __("Import", bb_agency_TEXTDOMAIN), __("Import", bb_agency_TEXTDOMAIN), 7,"bb_agency_import","bb_agency_import");
-    add_submenu_page("bb_agency_menu", __("Edit Settings", bb_agency_TEXTDOMAIN), __("Settings", bb_agency_TEXTDOMAIN), 7,"bb_agency_settings","bb_agency_settings");
+    add_submenu_page("bb_agency_menu", __("Settings", bb_agency_TEXTDOMAIN), __("Settings", bb_agency_TEXTDOMAIN), 7,"bb_agency_settings","bb_agency_settings");
 }
 
 function bb_agency_send_email() {
