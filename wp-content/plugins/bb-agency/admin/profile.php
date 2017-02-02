@@ -943,38 +943,38 @@ function bb_display_manage($ProfileID) {
 
             $resultsImg = $wpdb->get_results($queryImg);
             $countImg = count($resultsImg);
-            foreach ($resultsImg as $dataImg) :
-                if ($dataImg->ProfileMediaPrimary) {
-                    $styleBackground = "#900000";
-                    $isChecked = " checked";
-                    $isCheckedText = " Primary";
-                    if ($countImg == 1) {
-                        $toDelete = '<div class="delete"><a href="javascript:confirmDelete(\'' . $dataImg->ProfileMediaID . '\',\'' . $dataImg->ProfileMediaType . '\')"><span>Delete</span> &raquo;</a></div>';
+            if (!rempty($resultsImg)) :
+                foreach ($resultsImg as $dataImg) :
+                    $styleClass = '';
+                    if ($dataImg->ProfileMediaPrimary) {
+                        $styleBackground = "#900000";
+                        $isChecked = " checked";
+                        $isCheckedText = " Primary";
+                        if ($countImg == 1) {
+                            $toDelete = '<div class="delete"><a href="javascript:confirmDelete(\'' . $dataImg->ProfileMediaID . '\',\'' . $dataImg->ProfileMediaType . '\')"><span>Delete</span> &raquo;</a></div>';
+                        } else {
+                            $toDelete = '';
+                            $massDelete = '';
+                        }
                     } else {
-                        $toDelete = '';
-                        $massDelete = '';
+                        $styleBackground = $dataImg->ProfileMediaLive ? "#000000" : "#888888";
+                        $isChecked = '';
+                        $isCheckedText = __( 'Primary', bb_agency_TEXTDOMAIN );
+                        $massSelect = '<input type="checkbox" name="massgalsel" value="' . $dataImg->ProfileMediaID . '"> <span style="color:#FFFFFF">'.__('Select', bb_agency_TEXTDOMAIN).'</span>';
                     }
-                } else {
-                    $styleBackground = $dataImg->ProfileMediaLive ? "#000000" : "#888888";
-                    $isChecked = '';
-                    $isCheckedText = __( 'Primary', bb_agency_TEXTDOMAIN );
-/*
-                    $toDelete = '<div class="delete"><a href="javascript:confirmDelete(\'' . $dataImg->ProfileMediaID . '\',\'' . $dataImg->ProfileMediaType . '\')"><span>Delete</span> &raquo;</a></div>';
-*/
-                    $massSelect = '<input type="checkbox" name="massgalsel" value="' . $dataImg->ProfileMediaID . '"> <span style="color:#FFFFFF">'.__('Select', bb_agency_TEXTDOMAIN).'</span>';
-                }
-                ?>
-                <div class="profileimage" style="background: <?php echo $styleBackground ?>" class="<?php echo $dataImg->ProfileMediaLive ? 'showing' : 'hidden' ?>">
-                    <?php echo $toDelete ?>
-                    <?php echo $toShowHide ?>
-                    <img src="<?php echo bb_agency_UPLOADDIR . $ProfileGallery . '/' . $dataImg->ProfileMediaURL ?>" style="width: 100px; z-index: 1; \" />
-                    <div class="primary" style="background: <?php echo $styleBackground ?>">
-                        <input type="radio" name="ProfileMediaPrimary" value="<?php echo  $dataImg->ProfileMediaID ?>" <?php echo $isChecked ?> /> <?php echo $isCheckedText ?>
-                        <div><?php echo $massSelect ?></div>
+                    ?>
+                    <div class="profileimage" style="background: <?php echo $styleBackground ?>" class="<?php echo $dataImg->ProfileMediaLive ? 'showing' : 'hidden' ?>">
+                        <?php echo $toDelete ?>
+                        <?php echo $toShowHide ?>
+                        <img src="<?php echo bb_agency_UPLOADDIR . $ProfileGallery . '/' . $dataImg->ProfileMediaURL ?>" style="width: 100px; z-index: 1; \" />
+                        <div class="primary" style="background: <?php echo $styleBackground ?>">
+                            <input type="radio" name="ProfileMediaPrimary" value="<?php echo  $dataImg->ProfileMediaID ?>" <?php echo $isChecked ?> /> <?php echo $isCheckedText ?>
+                            <div><?php echo $massSelect ?></div>
+                        </div>
                     </div>
-                </div>
-                <?php
-            endforeach;
+                    <?php
+                endforeach;
+            endif;
 
             if ($countImg < 1) : ?>
                 <div><?php _e("There are no images loaded for this profile yet.", bb_agency_TEXTDOMAIN) ?></div>

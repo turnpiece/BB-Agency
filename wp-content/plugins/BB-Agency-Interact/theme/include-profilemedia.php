@@ -47,12 +47,12 @@
 			
 			// Verify Record
 			$queryImgConfirm = "SELECT * FROM ". table_agency_profile_media ." WHERE ProfileID =  \"". $ProfileID ."\" AND ProfileMediaID =  \"". $deleteTargetID ."\"";
-			$resultsImgConfirm = mysql_query($queryImgConfirm);
-			$countImgConfirm = mysql_num_rows($resultsImgConfirm);
-			while ($profileImgConfirm = mysql_fetch_array($resultsImgConfirm)) {
-				$ProfileMediaID = $profileImgConfirm['ProfileMediaID'];
-				$ProfileMediaType = $profileImgConfirm['ProfileMediaType'];
-				$ProfileMediaURL = $profileImgConfirm['ProfileMediaURL'];
+			$resultsImgConfirm = $wpdb->get_results($queryImgConfirm);
+			$countImgConfirm = count($resultsImgConfirm);
+			foreach ($resultsImgConfirm as $profileImgConfirm) {
+				$ProfileMediaID 	= $profileImgConfirm->ProfileMediaID;
+				$ProfileMediaType 	= $profileImgConfirm->ProfileMediaType;
+				$ProfileMediaURL 	= $profileImgConfirm->ProfileMediaURL;
 				
 			
 				
@@ -67,35 +67,41 @@
 					  echo ("<div id=\"message\" class=\"updated\"><p>File <strong>'. $ProfileMediaURL .'</strong> ". __("successfully removed", bb_agencyinteract_TEXTDOMAIN) .".</p></div>");
 					}
 				}
-					// Remove Record
-				$delete = "DELETE FROM " . table_agency_profile_media . " WHERE ProfileID =  \"". $ProfileID ."\" AND ProfileMediaID=$ProfileMediaID";
-				$results = $wpdb->query($delete);
+				// Remove Record
+				//$delete = "DELETE FROM " . table_agency_profile_media . " WHERE ProfileID =  \"". $ProfileID ."\" AND ProfileMediaID=$ProfileMediaID";
+				$wpdb->delete(table_agency_profile_media, array( 'ProfileID' => $ProfileID, 'ProfileMediaID' => $ProfileMediaID));
 			} // is there record?
 		}
 	}
 	// Go about our biz-nazz
-	$queryImg = "SELECT * FROM ". table_agency_profile_media ." WHERE `ProfileID` = $ProfileID AND `ProfileMediaType` = 'Image' ORDER BY `ProfileMediaPrimary` DESC, `ProfileMediaID` DESC";
+	$queryImg = "SELECT * FROM ". table_agency_profile_media ." WHERE `ProfileID` = $ProfileID AND `ProfileMediaType` = 'Image' ORDER BY `ProfileMediaPrimary` DESC, `ProfileMediaLive` DESC, `ProfileMediaID` DESC";
 	$resultsImg = $wpdb->get_results($queryImg);
 	$countImg = count($resultsImg);
 	foreach ($resultsImg as $profileImg) {
-		if ($profileImg->ProfileMediaPrimary) {
-			$styleClass = "primary-picture";
-			$isChecked = " checked";
-			$isCheckedText = " Primary";
-			$toDelete = "";
-		} else {
-		  	$styleBackground = "#000000";
-		  	$isChecked = "";
-		  	$isCheckedText = " Select";
-		  	$toDelete = "  <div class=\"delete\"><a href=\"javascript:;\" class=\"btn-small-red\" onclick=\"confirmDelete('". $profileImg->ProfileMediaID ."','".$profileImg->ProfileMediaType."');\"><span>Delete</span> &raquo;</a></div>\n";
-		}
-		echo "<div class=\"profileimage\" class=\"". $styleClass ."\">\n". $toDelete ."";
-		echo '<input type="hidden" name="pgallery" value="'.$ProfileGallery.'">';					
-		echo '<input type="hidden" name="pmedia_url" value="'.$profileImg->ProfileMediaURL.'">';					
-		echo "  <img src=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $profileImg->ProfileMediaURL ."\" style=\"width: 100px; z-index: 1; \" />\n";
-		echo "  <div class=\"". $styleClass ." primary bb_button\"><label><input type=\"radio\" name=\"ProfileMediaPrimary\" value=\"". $profileImg->ProfileMediaID ."\" class=\"button-primary\"". $isChecked ." /> ". $isCheckedText ."</label></div>\n";
 
-		echo "</div>\n";
+		$class = array( 'profileimage' );
+		$class[] = $profileImg->ProfileMediaPrimary ? ' primary-picture' : '';
+		$class[] = $profileImg->ProfileMediaLive ? ' live' : '';
+		?>
+		<div class="<?php echo implode(' ', $class) ?>">
+			<input type="hidden" name="pgallery" value="<?php echo $ProfileGallery ?>">			
+			<input type="hidden" name="pmedia_url" value="<?php echo $profileImg->ProfileMediaURL ?>">';					
+			<img src="<?php echo bb_agency_UPLOADDIR . $ProfileGallery ."/". $profileImg->ProfileMediaURL ?>" />
+			<?php if ($profileImg->ProfileMediaLive || $profileImg->ProfileMediaPrimary) : ?>
+			<div class="bb_button action">
+				<label>
+					<input type="radio" name="ProfileMediaPrimary" value="<?php echo $profileImg->ProfileMediaID ?>" class="button-primary" <?php checked( $profileImg->ProfileMediaPrimary ) ?> /> &nbsp; <?php $profileImg->ProfileMediaPrimary ? _e('Primary', bb_agencyinteract_TEXTDOMAIN) : _e('Select', bb_agencyinteract_TEXTDOMAIN) ?>
+				</label>
+			</div>
+			<?php else : ?>
+			<div class="delete action">
+				<a href="#" class="btn-small-red" data-id="<?php echo $profileImg->ProfileMediaID ?>" data-type="<?php echo $profileImg->ProfileMediaType ?>" onclick="confirmDelete(<?php echo $profileImg->ProfileMediaID . ', \'' . trim($profileImg->ProfileMediaType) . '\'' ?>); return false;">
+					<span><?php _e('Delete', bb_agencyinteract_TEXTDOMAIN) ?></span> &raquo;
+				</a>
+			</div>
+			<?php endif; ?>
+		</div>
+		<?php
 	}
 	if ($countImg < 1) {
 		echo "<p>". __("There are no images loaded for this profile yet.", bb_agencyinteract_TEXTDOMAIN) ."</p>\n";

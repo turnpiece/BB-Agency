@@ -50,39 +50,63 @@ p.submit { margin-top: 15px!important; }
 /*#profile-manage .manage-section.gallery .profileimage { float: left; margin: 0 10px 10px 0; height: 150px; position: relative; overflow: hidden; background: #eee; }*/
 
 #profile-manage .manage-section.gallery .profileimage {
-    background: none repeat scroll 0 0 #EEEEEE;
+    background: #EEEEEE;
     float: left;
-    height: auto;
-    margin: 0 10px 10px 0;
+    height: 220px;
+    margin: 0 3% 10px 0;
     overflow: hidden;
-    padding: 0px;
+    padding: 0;
     position: relative;
-    width: 101px;
+    width: 30%;
+    border: 1px solid transparent;
+    opacity: 0.6;
 }
 
+#profile-manage .manage-section.gallery .profileimage.live {
+    opacity: 1;
+}
+#profile-manage .manage-section.gallery .primaryimage.primary-picture {
+    border: 1px solid #900000;
+    opacity: 1;
+
+}
 
 #profile-manage .manage-section.gallery .profileimage .delete a { display: block; text-align: center; }
-/*#profile-manage .manage-section.gallery .profileimage .primary { position: absolute; left: 0; right: 0; bottom: 0; padding: 5px 10px; border-radius: 0; font-weight: normal; font-size: 13px; }*/
-#profile-manage .manage-section.gallery .profileimage .primary {
-    border-radius: 0;
+
+#profile-manage .manage-section.gallery .profileimage .action {
+    position: absolute;
     bottom: 0;
-    float: left;
+    height: 25px;
+    border-radius: 0;
     font-size: 13px;
     font-weight: normal;
     left: 0;
     padding: 5px 10px;
-    position: relative;
     right: 0;
-    width: 78%;
     z-index: 99999;
+    opacity: 0.7;
+    background: #EEEEEE;
+}
+#profile-manage .manage-section.gallery .profileimage .action.delete {
+    opacity: 1.0;
 }
 
-.profileimage > img {
-    margin-bottom: 35px;
+#profile-manage .manage-section.gallery .profileimage .action > label {
+    margin: 0;
+    display: block;
 }
 
-#profile-manage .manage-section.gallery .profileimage .primary input { margin: 0; }
-#profile-manage .manage-section.gallery .profileimage .primary label { cursor: pointer; }
+#profile-manage .manage-section.gallery .profileimage > img {
+    width: 100%;
+}
+
+#profile-manage .manage-section.gallery .profileimage .bb_button,
+#profile-manage .manage-section.gallery .profileimage .bb_button:hover,
+#profile-manage .manage-section.gallery .profileimage .bb_button:active {
+    top: auto;
+    bottom: 0;
+}
+#profile-manage .manage-section.gallery .profileimage .bb_button label { cursor: pointer; }
 
 /** Sign In - Register **/
 #bbsignin-register { text-align: center; vertical-align: top; }
