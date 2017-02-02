@@ -244,14 +244,14 @@ if (isset($_POST['action'])) {
             while ($data2 = mysql_fetch_array($results)) : ?>
                 <div style="background:black; color:white;float: left; max-width: 100px; height: 180px; margin: 2px; overflow:hidden;">
 				    <div style="margin:3px; max-width:250px; max-height:300px; overflow:hidden;">
-				        <?php echo stripslashes($data2['ProfileContactNameFirst']) ." ". stripslashes($data2['ProfileContactNameLast']); ?>
+				        <?php echo stripslashes($data2->ProfileContactNameFirst) ." ". stripslashes($data2->ProfileContactNameLast); ?>
 				        <br />
                         <?php if (bb_agency_EMAIL_CARDS) : ?>
-                        <a href="<?php bloginfo('wpurl') ?>/card/<?php echo $data2['ProfileGallery'] ?>.jpg" target="_blank">
+                        <a href="<?php bloginfo('wpurl') ?>/card/<?php echo $data2->ProfileGallery ?>.jpg" target="_blank">
                         <?php else : ?>
-                        <a href="<?php echo bb_agency_PROFILEDIR . $data2['ProfileGallery'] ?>" target="_blank">
+                        <a href="<?php echo bb_agency_PROFILEDIR . $data2->ProfileGallery ?>" target="_blank">
                         <?php endif; ?>
-                            <img style="max-width:130px; max-height:150px;" src="<?php echo bb_agency_UPLOADDIR . $data2['ProfileGallery'] ."/". $data2['ProfileMediaURL'] ?>" />
+                            <img style="max-width:130px; max-height:150px;" src="<?php echo bb_agency_UPLOADDIR . $data2->ProfileGallery ."/". $data2->ProfileMediaURL ?>" />
                         </a>
 				    </div>
 				</div>
@@ -328,14 +328,14 @@ if (isset($_POST['action'])) {
             while ($data2 = mysql_fetch_array($results)) : ?>
                 <div style="background:black; color:white;float: left; max-width: 100px; height: 180px; margin: 2px; overflow:hidden;">
                     <div style="margin:3px; max-width:250px; max-height:300px; overflow:hidden;">
-                        <?php echo stripslashes($data2['ProfileContactNameFirst']) ." ". stripslashes($data2['ProfileContactNameLast']); ?>
+                        <?php echo stripslashes($data2->ProfileContactNameFirst) ." ". stripslashes($data2->ProfileContactNameLast); ?>
                         <br />
                         <?php if (bb_agency_EMAIL_CARDS) : ?>
-                        <a href="<?php bloginfo('wpurl') ?>/lbda/<?php echo $data2['ProfileGallery'] ?>.jpg" target="_blank">
+                        <a href="<?php bloginfo('wpurl') ?>/lbda/<?php echo $data2->ProfileGallery ?>.jpg" target="_blank">
                         <?php else : ?>
-                        <a href="<?php echo bb_agency_PROFILEDIR . $data2['ProfileGallery'] ?>" target="_blank">
+                        <a href="<?php echo bb_agency_PROFILEDIR . $data2->ProfileGallery ?>" target="_blank">
                         <?php endif; ?>
-                            <img style="max-width:130px; max-height:150px;" src="<?php echo bb_agency_UPLOADDIR . $data2['ProfileGallery'] ."/". $data2['ProfileMediaURL'] ?>" />
+                            <img style="max-width:130px; max-height:150px;" src="<?php echo bb_agency_UPLOADDIR . $data2->ProfileGallery ."/". $data2->ProfileMediaURL ?>" />
                         </a>
                     </div>
                 </div>
@@ -381,13 +381,13 @@ if (isset($_POST['action'])) {
                                    
 						$query = "SELECT * FROM ". table_agency_profile ." profile, ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1 AND profile.ProfileID IN (". $cartString .") ORDER BY ProfileContactNameFirst ASC";
 
-						$results = mysql_query($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ));
-						$count = mysql_num_rows($results);
+						$results = $wpdb->get_results($query);
 
-						while ($data = mysql_fetch_array($results)) {
+                        if (!empty($results))
+    						foreach ($results as $data) {
 
-							echo " <div style=\"float: left; width: 80px; height: 100px; margin-right: 5px; overflow: hidden; \">". stripslashes($data['ProfileContactNameFirst']) ." ". stripslashes($data['ProfileContactNameLast']) . "<br /><a href=\"". bb_agency_PROFILEDIR . $data['ProfileGallery'] ."/\" target=\"_blank\"><img style=\"width: 80px; \" src=\"". bb_agency_UPLOADDIR ."". $data['ProfileGallery'] ."/". $data['ProfileMediaURL'] ."\" /></a></div>\n";
-						}
+    							echo " <div style=\"float: left; width: 80px; height: 100px; margin-right: 5px; overflow: hidden; \">". stripslashes($data->ProfileContactNameFirst) ." ". stripslashes($data->ProfileContactNameLast) . "<br /><a href=\"". bb_agency_PROFILEDIR . $data->ProfileGallery ."/\" target=\"_blank\"><img style=\"width: 80px; \" src=\"". bb_agency_UPLOADDIR . $data->ProfileGallery ."/". $data->ProfileMediaURL ."\" /></a></div>\n";
+    						}
 						?>
                    	<input type="hidden" name="SearchProfileID" value="<?php echo $cartString; ?>" />
                    </td>
@@ -395,7 +395,7 @@ if (isset($_POST['action'])) {
                </tbody>
            </table>
            <p class="submit">
-           	Click Save to get the email code<br />
+           	<?php _e( 'Click "Save Search" to get the email code', bb_agency_TEXTDOMAIN ) ?><br />
                <input type="hidden" name="action" value="addRecord" />
                <input type="submit" name="Submit" value="Save Search" class="button-primary" />
            </p>
@@ -457,7 +457,7 @@ if (isset($_POST['action'])) {
 
 		//Paginate
 
-		$items = mysql_num_rows(mysql_query("SELECT * FROM ". table_agency_searchsaved ." search LEFT JOIN ". table_agency_searchsaved_mux ." searchsent ON search.SearchID = search.SearchID ". $filter  ."")); // number of total rows in the database
+		$items = $wpdb->get_var("SELECT COUNT(*) FROM ". table_agency_searchsaved ." search LEFT JOIN ". table_agency_searchsaved_mux ." searchsent ON search.`SearchID` = search.`SearchID` ". $filter); // number of total rows in the database
 
 		if ($items > 0) {
 
@@ -551,22 +551,22 @@ if (isset($_POST['action'])) {
 
 		//$query2 = "SELECT search.SearchID, search.SearchTitle, search.SearchProfileID, search.SearchOptions, search.SearchDate FROM ". table_agency_searchsaved_mux ." searchsent LEFT JOIN ". table_agency_searchsaved ." search ON searchsent.SearchID = search.SearchID ". $filter  ." ORDER BY $sort $dir $limit";
 
-		$results2 = mysql_query($query2);
+		$results2 = $wpdb->get_results($query2);
 
-		$count2 = mysql_num_rows($results2);
+		$count2 = count($results2);
 
-		while ($data2 = mysql_fetch_array($results2)) {
-			$SearchID = $data2['SearchID'];
+		foreach ($results2 as $data2) {
+			$SearchID = $data2->SearchID;
 
-			$SearchTitle = stripslashes($data2['SearchTitle']);
+			$SearchTitle = stripslashes($data2->SearchTitle);
 
-			$SearchProfileID = stripslashes($data2['SearchProfileID']);
+			$SearchProfileID = stripslashes($data2->SearchProfileID);
 
-			$SearchDate = stripslashes($data2['SearchDate']);
-			$query3 = "SELECT SearchID,SearchMuxHash, SearchMuxToName, SearchMuxToEmail, SearchMuxSent FROM ". table_agency_searchsaved_mux ." WHERE SearchID = ". $SearchID;
+			$SearchDate = stripslashes($data2->SearchDate);
+			$query3 = "SELECT SearchID, SearchMuxHash, SearchMuxToName, SearchMuxToEmail, SearchMuxSent FROM ". table_agency_searchsaved_mux ." WHERE SearchID = ". $SearchID;
 
-			$results3 = mysql_query($query3);
-			$count3 = mysql_num_rows($results3);
+			$results3 = $wpdb->get_results($query3);
+			$count3 = count($results3);
 		?>
 
 		<tr<?php echo $rowColor; ?>>
@@ -579,8 +579,8 @@ if (isset($_POST['action'])) {
 			<td>
 				<?php echo $SearchTitle; ?>
 				<div class="row-actions">
-					<span class="send"><a href="admin.php?page=<?php echo $_GET['page']; ?>&amp;action=emailCompose&amp;SearchID=<?php echo $SearchID. ($count3 <= 0 ? "&amp;SearchMuxHash=".bb_agency_random(8) : '') ?>">Create Email</a> | </span>
-                    <span class="send"><a href="admin.php?page=<?php echo $_GET['page']; ?>&amp;action=LBDAemailCompose&amp;SearchID=<?php echo $SearchID. ($count3 <= 0 ? "&amp;SearchMuxHash=".bb_agency_random(8) : '') ?>">Create LBDA Email</a> | </span>
+					<span class="send"><a href="admin.php?page=<?php echo $_GET['page']; ?>&amp;action=emailCompose&amp;SearchID=<?php echo $SearchID. ($count3 <= 0 ? "&amp;SearchMuxHash=".bb_agency_random(8) : '') ?>"><?php _e('Create Email', bb_agency_TEXTDOMAIN) ?></a> | </span>
+                    <span class="send"><a href="admin.php?page=<?php echo $_GET['page']; ?>&amp;action=LBDAemailCompose&amp;SearchID=<?php echo $SearchID. ($count3 <= 0 ? "&amp;SearchMuxHash=".bb_agency_random(8) : '') ?>"><?php _e('Create LBDA Email', bb_agency_TEXTDOMAIN) ?></a> | </span>
                    	<span class="delete"><a class='submitdelete' title='Delete this Record' href='<?php echo admin_url("admin.php?page=". $_GET['page']); ?>&amp;action=deleteRecord&amp;SearchID=<?php echo $SearchID; ?>' onclick="if ( confirm('You are about to delete this record\'\n \'Cancel\' to stop, \'OK\' to delete.') ) { return true;}return false;">Delete</a></span>
 				</div>
 			</td>
@@ -592,19 +592,19 @@ if (isset($_POST['action'])) {
 
 				$pos = 0;
 
-				while ($data3 = mysql_fetch_array($results3)) {
+				foreach ($results3 as $data3) {
 
 				    $pos++;
 
 				    if ($pos == 1){
-						echo "Link: <a href=\"". get_bloginfo("url") ."/client-view/". $data3["SearchMuxHash"] ."/\" target=\"_blank\">". get_bloginfo("url") ."/client-view/". $data3["SearchMuxHash"] ."/</a><br />\n";
+						echo "Link: <a href=\"". get_bloginfo("url") ."/client-view/". $data3->SearchMuxHash ."/\" target=\"_blank\">". get_bloginfo("url") ."/client-view/". $data3->SearchMuxHash ."/</a><br />\n";
 					} 
-					echo "(". bb_agency_makeago(bb_agency_convertdatetime( $data3["SearchMuxSent"]), $bb_agency_option_locationtimezone) .") ";
-					echo "<strong>". $data3["SearchMuxToName"]."&lt;".$data3["SearchMuxToEmail"]."&gt;"."</strong> ";
+					echo "(". bb_agency_makeago(bb_agency_convertdatetime( $data3->SearchMuxSent), $bb_agency_option_locationtimezone) .") ";
+					echo "<strong>". $data3->SearchMuxToName."&lt;".$data3->SearchMuxToEmail."&gt; </strong> ";
 					echo "<br/>";
 
 				}
-				//mysql_free_result($results2);
+
 				if ($count3 < 1) {
 					echo "Not emailed yet\n";	
 				}
@@ -614,7 +614,6 @@ if (isset($_POST['action'])) {
 		<?php
 
 		}
-			mysql_free_result($results2);
 
 			if ($count2 < 1) {
 				if (isset($filter)) { 
