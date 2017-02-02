@@ -87,7 +87,6 @@ if ($action) {
     if ($action == "search") {
 
         // Sort By
-        $sort = "";
         if (isset($_GET['sort']) && !empty($_GET['sort'])) {
             $sort = $_GET['sort'];
         } else {
@@ -291,8 +290,7 @@ if ($action) {
                             $val = array_shift(array_values($val));
                         } 
                     }
-                    $q = mysql_query("SELECT * FROM ". table_agency_customfields ." WHERE ProfileCustomID = '".substr($key,15)."' ");
-                    $ProfileCustomType = mysql_fetch_assoc($q);
+                    $ProfileCustomType = $wpdb->get_row("SELECT * FROM ". table_agency_customfields ." WHERE ProfileCustomID = '".substr($key,15)."' ");
                     
                     // get key id
                     $keyID = substr($key, 15);
@@ -302,14 +300,14 @@ if ($action) {
                     // create its own filter here and change
                     // AND should be OR
                     
-                    if (in_array($ProfileCustomType['ProfileCustomTitle'], $cusFields)) {
+                    if (in_array($ProfileCustomType->ProfileCustomTitle, $cusFields)) {
     
                         if (in_array($keyID, $filters))
                             continue;
 
                         // get max and min values
-                        $minVal = $_GET['ProfileCustomID'.$ProfileCustomType['ProfileCustomID'].'_min'];
-                        $maxVal = $_GET['ProfileCustomID'.$ProfileCustomType['ProfileCustomID'].'_max'];
+                        $minVal = $_GET['ProfileCustomID'.$ProfileCustomType->ProfileCustomID.'_min'];
+                        $maxVal = $_GET['ProfileCustomID'.$ProfileCustomType->ProfileCustomID.'_max'];
                         
                         $filters[$keyID] = "cm{$keyID}.ProfileCustomValue BETWEEN '$minVal' AND '$maxVal'";
 
@@ -326,23 +324,23 @@ if ($action) {
                         7 - Metrics/Imperials
                         *********************/
 
-                        if ($ProfileCustomType["ProfileCustomType"] == 1) { //TEXT
+                        if ($ProfileCustomType->ProfileCustomType == 1) { //TEXT
                                                          
                             $_SESSION[$key] = $val;
 
                             // add filter
                             $filters[$keyID] = "cm{$keyID}.ProfileCustomValue LIKE('%".$val."%')";
 
-                        } elseif ($ProfileCustomType["ProfileCustomType"] == 3) { // Dropdown
+                        } elseif ($ProfileCustomType->ProfileCustomType == 3) { // Dropdown
 
                             $filters[$keyID] = "cm{$keyID}.ProfileCustomValue IN('$val') AND LOWER(cm{$keyID}.ProfileCustomValue) = LOWER('{$val}')";
 
-                        } elseif ($ProfileCustomType["ProfileCustomType"] == 4) { //Textarea
+                        } elseif ($ProfileCustomType->ProfileCustomType == 4) { //Textarea
 
                             $_SESSION[$key] = $val;
                             $filters[$keyID] = "cm{$keyID}.ProfileCustomValue='$val'";
 
-                        } elseif ($ProfileCustomType["ProfileCustomType"] == 5) { //Checkbox
+                        } elseif ($ProfileCustomType->ProfileCustomType == 5) { //Checkbox
                             if (!empty($val)) {
                                 if (strpos($val, ",") === false) {
                                     $filters[$keyID] = "cm{$keyID}.ProfileCustomValue like('%{$val}%')";
@@ -369,15 +367,15 @@ if ($action) {
                                 $_SESSION[$key] = '';
                             }
 
-                        } elseif ($ProfileCustomType["ProfileCustomType"] == 6) { //Radiobutton 
-                            //var_dump($ProfileCustomType["ProfileCustomType"]);
+                        } elseif ($ProfileCustomType->ProfileCustomType == 6) { //Radiobutton 
+                            //var_dump($ProfileCustomType->ProfileCustomType);
                             $val = implode("','",explode(",",$val));
 
                             $_SESSION[$key] = $val;
                             
                             $filters[$keyID] = "cm{$keyID}.ProfileCustomValue LIKE('%{$val}%')";   
 
-                        } elseif ($ProfileCustomType["ProfileCustomType"] == 7) { //Measurements 
+                        } elseif ($ProfileCustomType->ProfileCustomType == 7) { //Measurements 
 
                             list($Min_val,$Max_val) = explode(",",$val);
                             if (!empty($Min_val) && !empty($Max_val)) {
@@ -388,8 +386,6 @@ if ($action) {
                             }
                         }
                     }
-                        
-                    mysql_free_result($q);
                 } // if not empty
             }  // end if
         } // end for each
@@ -402,12 +398,24 @@ if ($action) {
            }     
         }
 
+        $select = array();
         $joins = array();
         $where = array();
 
         foreach ($filters as $key => $value) {
             $joins[] = "\nLEFT JOIN ". table_agency_customfield_mux ." AS cm{$key} ON profile.ProfileID = cm{$key}.ProfileID AND cm{$key}.ProfileCustomID = '$key'";
             $where[] = $value;
+        }
+
+        // filter by date
+        // exclude models booked on given date
+        if (!empty($_GET['Date'])) {
+            $date = trim($_GET['Date']);
+
+            $joins[] = "\nLEFT JOIN ".table_agency_booking." AS b ON b.ProfileID = profile.ProfileID AND b.BookedFrom <= '$date' AND b.BookedTo >= '$date'";
+
+            $where[] = 'b.`BookedID` IS NULL';
+
         }
 
         /*
@@ -441,6 +449,8 @@ if ($action) {
             (empty($having) ? '' : 'HAVING '.implode(' AND ', $having))." 
             ORDER BY $sort $dir $limit";
 
+
+
         // Search Results
         $results2 = $wpdb->get_results($query);
         $count = count($results2);
@@ -448,8 +458,7 @@ if ($action) {
         <h2 class="title"><?php printf( __( 'Found %d models', bb_agency_TEXTDOMAIN ), $count ) ?></h2>
         <?php
 
-        if (bb_agency_DEBUGGING)
-            echo "<pre>$query</pre>";
+        bb_agency_debug($query);
         
         if ($count > $bb_agency_option_persearch - 1 && !isset($_GET['limit']) && empty($_GET['limit'])) : ?>
             <div id="message" class="error">
