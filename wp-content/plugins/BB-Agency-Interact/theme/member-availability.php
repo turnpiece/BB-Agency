@@ -26,10 +26,6 @@ if (isset($_POST['action'])) {
 	$ProfileUserLinked			=$_POST['ProfileUserLinked'];
 	
 
-	// Error checking
-	$error = "";
-	$have_error = false;
-
 	// Get Post State
 	$action = $_POST['action'];
 	switch($action) {
@@ -37,12 +33,23 @@ if (isset($_POST['action'])) {
 	// *************************************************************************************************** //
 	// Edit Record
 		case 'addBooking':
-			if (!$have_error){
-				// Update Record
-				$wpdb->insert( table_agency_booking, array( 'ProfileID' => $ProfileID, 'BookedFrom' => $_POST['BookedFrom'], 'BookedTo' => $_POST['BookedTo'] ) );
-			} else {
-				$alerts = "<div id=\"message\" class=\"error\"><p>". __("Error adding booking. Please ensure you have filled out all required fields.", bb_agencyinteract_TEXTDOMAIN) ."</p></div>"; 
-			}
+
+			// Update Record
+			$wpdb->insert( table_agency_booking, array( 'ProfileID' => $ProfileID, 'BookedFrom' => $_POST['BookedFrom'], 'BookedTo' => $_POST['BookedTo'] ) );
+
+			wp_redirect( $bb_agencyinteract_WPURL ."/profile-member/availability/" );
+			exit;
+			break;
+
+		case 'deleteBookings':
+
+			$ids = $_POST['BookedID'];
+
+			if (!empty($ids))
+				foreach ($ids as $id) {
+					$wpdb->delete( table_agency_booking, array( 'ProfileID' => $ProfileID, 'BookedID' => $id ) );
+				}
+
 			wp_redirect( $bb_agencyinteract_WPURL ."/profile-member/availability/" );
 			exit;
 			break;
