@@ -202,13 +202,16 @@ if (isset($_POST['action'])) {
 			 
 			if ( username_exists( $ProfileUsername) ) {
 
-				$isLinked =  mysql_query("UPDATE ". table_agency_profile ." SET ProfileUserLinked =  ". $current_user->ID ." WHERE ProfileID = ".$ProfileID." ");
-				if($isLinked){
+				$isLinked = $wpdb->update(
+					table_agency_profile, 
+					array( 'ProfileUserLinked' => $current_user->ID ), array( 'ProfileID' => $ProfileID ) 
+				);
 
+				if ($isLinked){
 					wp_redirect(get_bloginfo("wpurl") . "/profile-member/media/");
-
 				}  else {
-				    die(mysql_error());	 				    				}
+				    die(mysql_error());	 				    				
+				}
 			} else {
 				$user_data = array(
 				    'ID' => $current_user->id,
@@ -236,13 +239,12 @@ if (isset($_POST['action'])) {
 					
 			/* Redirect so the page will show updated info. */
 			if ( !$error ) {
-				
 				wp_redirect(get_bloginfo("wpurl") . "/profile-member/manage/");
 				//exit;
 			}
 		} else {
 			
-       	$alerts = "<div id=\"message\" class=\"error\"><p>". __("Error creating record, please ensure you have filled out all required fields.", bb_agencyinteract_TEXTDOMAIN) ."<br />". $error ."</p></div>"; 
+       		$alerts = "<div id=\"message\" class=\"error\"><p>". __("Error creating record, please ensure you have filled out all required fields.", bb_agencyinteract_TEXTDOMAIN) ."<br />". $error ."</p></div>"; 
 		}
 	break;
 	
@@ -290,12 +292,13 @@ if (isset($_POST['action'])) {
 				
 				if ((substr($key, 0, 15) == "ProfileCustomID") && (isset($value) && !empty($value))) {
 					
-						$ProfileCustomID = substr($key, 15);
+					$ProfileCustomID = substr($key, 15);
 					
 					// Remove Old Custom Field Values
-					$delete1 = "DELETE FROM " . table_agency_customfield_mux . " WHERE ProfileCustomID = ". $ProfileCustomID ." AND ProfileID = ".$ProfileID."";
-					$results1 = mysql_query($delete1) or die(mysql_error());	
-					
+					$results1 = $wpdb->delete(
+						table_agency_customfield_mux, 
+						array( 'ProfileCustomID' => $ProfileCustomID, 'ProfileID' => $ProfileID ) 
+					);
 					
 					if(is_array($value)){
 						$value =  implode(",",$value);
@@ -307,7 +310,6 @@ if (isset($_POST['action'])) {
 				}
 			}
 		
-			
 			$alerts = "<div id=\"message\" class=\"updated\"><p>". __("Profile updated successfully", bb_agencyinteract_TEXTDOMAIN) ."!</a></p></div>";
 		} else {
 			$alerts = "<div id=\"message\" class=\"error\"><p>". __("Error updating record, please ensure you have filled out all required fields.", bb_agencyinteract_TEXTDOMAIN) ."<br />". $error ."</p></div>"; 
@@ -324,17 +326,9 @@ if (isset($_POST['action'])) {
 get_header();
 
 // Check Sidebar
-$bb_agencyinteract_options_arr = get_option('bb_agencyinteract_options');
-$bb_agencyinteract_option_profilemanage_sidebar = $bb_agencyinteract_options_arr['bb_agencyinteract_option_profilemanage_sidebar'];
-$content_class = "";
-if (is_user_logged_in()) {
-	$content_class = "eight";
-} else {
-	$content_class = "twelve";
-}
 
-		// get profile Custom fields value
-	echo "<div id=\"container\" class=\"".$content_class." column bb-agency-interact-account\">\n";
+	// get profile Custom fields value
+	echo "<div id=\"container\" class=\"".get_content_class()." column bb-agency-interact-account\">\n";
 	echo "  <div id=\"content\">\n";
 	
 		// ****************************************************************************************** //
@@ -378,7 +372,7 @@ if (is_user_logged_in()) {
 				// Users CAN register themselves
 				
 				// No Record Exists, register them
-				echo "<p>". __("Records show you are not currently linked to a model or agency profile.  Lets setup your profile now!", bb_agencyinteract_TEXTDOMAIN) ."</p>";
+				echo "<p>". __("Records show you are not currently linked to a model or agency profile.  Let's setup your profile now!", bb_agencyinteract_TEXTDOMAIN) ."</p>";
 				
 				// Register Profile
 				include(dirname(__FILE__)."/include-profileregister.php"); 	

@@ -1,49 +1,48 @@
 <?php
 			$ProfileCustomTitle = $data1->ProfileCustomTitle;
 			$ProfileCustomType = $data1->ProfileCustomType;
-			$qProfileCustomValue = mysql_query("SELECT * FROM ".table_agency_customfield_mux." WHERE ProfileID = '".$ProfileID."' AND ProfileCustomID = '".$data1->ProfileCustomID."'") or die(mysql_error());
-			$fProfileCustomValue = mysql_fetch_assoc($qProfileCustomValue);
-			$ProfileCustomValue = $fProfileCustomValue["ProfileCustomValue"];
+			$ProfileCustomValue = $wpdb->get_var("SELECT `ProfileCustomValue` FROM ".table_agency_customfield_mux." WHERE `ProfileID` = '".$ProfileID."' AND `ProfileCustomID` = '".$data1->ProfileCustomID."'");
+
 			 // SET Label for Measurements
 			 // Imperial(in/lb), Metrics(ft/kg)
 			$bb_agency_options_arr = get_option('bb_agency_options');
 			  $bb_agency_option_unittype  = $bb_agency_options_arr['bb_agency_option_unittype'];
 			  $measurements_label = "";
 			 if ($ProfileCustomType == 7) { //measurements field type
-			           if($bb_agency_option_unittype ==0){ // 0 = Metrics(ft/kg)
-						if($data1->ProfileCustomOptions == 1){
-						     $measurements_label  ="<em>(cm)</em>";
-						}elseif($data1->ProfileCustomOptions == 2){
-						     $measurements_label  ="<em>(kg)</em>";
-						}elseif($data1->ProfileCustomOptions == 3){
-						  $measurements_label  ="<em>(In Inches/Feet)</em>";
-						}
-					}elseif($bb_agency_option_unittype ==1){ //1 = Imperial(in/lb)
-						if($data1->ProfileCustomOptions == 1){
-						     $measurements_label  ="<em>(In Inches)</em>";
-						}elseif($data1->ProfileCustomOptions == 2){
-						  $measurements_label  ="<em>(In Pounds)</em>";
-						}elseif($data1->ProfileCustomOptions == 3){
-						  $measurements_label  ="<em>(In Inches/Feet)</em>";
-						}
+		           if($bb_agency_option_unittype ==0){ // 0 = Metrics(ft/kg)
+					if($data1->ProfileCustomOptions == 1){
+					     $measurements_label  ="<em>(cm)</em>";
+					}elseif($data1->ProfileCustomOptions == 2){
+					     $measurements_label  ="<em>(kg)</em>";
+					}elseif($data1->ProfileCustomOptions == 3){
+					  $measurements_label  ="<em>(In Inches/Feet)</em>";
 					}
+				}elseif($bb_agency_option_unittype ==1){ //1 = Imperial(in/lb)
+					if($data1->ProfileCustomOptions == 1){
+					     $measurements_label  ="<em>(In Inches)</em>";
+					}elseif($data1->ProfileCustomOptions == 2){
+					  $measurements_label  ="<em>(In Pounds)</em>";
+					}elseif($data1->ProfileCustomOptions == 3){
+					  $measurements_label  ="<em>(In Inches/Feet)</em>";
+					}
+				}
 			 }
 			if ($ProfileCustomType == 1) { //TEXT
-			 echo "    <tr valign=\"top\">\n";
-			 echo "		<td scope=\"row\">";
-			 echo "				        <label for=\"ProfileCustomID". $data1->ProfileCustomID ."\">".__($data1->ProfileCustomTitle.$measurements_label, bb_agency_TEXTDOMAIN)."</label>\n";
+			 	echo "    <tr valign=\"top\">\n";
+			 	echo "		<td scope=\"row\">";
+			 	echo "				        <label for=\"ProfileCustomID". $data1->ProfileCustomID ."\">".__($data1->ProfileCustomTitle.$measurements_label, bb_agency_TEXTDOMAIN)."</label>\n";
 				echo "		</td>\n";
 				echo "	<td>";
 
 						echo "<input type=\"text\" name=\"ProfileCustomID". $data1->ProfileCustomID ."\" value=\"". $ProfileCustomValue ."\" /><br />\n";
 				echo "		</td>\n";
-				;
+				
 			} elseif ($ProfileCustomType == 2) { // Min Max
-			 echo "    <tr valign=\"top\">\n";
-			 echo "		<td scope=\"row\">";
-			 echo "				        <label for=\"ProfileCustomID". $data1->ProfileCustomID ."\">".__($data1->ProfileCustomTitle.$measurements_label, bb_agency_TEXTDOMAIN)."</label>\n";
-			 echo "		</td>\n";
-			 echo "	<td>";
+			 	echo "    <tr valign=\"top\">\n";
+			 	echo "		<td scope=\"row\">";
+			 	echo "				        <label for=\"ProfileCustomID". $data1->ProfileCustomID ."\">".__($data1->ProfileCustomTitle.$measurements_label, bb_agency_TEXTDOMAIN)."</label>\n";
+			 	echo "		</td>\n";
+			 	echo "	<td>";
 
 				$ProfileCustomOptions_String = str_replace(",",":",strtok(strtok($data1->ProfileCustomOptions,"}"),"{"));
 				list($ProfileCustomOptions_Min_label,$ProfileCustomOptions_Min_value,$ProfileCustomOptions_Max_label,$ProfileCustomOptions_Max_value) = explode(":",$ProfileCustomOptions_String);

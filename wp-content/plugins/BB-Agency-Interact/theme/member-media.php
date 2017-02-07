@@ -67,21 +67,23 @@ if (isset($_POST['action'])) {
 						// Upload if it doesnt exist already
 						$path_parts = pathinfo($_FILES['profileMedia'. $i]['name']);
 						$safeProfileMediaFilename =  bb_agency_safenames($path_parts['filename'].".".$path_parts['extension']);
-						$results = mysql_query("SELECT * FROM " . table_agency_profile_media . " WHERE ProfileID='". $ProfileID ."' AND ProfileMediaURL = '".$safeProfileMediaFilename ."'");
-						$count = mysql_num_rows($results);
+
+						// check if file exists
+						$count = $wpdb->get_var("SELECT COUNT(*) FROM " . table_agency_profile_media . " WHERE `ProfileID` = '". $ProfileID ."' AND `ProfileMediaURL` = '".$safeProfileMediaFilename ."'");
 
 						if ($count < 1) {
 							if($uploadMediaType == "Image") { 
 							    if($_FILES['profileMedia'. $i]['type'] == "image/pjpeg" || $_FILES['profileMedia'. $i]['type'] == "image/jpeg" || $_FILES['profileMedia'. $i]['type'] == "image/gif" || $_FILES['profileMedia'. $i]['type'] == "image/png"){
 							
-										$image = new bb_agency_image();
-										$image->load($_FILES['profileMedia'. $i]['tmp_name']);
-				
-										if ($image->getHeight() > $bb_agency_option_agencyimagemaxheight) {
-											$image->resizeToHeight($bb_agency_option_agencyimagemaxheight);
-										}
-										$image->save(bb_agency_UPLOADPATH . $ProfileGallery ."/". $safeProfileMediaFilename);
-										// Add to database
+									$image = new bb_agency_image();
+									$image->load($_FILES['profileMedia'. $i]['tmp_name']);
+			
+									if ($image->getHeight() > $bb_agency_option_agencyimagemaxheight) {
+										$image->resizeToHeight($bb_agency_option_agencyimagemaxheight);
+									}
+									$image->save(bb_agency_UPLOADPATH . $ProfileGallery ."/". $safeProfileMediaFilename);
+
+									// Add to database
 									$results = $wpdb->query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL) VALUES ('". $ProfileID ."','". $uploadMediaType ."','". $safeProfileMediaFilename ."','". $safeProfileMediaFilename ."')");
 							    }else{
 									$error .= "<b><i>".__("Please upload an image file only", bb_agencyinteract_TEXTDOMAIN)."</i></b><br />";
@@ -166,12 +168,12 @@ if (isset($_POST['action'])) {
 
 			/* --------------------------------------------------------- CLEAN THIS UP -------------- */
 			// Do we have a custom image yet? Lets just set the first one as primary.
-			$results = mysql_query("SELECT * FROM " . table_agency_profile_media . " WHERE ProfileID='". $ProfileID ."' AND ProfileMediaType = 'Image' AND ProfileMediaPrimary='1'");
-			$count = mysql_num_rows($results);
+			$count = $wpdb->get_var("SELECT COUNT(*) FROM " . table_agency_profile_media . " WHERE `ProfileID` = '". $ProfileID ."' AND `ProfileMediaType` = 'Image' AND `ProfileMediaPrimary` = '1'");
+
 			if ($count < 1) {
-			 	$resultsNeedOne = mysql_query("SELECT * FROM " . table_agency_profile_media . " WHERE ProfileID='". $ProfileID ."' AND ProfileMediaType = 'Image' LIMIT 0, 1");
-				while ($dataNeedOne = mysql_fetch_array($resultsNeedOne)) {
-					$resultsFoundOne = $wpdb->query("UPDATE " . table_agency_profile_media . " SET ProfileMediaPrimary='1' WHERE ProfileID='". $ProfileID ."' AND ProfileMediaID = '". $dataNeedOne['ProfileMediaID'] . "'");
+			 	$resultsNeedOne = $wpdb->get_row("SELECT * FROM " . table_agency_profile_media . " WHERE `ProfileID` = '". $ProfileID ."' AND `ProfileMediaType` = 'Image' LIMIT 0, 1");
+				if (!empty($resultsNeedOne)) {
+					$resultsFoundOne = $wpdb->query("UPDATE " . table_agency_profile_media . " SET `ProfileMediaPrimary` = '1' WHERE `ProfileID` = '$ProfileID' AND `ProfileMediaID` = '$resultsNeedOne->ProfileMediaID'");
 					break;
 				}
 			}
@@ -205,74 +207,64 @@ if (isset($_POST['action'])) {
 get_header();
 
 // Check Sidebar
-$bb_agencyinteract_options_arr = get_option('bb_agencyinteract_options');
-$bb_agencyinteract_option_profilemanage_sidebar = $bb_agencyinteract_options_arr['bb_agencyinteract_option_profilemanage_sidebar'];
-$content_class = "";
-if (is_user_logged_in()) {
-	$content_class = "eight";
+	
+echo "<div id=\"container\" class=\"".get_content_class()." column bb-agency-interact bb-agency-interact-media\">\n";
+echo "  <div id=\"content\">\n";
+
+// ****************************************************************************************** //
+// Check if User is Logged in or not
+if (is_user_logged_in()) { 
+	
+	/// Show registration steps
+	echo "<div id=\"profile-steps\">Profile Setup: Step 3 of 3</div>\n";
+	
+	echo "<div id=\"profile-manage\" class=\"profile-media\">\n";
+	
+	// Menu
+	include("include-menu.php"); 	
+	echo " <div class=\"manage-media manage-content\">\n";
+	
+	
+	/* Check if the user is regsitered *****************************************/ 
+	// Verify Record
+
+	$ProfileUserLinked = $current_user->id;
+
+	$query = "SELECT * FROM " . table_agency_profile . " WHERE `ProfileUserLinked` = $ProfileUserLinked LIMIT 1";
+
+	$profile = $wpdb->get_row( $query );
+
+	if ($profile) {
+
+		// Manage Profile
+		include 'include-profilemedia.php'; 	
+				
+	} else {
+		
+		// No Record Exists, register them
+		echo "<p>".__("Records show you are not currently linked to a model or agency profile. ", bb_agencyinteract_TEXTDOMAIN)."</p>";
+		
+	}
+	echo " </div>\n"; // .profile-manage-inner
+	echo "</div>\n"; // #profile-manage
 } else {
-	$content_class = "twelve";
+	
+	// Show Login Form
+	include("include-login.php"); 	
 }
 	
-	echo "<div id=\"container\" class=\"".$content_class." column bb-agency-interact bb-agency-interact-media\">\n";
-	echo "  <div id=\"content\">\n";
-	
-		// ****************************************************************************************** //
-		// Check if User is Logged in or not
-		if (is_user_logged_in()) { 
-			
-			/// Show registration steps
-			echo "<div id=\"profile-steps\">Profile Setup: Step 3 of 3</div>\n";
-			
-			echo "<div id=\"profile-manage\" class=\"profile-media\">\n";
-			
-			// Menu
-			include("include-menu.php"); 	
-			echo " <div class=\"manage-media manage-content\">\n";
-			
-			
-			/* Check if the user is regsitered *****************************************/ 
-			// Verify Record
+echo "  </div><!-- #content -->\n";
+echo "</div><!-- #container -->\n";
 
-			$ProfileUserLinked = $current_user->id;
+if (is_user_logged_in()) {
 
-			$query = "SELECT * FROM " . table_agency_profile . " WHERE `ProfileUserLinked` = $ProfileUserLinked LIMIT 1";
-
-			bb_agency_debug($query);
-
-			$profile = $wpdb->get_row( $query );
-
-			if ($profile) {
-
-				// Manage Profile
-				include 'include-profilemedia.php'; 	
-						
-			} else {
-				
-				// No Record Exists, register them
-				echo "<p>".__("Records show you are not currently linked to a model or agency profile. ", bb_agencyinteract_TEXTDOMAIN)."</p>";
-				
-			}
-			echo " </div>\n"; // .profile-manage-inner
-			echo "</div>\n"; // #profile-manage
-		} else {
-			
-			// Show Login Form
-			include("include-login.php"); 	
-		}
-		
-	echo "  </div><!-- #content -->\n";
-	echo "</div><!-- #container -->\n";
-	
-	if (is_user_logged_in()) {
-
-		// Get Sidebar 
-		$LayoutType = "";
-		if ($bb_agencyinteract_option_profilemanage_sidebar) {
-			$LayoutType = "profile";
-			get_sidebar();
-		}
+	// Get Sidebar 
+	$LayoutType = "";
+	if ($bb_agencyinteract_option_profilemanage_sidebar) {
+		$LayoutType = "profile";
+		get_sidebar();
 	}
+}
 	
 // Get Footer
 get_footer();

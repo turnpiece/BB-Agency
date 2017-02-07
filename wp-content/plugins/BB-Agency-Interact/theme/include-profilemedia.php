@@ -188,7 +188,7 @@
 		echo "     <input type=\"hidden\" name=\"ProfileID\" value=\"". $ProfileID ."\" />\n";
 		echo "     <input type=\"hidden\" name=\"ProfileGallery\" value=\"". $ProfileGallery ."\" />\n";
 		echo "     <input type=\"hidden\" name=\"action\" value=\"editRecord\" />\n";
-		echo "     <input type=\"submit\" name=\"submit\" value=\"". __("Save and Continue", bb_restaurant_TEXTDOMAIN) ."\" class=\"button-primary\" onClick=\"this.value = 'Please Wait...'\"/>\n";
+		echo "     <input type=\"submit\" name=\"submit\" value=\"". __("Save and Continue", bb_agencyinteract_TEXTDOMAIN) ."\" class=\"button-primary\" onClick=\"this.value = 'Please Wait...'\"/>\n";
 		echo "</p>\n";
 	endif;
 

@@ -17,9 +17,9 @@ get_currentuserinfo();
 
 // Get Data
 $bb_agencyinteract_options_arr = get_option('bb_agencyinteract_options');
-	$bb_agencyinteract_option_subscribeupsell = (int)$bb_agencyinteract_options_arr['bb_agencyinteract_option_subscribeupsell'];
-	$bb_agencyinteract_option_subscribepaypalemail = $bb_agencyinteract_options_arr['bb_agencyinteract_option_subscribepaypalemail'];
-	$bb_agencyinteract_option_subscribepagedetails = $bb_agencyinteract_options_arr['bb_agencyinteract_option_subscribepagedetails'];
+$bb_agencyinteract_option_subscribeupsell = (int)$bb_agencyinteract_options_arr['bb_agencyinteract_option_subscribeupsell'];
+$bb_agencyinteract_option_subscribepaypalemail = $bb_agencyinteract_options_arr['bb_agencyinteract_option_subscribepaypalemail'];
+$bb_agencyinteract_option_subscribepagedetails = $bb_agencyinteract_options_arr['bb_agencyinteract_option_subscribepagedetails'];
 
 // Were they users or agents?
 $profiletype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
@@ -36,8 +36,7 @@ if ($profiletype == 1) { $profiletypetext = __("Agent/Producer", bb_agencyintera
 get_header();
 	
 	echo "<div id=\"container\" class=\"one-column bb-agency-interact bb-agency-interact-subscribe\">\n";
-	echo "  <div id=\"content\">\n";
-	
+	echo "<div id=\"content\">\n";
 	
 		// ****************************************************************************************** //
 		// Check if User is Logged in or not
@@ -54,11 +53,11 @@ get_header();
 
 			/* Check if the user is regsitered *****************************************/ 
 			// Verify Record
-			$sql = "SELECT ProfileID FROM ". table_agency_profile ." WHERE ProfileUserLinked =  ". $current_user->ID ."";
-			$results = mysql_query($sql);
-			$count = mysql_num_rows($results);
+			$sql = "SELECT `ProfileID` FROM ". table_agency_profile ." WHERE `ProfileUserLinked` =  ". $current_user->ID;
+			$profiles = $wpdb->get_results($sql);
+			$count = count($profiles);
 			if ($count > 0) {
-			  	while ($data = mysql_fetch_array($results)) {
+			  	foreach ($profiles as $p) {
 			
 					// Is there a subscription?
 					if (isset($SubscriberDateExpire)) {
@@ -70,23 +69,23 @@ get_header();
 					}
 
 					// What are the rates?
-					$sql = "SELECT * FROM ". table_agencyinteract_subscription_rates ."";
-					$results = mysql_query($sql);
-					$count = mysql_num_rows($results);
+					$sql = "SELECT * FROM ". table_agencyinteract_subscription_rates;
+					$results = $wpdb->get_results($sql);
+					$count = count($results);
 					if ($count > 0) {
 						echo "<div id=\"subscription-wrapper\">";
-					  	while ($data = mysql_fetch_array($results)) {
+					  	foreach ($results as $data) {
 							echo " <div class=\"subscription-rate\">";
-							echo "  <div class=\"subscription-rate-title\">". stripslashes($data['SubscriptionRateTitle']) ."</div>\n";
-							echo "  <div class=\"subscription-rate-price\">$". $data['SubscriptionRatePrice'] ."</div>\n";
+							echo "  <div class=\"subscription-rate-title\">". stripslashes($data->SubscriptionRateTitle) ."</div>\n";
+							echo "  <div class=\"subscription-rate-price\">$". $data->SubscriptionRatePrice ."</div>\n";
 							echo "  <div class=\"subscription-rate-button\">\n";
 							echo "    <form action=\"https://www.paypal.com/cgi-bin/webscr\" method=\"post\">\n";
 							echo "  	<input type=\"hidden\" name=\"cmd\" value=\"_xclick\" />\n";
 							echo "  	<input type=\"hidden\" name=\"business\" value=\"". $bb_agencyinteract_option_subscribepaypalemail ."\" />\n";
-							echo "  	<input type=\"hidden\" name=\"item_name\" value=\"". $data['SubscriptionRateTitle'] ."\" />\n";
-							echo "  	<input type=\"hidden\" name=\"item_number\" value=\"". $data['SubscriptionRateID'] ."\" />\n";
+							echo "  	<input type=\"hidden\" name=\"item_name\" value=\"". $data->SubscriptionRateTitle ."\" />\n";
+							echo "  	<input type=\"hidden\" name=\"item_number\" value=\"". $data->SubscriptionRateID ."\" />\n";
 							echo "  	<input type=\"hidden\" name=\"custom\" value=\"". $current_user->ID ."\" />\n";
-							echo "  	<input type=\"hidden\" name=\"amount\" value=\"". $data['SubscriptionRatePrice'] ."\" />\n";
+							echo "  	<input type=\"hidden\" name=\"amount\" value=\"". $data->SubscriptionRatePrice ."\" />\n";
 							echo "  	<input type=\"hidden\" name=\"return\" value=\"". get_bloginfo("wpurl") ."/profile-member/subscription/\" />\n";
 							echo "  	<input type=\"hidden\" name=\"notify_url\" value=\"". bb_agencyinteract_BASEDIR ."tasks/paypalIPN.php\" />\n";
 							echo "  	<input type=\"hidden\" name=\"first_name\" value=\"". $current_user->first_name ."\" />\n";
@@ -96,7 +95,7 @@ get_header();
 							echo "  	<input type=\"image\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynow_SM.gif\" border=\"0\" name=\"submit\" alt=\"PayPal - The safer, easier way to pay online!\" />\n";
 							echo "    </form>\n";
 							echo "  </div>\n";
-							echo "  <div class=\"subscription-rate-text\">". stripslashes($data['SubscriptionRateText']) ."</div>\n";
+							echo "  <div class=\"subscription-rate-text\">". stripslashes($data->SubscriptionRateText) ."</div>\n";
 
 							echo " </div>";
 					  	} // is there record?
@@ -114,7 +113,7 @@ get_header();
 			} else {
 				
 				// No Record Exists, register them
-				echo "". __("Records show you are not currently linked to a model or agency profile.  Lets setup your profile now!", bb_agencyinteract_TEXTDOMAIN) ."";
+				echo "". __("Records show you are not currently linked to a model or agency profile.  Let's setup your profile now!", bb_agencyinteract_TEXTDOMAIN) ."";
 				
 				// Register Profile
 				include("include-profileregister.php"); 	
@@ -136,12 +135,12 @@ get_header();
 	
 // Get Sidebar 
 $bb_agencyinteract_options_arr = get_option('bb_agencyinteract_options');
-	$bb_agencyinteract_option_profilemanage_sidebar = $bb_agencyinteract_options_arr['bb_agencyinteract_option_profilemanage_sidebar'];
-	$LayoutType = "";
-	if ($bb_agencyinteract_option_profilemanage_sidebar) {
-		$LayoutType = "profile";
-		get_sidebar(); 
-	}
+$bb_agencyinteract_option_profilemanage_sidebar = $bb_agencyinteract_options_arr['bb_agencyinteract_option_profilemanage_sidebar'];
+$LayoutType = "";
+if ($bb_agencyinteract_option_profilemanage_sidebar) {
+	$LayoutType = "profile";
+	get_sidebar(); 
+}
 
 // Get Footer
 get_footer();

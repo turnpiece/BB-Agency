@@ -54,21 +54,23 @@
 	add_filter('template_include', 'bb_agencyinteract_template_include', 1, 1); 
 		function bb_agencyinteract_template_include( $template ) {
 			if ( get_query_var( 'type' ) ) {
-			  if (get_query_var( 'type' ) == "profileoverview") {
-				return dirname(__FILE__) . '/theme/member-overview.php'; 
-			  } elseif (get_query_var( 'type' ) == "account") {
-				return dirname(__FILE__) . '/theme/member-account.php'; 
-			  } elseif (get_query_var( 'type' ) == "subscription") {
-				return dirname(__FILE__) . '/theme/member-subscription.php'; 
-			  } elseif (get_query_var( 'type' ) == "manage") {
-				return dirname(__FILE__) . '/theme/member-profile.php'; 
-			  } elseif (get_query_var( 'type' ) == "media") {
-				return dirname(__FILE__) . '/theme/member-media.php'; 
-			  } elseif (get_query_var( 'type' ) == "profileregister") {
-				return dirname(__FILE__) . '/theme/member-register.php'; 
-			  } elseif (get_query_var( 'type' ) == "profilelogin") {
-				return dirname(__FILE__) . '/theme/member-login.php'; 
-			  }
+				if (get_query_var( 'type' ) == "profileoverview") {
+					return dirname(__FILE__) . '/theme/member-overview.php'; 
+			  	} elseif (get_query_var( 'type' ) == "account") {
+					return dirname(__FILE__) . '/theme/member-account.php'; 
+			  	} elseif (get_query_var( 'type' ) == "subscription") {
+					return dirname(__FILE__) . '/theme/member-subscription.php'; 
+			  	} elseif (get_query_var( 'type' ) == "availability") {
+					return dirname(__FILE__) . '/theme/member-availability.php'; 
+			  	} elseif (get_query_var( 'type' ) == "manage") {
+					return dirname(__FILE__) . '/theme/member-profile.php'; 
+			  	} elseif (get_query_var( 'type' ) == "media") {
+					return dirname(__FILE__) . '/theme/member-media.php'; 
+			  	} elseif (get_query_var( 'type' ) == "profileregister") {
+					return dirname(__FILE__) . '/theme/member-register.php'; 
+			  	} elseif (get_query_var( 'type' ) == "profilelogin") {
+					return dirname(__FILE__) . '/theme/member-login.php'; 
+			  	}
 			}
 			return $template;
 		}
@@ -261,6 +263,19 @@
             if ($type)
             	return $type;
 
+		}
+	}
+
+	if (!function_exists('get_content_class')) {
+		function get_content_class() {
+			$bb_agencyinteract_options_arr = get_option('bb_agencyinteract_options');
+			$bb_agencyinteract_option_profilemanage_sidebar = $bb_agencyinteract_options_arr['bb_agencyinteract_option_profilemanage_sidebar'];
+
+			if (is_user_logged_in()) {
+				return "eight";
+			} else {
+				return "twelve";
+			}
 		}
 	}
 

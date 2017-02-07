@@ -80,20 +80,21 @@ get_header();
 			
 				/* Show account information here *****************************************/
 				 
-				echo " <div class=\"section-content section-account\">\n"; // .account
-				echo " 	<ul>\n";
-				echo "      <li><a href=\"account/\">Edit Your Account Details</a></li>\n";
-				echo "      <li><a href=\"manage/\">Manage Your Profile Information</a></li>\n";
+				echo "<div class=\"section-content section-account\">\n"; // .account
+				echo "<ul>\n";
+				echo "<li><a href=\"account/\">Edit Your Account Details</a></li>\n";
+				echo "<li><a href=\"manage/\">Manage Your Profile Information</a></li>\n";
 				if (defined('bb_agencyinteract_ALLOW_UPLOADS') && bb_agencyinteract_ALLOW_UPLOADS) {
-					echo "      <li><a href=\"media/\">Manage Photos and Media</a></li>\n";
+					echo "<li><a href=\"media/\">Manage Photos and Media</a></li>\n";
 				}
 				if ($bb_subscription){
-					echo "      <li><a href=\"subscription/\">Manage your Subscription</a></li>\n";
+					echo "<li><a href=\"subscription/\">Manage your Subscription</a></li>\n";
 				}
-				echo "	</ul>\n";
-				echo " </div>\n";
-			  	echo " </div>\n"; // .welcome
-			  	echo " </div>\n"; // .profile-manage-inner
+				echo "<li><a href=\"availability/\">Manage Availability</a></li>\n";
+				echo "</ul>\n";
+				echo "</div>\n";
+			  	echo "</div>\n"; // .welcome
+			  	echo "</div>\n"; // .profile-manage-inner
 				  
 				// No Record Exists, register them
 			} else {

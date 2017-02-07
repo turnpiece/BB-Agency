@@ -19,7 +19,7 @@
 	$bb_agencyinteract_option_registerallow = (int)$bb_agencyinteract_options_arr['bb_agencyinteract_option_registerallow'];
 
 	// Get Data
-	$query = "SELECT * FROM " . table_agency_profile . " WHERE ProfileUserLinked='$ProfileUserLinked'";
+	$query = "SELECT * FROM " . table_agency_profile . " WHERE `ProfileUserLinked` = '$ProfileUserLinked'";
 	$results = $wpdb->get_results($query);
 	$count = count($results);
 	foreach ($results as $data) {
@@ -89,22 +89,23 @@
 		*/
 		// disable editing of last name
 		echo "<input type=\"hidden\" name=\"ProfileContactNameLast\" value=\"". $ProfileContactNameLast ."\" />\n";
-		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\">". __("Gender", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
-		echo "		<td>";
-		
-					$query= "SELECT GenderID, GenderTitle FROM " .  table_agency_data_gender . " GROUP BY GenderTitle ";
-					echo "<select name=\"ProfileGender\">";
-					echo "<option value=\"\">---</option>";
-					$queryShowGender = mysql_query($query);
-					while($dataShowGender = mysql_fetch_assoc($queryShowGender)){
-															
-						echo "<option value=\"".$dataShowGender["GenderID"]."\" ". selected($ProfileGender ,$dataShowGender["GenderID"],false).">".$dataShowGender["GenderTitle"]."</option>";
-															
-					}
-					echo "</select>";
-		echo "		</td>\n";
-		echo "	  </tr>\n";
+		$queryShowGender = $wpdb->get_results("SELECT `GenderID`, `GenderTitle` FROM " .  table_agency_data_gender . " GROUP BY `GenderTitle`");
+		if (!empty($queryShowGender)) {
+			echo "    <tr valign=\"top\">\n";
+			echo "		<td scope=\"row\">". __("Gender", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+			echo "		<td>";
+			
+			echo "<select name=\"ProfileGender\">";
+			echo "<option value=\"\">---</option>";
+
+			foreach($queryShowGender as $dataShowGender){									
+				echo "<option value=\"".$dataShowGender->GenderID."\" ". selected($ProfileGender ,$dataShowGender->GenderID,false).">".$dataShowGender->GenderTitle."</option>";										
+			}
+			
+			echo "</select>";
+			echo "		</td>\n";
+			echo "	  </tr>\n";
+		}
 		// Private Information
 		echo "    <tr valign=\"top\">\n";
 		echo "		<td scope=\"row\" colspan=\"2\"><h3>". __("Private Information", bb_agencyinteract_TEXTDOMAIN) ."</h3>The following information will appear only in administrative areas.</th>\n";
@@ -176,41 +177,40 @@
 		echo "	  </tr>\n";
 		
 		// Include Profile Customfields
-		        $ProfileInformation = "1"; // Private fields only
+		$ProfileInformation = "1"; // Private fields only
 
-			$query1 = "SELECT ProfileCustomID, ProfileCustomTitle, ProfileCustomType, ProfileCustomOptions, ProfileCustomOrder, ProfileCustomView, ProfileCustomShowGender, ProfileCustomShowProfile, ProfileCustomShowSearch, ProfileCustomShowLogged, ProfileCustomShowAdmin,ProfileCustomShowRegistration FROM ". table_agency_customfields ." WHERE ProfileCustomView = ". $ProfileInformation ." ORDER BY ProfileCustomOrder ASC";
-				$results1 = $wpdb->get_results($query1);
-				$count1 = count($results1);
-				$pos = 0;
-			foreach ($results1 as $data1) { 
-               /*
-                * Get Profile Types to
-                * filter models from clients
-                */
-                $permit_type = false;
+		$query1 = "SELECT ProfileCustomID, ProfileCustomTitle, ProfileCustomType, ProfileCustomOptions, ProfileCustomOrder, ProfileCustomView, ProfileCustomShowGender, ProfileCustomShowProfile, ProfileCustomShowSearch, ProfileCustomShowLogged, ProfileCustomShowAdmin,ProfileCustomShowRegistration FROM ". table_agency_customfields ." WHERE ProfileCustomView = ". $ProfileInformation ." ORDER BY ProfileCustomOrder ASC";
 
-                $PID = $data1->ProfileCustomID;
+		$results1 = $wpdb->get_results($query1);
+		$count1 = count($results1);
+		$pos = 0;
+		
+		foreach ($results1 as $data1) { 
+           /*
+            * Get Profile Types to
+            * filter models from clients
+            */
+            $permit_type = false;
 
-                $get_types = "SELECT ProfileCustomTypes FROM ". table_agency_customfields_types .
-                            " WHERE ProfileCustomID = " . $PID;
+            $PID = $data1->ProfileCustomID;
 
-                $types = $wpdb->get_var($get_types);
+            $get_types = "SELECT `ProfileCustomTypes` FROM ". table_agency_customfields_types .
+                        " WHERE `ProfileCustomID` = " . $PID;
 
-                if($types != "" || $types != NULL){
-                    $types = explode(",",$types); 
-                    if(in_array($ptype,$types)){ 
-                    	$permit_type = true; 
-                    } 
+            $types = $wpdb->get_var($get_types);
+
+            if($types != "" || $types != NULL){
+                $types = explode(",",$types); 
+                if(in_array($ptype,$types)){ 
+                	$permit_type = true; 
                 } 
-                                
-				if ( ($data1->ProfileCustomShowGender == $ProfileGender) || 
-					($data1->ProfileCustomShowGender == 0) 
-                                      && $permit_type == true )  {
-
-					include("view-custom-fields.php");
-
-				}
-			 }
+            } 
+                            
+			if ( ($data1->ProfileCustomShowGender == $ProfileGender) || 
+				($data1->ProfileCustomShowGender == 0) && $permit_type == true )  {
+				include("view-custom-fields.php");
+			}
+		}
 
 
 		// Show Social Media Links

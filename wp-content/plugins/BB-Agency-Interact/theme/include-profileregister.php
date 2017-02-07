@@ -1,4 +1,6 @@
 <?php
+	global $wpdb;
+
     // profile type
     $ptype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
     $ptype = retrieve_title($ptype);
@@ -138,46 +140,46 @@
 	 * Get Private custom Fields Here
 	 *
 	 */
-		    $ProfileInformation = "1"; // Private fields only
+    $ProfileInformation = "1"; // Private fields only
 
-			$query1 = "SELECT ProfileCustomID, ProfileCustomTitle, ProfileCustomType, ProfileCustomOptions, ProfileCustomOrder, ProfileCustomView, ProfileCustomShowGender, ProfileCustomShowProfile, ProfileCustomShowSearch, 
-			                  ProfileCustomShowLogged, ProfileCustomShowAdmin,ProfileCustomShowRegistration FROM "
-			         . table_agency_customfields ." WHERE ProfileCustomView = ". $ProfileInformation ." ORDER BY ProfileCustomOrder ASC";
-			
-			$results1 = mysql_query($query1);
-			$count1 = mysql_num_rows($results1);
-			$pos = 0;
-			while ($data1 = mysql_fetch_array($results1)) { 
-                               /*
-                                * Get Profile Types to
-                                * filter models from clients
-                                */
-                                $permit_type = false;
+	$query1 = "SELECT ProfileCustomID, ProfileCustomTitle, ProfileCustomType, ProfileCustomOptions, ProfileCustomOrder, ProfileCustomView, ProfileCustomShowGender, ProfileCustomShowProfile, ProfileCustomShowSearch, 
+	                  ProfileCustomShowLogged, ProfileCustomShowAdmin,ProfileCustomShowRegistration FROM "
+	         . table_agency_customfields ." WHERE ProfileCustomView = ". $ProfileInformation ." ORDER BY ProfileCustomOrder ASC";
+	
+	$results1 = $wpdb->get_results($query1);
+	$count1 = count($results1);
+	$pos = 0;
 
-                                $PID = $data1['ProfileCustomID'];
+	foreach ($results1 as $data1) { 
+		/*
+		* Get Profile Types to
+		* filter models from clients
+		*/
+		$permit_type = false;
 
-                                $get_types = "SELECT ProfileCustomTypes FROM ". table_agency_customfields_types .
-                                            " WHERE ProfileCustomID = " . $PID;
+		$PID = $data1->ProfileCustomID;
 
-                                $result = mysql_query($get_types);
+		$get_types = "SELECT ProfileCustomTypes FROM ". table_agency_customfields_types .
+		            " WHERE ProfileCustomID = " . $PID;
 
-                                while ( $p = mysql_fetch_array($result)){
-                                        $types = $p['ProfileCustomTypes'];			    
-                                }
+		$result = $wpdb->get_results($get_types);
 
-                                $types = explode(",",$types); 
+		foreach ( $result as $p ){
+		    $types = $p->ProfileCustomTypes;			    
+		}
 
-                                if(in_array($ptype,$types)){ $permit_type=true; }
-                                
-				if ( ($data1["ProfileCustomShowGender"] == $ProfileGender) || ($data1["ProfileCustomShowGender"] == 0) 
-                                      && $permit_type == true )  {
+		$types = explode(",",$types); 
 
-					include("view-custom-fields.php");
+		if (in_array($ptype,$types)){ 
+			$permit_type=true; 
+		}
+                        
+		if ( ($data1->ProfileCustomShowGender == $ProfileGender) || ($data1->ProfileCustomShowGender == 0) 
+                              && $permit_type == true )  {
 
-				}
-			}
-        
-
+			include("view-custom-fields.php");
+		}
+	}
 	
 	$bb_agencyinteract_options_arr = get_option('bb_agencyinteract_options');
 	$bb_agencyinteract_option_registerallow = (int)$bb_agencyinteract_options_arr['bb_agencyinteract_option_registerallow'];
@@ -213,7 +215,7 @@
 	echo "</table>\n";
 	echo "<p class=\"submit\">\n";
 	echo "     <input type=\"hidden\" name=\"action\" value=\"addRecord\" />\n";
-	echo "     <input type=\"submit\" name=\"submit\" value=\"". __("Save and Continue", bb_restaurant_TEXTDOMAIN) ."\" class=\"button-primary\" />\n";
+	echo "     <input type=\"submit\" name=\"submit\" value=\"". __("Save and Continue", bb_agencyinteract_TEXTDOMAIN) ."\" class=\"button-primary\" />\n";
 	echo "</p>\n";
 	echo "</form>\n";
 ?>

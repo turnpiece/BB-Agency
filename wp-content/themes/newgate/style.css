@@ -1933,7 +1933,7 @@ div.jp-playlist li a {
 .button_large, 
 input[type="submit"] {
 	display:inline-block;
-	z-index:5;
+	z-index: 1;
 	margin-bottom:5px;
 	text-align:center;
 	text-transform:uppercase;
