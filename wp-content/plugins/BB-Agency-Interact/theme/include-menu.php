@@ -56,6 +56,17 @@ global $wpdb;
 			echo " 			  <div class=\"subMenuTabBG\"><div class=\"subMenuTabBorders\"><div class=\"subMenuTabText\">".__("My Photos", bb_agencyinteract_TEXTDOMAIN) ."</div></div></div>\n";
 			echo " 			</a>\n";
 			echo " 		</div>\n";
+
+			if ( ($_SERVER["REQUEST_URI"]) == "/profile-member/availability/") { 
+				$tabclass = "active"; 
+			} else { 
+				$tabclass = "inactive"; 
+			}
+			echo ' 		<div class="tab-inner tab-'. $tabclass .'" style="'.$d.'">';
+			echo " 			<a href=\"". get_bloginfo("wpurl") ."/profile-member/availability/\">\n";
+			echo " 			  <div class=\"subMenuTabBG\"><div class=\"subMenuTabBorders\"><div class=\"subMenuTabText\">".__("Availability", bb_agencyinteract_TEXTDOMAIN) ."</div></div></div>\n";
+			echo " 			</a>\n";
+			echo " 		</div>\n";
 		}
                 
 		$bb_agencyinteract_options_arr = get_option('bb_agencyinteract_options');

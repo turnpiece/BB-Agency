@@ -1,53 +1,54 @@
 <?php
 	global $user_ID; 
 	global $current_user;
+	global $wpdb;
 	get_currentuserinfo();
 	$ProfileUserLinked = $current_user->id;
-        $ptype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
+    $ptype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
 	$ptype = retrieve_title($ptype);
 	$ProfileGender  = get_user_meta($current_user->id, "bb_agency_interact_pgender", true);
 
 	// Get Settings
 	$bb_agency_options_arr = get_option('bb_agency_options');
 	
-		$bb_agency_option_showsocial 			= $bb_agency_options_arr['bb_agency_option_showsocial'];
-		$bb_agency_option_profilenaming 		= (int)$bb_agency_options_arr['bb_agency_option_profilenaming'];
-		$bb_agency_option_locationtimezone 		= (int)$bb_agency_options_arr['bb_agency_option_locationtimezone'];
+	$bb_agency_option_showsocial 			= $bb_agency_options_arr['bb_agency_option_showsocial'];
+	$bb_agency_option_profilenaming 		= (int)$bb_agency_options_arr['bb_agency_option_profilenaming'];
+	$bb_agency_option_locationtimezone 		= (int)$bb_agency_options_arr['bb_agency_option_locationtimezone'];
       
 	$bb_agencyinteract_options_arr = get_option('bb_agencyinteract_options');
 	$bb_agencyinteract_option_registerallow = (int)$bb_agencyinteract_options_arr['bb_agencyinteract_option_registerallow'];
 
 	// Get Data
 	$query = "SELECT * FROM " . table_agency_profile . " WHERE ProfileUserLinked='$ProfileUserLinked'";
-	$results = mysql_query($query) or die ( __("Error, query failed", bb_agencyinteract_TEXTDOMAIN ));
-	$count = mysql_num_rows($results);
-	while ($data = mysql_fetch_array($results)) {
+	$results = $wpdb->get_results($query);
+	$count = count($results);
+	foreach ($results as $data) {
 		
-		// $ProfileGender =$data['ProfileGender'];
-		$ProfileID					=$data['ProfileID'];
-		$ProfileUserLinked			=$data['ProfileUserLinked'];
-		$ProfileGallery				=stripslashes($data['ProfileGallery']);
-		$ProfileContactDisplay		=stripslashes($data['ProfileContactDisplay']);
-		$ProfileContactNameFirst	=stripslashes($data['ProfileContactNameFirst']);
-		$ProfileContactNameLast		=stripslashes($data['ProfileContactNameLast']);
-		$ProfileContactEmail		=stripslashes($data['ProfileContactEmail']);
-		$ProfileContactWebsite		=stripslashes($data['ProfileContactWebsite']);
-		$ProfileContactLinkFacebook	=stripslashes($data['ProfileContactLinkFacebook']);
-		$ProfileContactLinkTwitter	=stripslashes($data['ProfileContactLinkTwitter']);
-		$ProfileContactLinkYouTube	=stripslashes($data['ProfileContactLinkYouTube']);
-		$ProfileContactLinkFlickr	=stripslashes($data['ProfileContactLinkFlickr']);
-		$ProfileContactPhoneHome	=stripslashes($data['ProfileContactPhoneHome']);
-		$ProfileContactPhoneCell	=stripslashes($data['ProfileContactPhoneCell']);
-		$ProfileContactPhoneWork	=stripslashes($data['ProfileContactPhoneWork']);
+		// $ProfileGender = $data->ProfileGender;
+		$ProfileID					= $data->ProfileID;
+		$ProfileUserLinked			= $data->ProfileUserLinked;
+		$ProfileGallery				= stripslashes($data->ProfileGallery);
+		$ProfileContactDisplay		= stripslashes($data->ProfileContactDisplay);
+		$ProfileContactNameFirst	= stripslashes($data->ProfileContactNameFirst);
+		$ProfileContactNameLast		= stripslashes($data->ProfileContactNameLast);
+		$ProfileContactEmail		= stripslashes($data->ProfileContactEmail);
+		$ProfileContactWebsite		= stripslashes($data->ProfileContactWebsite);
+		$ProfileContactLinkFacebook	= stripslashes($data->ProfileContactLinkFacebook);
+		$ProfileContactLinkTwitter	= stripslashes($data->ProfileContactLinkTwitter);
+		$ProfileContactLinkYouTube	= stripslashes($data->ProfileContactLinkYouTube);
+		$ProfileContactLinkFlickr	= stripslashes($data->ProfileContactLinkFlickr);
+		$ProfileContactPhoneHome	= stripslashes($data->ProfileContactPhoneHome);
+		$ProfileContactPhoneCell	= stripslashes($data->ProfileContactPhoneCell);
+		$ProfileContactPhoneWork	= stripslashes($data->ProfileContactPhoneWork);
 
-		$ProfileDateBirth	    	=stripslashes($data['ProfileDateBirth']);
-		$ProfileDateDue	    		=stripslashes($data['ProfileDateDue']);
-		$ProfileLocationStreet		=stripslashes($data['ProfileLocationStreet']);
-		$ProfileLocationCity		=stripslashes($data['ProfileLocationCity']);
-		$ProfileLocationState		=stripslashes($data['ProfileLocationState']);
-		$ProfileLocationZip			=stripslashes($data['ProfileLocationZip']);
-		$ProfileLocationCountry		=stripslashes($data['ProfileLocationCountry']);
-		$ProfileDateUpdated			=$data['ProfileDateUpdated'];
+		$ProfileDateBirth	    	= stripslashes($data->ProfileDateBirth);
+		$ProfileDateDue	    		= stripslashes($data->ProfileDateDue);
+		$ProfileLocationStreet		= stripslashes($data->ProfileLocationStreet);
+		$ProfileLocationCity		= stripslashes($data->ProfileLocationCity);
+		$ProfileLocationState		= stripslashes($data->ProfileLocationState);
+		$ProfileLocationZip			= stripslashes($data->ProfileLocationZip);
+		$ProfileLocationCountry		= stripslashes($data->ProfileLocationCountry);
+		$ProfileDateUpdated			= $data->ProfileDateUpdated;
 
 		echo "<form method=\"post\" enctype=\"multipart/form-data\" action=\"". get_bloginfo("wpurl") ."/profile-member/account/\">\n";
 		echo "     <input type=\"hidden\" name=\"ProfileID\" value=\"". $ProfileID ."\" />\n";
@@ -178,33 +179,32 @@
 		        $ProfileInformation = "1"; // Private fields only
 
 			$query1 = "SELECT ProfileCustomID, ProfileCustomTitle, ProfileCustomType, ProfileCustomOptions, ProfileCustomOrder, ProfileCustomView, ProfileCustomShowGender, ProfileCustomShowProfile, ProfileCustomShowSearch, ProfileCustomShowLogged, ProfileCustomShowAdmin,ProfileCustomShowRegistration FROM ". table_agency_customfields ." WHERE ProfileCustomView = ". $ProfileInformation ." ORDER BY ProfileCustomOrder ASC";
-				$results1 = mysql_query($query1);
-				$count1 = mysql_num_rows($results1);
+				$results1 = $wpdb->get_results($query1);
+				$count1 = count($results1);
 				$pos = 0;
-			while ($data1 = mysql_fetch_array($results1)) { 
+			foreach ($results1 as $data1) { 
                /*
                 * Get Profile Types to
                 * filter models from clients
                 */
                 $permit_type = false;
 
-                $PID = $data1['ProfileCustomID'];
+                $PID = $data1->ProfileCustomID;
 
                 $get_types = "SELECT ProfileCustomTypes FROM ". table_agency_customfields_types .
                             " WHERE ProfileCustomID = " . $PID;
 
-                $result = mysql_query($get_types);
-                $types = "";
-                while ( $p = mysql_fetch_array($result)){
-                        $types = $p['ProfileCustomTypes'];			    
-                }
+                $types = $wpdb->get_var($get_types);
 
                 if($types != "" || $types != NULL){
                     $types = explode(",",$types); 
-                    if(in_array($ptype,$types)){ $permit_type=true; } 
+                    if(in_array($ptype,$types)){ 
+                    	$permit_type = true; 
+                    } 
                 } 
                                 
-				if ( ($data1["ProfileCustomShowGender"] == $ProfileGender) || ($data1["ProfileCustomShowGender"] == 0) 
+				if ( ($data1->ProfileCustomShowGender == $ProfileGender) || 
+					($data1->ProfileCustomShowGender == 0) 
                                       && $permit_type == true )  {
 
 					include("view-custom-fields.php");

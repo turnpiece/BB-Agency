@@ -365,11 +365,11 @@ if (is_user_logged_in()) {
 			echo $alerts;
 			/* Check if the user is regsitered *****************************************/ 
 			// Verify Record
-			$sql = "SELECT ProfileID FROM ". table_agency_profile ." WHERE ProfileUserLinked =  ". $current_user->ID ."";
-			$results = mysql_query($sql);
-			$count = mysql_num_rows($results);
+			$sql = "SELECT ProfileID FROM ". table_agency_profile ." WHERE ProfileUserLinked =  ". $current_user->ID;
+			$results = $wpdb->get_results($sql);
+			$count = count($results);
 			if ($count > 0) {
-			  	while ($data = mysql_fetch_array($results)) {
+			  	foreach ($results as $data) {
 					// Manage Profile
 					include(dirname(__FILE__)."/include-profileaccount.php");								
 			  	} // is there record?

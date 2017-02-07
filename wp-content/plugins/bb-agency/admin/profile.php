@@ -990,29 +990,7 @@ function bb_display_manage($ProfileID) {
                     <a id="mass_gallery_hide" href="#"><?php _e('Hide Selected Images') ?></a>
                 </p>
             <script language="javascript">
-            /*
-                function confirm_mass_gallery_delete() {
-                    jQuery(document).ready(function() {
-                        var mas_del_ids = '&';
-                        jQuery("input:checkbox[name=massgaldel]:checked").each(function() {
-                            if(mas_del_ids != '&'){
-                                mas_del_ids += '&';
-                            }
-                            mas_del_ids += 'targetids[]='+jQuery(this).val();
-                        });
 
-                        if( mas_del_ids != '&'){
-                            if(confirm("Do you want to delete all the selected images?")){
-                                urlmassdelete = "<?php echo admin_url('admin.php?page='.$_GET['page']) ?>&action=editRecord&ProfileID=<?php echo $ProfileID ?>&actionsub=massphotodelete" + mas_del_ids;
-                                document.location = urlmassdelete;
-                            }
-                        }
-                        else{
-                            alert("You have to select images to delete");
-                        }
-                    });
-                }
-            */
                 jQuery(document).ready(function($) {
 
                     var pID = <?php echo $ProfileID ?>;
