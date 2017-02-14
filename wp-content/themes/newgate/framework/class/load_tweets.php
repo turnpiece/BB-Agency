@@ -183,4 +183,3 @@ class ezTweet {
 
 $ezTweet = new ezTweet;
 $ezTweet->fetch();
-
