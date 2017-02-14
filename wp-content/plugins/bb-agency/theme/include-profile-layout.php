@@ -1,5 +1,5 @@
 <div id="profile">
-	<div id="rblayout-zero" class="rblayout">
+	<div id="bblayout-zero" class="bblayout">
 		<div id="photos" class="col_6 column">
 			<div class="inner"><?php
 
@@ -34,7 +34,15 @@
 		<div id="stats" class="col_3 column">
 			<h2><?php echo $ProfileContactDisplay . (bb_agency_isfamily($ProfileType) ? __(' and family', bb_agency_TEXTDOMAIN) : '') ?></h2>
 			<ul>
+			<?php if (bb_agency_SITETYPE == 'children' && !bb_agency_isfamily($ProfileType)) : ?>
+				<li>
+					<strong><?php _e('Age', bb_agency_TEXTDOMAIN) ?>
+					<span class="divider">:</span></strong> 
+					<?php echo bb_agency_get_age($ProfileDateBirth) ?>
+				</li>
 			<?php 
+				endif;
+
 				if ($ProfileHasTalent) : 
 				$t_name = bb_agency_get_talents(); 
 				$talents = explode(',', $ProfileTalent); 
@@ -59,8 +67,9 @@
 
 				<?php elseif (bb_agency_isbaby($ProfileType) && !empty($ProfileDateBirth)) : // if a family display the baby's date of birth ?>
 				<li><strong><?php echo (bb_agency_isfamily($ProfileType) ? __("Baby's date of birth", bb_agency_TEXTDOMAIN) : __("Date of birth", bb_agency_TEXTDOMAIN)) ?><span class="divider">:</span></strong> <?php echo bb_agency_displaydate($ProfileDateBirth) ?></li>
-				<?php endif;
 
+				<?php endif;
+				
 				endif;
 
 			// Insert Custom Fields

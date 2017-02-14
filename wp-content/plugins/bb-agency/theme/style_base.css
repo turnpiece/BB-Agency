@@ -5,7 +5,7 @@
 .bbclear {
 	clear: both;
 }
-.rblayout {
+.bblayout {
 	line-height: 20px;
 }
 
@@ -342,9 +342,9 @@ img.fillheight {
 #profile #stats ul { list-style: none; margin: 0px; padding: 0px; line-height: 22px; font-size: 13px; }
 
 /* Profile Layout with Thumbnails (include-profile-layout0.php) */
-#rblayout-zero #photos { text-align: center; font-size: 0px; }
-#rblayout-zero #photos .inner { margin: 0 -5px; }
-#rblayout-zero #photos .photo { width: 40%; max-width: 150px; overflow: hidden; display: inline-block; margin: 0px 7px 15px 7px; border-radius: 5px;
+#bblayout-zero #photos { text-align: center; font-size: 0px; }
+#bblayout-zero #photos .inner { margin: 0 -5px; }
+#bblayout-zero #photos .photo { width: 40%; max-width: 150px; overflow: hidden; display: inline-block; margin: 0px 7px 15px 7px; border-radius: 5px;
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ffffff), color-stop(1, #ddd) );
 	background:-moz-linear-gradient( center top, #ffffff 5%, #ddd 100% );
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ddd');
@@ -353,95 +353,95 @@ img.fillheight {
 	-webkit-border-radius:3px;
 	box-shadow: 0px 0px 3px rgba(0,0,0,0.5)
 }
-#rblayout-zero #photos .photo a { display: block; overflow: hidden; margin: 5px; border-radius: 2px; border: 1px solid #ddd; position: relative; }
-#rblayout-zero #photos .photo a img { float: left; }
-#rblayout-zero #photos .photo a img.fillheight { position: absolute; left: 50%; }
-#rblayout-zero #stats { border: 1px solid #ccc; padding: 15px; }
-#rblayout-zero #stats h2 { margin-bottom: 15px; }
-#rblayout-zero #links ul li a { margin: 0px 5px 10px 5px; min-width: 200px; font-weight: normal; font-size: 14px; }
-#rblayout-zero #movie { float: right; }
-#rblayout-zero .experience { float: left; clear: both; margin: 20px 0 0 0; line-height: 18px; font-size: 13px; text-indent: 30px; }
+#bblayout-zero #photos .photo a { display: block; overflow: hidden; margin: 5px; border-radius: 2px; border: 1px solid #ddd; position: relative; }
+#bblayout-zero #photos .photo a img { float: left; }
+#bblayout-zero #photos .photo a img.fillheight { position: absolute; left: 50%; }
+#bblayout-zero #stats { border: 1px solid #ccc; padding: 15px; }
+#bblayout-zero #stats h2 { margin-bottom: 15px; }
+#bblayout-zero #links ul li a { margin: 0px 5px 10px 5px; min-width: 200px; font-weight: normal; font-size: 14px; }
+#bblayout-zero #movie { float: right; }
+#bblayout-zero .experience { float: left; clear: both; margin: 20px 0 0 0; line-height: 18px; font-size: 13px; text-indent: 30px; }
 
 /* Profile Layout with Thumbnails and Primary Image (include-profile-layout1.php) */
-#rblayout-one { overflow: hidden; }
-#rblayout-one #photos { padding: 15px; }
-#rblayout-one #photos .multiple { float: left; margin: 0 15px 15px 0; }
-#rblayout-one #photos img { height: 150px; float: left; }
+#bblayout-one { overflow: hidden; }
+#bblayout-one #photos { padding: 15px; }
+#bblayout-one #photos .multiple { float: left; margin: 0 15px 15px 0; }
+#bblayout-one #photos img { height: 150px; float: left; }
 
 /* Profile Layout with Scrolling Thumbnails and Primary Image (include-profile-layout2.php) */
-#rblayout-two { overflow: hidden; }
-#rblayout-two .mCSB_container a img { max-height: 150px; float: left; border: none; }
-#rblayout-two #profile-picture a img { border: none; }
+#bblayout-two { overflow: hidden; }
+#bblayout-two .mCSB_container a img { max-height: 150px; float: left; border: none; }
+#bblayout-two #profile-picture a img { border: none; }
 
 /* Profile Extended Layout (include-profile-layout3.php) */
-#rblayout-three { overflow: hidden; }
-#rblayout-three .row-zero { font-size: 30px; margin: 0 0 20px 0; overflow: hidden; }
-#rblayout-three .row-one { padding: 10px 0; overflow: hidden; }
-#rblayout-three #profile-picture-wrap {  }
-#rblayout-three #profile-picture-wrap img { width: 150px; }
-#rblayout-three #profile-picture { width: 150px; height: 200px; overflow: hidden; }
-#rblayout-three .profile-picture-favorite { text-align: center; background: #ccc; font-size: 13px; padding: 5px; margin: 5px 0 0 0; }
-#rblayout-three .profile-picture-favorite a { color: #666; }
-#rblayout-three .profile-picture-favorite:hover { background: #bbb; }
-#rblayout-three #profile-overview { line-height: 20px; }
-#rblayout-three #profile-name h2 { font-size: 33px; }
-#rblayout-three #profile-liner { overflow: hidden; margin: 10px 0; }
-#rblayout-three #profile-liner div { float: left; margin: 0 5px 0 0; }
-#rblayout-three #profile-actions { line-height: 22px; }
-#rblayout-three #profile-actions-contact,
-#rblayout-three #profile-actions-print { }
-#rblayout-three #profile-actions-contact { width: 161px; background: url(style/buttons.png) no-repeat; height: 30px; margin: 0 0 10px 0; }
-#rblayout-three #profile-actions-contact:hover { background-position: -161px 0; } 
+#bblayout-three { overflow: hidden; }
+#bblayout-three .row-zero { font-size: 30px; margin: 0 0 20px 0; overflow: hidden; }
+#bblayout-three .row-one { padding: 10px 0; overflow: hidden; }
+#bblayout-three #profile-picture-wrap {  }
+#bblayout-three #profile-picture-wrap img { width: 150px; }
+#bblayout-three #profile-picture { width: 150px; height: 200px; overflow: hidden; }
+#bblayout-three .profile-picture-favorite { text-align: center; background: #ccc; font-size: 13px; padding: 5px; margin: 5px 0 0 0; }
+#bblayout-three .profile-picture-favorite a { color: #666; }
+#bblayout-three .profile-picture-favorite:hover { background: #bbb; }
+#bblayout-three #profile-overview { line-height: 20px; }
+#bblayout-three #profile-name h2 { font-size: 33px; }
+#bblayout-three #profile-liner { overflow: hidden; margin: 10px 0; }
+#bblayout-three #profile-liner div { float: left; margin: 0 5px 0 0; }
+#bblayout-three #profile-actions { line-height: 22px; }
+#bblayout-three #profile-actions-contact,
+#bblayout-three #profile-actions-print { }
+#bblayout-three #profile-actions-contact { width: 161px; background: url(style/buttons.png) no-repeat; height: 30px; margin: 0 0 10px 0; }
+#bblayout-three #profile-actions-contact:hover { background-position: -161px 0; } 
 
-#rblayout-three #profile-actions-contact span { display: none; }
-#rblayout-three .row-photos { float: left; clear: both; padding: 20px 0; background: #fff; }
-#rblayout-three .row-photos .multiple { float: left; width: 200px; margin: 0 15px 15px 0; overflow: hidden; border: 3px solid #CCC; height: 250px; }
-#rblayout-three .row-photos .multiple:nth-child(3n+0) {  } 
-#rblayout-three .row-photos .multiple img { float: left; max-width: 100%; }
-#rblayout-three .row-two { overflow: hidden; margin: 20px 0 0 0; }
-#rblayout-three .row-two #subMenuTab { overflow: hidden; }
-#rblayout-three .row-two #subMenuTab a { float: left; border-left: 1px solid #fff; padding: 10px 20px; color: #555; background: url(style/bg-tab.png) repeat-x }
-#rblayout-three .row-two #subMenuTab a:hover { color: #444; background: url(style/bg-tab.png) 0 -38px repeat-x  }
-#rblayout-three .row-two #subMenuTab div.tab-inner, #rblayout-three .row-two #subMenuTab .tab-left, #rblayout-three .row-two #subMenuTab .tab-right { float: left; border: 1px solid #d1d1d1; border-bottom: 1px solid #acaca8; }
-#rblayout-three .row-two #subMenuTab div.tab-inner, #rblayout-three .row-two #subMenuTab .tab-right { border-left: none; }
-#rblayout-three .row-two #subMenuTab .tab-left { -webkit-border-top-left-radius: 5px; -moz-border-radius-topleft: 5px; border-top-left-radius: 5px; }
-#rblayout-three .row-two #subMenuTab .tab-left a { -webkit-border-top-left-radius: 5px; -moz-border-radius-topleft: 5px; border-top-left-radius: 5px; }
-#rblayout-three .row-two #subMenuTab .tab-left a { border: none; }
-#rblayout-three .row-two #subMenuTab .tab-right { -webkit-border-top-right-radius: 5px; -moz-border-radius-topright: 5px; border-top-right-radius: 5px; }
-#rblayout-three .row-two #subMenuTab .tab-right a { -webkit-border-top-right-radius: 5px; -moz-border-radius-topright: 5px; border-top-right-radius: 5px; }
-#rblayout-three .row-two #subMenuTab .tab-active, #rblayout-three .row-two #subMenuTab .tab-active a { background: #fff; border-bottom: 1px solid #fff; }
-#rblayout-three .row-physical { line-height: 22px; margin: 0 0 20px 0; padding: 10px 10px; background: #fff; }
-#rblayout-three .row-physical div { padding: 5px; border-bottom: 1px solid #fff; }
-#rblayout-three .row-physical div:nth-child(even){ background: #ddd; }
-#rblayout-three .row-experience { margin: 20px 0; overflow: hidden; }
+#bblayout-three #profile-actions-contact span { display: none; }
+#bblayout-three .row-photos { float: left; clear: both; padding: 20px 0; background: #fff; }
+#bblayout-three .row-photos .multiple { float: left; width: 200px; margin: 0 15px 15px 0; overflow: hidden; border: 3px solid #CCC; height: 250px; }
+#bblayout-three .row-photos .multiple:nth-child(3n+0) {  } 
+#bblayout-three .row-photos .multiple img { float: left; max-width: 100%; }
+#bblayout-three .row-two { overflow: hidden; margin: 20px 0 0 0; }
+#bblayout-three .row-two #subMenuTab { overflow: hidden; }
+#bblayout-three .row-two #subMenuTab a { float: left; border-left: 1px solid #fff; padding: 10px 20px; color: #555; background: url(style/bg-tab.png) repeat-x }
+#bblayout-three .row-two #subMenuTab a:hover { color: #444; background: url(style/bg-tab.png) 0 -38px repeat-x  }
+#bblayout-three .row-two #subMenuTab div.tab-inner, #bblayout-three .row-two #subMenuTab .tab-left, #bblayout-three .row-two #subMenuTab .tab-right { float: left; border: 1px solid #d1d1d1; border-bottom: 1px solid #acaca8; }
+#bblayout-three .row-two #subMenuTab div.tab-inner, #bblayout-three .row-two #subMenuTab .tab-right { border-left: none; }
+#bblayout-three .row-two #subMenuTab .tab-left { -webkit-border-top-left-radius: 5px; -moz-border-radius-topleft: 5px; border-top-left-radius: 5px; }
+#bblayout-three .row-two #subMenuTab .tab-left a { -webkit-border-top-left-radius: 5px; -moz-border-radius-topleft: 5px; border-top-left-radius: 5px; }
+#bblayout-three .row-two #subMenuTab .tab-left a { border: none; }
+#bblayout-three .row-two #subMenuTab .tab-right { -webkit-border-top-right-radius: 5px; -moz-border-radius-topright: 5px; border-top-right-radius: 5px; }
+#bblayout-three .row-two #subMenuTab .tab-right a { -webkit-border-top-right-radius: 5px; -moz-border-radius-topright: 5px; border-top-right-radius: 5px; }
+#bblayout-three .row-two #subMenuTab .tab-active, #bblayout-three .row-two #subMenuTab .tab-active a { background: #fff; border-bottom: 1px solid #fff; }
+#bblayout-three .row-physical { line-height: 22px; margin: 0 0 20px 0; padding: 10px 10px; background: #fff; }
+#bblayout-three .row-physical div { padding: 5px; border-bottom: 1px solid #fff; }
+#bblayout-three .row-physical div:nth-child(even){ background: #ddd; }
+#bblayout-three .row-experience { margin: 20px 0; overflow: hidden; }
 
 /* Profile Layout (Display Model Contact Information)  (include-profile-layout4.php) */
-#rblayout-four { padding: 0 20px; overflow: hidden; }
-#rblayout-four #name { margin-bottom: 15px; }
-#rblayout-four #info { padding-left: 0; }
-#rblayout-four h3 { margin: 0 0 10px 0; padding: 5px 8px; background: #454545; color: white; text-transform: uppercase; }
-#rblayout-four #info .stats { font-size: 13px; }
-#rblayout-four #photo { padding-right: 0; }
-#rblayout-four #photo .multiple { float: left; margin: 0 10px 10px 0; overflow: hidden; }
-#rblayout-four #photo .multiple img { max-width: 350px; max-height: 400px; }
+#bblayout-four { padding: 0 20px; overflow: hidden; }
+#bblayout-four #name { margin-bottom: 15px; }
+#bblayout-four #info { padding-left: 0; }
+#bblayout-four h3 { margin: 0 0 10px 0; padding: 5px 8px; background: #454545; color: white; text-transform: uppercase; }
+#bblayout-four #info .stats { font-size: 13px; }
+#bblayout-four #photo { padding-right: 0; }
+#bblayout-four #photo .multiple { float: left; margin: 0 10px 10px 0; overflow: hidden; }
+#bblayout-four #photo .multiple img { max-width: 350px; max-height: 400px; }
 
 /* Profile Layout Seven */
-#rblayout-seven { overflow: hidden; background: #000; margin: 0 15px; margin-bottom: 30px; }
-#rblayout-seven #profile-slider,
+#bblayout-seven { overflow: hidden; background: #000; margin: 0 15px; margin-bottom: 30px; }
+#bblayout-seven #profile-slider,
 #profile-carousel { float: left; border: none; padding: 0; border-radius: 0; box-shadow: none; }
-#rblayout-seven #profile-slider { margin-bottom: 0px; }
-#rblayout-seven #profile-carousel { clear: both; width: 100%; display: block; background: #fff; padding-top: 10px; margin: 0; }
-#rblayout-seven #profile-carousel .slides li { height: 150px; overflow: hidden; }
-#rblayout-seven #profile-slider .slides img { border-radius: 0; box-shadow: none; } 
-#rblayout-seven #profile-info { background: #000; padding: 30px 0; }
-#rblayout-seven #profile-info h1 { color: #e2e2e2; font-weight: normal; text-transform: uppercase; padding: 30px; }
-#rblayout-seven #profile-info ul { list-style: none; color: #959595; padding: 0 30px; margin: 0; }
-#rblayout-seven #profile-info ul li { list-style: none; display: block; font-size: 16px; padding: 5px 0; }
-#rblayout-seven #profile-info ul li span { font-style: italic; }
-#rblayout-seven #profile-links { padding: 15px; float: right; clear: both; }
-#rblayout-seven #profile-links li { display: inline-block; padding: 0 10px; border-right: 1px solid #e2e2e2; font-size: 14px; }
-#rblayout-seven #profile-links li:last-child { border: none; }
-#rblayout-seven #profile-links li a { color: #e2e2e2; text-decoration: none; text-transform: uppercase; }
+#bblayout-seven #profile-slider { margin-bottom: 0px; }
+#bblayout-seven #profile-carousel { clear: both; width: 100%; display: block; background: #fff; padding-top: 10px; margin: 0; }
+#bblayout-seven #profile-carousel .slides li { height: 150px; overflow: hidden; }
+#bblayout-seven #profile-slider .slides img { border-radius: 0; box-shadow: none; } 
+#bblayout-seven #profile-info { background: #000; padding: 30px 0; }
+#bblayout-seven #profile-info h1 { color: #e2e2e2; font-weight: normal; text-transform: uppercase; padding: 30px; }
+#bblayout-seven #profile-info ul { list-style: none; color: #959595; padding: 0 30px; margin: 0; }
+#bblayout-seven #profile-info ul li { list-style: none; display: block; font-size: 16px; padding: 5px 0; }
+#bblayout-seven #profile-info ul li span { font-style: italic; }
+#bblayout-seven #profile-links { padding: 15px; float: right; clear: both; }
+#bblayout-seven #profile-links li { display: inline-block; padding: 0 10px; border-right: 1px solid #e2e2e2; font-size: 14px; }
+#bblayout-seven #profile-links li:last-child { border: none; }
+#bblayout-seven #profile-links li a { color: #e2e2e2; text-decoration: none; text-transform: uppercase; }
 
 /** Sign In - Register **/
 #bbsignin-register { text-align: center; vertical-align: top; }
