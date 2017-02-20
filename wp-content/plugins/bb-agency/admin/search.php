@@ -805,44 +805,44 @@ EOF;
         <div class="boxblock">
             <h3><?php _e('Advanced Search', bb_agency_TEXTDOMAIN) ?></h3>
             <div class="inner">
-            <form method="GET" action="<?php echo admin_url('admin.php?page='. $_GET['page']) ?>">
-                <input type="hidden" name="page" id="page" value="bb_agency_search" />
-                <input type="hidden" name="action" value="search" />
-                <table cellspacing="0" class="widefat fixed">
-                    <thead>
-                        <tr>
-                            <th scope="row"><?php _e('Date', bb_agency_TEXTDOMAIN) ?>:</th>
-                            <td>
-                                <input type="text" id="Date" name="Date" value="<?php echo isset($_REQUEST['Date']) ? $_REQUEST['Date'] : '' ?>" class="bbdatepicker" />               
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row"><?php _e('Name', bb_agency_TEXTDOMAIN) ?>:</th>
-                            <td>
-                                <input type="text" id="ProfileContactName" name="ProfileContactName" value="<?php echo isset($ProfileContactName) ? $ProfileContactName : '' ?>" />               
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row"><?php _e('Classification', bb_agency_TEXTDOMAIN) ?>:</th>
-                            <td>
-                                <select name="ProfileType" id="ProfileType">          
-                                    <option value="">--</option>
-                                    <?php
-                                    /* 
-                                     * set filter from theis array
-                                     * to block the following profile types 
-                                     * in search
-                                     */
-                                    $filter = array( 'agents', 'agent', 'producer', 'producers' );
-                                     
-                                    $DataTypes = $wpdb->get_results("SELECT * FROM ". table_agency_data_type);
-                                    if (!empty($DataTypes)) : foreach ($DataTypes as $type) : if (!in_array(strtolower($type->DataTypeTitle), $filter)) : ?>
-                                    <option value="<?php echo $type->DataTypeID ?>" <?php selected(isset($_SESSION['ProfileType']) ? $_SESSION['ProfileType'] : false, $type->DataTypeID) ?>><?php echo $type->DataTypeTitle ?></option>
-                                    <?php endif; endforeach; endif; ?>
-                                    
-                                </select>
-                            </td>
-                        </tr>
+                <form method="GET" action="<?php echo admin_url('admin.php?page='. $_GET['page']) ?>">
+                    <input type="hidden" name="page" id="page" value="bb_agency_search" />
+                    <input type="hidden" name="action" value="search" />
+                    <table cellspacing="0" class="widefat fixed">
+                        <thead>
+                            <tr>
+                                <th scope="row"><?php _e('Date', bb_agency_TEXTDOMAIN) ?>:</th>
+                                <td>
+                                    <input type="text" id="Date" name="Date" value="<?php echo isset($_REQUEST['Date']) ? $_REQUEST['Date'] : '' ?>" class="bbdatepicker" />               
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><?php _e('Name', bb_agency_TEXTDOMAIN) ?>:</th>
+                                <td>
+                                    <input type="text" id="ProfileContactName" name="ProfileContactName" value="<?php echo isset($ProfileContactName) ? $ProfileContactName : '' ?>" />               
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><?php _e('Classification', bb_agency_TEXTDOMAIN) ?>:</th>
+                                <td>
+                                    <select name="ProfileType" id="ProfileType">          
+                                        <option value="">--</option>
+                                        <?php
+                                        /* 
+                                         * set filter from theis array
+                                         * to block the following profile types 
+                                         * in search
+                                         */
+                                        $filter = array( 'agents', 'agent', 'producer', 'producers' );
+                                         
+                                        $DataTypes = $wpdb->get_results("SELECT * FROM ". table_agency_data_type);
+                                        if (!empty($DataTypes)) : foreach ($DataTypes as $type) : if (!in_array(strtolower($type->DataTypeTitle), $filter)) : ?>
+                                        <option value="<?php echo $type->DataTypeID ?>" <?php selected(isset($_SESSION['ProfileType']) ? $_SESSION['ProfileType'] : false, $type->DataTypeID) ?>><?php echo $type->DataTypeTitle ?></option>
+                                        <?php endif; endforeach; endif; ?>
+                                        
+                                    </select>
+                                </td>
+                            </tr>
                         <?php $talents = $wpdb->get_results("SELECT * FROM ". table_agency_data_talent); if (!empty($talents)) : ?>
                         <tr>
                             <th scope="row"><?php _e('Talent', bb_agency_TEXTDOMAIN) ?>:</th>

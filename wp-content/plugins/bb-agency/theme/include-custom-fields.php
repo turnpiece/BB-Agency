@@ -2,11 +2,11 @@
 
 global $wpdb;
 
-$query = "SELECT ProfileCustomID, ProfileCustomTitle, ProfileCustomType, ProfileCustomOptions, ProfileCustomOrder, ProfileCustomView, ProfileCustomShowGender, ProfileCustomShowProfile, ProfileCustomShowSearch, ProfileCustomShowLogged, ProfileCustomShowAdmin FROM ". table_agency_customfields ." WHERE ProfileCustomView = 0  ORDER BY ProfileCustomOrder ASC";
+$query = "SELECT `ProfileCustomID`, `ProfileCustomTitle`, `ProfileCustomType`, `ProfileCustomOptions`, `ProfileCustomOrder`, `ProfileCustomView`, `ProfileCustomShowGender`, `ProfileCustomShowProfile`, `ProfileCustomShowSearch`, `ProfileCustomShowLogged`, `ProfileCustomShowAdmin` FROM ". table_agency_customfields ." WHERE `ProfileCustomView` = 0  ORDER BY `ProfileCustomOrder` ASC";
 $results = $wpdb->get_results($query1);
 $pos = 0;
 
-$query2 = "SELECT ProfileGender,ProfileUserLinked  FROM ".table_agency_profile." WHERE ProfileUserLinked = '".bb_agency_get_current_userid()."' ";
+$query2 = "SELECT `ProfileGender`, `ProfileUserLinked` FROM ".table_agency_profile." WHERE `ProfileUserLinked` = '".bb_agency_get_current_userid()."'";
 $profile = $wpdb->get_row($query2);
 			
 if (!empty($results)) {		

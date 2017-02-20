@@ -101,16 +101,16 @@ if ($profilesearch_layout == "condensed" || $profilesearch_layout == "simple") :
 		<?php else : // age ?>
         <legend><?php _e("Age", bb_agency_TEXTDOMAIN) ?></legend>
 	    <div>
-	        <label for="age_from"><?php _e("From", bb_agency_TEXTDOMAIN) ?></label>
 	        <select name="age_from">
+	        	<option value=""><?php _e("From", bb_agency_TEXTDOMAIN) ?></option>
 	        <?php for ($i = 0; $i <= bb_agency_MAX_AGE; $i++) : ?>
 	        	<option value="<?php echo $i ?>" <?php selected($i, $_SESSION['ProfileAge_min']) ?>><?php echo $i ?></option>
 	        <?php endfor; ?>
 	        </select>
 	    </div>
 	    <div>
-	    	<label for="age_to"><?php _e("To", bb_agency_TEXTDOMAIN) ?></label>
 	       	<select name="age_to">
+	       		<option value=""><?php _e("To", bb_agency_TEXTDOMAIN) ?></option>
 	        <?php for ($i = 0; $i <= bb_agency_MAX_AGE; $i++) : ?>
 	        	<option value="<?php echo $i ?>" <?php selected($i, $_SESSION['ProfileAge_max']) ?>><?php echo $i ?></option>
 	        <?php endfor; ?>
@@ -150,11 +150,13 @@ if ($profilesearch_layout == "condensed" || $profilesearch_layout == "simple") :
 	<div class="search-field submit">
 		<input type="submit" value="<?php _e("Search Profiles", bb_agency_TEXTDOMAIN) ?>" class="button-primary" onclick="this.form.action='<?php echo get_bloginfo("wpurl") ?>/profile-search/'" />
 		<input type="reset" class="button-primary" value="<?php _e("Empty Form", bb_agency_TEXTDOMAIN) ?>">
-		<?php if (!isset($_GET[srch])) : ?>
+		<?php /*
+		<?php if (!isset($_GET['srch'])) : ?>
 		<input type="submit" name="advanced_search" value="<?php _e("Advanced Search", bb_agency_TEXTDOMAIN) ?>" class="button-primary" onclick="this.form.action='<?php echo get_bloginfo("wpurl") ?>/search/?srch=1'" />
 		<?php else : ?>
 		<input type="submit" name="basic_search" value="<?php _e("Basic Search", bb_agency_TEXTDOMAIN) ?>" class="button-primary" onclick="this.form.action='<?php echo get_bloginfo("wpurl") ?>/search'" />
 		<?php endif; ?>
+		*/ ?>
 	</div>
 	<?php if (isset($_GET['srch'])) { 
 		echo'<div></div>'; 
