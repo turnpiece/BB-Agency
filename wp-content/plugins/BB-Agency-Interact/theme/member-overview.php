@@ -55,13 +55,8 @@ get_header();
 			 */
             $ptype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
 	        $ptype = retrieve_title($ptype);
-			$restrict = array('client','clients','agents','agent','producer','producers');
-			if(in_array(strtolower($ptype),$restrict)){
-				echo "<div id=\"profile-steps\">Profile Setup: Step 1 of 2</div>\n";
-			} else {
-				echo "<div id=\"profile-steps\">Profile Setup: Step 1 of 3</div>\n";
-			}
-                        
+			echo "<div id=\"profile-steps\">Profile Setup</div>\n";
+
 			echo "	<div id=\"profile-manage\" class=\"profile-overview\">\n";
 				
 			/* Check if the user is regsitered *****************************************/ 
@@ -82,13 +77,13 @@ get_header();
 				 
 				echo "<div class=\"section-content section-account\">\n"; // .account
 				echo "<ul>\n";
-				echo "<li><a href=\"account/\">Edit Your Account Details</a></li>\n";
-				echo "<li><a href=\"manage/\">Manage Your Profile Information</a></li>\n";
+				echo "<li><a href=\"account/\">Edit Your Account</a></li>\n";
+				echo "<li><a href=\"manage/\">Manage Your Details</a></li>\n";
 				if (defined('bb_agencyinteract_ALLOW_UPLOADS') && bb_agencyinteract_ALLOW_UPLOADS) {
 					echo "<li><a href=\"media/\">Manage Photos and Media</a></li>\n";
 				}
 				if ($bb_subscription){
-					echo "<li><a href=\"subscription/\">Manage your Subscription</a></li>\n";
+					echo "<li><a href=\"subscription/\">Manage Your Subscription</a></li>\n";
 				}
 				echo "<li><a href=\"availability/\">Manage Availability</a></li>\n";
 				echo "</ul>\n";

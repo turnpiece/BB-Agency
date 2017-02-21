@@ -33,8 +33,6 @@ if (isset($_POST['action'])) {
 	$ProfileUserLinked			=$_POST['ProfileUserLinked'];
 	$ProfileGallery				=$_POST['ProfileGallery'];
 
-    
-
 	// Get Primary Image
 	$ProfileMediaPrimaryID		=$_POST['ProfileMediaPrimary'];
 
@@ -51,10 +49,10 @@ if (isset($_POST['action'])) {
 	case 'editRecord':
 		if (!$have_error){
 		
-        // fixed error of folder is not created 
-		$ProfileGallery = bb_agency_createdir($ProfileGallery);  // Check Directory - create directory if does not exist	
-		
-		// Upload Image & Add to Database
+	        // fixed error of folder is not created 
+			$ProfileGallery = bb_agency_createdir($ProfileGallery);  // Check Directory - create directory if does not exist	
+			
+			// Upload Image & Add to Database
 			$i = 1;
 			while ($i <= 10) {
 				if($_FILES['profileMedia'. $i]['tmp_name'] != ""){
@@ -190,13 +188,7 @@ if (isset($_POST['action'])) {
 			$alerts = "<div id=\"message\" class=\"error\"><p>". __("Error updating record, please ensure you have filled out all required fields.", bb_agencyinteract_TEXTDOMAIN) ."</p></div>"; 
 		}
 		
-		if ($have_error != true) {
-					// redirect only, if requirement of Redirect page is not  "/profile-member/media/ after successful files upload"
 
-			//wp_redirect( $bb_agencyinteract_WPURL ."/profile-member/media/" );
-		
-		//exit;
-	    }
 	break;
 	}
 }
@@ -216,7 +208,7 @@ echo "  <div id=\"content\">\n";
 if (is_user_logged_in()) { 
 	
 	/// Show registration steps
-	echo "<div id=\"profile-steps\">Profile Setup: Step 3 of 3</div>\n";
+	echo "<div id=\"profile-steps\">Profile Setup: Photos</div>\n";
 	
 	echo "<div id=\"profile-manage\" class=\"profile-media\">\n";
 	
@@ -242,7 +234,10 @@ if (is_user_logged_in()) {
 	} else {
 		
 		// No Record Exists, register them
-		echo "<p>".__("Records show you are not currently linked to a model or agency profile. ", bb_agencyinteract_TEXTDOMAIN)."</p>";
+		echo "<p>". __("Records show you are not currently linked to a model or agency profile.  Let's setup your profile now!", bb_agencyinteract_TEXTDOMAIN) ."</p>";
+
+		// Register Profile
+		include("include-profileregister.php");
 		
 	}
 	echo " </div>\n"; // .profile-manage-inner

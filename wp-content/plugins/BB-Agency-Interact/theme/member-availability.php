@@ -62,10 +62,10 @@ if (isset($_POST['action'])) {
 get_header();
 
 // Check Sidebar
-
-	echo "<div id=\"container\" class=\"".get_content_class()." column bb-agency-interact bb-agency-interact-availability\">\n";
-	echo "<div id=\"content\">\n";
-
+	?>
+	<div id="container" class="<?php echo get_content_class() ?> column bb-agency-interact bb-agency-interact-availability">
+		<div id="content">
+		<?php
 		// ****************************************************************************************** //
 		// Check if User is Logged in or not
 		if (is_user_logged_in()) { 
@@ -76,25 +76,23 @@ get_header();
 			 */
 			$ptype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
 	                $ptype = retrieve_title($ptype);
-			$restrict = array('client','clients','agents','agent','producer','producers');
-			if(in_array(strtolower($ptype),$restrict)){
-				echo "<div id=\"profile-steps\">Profile Setup: Step 2 of 2</div>\n";
-			} else {
-				echo "<div id=\"profile-steps\">Profile Setup: Step 2 of 3</div>\n";
-			}
+
+			echo "<div id=\"profile-steps\">Profile Setup: Availability</div>\n";
 
 			echo "<div id=\"profile-manage\" class=\"overview\">\n";
 
 			// Menu
-			include("include-menu.php"); 	
-			echo " <div class=\"manage-profile manage-content\">\n";
-
+			include("include-menu.php");
+			?>
+			<div class="manage-profile manage-content">
+				<p><?php _e('Tell us when you\'re booked up or otherwise unavailable', bb_agencyinteract_TEXTDOMAIN) ?></p>
+			<?php
 			// Show Errors & Alerts
 			echo $alerts;
 
 			/* Check if the user is regsitered *****************************************/ 
 			// Verify Record
-			$sql = "SELECT `ProfileID` FROM ". table_agency_profile ." WHERE ProfileUserLinked =  ". $current_user->ID;
+			$sql = "SELECT `ProfileID` FROM ". table_agency_profile ." WHERE `ProfileUserLinked` =  ". $current_user->ID;
 
 			if ($wpdb->get_var($sql)) {
 				// Manage Profile

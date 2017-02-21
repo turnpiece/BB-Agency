@@ -341,14 +341,9 @@ get_header();
 			 */
 			$ptype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
 	                $ptype = retrieve_title($ptype);
-			$restrict = array('client','clients','agents','agent','producer','producers');
-			if(in_array(strtolower($ptype),$restrict)){
-				echo "<div id=\"profile-steps\">Profile Setup: Step 1 of 2</div>\n";
-			} else {
-				echo "<div id=\"profile-steps\">Profile Setup: Step 1 of 3</div>\n";
-			}
-			
-			
+
+			echo "<div id=\"profile-steps\">Profile Setup: Account</div>\n";
+						
 			echo "<div id=\"profile-manage\" class=\"profile-account\">\n";
 			$bb_agency_new_registeredUser = get_user_meta($current_user->id,'bb_agency_new_registeredUser');
 			

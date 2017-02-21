@@ -26,6 +26,13 @@
 			$back = $bb_agencyinteract_WPURL ."/profile-member/";
 			echo '<p><a class="bb_button" href='.$back.'>EXIT</a></p>';
 			echo "</div>";
+
+			// send message to admin
+			$subject = 'New media uploaded to '.get_bloginfo('name').' by '.$profile->ProfileContactDisplay;
+			$body = implode("\n", $UploadMedia);
+			$body .= "\n\n" . admin_url( '?page=bb_agency_profiles&action=editRecord&ProfileID='.$ProfileID );
+
+			wp_mail( get_bloginfo('admin_email'), $subject, $body );
 		}
 		
 		echo "	<h3>". __("Gallery", bb_agencyinteract_TEXTDOMAIN) ."</h3>\n";
@@ -49,12 +56,11 @@
 			$queryImgConfirm = "SELECT * FROM ". table_agency_profile_media ." WHERE ProfileID =  \"". $ProfileID ."\" AND ProfileMediaID =  \"". $deleteTargetID ."\"";
 			$resultsImgConfirm = $wpdb->get_results($queryImgConfirm);
 			$countImgConfirm = count($resultsImgConfirm);
+
 			foreach ($resultsImgConfirm as $profileImgConfirm) {
 				$ProfileMediaID 	= $profileImgConfirm->ProfileMediaID;
 				$ProfileMediaType 	= $profileImgConfirm->ProfileMediaType;
 				$ProfileMediaURL 	= $profileImgConfirm->ProfileMediaURL;
-				
-			
 				
 				if ($ProfileMediaType == "Demo Reel" || $ProfileMediaType == "Video Monologue" || $ProfileMediaType == "Video Slate") {
 						  echo ("<div id=\"message\" class=\"updated\"><p>File <strong>'. $ProfileMediaURL .'</strong> ". __("successfully removed", bb_agencyinteract_TEXTDOMAIN) .".</p></div>");
@@ -68,7 +74,6 @@
 					}
 				}
 				// Remove Record
-				//$delete = "DELETE FROM " . table_agency_profile_media . " WHERE ProfileID =  \"". $ProfileID ."\" AND ProfileMediaID=$ProfileMediaID";
 				$wpdb->delete(table_agency_profile_media, array( 'ProfileID' => $ProfileID, 'ProfileMediaID' => $ProfileMediaID));
 			} // is there record?
 		}
@@ -108,19 +113,17 @@
 	}
 			
 	echo "		</div>\n";
-	echo "	<div class=\"manage-section media\">\n";
-	echo "		<h3>". __("Media", bb_agencyinteract_TEXTDOMAIN) ."</h3>\n";
-	echo "		<p>". __("The following files (pdf, audio file, etc.) are associated with this record", bb_agencyinteract_TEXTDOMAIN) .".</p>\n";
 
 	$queryMedia = "SELECT * FROM ". table_agency_profile_media ." WHERE `ProfileID` = %d AND `ProfileMediaType` <> 'Image'";
 
-	bb_agency_debug( $queryMedia );
-
 	$media = $wpdb->get_results( $wpdb->prepare( $queryMedia, $ProfileID ) );
 
-	if (!empty($media)) {
-
-		foreach ( $media as $item ) {
+	if (!empty($media)) : ?>
+	<div class="manage-section media">
+		<h3><?php _e("Media", bb_agencyinteract_TEXTDOMAIN) ?></h3>
+		<p><?php _e("The following files (pdf, audio file, etc.) are associated with this record", bb_agencyinteract_TEXTDOMAIN) ?></p>
+	
+	<?php foreach ( $media as $item ) :
 
 			if ($item->ProfileMediaType == "Demo Reel" || 
 				$item->ProfileMediaType == "Video Monologue" || 
@@ -139,29 +142,22 @@
 			}else{
 				$outCustomMediaLink .= "<div>". $item->ProfileMediaType .": <a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $item->ProfileMediaURL ."\" target=\"_blank\">". $item->ProfileMediaTitle ."</a> [<a href=\"javascript:confirmDelete('". $item->ProfileMediaID ."','".$item->ProfileMediaType."')\">DELETE</a>]</div>\n";
 			}
-		}
-	}
+		endforeach; ?>
+		<ul>
+		<?php foreach (array('outLinkVoiceDemo', 'outLinkResume', 'outLinkHeadShot', 'outLinkComCard', 'outCustomMediaLink', 'outVideoMedia') as $type ) :
 
-	echo '<p>';
-	echo $outLinkVoiceDemo;
-	echo '</p>';
-	echo '<p>';
-	echo $outLinkResume;
-	echo '</p>';
-	echo '<p>';
-	echo $outLinkHeadShot;
-	echo '</p>';
-	echo '<p>';
-	echo $outLinkComCard;
-	echo '</p>';
-	echo '<p>';
-	echo $outCustomMediaLink;
-	echo '</p>';
-	echo $outVideoMedia;
+			if (${$type})
+				echo '<li>'.${$type}.'</li>';
+		
+		endforeach; ?>
+		</ul>
 
+	<?php endif;
+	/*
 	if ($countMedia < 1) {
 		echo "<p><em>". __("There are no additional media linked", bb_agencyinteract_TEXTDOMAIN) ."</em></p>\n";
 	}
+	*/
 	echo "		</div>\n";
 
 	if (defined('bb_agencyinteract_ALLOW_UPLOADS') && bb_agencyinteract_ALLOW_UPLOADS) :

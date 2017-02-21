@@ -128,15 +128,14 @@
 		       . __( $data3->ProfileCustomTitle.$measurements_label, bb_agencyinteract_TEXTDOMAIN) 
 			   ."</label>\n";		  
 		 
-		 if ($ProfileCustomType == 1) { //TEXT
+		if ($ProfileCustomType == 1) { //TEXT
 			
 			echo '<input type="text" name="ProfileCustomID'. $data3->ProfileCustomID 
 			     .'" value="'. retrieve_datavalue($_REQUEST["ProfileCustomID". $data3->ProfileCustomID],
 				 									$data3->ProfileCustomID,$ProfileID,"textbox") 
 				 .'" /><br />';
-			}
-			
-		elseif ($ProfileCustomType == 2) { // Min Max
+				 
+		} elseif ($ProfileCustomType == 2) { // Min Max
 			
 			$ProfileCustomOptions_String = str_replace(",",":",
 			                               strtok(strtok($data3->ProfileCustomOptions,"}"),"{"));
@@ -175,118 +174,117 @@
 		} 
 			
 		elseif ($ProfileCustomType == 3) {  // Drop Down
-		
-				list($option1,$option2) = explode(":",$data3->ProfileCustomOptions);	
-		
-				$data = explode("|",$option1);
-				$data2 = explode("|",$option2);
-		
-				echo "<select name=\"ProfileCustomID". $data3->ProfileCustomID ."\">\n";
-		
-						echo "<option value=\"\">--</option>";
-				
-							$pos = 0;
-							foreach($data as $val1){
-								if(!empty($val1)){
-												echo "<option value=\"".$val1."\" ".
-											retrieve_datavalue("",$data3->ProfileCustomID,$ProfileID,"dropdown",$val1)
-												." >".$val1."</option>";
-								}
-							}
-					
-				echo "</select>\n";
-				
-				if (!empty($data2) && !empty($option2)) {
-
-						$pos2 = 0;
-						echo "<select name=\"ProfileCustomID". $data3->ProfileCustomID ."[]\">\n";
-						echo "<option value=\"\">--</option>";
-						foreach($data2 as $val2){
-								if($val2 != end($data2) && $val2 !=  $data2[0]){
-									echo "<option value=\"".$val2."\" ". selected($val2, $_REQUEST["ProfileCustomID"
-									     . $data3->ProfileCustomID]) 
-									     ." >".$val2."</option>";
-								}
-							}
-						echo "</select>\n";
+	
+			list($option1,$option2) = explode(":",$data3->ProfileCustomOptions);	
+	
+			$data = explode("|",$option1);
+			$data2 = explode("|",$option2);
+	
+			echo "<select name=\"ProfileCustomID". $data3->ProfileCustomID ."\">\n";
+	
+			echo "<option value=\"\">--</option>";
+	
+				$pos = 0;
+				foreach($data as $val1){
+					if(!empty($val1)){
+									echo "<option value=\"".$val1."\" ".
+								retrieve_datavalue("",$data3->ProfileCustomID,$ProfileID,"dropdown",$val1)
+									." >".$val1."</option>";
+					}
 				}
 				
-			} elseif ($ProfileCustomType == 4) {
-				echo "<textarea style=\"width: 100%; min-height: 100px;\" name=\"ProfileCustomID". $data3->ProfileCustomID ."\">"
-				     . retrieve_datavalue($_REQUEST["ProfileCustomID". $data3->ProfileCustomID],
-				 									$data3->ProfileCustomID,$ProfileID,"textbox") ."</textarea>";
-
-			} elseif ($ProfileCustomType == 5) {
-
-				$array_customOptions_values = explode("|",$data3->ProfileCustomOptions);
-				echo "<div style=\"width:300px;float:left;\">";
-				foreach($array_customOptions_values as $val){
-					 $xplode = explode(",",$_REQUEST["ProfileCustomID". $data3->ProfileCustomID]);
-					 echo "<label><input type=\"checkbox\" value=\"". $val."\"   "; 
-					 
-					 if(in_array($val,$xplode)){ echo "checked=\"checked\""; } 
-					 
-					 echo" name=\"ProfileCustomID". $data3->ProfileCustomID ."[]\" />";
-					 
-					 echo "". $val."</label>";
-				}    
-				
-				echo "<br/>";
-				echo "</div>";
-				   
-			} elseif ($ProfileCustomType == 6) {
-				
-				echo "<fieldset>";
-				$array_customOptions_values = explode("|",$data3->ProfileCustomOptions);
-				
-				foreach($array_customOptions_values as $val){
-					
-					$selected = "";
-					 $check = "";
-					 $selected = retrieve_datavalue("",$data3->ProfileCustomID,$ProfileID,"dropdown",$val);
-					 
-					 if($selected == "selected"){
-					 	$check = "checked";	
-					 }
-					
-					 echo "<label><input type=\"radio\" value=\"". $val."\" " . $check .
-					      " name=\"ProfileCustomID". $data3->ProfileCustomID ."[]\" />";
-					 echo $val."</label><br/>";
-				}
-				echo "</fieldset>";
-				
-			}elseif ($ProfileCustomType == 7) { //Imperial/Metrics
+			echo "</select>\n";
 			
+			if (!empty($data2) && !empty($option2)) {
 
-			    if($data3->ProfileCustomTitle=="Height" AND $bb_agency_option_unittype==1){
-			        
-			        echo "<select name=\"ProfileCustomID". $data3->ProfileCustomID ."\">\n";
-					echo "<option value=\"\">--</option>\n";
-		
-					$i=36;
-						$heightraw = 0;
-						$heightfeet = 0;
-						$heightinch = 0;
-						while($i<=90)  { 
-							  $heightraw = $i;
-							  $heightfeet = floor($heightraw/12);
-							  $heightinch = $heightraw - floor($heightfeet*12);
-								echo " <option value=\"". $i ."\" ".
-								retrieve_datavalue("",$data3->ProfileCustomID,$ProfileID,"dropdown",$i)  .">"
-									 . $heightfeet ." ft ". $heightinch ." in</option>\n";
-							    $i++;
+				$pos2 = 0;
+				echo "<select name=\"ProfileCustomID". $data3->ProfileCustomID ."[]\">\n";
+				echo "<option value=\"\">--</option>";
+				foreach($data2 as $val2){
+						if($val2 != end($data2) && $val2 !=  $data2[0]){
+							echo "<option value=\"".$val2."\" ". selected($val2, $_REQUEST["ProfileCustomID"
+							     . $data3->ProfileCustomID]) 
+							     ." >".$val2."</option>";
 						}
-						
-		           echo " </select>\n";
-		   
-		       }else{
+					}
+				echo "</select>\n";
+			}
+			
+		} elseif ($ProfileCustomType == 4) {
+			echo "<textarea style=\"width: 100%; min-height: 100px;\" name=\"ProfileCustomID". $data3->ProfileCustomID ."\">"
+			     . retrieve_datavalue($_REQUEST["ProfileCustomID". $data3->ProfileCustomID],
+			 									$data3->ProfileCustomID,$ProfileID,"textbox") ."</textarea>";
+
+		} elseif ($ProfileCustomType == 5) {
+
+			$array_customOptions_values = explode("|",$data3->ProfileCustomOptions);
+			echo "<div style=\"width:300px;float:left;\">";
+			foreach($array_customOptions_values as $val){
+				 $xplode = explode(",",$_REQUEST["ProfileCustomID". $data3->ProfileCustomID]);
+				 echo "<label><input type=\"checkbox\" value=\"". $val."\"   "; 
+				 
+				 if(in_array($val,$xplode)){ echo "checked=\"checked\""; } 
+				 
+				 echo" name=\"ProfileCustomID". $data3->ProfileCustomID ."[]\" />";
+				 
+				 echo "". $val."</label>";
+			}    
+			
+			echo "<br/>";
+			echo "</div>";
 			   
-			 echo '<input type="text" name="ProfileCustomID'. $data3->ProfileCustomID 
+		} elseif ($ProfileCustomType == 6) {
+			
+			echo "<fieldset>";
+			$array_customOptions_values = explode("|",$data3->ProfileCustomOptions);
+			
+			foreach($array_customOptions_values as $val){
+				
+				$selected = "";
+				 $check = "";
+				 $selected = retrieve_datavalue("",$data3->ProfileCustomID,$ProfileID,"dropdown",$val);
+				 
+				 if($selected == "selected"){
+				 	$check = "checked";	
+				 }
+				
+				 echo "<label><input type=\"radio\" value=\"". $val."\" " . $check .
+				      " name=\"ProfileCustomID". $data3->ProfileCustomID ."[]\" />";
+				 echo $val."</label><br/>";
+			}
+			echo "</fieldset>";
+			
+		} elseif ($ProfileCustomType == 7) { //Imperial/Metrics
+		
+		    if ($data3->ProfileCustomTitle=="Height" AND $bb_agency_option_unittype==1){
+		        
+		        echo "<select name=\"ProfileCustomID". $data3->ProfileCustomID ."\">\n";
+				echo "<option value=\"\">--</option>\n";
+	
+				$i=36;
+				$heightraw = 0;
+				$heightfeet = 0;
+				$heightinch = 0;
+				while($i<=90)  { 
+					$heightraw = $i;
+					$heightfeet = floor($heightraw/12);
+					$heightinch = $heightraw - floor($heightfeet*12);
+					echo " <option value=\"". $i ."\" ".
+					retrieve_datavalue("",$data3->ProfileCustomID,$ProfileID,"dropdown",$i)  .">"
+						 . $heightfeet ." ft ". $heightinch ." in</option>\n";
+					$i++;
+				}
+					
+	           	echo " </select>\n";
+	   
+	       	} else {
+			   
+				echo '<input type="text" name="ProfileCustomID'. $data3->ProfileCustomID 
 			     .'" value="'. retrieve_datavalue($_REQUEST["ProfileCustomID". $data3->ProfileCustomID],
 				 									$data3->ProfileCustomID,$ProfileID, 'textbox') 
 				 .'" /><br />';
-			   }
 			}
+		}
 										
 	    echo "</p>\n";
 	   

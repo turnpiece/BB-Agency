@@ -30,7 +30,7 @@ global $wpdb;
 						if ( ($_SERVER["REQUEST_URI"]) == "/profile-member/manage/") { $tabclass = "active"; } else { $tabclass = "inactive"; }
 			echo " 		<div class=\"tab-inner tab-". $tabclass ."\">\n";
 			echo " 			<a  href=\"". get_bloginfo("wpurl") ."/profile-member/manage/\">\n";
-			echo " 			  <div class=\"subMenuTabBG\"><div class=\"subMenuTabBorders\"><div class=\"subMenuTabText\">".__("My Profile", bb_agencyinteract_TEXTDOMAIN) ."</div></div></div>\n";
+			echo " 			  <div class=\"subMenuTabBG\"><div class=\"subMenuTabBorders\"><div class=\"subMenuTabText\">".__("My Details", bb_agencyinteract_TEXTDOMAIN) ."</div></div></div>\n";
 			echo " 			</a>\n";
 			echo " 		</div>\n";
 			/*
