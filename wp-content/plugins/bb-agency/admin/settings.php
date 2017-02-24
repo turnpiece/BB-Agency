@@ -201,7 +201,7 @@ switch ($ConfigID) {
                 $result = mysql_query("SELECT * FROM $table WHERE `ProfileID` = $id");
                 if ($result && mysql_num_rows($result)) {
                     $record = mysql_fetch_array($result);
-                    echo '<strong>'.$record['ProfileContactDisplay'].'</strong>: ';
+                    echo '<strong>'.$record->ProfileContactDisplay.'</strong>: ';
                     // get address to geocode
                     $address = array();
                     foreach ($addressFields as $field) {
@@ -244,8 +244,8 @@ ORDER BY `ProfileDateCreated` ASC
 LIMIT 100
 EOF;
 
-    $results = mysql_query($query);
-    $count = mysql_num_rows($results);
+    $results = $wpdb->get_results($query);
+    $count = count($results);
 
     ?>
     <form method="POST" action="">
@@ -275,19 +275,19 @@ EOF;
             </tfoot>
             <tbody>
             <?php 
-                while ($record = mysql_fetch_array($results)) : 
-                    $isInactive = $record['ProfileIsActive'] == 0; 
-                    $isInactiveDisable = $record['ProfileIsActive'] ? '' : 'disabled="disabled"'; 
-                    $pid = $record['ProfileID']; ?>
+                foreach ($results as $record) : 
+                    $isInactive = $record->ProfileIsActive == 0; 
+                    $isInactiveDisable = $record->ProfileIsActive ? '' : 'disabled="disabled"'; 
+                    $pid = $record->ProfileID; ?>
                 <tr class="<?php echo $isInactive ? 'inactive' : 'active' ?>">
                     <th class="check-column" scope="row" >
                        <input type="checkbox" <?php echo $isInactiveDisable ?> value="<?php echo $pid ?>" class="administrator" id="ProfileID<?php echo $pid ?>" name="ProfileID[]" />
                     </th>
                     <td class="ProfileID column-ProfileID"><?php echo $pid ?></td>
-                    <td><?php echo $record['ProfileContactDisplay'] ?></td>
-                    <td><?php echo $record['ProfileLocationStreet'].', '.$record['ProfileLocationCity'].', '.$record['ProfileLocationState'],', '.$record['ProfileLocationZip'].', '.$record['ProfileLocationCountry'] ?></td>
+                    <td><?php echo $record->ProfileContactDisplay ?></td>
+                    <td><?php echo $record->ProfileLocationStreet.', '.$record->ProfileLocationCity.', '.$record->ProfileLocationState,', '.$record->ProfileLocationZip.', '.$record->ProfileLocationCountry ?></td>
                 </tr>
-            <?php endwhile; ?>
+            <?php endforeach; ?>
             </tbody>
         </table>
         <input type="hidden" name="ConfigID" value="2" />
@@ -1313,15 +1313,13 @@ EOF;
 		* Set profile types here
 		*/
 		
-		$get_types = "SELECT * FROM ". table_agency_data_type;
+		$types = bb_agency_get_types();
 						
-		$result = mysql_query($get_types);
-						
-		while ( $typ = mysql_fetch_array($result)){
-                  $t = trim($typ['DataTypeTitle']);
-				 $t = str_replace(' ', '_', $t);
-			     $name = 'ProfileType' . $t; 
-				 $$name = (int) $_POST['ProfileType' . $t]; 
+		foreach ( $types as $type ) {
+            $t = trim($type->DataTypeTitle);
+			$t = str_replace(' ', '_', $t);
+			$name = 'ProfileType' . $t; 
+			$$name = (int) $_POST['ProfileType' . $t]; 
 		} 		
 
 		//adjustment in making the visibility fields into a checkbox
@@ -1450,31 +1448,26 @@ EOF;
     				* Selected
     				*/
     				$Types = "";
-    				
-    				/*
-    				* Set Types Here for each Custom fields.
-    				*/ 
-    				$get_types = "SELECT * FROM ". table_agency_data_type;
     						
-    				$result = mysql_query($get_types);
-    						
-    				while ( $typ = mysql_fetch_array($result)){
-    				  $profiletyp = 'ProfileType' . trim($typ['DataTypeTitle']);
-    				   $profiletyp = str_replace(' ', '_', $profiletyp);	
-    				  if($$profiletyp) { $Types .= trim($typ['DataTypeTitle']) . "," ; }  
-    		       } 
+    				foreach ( $types as $type ) {
+    				    $profiletyp = 'ProfileType' . trim($type->DataTypeTitle);
+    				    $profiletyp = str_replace(' ', '_', $profiletyp);	
+    				    if ($$profiletyp) { 
+                            $Types .= trim($type->DataTypeTitle) . "," ;
+                        }  
+    		        } 
     			
     				$Types = rtrim($Types, ",");
     				
     				if($Types != "" or !empty($Types)){
     				
-    					$check_sql = "SELECT ProfileCustomTypesID FROM " . table_agency_customfields_types . 
-    		           " WHERE ProfileCustomID= " . $lastid; 
+    					$check_sql = "SELECT `ProfileCustomTypesID` FROM " . table_agency_customfields_types . 
+    		           " WHERE `ProfileCustomID` = $lastid"; 
     		
-    					$check_results = mysql_query($check_sql);
-    					$count_check = mysql_num_rows($check_results);
+    					$check_results = $wpdb->get_results($check_sql);
+    					$count_check = count($check_results);
     		
-    					if($count_check <= 0){
+    					if ($count_check <= 0){
     						//create record in Custom Clients
     						$insert_client = "INSERT INTO " . table_agency_customfields_types . 
     						" (ProfileCustomID,ProfileCustomTitle,ProfileCustomTypes) 
@@ -1550,28 +1543,19 @@ EOF;
     				*/
 
     				$Types = "";
-    				
-    				/*
-    				* Set Types Here for each Custom fields.
-    				*/ 
-    				$get_types = "SELECT * FROM ". table_agency_data_type;
     						
-    				$result = mysql_query($get_types);
-    						
-    				while ( $typ = mysql_fetch_array($result)){
-                        $t = 'ProfileType' . trim($typ['DataTypeTitle']);$t = str_replace(' ', '_', $t);
-                        $n = trim($typ['DataTypeTitle']);
+    				foreach ( $types as $type ){
+                        $t = 'ProfileType' . trim($type->DataTypeTitle);
+                        $t = str_replace(' ', '_', $t);
+                        $n = trim($type->DataTypeTitle);
                         $n = str_replace(' ', '_', $n);
                         if($$t) { 
-    				  	   
                             $$n = true;
                             $Types .= $n . "," ; 
-    				    
     				    } else { 
-    					  
                             $$n = false;
     				    }  
-    		       } 
+    		        } 
     				
     				$Types = rtrim($Types, ",");
     				
@@ -1579,14 +1563,12 @@ EOF;
     				
     				if($Types != "" or !empty($Types)){
     				
-    					$check_sql = "SELECT ProfileCustomTypesID FROM " . table_agency_customfields_types . 
-    		           " WHERE ProfileCustomID = " . $ProfileCustomID; 
+    					$check_sql = "SELECT `ProfileCustomTypesID` FROM " . table_agency_customfields_types . 
+    		           " WHERE `ProfileCustomID` = $ProfileCustomID"; 
+    					$check_results = $wpdb->get_results($check_sql);
+    					$count_check = count($check_results);
     		
-    					$check_results = mysql_query($check_sql);
-    		
-    					$count_check = mysql_num_rows($check_results);
-    		
-    					if($count_check <= 0){
+    					if ($count_check <= 0) {
     						//create record in Custom Clients
     						$insert_client = "INSERT INTO " . table_agency_customfields_types . 
     						" (ProfileCustomID,ProfileCustomTitle,ProfileCustomTypes) 
@@ -1820,7 +1802,7 @@ EOF;
                             <?php
         					$queryShowGender = mysql_query($query);
         					while ($dataShowGender = mysql_fetch_assoc($queryShowGender)){
-        						if (isset($data1["ProfileCustomShowGender"])) : ?>
+        						if (isset($data1->ProfileCustomShowGender)) : ?>
         							<option value="<?php echo $dataShowGender['GenderID'] ?>" selected=="selected"><?php echo $dataShowGender["GenderTitle"] ?></option>
         						<?php else : ?>
         							<option value="<?php echo $dataShowGender['GenderID'] ?>"><?php echo $dataShowGender["GenderTitle"] ?></option>
@@ -1839,20 +1821,7 @@ EOF;
                 				* get the proper fields on
                 				* profile types here
                 				*/
-                				
-                				$get_types = "SELECT * FROM ". table_agency_data_type;
-                				
-                				$result = mysql_query($get_types);
-                				
-                				while ($typ = mysql_fetch_array($result)) {
-                					$t = trim($typ['DataTypeTitle']);
-                					$t = str_replace(' ', '_', $t);
-                					echo '<input type="checkbox" name="ProfileType'.$t.'" value="1" ' . 
-                						($$t == true ? 'checked="checked"':''). '  />&nbsp;'.
-                						trim($typ['DataTypeTitle'])
-                						.'&nbsp;<br/>';
-                				} 
-                                
+                                bb_agency_types_checkboxes();
                 			    ?>
                             </td>
         				</tr>
@@ -1868,21 +1837,19 @@ EOF;
                         </tr>  		
         		
                     <?php else : //Edit/Update Field
-            			$query1 = "SELECT ProfileCustomID, ProfileCustomTitle, ProfileCustomType, ProfileCustomOptions,  ProfileCustomOrder, ProfileCustomView,  ProfileCustomShowGender, ProfileCustomShowProfile, ProfileCustomShowSearch, ProfileCustomShowLogged, ProfileCustomShowAdmin, ProfileCustomShowRegistration FROM ". table_agency_customfields ." WHERE ProfileCustomID = ".$_GET["ProfileCustomID"];
+            			$query1 = "SELECT `ProfileCustomID`, `ProfileCustomTitle`, `ProfileCustomType`, `ProfileCustomOptions`,  `ProfileCustomOrder`, `ProfileCustomView`, `ProfileCustomShowGender`, `ProfileCustomShowProfile`, `ProfileCustomShowSearch`, `ProfileCustomShowLogged`, `ProfileCustomShowAdmin`, `ProfileCustomShowRegistration` FROM ". table_agency_customfields ." WHERE `ProfileCustomID` = ".$_GET["ProfileCustomID"];
 
-            			$results1 = mysql_query($query1);
-            			$count1 = mysql_num_rows($results1);
+            			$results1 = $wpdb->get_results($query1);
+            			$count1 = count($results1);
             			$pos = 0;
-            			while ($data1 = mysql_fetch_array($results1)) :
+            			foreach ($results1 as $data1) :
             			
             				//get record from Clients to edit
-            				$select_sql = "Select  * FROM " . table_agency_customfields_types . " WHERE ProfileCustomID= " . $data1["ProfileCustomID"];
+            				$select_sql = "SELECT * FROM " . table_agency_customfields_types . " WHERE `ProfileCustomID` = $data1->ProfileCustomID";
             				
-            				$select_sql = mysql_query($select_sql) or die(mysql_error());
+            				$fetch_type = $wpdb->get_row($select_sql);
             				
-            				$fetch_type = mysql_fetch_assoc($select_sql);
-            				
-            				$array_type = explode(",", $fetch_type['ProfileCustomTypes']);
+            				$array_type = explode(",", $fetch_type->ProfileCustomTypes);
             				
             				$a = array();
             				
@@ -1891,26 +1858,26 @@ EOF;
             				}
             						
             				$pos ++;			
-            				$query2 = "SELECT * FROM ". table_agency_customfields_mux ." WHERE ProfileCustomID=".$data1["ProfileCustomID"]." AND ProfileID = $ProfileID";
-            				$results2 = mysql_query($query2);
+            				$query2 = "SELECT * FROM ". table_agency_customfields_mux ." WHERE `ProfileCustomID` = $data1->ProfileCustomID AND `ProfileID` = $ProfileID";
+            				$results2 = $wpdb->get_row($query2);
         			?>
                         <tr>
                         	<td>Type*:</td>
                         	<td>
                         	   <select class="objtype" name="ProfileCustomType">
                                 	<option value="">---</option>
-                                	<option value="1" <?php echo ($data1["ProfileCustomType"] == 1 ? 'selected="selected"' : '') ?>>Single Line Text</option>
+                                	<option value="1" <?php echo ($data1->ProfileCustomType == 1 ? 'selected="selected"' : '') ?>>Single Line Text</option>
                                 	
-                                	<option value="3" <?php echo ($data1["ProfileCustomType"] == 3 ? 'selected="selected"' : '') ?>>Dropdown</option>
-                                	<option value="4" <?php echo ($data1["ProfileCustomType"] == 4 ? 'selected="selected"' : '') ?>>Textbox</option>
-                                	<option value="5" <?php echo ($data1["ProfileCustomType"] == 5 ? 'selected="selected"' : '') ?>>Checkbox</option>
-                                	<option value="6" <?php echo ($data1["ProfileCustomType"] == 6 ? 'selected="selected"' : '') ?>>Radiobutton</option>
+                                	<option value="3" <?php echo ($data1->ProfileCustomType == 3 ? 'selected="selected"' : '') ?>>Dropdown</option>
+                                	<option value="4" <?php echo ($data1->ProfileCustomType == 4 ? 'selected="selected"' : '') ?>>Textbox</option>
+                                	<option value="5" <?php echo ($data1->ProfileCustomType == 5 ? 'selected="selected"' : '') ?>>Checkbox</option>
+                                	<option value="6" <?php echo ($data1->ProfileCustomType == 6 ? 'selected="selected"' : '') ?>>Radiobutton</option>
                                     <?php if(bb_agency_get_option('bb_agency_option_unittype')==1) : ?>
-                                    <option value="7" <?php echo ($data1["ProfileCustomType"] == 7 ? 'selected="selected"' : '') ?>>Imperial (ft/in/lb)</option>
+                                    <option value="7" <?php echo ($data1->ProfileCustomType == 7 ? 'selected="selected"' : '') ?>>Imperial (ft/in/lb)</option>
                         	        <?php else : ?>
-                                    <option value="7" <?php echo ($data1["ProfileCustomType"] == 7 ? 'selected="selected"' : '') ?>>Metric (cm/kg)</option>
+                                    <option value="7" <?php echo ($data1->ProfileCustomType == 7 ? 'selected="selected"' : '') ?>>Metric (cm/kg)</option>
                         	        <?php endif; ?>
-                                    <option value="9" <?php echo ($data1["ProfileCustomType"] == 9 ? 'selected="selected"' : '') ?>>Date</option>
+                                    <option value="9" <?php echo ($data1->ProfileCustomType == 9 ? 'selected="selected"' : '') ?>>Date</option>
                                 </select>
                         	</td>
                         </tr>
@@ -1918,25 +1885,25 @@ EOF;
         				<tr>
         					<td valign="top">Visibility*:</td>
         					<td>
-        						<input type="radio" name="ProfileCustomView" value="0" <?php echo ($data1["ProfileCustomView"] == 0 ? 'checked="checked"' : '') ?> />Show Everywhere(Front-end & Back-end)&nbsp;<br/>
-        						<input type="radio" name="ProfileCustomView" value="1" <?php echo ($data1["ProfileCustomView"] == 1 ? 'checked="checked"' : '') ?> />Private(Only show in Admin CRM)&nbsp;<br/>
-        						<input type="radio" name="ProfileCustomView" value="2" <?php echo ($data1["ProfileCustomView"] == 2 ? 'checked="checked"' : '') ?>/>Custom(Used in Custom Views)&nbsp;
+        						<input type="radio" name="ProfileCustomView" value="0" <?php echo ($data1->ProfileCustomView == 0 ? 'checked="checked"' : '') ?> />Show Everywhere(Front-end &amp; Back-end)&nbsp;<br/>
+        						<input type="radio" name="ProfileCustomView" value="1" <?php echo ($data1->ProfileCustomView == 1 ? 'checked="checked"' : '') ?> />Private(Only show in Admin CRM)&nbsp;<br/>
+        						<input type="radio" name="ProfileCustomView" value="2" <?php echo ($data1->ProfileCustomView == 2 ? 'checked="checked"' : '') ?>/>Custom(Used in Custom Views)&nbsp;
         					</td>
         				</tr>
         				<tr>
         					<td valign="top">Custom View*:</td>
         					<td>
-                                <input type="checkbox" name="ProfileCustomShowProfile" value="1" <?php echo ($data1["ProfileCustomShowProfile"] == 1 ? 'checked="checked"' : '') ?> /> Manage Profile (Back-end)&nbsp; <br/>
-                                <input type="checkbox" name="ProfileCustomShowSearch" value="1" <?php echo ($data1["ProfileCustomShowSearch"] == 1 ? 'checked="checked"' : '') ?> /> Search Form (Back-end)&nbsp;  <br/>
-                                <input type="checkbox" <?php echo ($ProfileCustomType==4 ? "" : "") ?> name="ProfileCustomShowRegistration" value="1" <?php echo ($data1["ProfileCustomShowRegistration"] == 1 ? 'checked="checked"' : '') ?> /> Profile Registration Form &nbsp; <br/>
+                                <input type="checkbox" name="ProfileCustomShowProfile" value="1" <?php echo ($data1->ProfileCustomShowProfile == 1 ? 'checked="checked"' : '') ?> /> Manage Profile (Back-end)&nbsp; <br/>
+                                <input type="checkbox" name="ProfileCustomShowSearch" value="1" <?php echo ($data1->ProfileCustomShowSearch == 1 ? 'checked="checked"' : '') ?> /> Search Form (Back-end)&nbsp;  <br/>
+                                <input type="checkbox" <?php echo ($ProfileCustomType==4 ? "" : "") ?> name="ProfileCustomShowRegistration" value="1" <?php echo ($data1->ProfileCustomShowRegistration == 1 ? 'checked="checked"' : '') ?> /> Profile Registration Form &nbsp; <br/>
                             </td>
         				</tr>
         				<tr>
         					<td valign="top">Privacy*:</td>
         					<td>
-                                <input type="radio" name="ProfileCustomPrivacy" value="1" <?php echo ($data1["ProfileCustomShowLogged"] == 1 ? 'checked="checked"' : '') ?> /> User must be logged in to see It &nbsp;<br/>
-                                <input type="radio" name="ProfileCustomPrivacy" value="2" <?php echo ($data1["ProfileCustomShowAdmin"] == 1 ? 'checked="checked"' : '') ?> /> User must be an admin to see It<br/>
-                                <input type="radio" name="ProfileCustomPrivacy" value="3" <?php echo ($data1["ProfileCustomShowAdmin"] == 0 && $data1["ProfileCustomShowLogged"] == 0 ? 'checked="checked"':'') ?> /> Visible to Public 
+                                <input type="radio" name="ProfileCustomPrivacy" value="1" <?php echo ($data1->ProfileCustomShowLogged == 1 ? 'checked="checked"' : '') ?> /> User must be logged in to see It &nbsp;<br/>
+                                <input type="radio" name="ProfileCustomPrivacy" value="2" <?php echo ($data1->ProfileCustomShowAdmin == 1 ? 'checked="checked"' : '') ?> /> User must be an admin to see It<br/>
+                                <input type="radio" name="ProfileCustomPrivacy" value="3" <?php echo ($data1->ProfileCustomShowAdmin == 0 && $data1->ProfileCustomShowLogged == 0 ? 'checked="checked"':'') ?> /> Visible to Public 
         					</td>
         				</tr>
         				<tr>
@@ -1950,7 +1917,7 @@ EOF;
                                     <?php
                                     $queryShowGender = mysql_query($query);
         							while($dataShowGender = mysql_fetch_assoc($queryShowGender)) : ?>	
-        							<option value="<?php echo $dataShowGender['GenderID'] ?>" <?php echo selected($data1["ProfileCustomShowGender"],$dataShowGender['GenderID'],false) ?>><?php echo $dataShowGender["GenderTitle"] ?></option>
+        							<option value="<?php echo $dataShowGender['GenderID'] ?>" <?php echo selected($data1->ProfileCustomShowGender,$dataShowGender['GenderID'],false) ?>><?php echo $dataShowGender["GenderTitle"] ?></option>
         							<?php endwhile; ?>
         						</select>
         							
@@ -1961,16 +1928,13 @@ EOF;
         					<td valign="top">Profile Type:</td>
         					<td>
         					<?php
-        					$get_types = "SELECT * FROM ". table_agency_data_type;
         				
-        					$result = mysql_query($get_types);
-        				
-        					while ( $typ = mysql_fetch_array($result)){
-        						$t = trim($typ['DataTypeTitle']);
+        					foreach ( $types as $type ) {
+        						$t = trim($type->DataTypeTitle);
         						$t = str_replace(' ', '_', $t);
         						echo '<input type="checkbox" name="ProfileType'.$t.'" value="1" ' . 
         							($$t == true ? 'checked="checked"':''). '  />&nbsp;'.
-        							trim($typ['DataTypeTitle'])
+        							trim($type->DataTypeTitle)
         							.'&nbsp;<br/>';
         					} 
         					?>
@@ -1980,17 +1944,17 @@ EOF;
         				<tr>
         					<td valign="top">Custom Order*:</td>
         					<td style="font-size:13px;=" align="left">
-        					<input type="text" name="ProfileCustomOrder"  value="<?php echo $data1["ProfileCustomOrder"] ?>"/>
+        					<input type="text" name="ProfileCustomOrder"  value="<?php echo $data1->ProfileCustomOrder ?>"/>
         					</td>
         				</tr>
         				
-        			    <?php if($data1["ProfileCustomType"] == 1) : // text ?>
+        			    <?php if($data1->ProfileCustomType == 1) : // text ?>
         				  <tr>
         						<td style="width:50px;">Title:</td>
         						<td><input type="text" name="ProfileCustomTitle" value="<?php echo $data1['ProfileCustomTitle'] ?>"/></td>
         					</tr>
 
-        				<?php elseif($data1["ProfileCustomType"] == 3) :	 // Dropdown ?>
+        				<?php elseif($data1->ProfileCustomType == 3) :	 // Dropdown ?>
         					<tr>
         						<td style="width:40px;">Title:</td>
         						<td><input type="text" name="ProfileCustomTitle" value="<?php echo $data1['ProfileCustomTitle'] ?>" style="width:190px;"/></td>
@@ -2040,7 +2004,7 @@ EOF;
         						</td>
                             </tr>				
         						
-        				<?php elseif($data1["ProfileCustomType"] == 4) :	 //textbox
+        				<?php elseif($data1->ProfileCustomType == 4) :	 //textbox
         				  
         				     $array_customOptions_values = explode("|",$data1['ProfileCustomOptions']);
                              ?>
@@ -2049,7 +2013,7 @@ EOF;
         							<td><input type="text" name="ProfileCustomTitle" value="<?php echo $data1['ProfileCustomTitle'] ?>"/></td>
         						</tr>
         					
-        				<?php elseif($data1["ProfileCustomType"] == 5) :	 //checkbox
+        				<?php elseif($data1->ProfileCustomType == 5) :	 //checkbox
         				 
                             $array_customOptions_values = explode("|",$data1['ProfileCustomOptions']);
         					$pos =0;
@@ -2071,7 +2035,7 @@ EOF;
                                     </td>
         						</tr>
                                     
-        				<?php elseif($data1["ProfileCustomType"] == 6) :	 //radio button
+        				<?php elseif($data1->ProfileCustomType == 6) :	 //radio button
         				    $array_customOptions_values = explode("|",$data1['ProfileCustomOptions']);
         					$pos =0;
                             ?>
@@ -2098,7 +2062,7 @@ EOF;
         						</tr>
                                 <div id="addcheckbox_field_1"></div>
         						 							
-        				<?php elseif ($data1["ProfileCustomType"] == 7) :	 ///metric/imperials ?>
+        				<?php elseif ($data1->ProfileCustomType == 7) :	 ///metric/imperials ?>
         						<tr>
                                     <td>Title*:<input type='text' name='ProfileCustomTitle' value="<?php echo $data1['ProfileCustomTitle'] ?>"/></td></tr>
         						<tr>
@@ -2108,12 +2072,12 @@ EOF;
         				    <?php if (bb_agency_get_option('bb_agency_option_unittype')==0) : //  Metric (cm/kg) ?>
         						<tr>
                                     <td>
-                                        <input type="radio" name="ProfileUnitType" value="1" <?php echo checked($data1["ProfileCustomOptions"],1,false) ?> />cm
+                                        <input type="radio" name="ProfileUnitType" value="1" <?php echo checked($data1->ProfileCustomOptions,1,false) ?> />cm
                                     </td>
                                 </tr>
         				    	<tr>
                                     <td>
-                                        <input type="radio" name="ProfileUnitType" value="2" <?php echo checked($data1["ProfileCustomOptions"],2,false) ?> />kg
+                                        <input type="radio" name="ProfileUnitType" value="2" <?php echo checked($data1->ProfileCustomOptions,2,false) ?> />kg
                                     </td>
                                 </tr>  
         				
@@ -2121,31 +2085,31 @@ EOF;
         					
         						<tr>
                                     <td>
-                                        <input type="radio" name="ProfileUnitType" value="1" <?php echo checked($data1["ProfileCustomOptions"],1,false) ?> />Inches
+                                        <input type="radio" name="ProfileUnitType" value="1" <?php echo checked($data1->ProfileCustomOptions,1,false) ?> />Inches
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <input type="radio" name="ProfileUnitType" value="2" <?php echo checked($data1["ProfileCustomOptions"],2,false) ?>/>Pounds
+                                        <input type="radio" name="ProfileUnitType" value="2" <?php echo checked($data1->ProfileCustomOptions,2,false) ?>/>Pounds
                                     </td>
                                 </tr>
         						<tr>
                                     <td>
-                                        <input type="radio" name="ProfileUnitType" value="3" <?php echo checked($data1["ProfileCustomOptions"],3,false) ?>/>Feet/Inches
+                                        <input type="radio" name="ProfileUnitType" value="3" <?php echo checked($data1->ProfileCustomOptions,3,false) ?>/>Feet/Inches
                                     </td>
                                 </tr>
         				    <?php endif; ?>
         													
-                        <?php elseif($data1["ProfileCustomType"] == 9) : // date ?>
+                        <?php elseif($data1->ProfileCustomType == 9) : // date ?>
                                 <tr>
                                     <td style="width:50px;">Title:</td>
-                                    <td><input type="text" name="ProfileCustomTitle" value="<?php echo $data1["ProfileCustomTitle"] ?>" /></td>
+                                    <td><input type="text" name="ProfileCustomTitle" value="<?php echo $data1->ProfileCustomTitle ?>" /></td>
                                 </tr>
 
                         <?php endif; ?>
 
 
-        			<?php endwhile; endif; ?>
+        			<?php endforeach; endif; ?>
                     </table>
 
                     <p class="submit">

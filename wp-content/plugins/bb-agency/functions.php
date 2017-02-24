@@ -3610,18 +3610,16 @@ function bb_agency_display_height($i) {
 	if (!is_numeric($i) && preg_match('/cm$/', $i))
 		return $i; // fix when height is set directly as 123cm
 
-	$i = intval($i);
-
 	$units =  (int)bb_agency_get_option('bb_agency_option_unittype');
 
 	switch ($units) {
 		case 1 :
-			$feet = floor($i/12);
-			$inches = $i % 12;
+			$feet = floor($i/(2.54 * 12));
+			$inches = floor($i/2.54) % 12;
 			return "$feet ft $inches in";
 
 		case 0 :
-			$cms = intval(2.54 * $i);
+			$cms = floor($i + .5);
 			return "$cms cm";
 	}
 }
@@ -4022,6 +4020,30 @@ function bb_agency_save_lbda_modelcard( $gallery ) {
         return $Card->filepath();
     
     bb_agency_adminmessage_former('Error saving LBDA model card: '.$Card->get_error(), true);
+}
+
+/**
+ *
+ * get types
+ *
+ * @return array
+ *
+ */
+function bb_agency_get_types() {
+	global $wpdb;
+	return $wpdb->get_results("SELECT * FROM ". table_agency_data_type);
+}
+
+function bb_agency_types_checkboxes() {
+	$types = bb_agency_get_types();
+	foreach ($types as $type) {
+		$t = trim($type->DataTypeTitle);
+		$t = str_replace(' ', '_', $t);
+		echo '<input type="checkbox" name="ProfileType'.$t.'" value="1" ' . 
+			($$t == true ? 'checked="checked"':''). '  />&nbsp;'.
+			trim($type->DataTypeTitle)
+			.'&nbsp;<br/>';
+	}
 }
 
 /**
