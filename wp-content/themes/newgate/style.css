@@ -27,10 +27,9 @@ body {
 body.cmsms_boxed {background-size:100% auto;}
 
 body.cmsms_boxed #page {
-	background-color:#fbfbfa;
-	width:940px;
+	width: 940px;
 	margin:0 auto;
-	font:13px/18px Arial,Helvetica,'Nimbus Sans L',sans-serif;
+	font:18px/24px Arial,Helvetica,'Nimbus Sans L',sans-serif;
 }
 
 header, 
@@ -1252,7 +1251,7 @@ code {
 	border-top-width:3px;
 	border-top-color:#FF938A;
 	background:#ffffff;
-	font:13px/18px Arial,Helvetica,'Nimbus Sans L',sans-serif;
+	font:18px/24px Arial,Helvetica,'Nimbus Sans L',sans-serif;
 }
 
 .cmsms_plus {display:none;}
@@ -2779,7 +2778,7 @@ input[type="submit"] {font-family:Arial,Helvetica,'Nimbus Sans L',sans-serif;}
 .pj_sort a[name="pj_date"], 
 a.pj_cat_filter {font-family:'Raleway',Arial,Helvetica,'Nimbus Sans L',sans-serif;}
 
-a {font:13px/18px Arial,Helvetica,'Nimbus Sans L',sans-serif;}
+a {font:18px/24px Arial,Helvetica,'Nimbus Sans L',sans-serif;}
 
 .cmsms_page_month, 
 .cmsms_page_day, 
@@ -2957,7 +2956,7 @@ blockquote:before,
 
 .cmsms_post_full_date, 
 .blog.opened-article .cmsms_comments_wrap, 
-.widget_custom_posts_tabs_entries li {font:13px/18px Arial,Helvetica,'Nimbus Sans L',sans-serif;}
+.widget_custom_posts_tabs_entries li {font:18px/24px Arial,Helvetica,'Nimbus Sans L',sans-serif;}
 
 .project_navi {
 	border-top:1px solid #e8e8e8;
@@ -4678,5 +4677,4 @@ input[type="email"]
 	transition:border-color .3s ease-in-out, background-color .3s ease-in-out;
 }
 
-input[type="email"], 
-select {width:50%;}
+input[type="email"] {width:50%;}
