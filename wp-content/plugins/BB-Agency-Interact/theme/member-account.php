@@ -6,7 +6,7 @@ Template Name: Edit Member Details
 * @desc		Edit Member Details
 */
 session_start();
-header("Cache-control: private"); //IE 6 Fix
+
 global $wpdb;
 /* Get User Info ******************************************/ 
 global $current_user, $wp_roles;

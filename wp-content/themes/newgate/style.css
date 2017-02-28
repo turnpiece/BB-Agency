@@ -4675,6 +4675,5 @@ input[type="email"]
 	-ms-transition:border-color .3s ease-in-out, background-color .3s ease-in-out;
 	-o-transition:border-color .3s ease-in-out, background-color .3s ease-in-out;
 	transition:border-color .3s ease-in-out, background-color .3s ease-in-out;
+	width:50%;
 }
-
-input[type="email"] {width:50%;}

@@ -2024,7 +2024,7 @@ function bb_custom_fields($visibility = 0, $ProfileID, $ProfileGender, $ProfileG
 	if (!empty($results)) {
 		foreach ($results as $data) {
 			if ($ProfileGenderShow) {
-				if ($data->ProfileCustomShowGender == $ProfileGender && $count3 >= 1 ) { // Depends on Current LoggedIn User's Gender
+				if ($data->ProfileCustomShowGender == $ProfileGender ) { // Depends on Current LoggedIn User's Gender
 					bb_custom_fields_template($visibility, $ProfileID, $data);
 				} elseif (empty($data->ProfileCustomShowGender)) {
 					bb_custom_fields_template($visibility, $ProfileID, $data);

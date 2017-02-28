@@ -477,7 +477,7 @@ if ( is_admin() ){
 		class bb_agency_widget_showpromoted extends WP_Widget {
 			
 			// Setup
-			function bb_agency_widget_showpromoted() {
+			function __construct() {
 				$widget_ops = array('classname' => 'bb_agency_widget_showpromoted', 'description' => __("Displays promoted profiles", bb_agency_TEXTDOMAIN) );
 				$this->WP_Widget('bb_agency_widget_showpromoted', __("BB Agency : Featured", bb_agency_TEXTDOMAIN), $widget_ops);
 			}
@@ -527,7 +527,7 @@ if ( is_admin() ){
 		class bb_agency_widget_showsearch extends WP_Widget {
 			
 			// Setup
-			function bb_agency_widget_showsearch() {
+			function __construct() {
 				$widget_ops = array('classname' => 'bb_agency_widget_showsearch', 'description' => __("Displays profile search fields", bb_agency_TEXTDOMAIN) );
 				$this->WP_Widget('bb_agency_widget_showsearch', __("BB Agency : Search", bb_agency_TEXTDOMAIN), $widget_ops);
 			}
