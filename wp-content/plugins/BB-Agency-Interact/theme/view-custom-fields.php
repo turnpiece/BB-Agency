@@ -29,7 +29,7 @@
 			 }
 			if ($ProfileCustomType == 1) { //TEXT
 			 	echo "    <tr valign=\"top\">\n";
-			 	echo "		<td scope=\"row\">";
+			 	echo "		<td scope=\"row\" class=\"label\">";
 			 	echo "				        <label for=\"ProfileCustomID". $data1->ProfileCustomID ."\">".__($data1->ProfileCustomTitle.$measurements_label, bb_agency_TEXTDOMAIN)."</label>\n";
 				echo "		</td>\n";
 				echo "	<td>";
@@ -39,7 +39,7 @@
 				
 			} elseif ($ProfileCustomType == 2) { // Min Max
 			 	echo "    <tr valign=\"top\">\n";
-			 	echo "		<td scope=\"row\">";
+			 	echo "		<td scope=\"row\" class=\"label\">";
 			 	echo "				        <label for=\"ProfileCustomID". $data1->ProfileCustomID ."\">".__($data1->ProfileCustomTitle.$measurements_label, bb_agency_TEXTDOMAIN)."</label>\n";
 			 	echo "		</td>\n";
 			 	echo "	<td>";
@@ -64,7 +64,7 @@
 			    echo "	</tr>";
 			} elseif ($ProfileCustomType == 3) {
 			 echo "    <tr valign=\"top\">\n";
-			 echo "		<td scope=\"row\">";
+			 echo "		<td scope=\"row\" class=\"label\">";
 			 echo "				        <label for=\"ProfileCustomID". $data1->ProfileCustomID ."\">".__($data1->ProfileCustomTitle.$measurements_label, bb_agency_TEXTDOMAIN)."</label>\n";
 			 echo "		</td>\n";
 			 echo "	<td>";
@@ -115,7 +115,7 @@
 
 				if(is_admin()){
 					echo "    <tr valign=\"top\">\n";
-					 echo "		<td scope=\"row\">";
+					 echo "		<td scope=\"row\" class=\"label\">";
 					 echo "				        <label for=\"ProfileCustomID". $data1->ProfileCustomID ."\">".__($data1->ProfileCustomTitle.$measurements_label, bb_agency_TEXTDOMAIN)."</label>\n";
 					 echo "		</td>\n";
 					 echo "	<td>";
@@ -128,7 +128,7 @@
 			 elseif ($ProfileCustomType == 5)
 			  {
 				  echo "    <tr valign=\"top\">\n";
-				 echo "		<td scope=\"row\">";
+				 echo "		<td scope=\"row\" class=\"label\">";
 				 echo "				        <label for=\"ProfileCustomID". $data1->ProfileCustomID ."\">".__($data1->ProfileCustomTitle.$measurements_label, bb_agency_TEXTDOMAIN)."</label>\n";
 				 echo "		</td>\n";
 				 echo "	<td>";
@@ -152,7 +152,7 @@
 			}
 			elseif ($ProfileCustomType == 6) {
 					 echo "    <tr valign=\"top\">\n";
-					 echo "		<td scope=\"row\">";
+					 echo "		<td scope=\"row\" class=\"label\">";
 					 echo "				        <label for=\"ProfileCustomID". $data1->ProfileCustomID ."\">".__($data1->ProfileCustomTitle.$measurements_label, bb_agency_TEXTDOMAIN)."</label>\n";
 					 echo "		</td>\n";
 					 echo "	<td>";
@@ -202,7 +202,7 @@
 				   }else{
 */
 					   echo "    <tr valign=\"top\">\n";
-						 echo "		<td scope=\"row\">";
+						 echo "		<td scope=\"row\" class=\"label\">";
 						 echo "				        <label for=\"ProfileCustomID". $data1->ProfileCustomID ."\">".__($data1->ProfileCustomTitle.$measurements_label, bb_agency_TEXTDOMAIN)."</label>\n";
 						 echo "		</td>\n";
 						 echo "	<td>";
