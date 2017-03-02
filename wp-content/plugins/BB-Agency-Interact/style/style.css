@@ -37,7 +37,8 @@ p.submit { margin-top: 15px!important; }
 /* 	My Media - /profile-member/media/
 	/theme/member-media.php
 	/theme/include-profilemedia.php */
-#profile-manage .manage-section.upload div textarea { vertical-align: top; }
+#profile-manage .manage-section.upload div { padding: 10px 0; }
+#profile-manage .manage-section.upload div textarea { vertical-align: top; width: 100%; }
 #profile-manage .manage-section.upload p { margin: 15px 0; }
 
 #profile-manage .manage-section.media .media-video { display: inline-block; margin: 15px; width: 250px; }

@@ -28,7 +28,7 @@ body.cmsms_boxed {background-size:100% auto;}
 
 body.cmsms_boxed #page {
 	width: 940px;
-	margin:0 auto;
+	margin: 0 auto;
 	font:18px/24px Arial,Helvetica,'Nimbus Sans L',sans-serif;
 }
 
@@ -201,8 +201,6 @@ fieldset {
 
 label {
 	display:inline-block;
-	margin:0;
-	padding:0;
 }
 
 input {
@@ -4031,7 +4029,6 @@ a span.image_rollover {
 select {
 	margin:0 0 3px;
 	padding:8px;
-	width:100%;
 	height:36px;
 	border:1px solid #e9e9e9;
 	background-color:#efefef;
@@ -4085,9 +4082,6 @@ textarea {
 	-o-transition:border-color .3s ease-in-out, background-color .3s ease-in-out;
 	transition:border-color .3s ease-in-out, background-color .3s ease-in-out;
 }
-
-input[type="text"], 
-select {width:50%;}
 
 input[type="password"] {
 	width:70%;
@@ -4662,8 +4656,7 @@ select:focus {
 	transition:background-color .3s ease-in-out;
 }
 
-input[type="email"]
- {
+input[type="email"] {
 	background-color:#efefef;
 	border-style:solid;
 	border-width:1px;
@@ -4676,5 +4669,4 @@ input[type="email"]
 	-ms-transition:border-color .3s ease-in-out, background-color .3s ease-in-out;
 	-o-transition:border-color .3s ease-in-out, background-color .3s ease-in-out;
 	transition:border-color .3s ease-in-out, background-color .3s ease-in-out;
-	width:50%;
 }
