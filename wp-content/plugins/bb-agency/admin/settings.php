@@ -100,7 +100,7 @@ switch ($ConfigID) {
 	<?php if (function_exists('bb_agencyinteract_settings')) : ?>
     <div class="boxlinkgroup">
         <h2><?php _e("Interactive Settings", bb_agency_TEXTDOMAIN) ?></h2>
-        <p><?php _e("These settings modify the behavior of the RB Agency Interactive plugin.", bb_agency_TEXTDOMAIN) ?></p>
+        <p><?php _e("These settings modify the behavior of the BB Agency Interactive plugin.", bb_agency_TEXTDOMAIN) ?></p>
         <div class="boxlink">
             <h3><?php _e("Interactive Settings", bb_agency_TEXTDOMAIN) ?></h3>
             <a class="button-primary" href="?page=<?php echo $_GET["page"] ?>&amp;ConfigID=11=" title="<?php _e("Interactive Settings", bb_agency_TEXTDOMAIN) ?>"><?php _e("Settings", bb_agency_TEXTDOMAIN) ?></a><br />
@@ -302,7 +302,6 @@ EOF;
 // *************************************************************************************************** //
 // Manage Settings
     ?>
-    <h3><?php _e("Interactive Settings", bb_agency_TEXTDOMAIN) ?></h3>
 	<form method="post" action="options.php=">
         <?php
     		settings_fields( 'bb-agencyinteract-settings-group' ); 

@@ -154,7 +154,6 @@ wp_head();
 
 ?>
 </head>
-<a href="https://plus.google.com/108406575773494236177" rel="publisher">Google+</a>
 <?php
 	if ($cmsms_option[CMSMS_SHORTNAME . '_boxed_version'] || is_page(3027)) {
 		$cmsms_boxed = 'cmsms_boxed';
