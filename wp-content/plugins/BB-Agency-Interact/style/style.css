@@ -9,14 +9,14 @@ p.submit { margin-top: 15px!important; }
 
 #profile-steps { font-size: 22px; text-align: center; background: #eee; border-bottom: 3px solid #aaa; padding: 10px; }
 
-#profile-manage { overflow: hidden; }
+#profile-manage { overflow: hidden; max-width: 640px; margin: 0 auto; }
 #profile-manage h2 { margin: 20px 0 10px 0; }
 #profile-manage table { border:none }
-#profile-manage table tr td { font-size: 13px; padding: 5px; }
-#profile-manage table tr td h3 { font-size: 16px; margin-bottom:10px; }
+#profile-manage table tr td { padding: 5px; }
+#profile-manage table tr td h3 { margin-bottom:10px; }
 #profile-manage table tr td select { width: 200px; }
 #profile-manage table tr td input[type="text"], #profile-manage table tr td input[type="email"], #profile-manage table tr td input[type="password"] { width: 194px; }
-#profile-manage .profile-manage-menu { overflow: hidden; margin: 20px 0 0 0; }
+#profile-manage .profile-manage-menu { overflow: hidden; margin: 20px auto 0; }
 #profile-manage .profile-manage-menu #subMenuTab { overflow: hidden; }
 #profile-manage .profile-manage-menu #subMenuTab a { float: left; border-left: 1px solid #fff; padding: 10px 20px; color: #555; background: url(/wp-content/uploads/2012/01/bg-tab.png) repeat-x }
 #profile-manage .profile-manage-menu #subMenuTab a:hover { color: #444; background: url(/wp-content/uploads/2012/01/bg-tab.png) 0 -38px repeat-x  }

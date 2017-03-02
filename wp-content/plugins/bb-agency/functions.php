@@ -2063,9 +2063,8 @@ function bb_custom_fields_template($visibility = 0, $ProfileID, $data) {
 	
 	if ( (!empty($data->ProfileCustomID) || $data->ProfileCustomID !="") ) { 
    
-		$row = $wpdb->get_row("SELECT ProfileID,ProfileCustomValue,ProfileCustomID FROM ". table_agency_customfield_mux ." WHERE ProfileCustomID = '". $data->ProfileCustomID ."' AND ProfileID = ". $ProfileID);
-		
-		$ProfileCustomValue = $row->ProfileCustomValue;
+		$ProfileCustomValue = $wpdb->get_var("SELECT `ProfileCustomValue` FROM ". table_agency_customfield_mux ." WHERE `ProfileCustomID` = '$data->ProfileCustomID' AND `ProfileID` = $ProfileID");
+
 		$ProfileCustomTitle = $data->ProfileCustomTitle;
 		$ProfileCustomType  = $data->ProfileCustomType;
 	
@@ -2122,7 +2121,7 @@ function bb_custom_fields_template($visibility = 0, $ProfileID, $data) {
 		 
 		} elseif ($ProfileCustomType == 3) {  // Drop Down
 			
-			list($option1,$option2) = explode(":", $data->ProfileCustomOptions);
+			list($option1, $option2) = explode(":", $data->ProfileCustomOptions);
 				
 			$options = explode("|", $option1);
 			$options2 = explode("|", $option2);

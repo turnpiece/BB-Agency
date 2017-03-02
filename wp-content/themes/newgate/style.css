@@ -889,10 +889,11 @@ video {background-color:#000000;}
 }
 
 #content {
-	position:relative;
-	float:left;
-	padding:40px 0 40px;
-	width:74%;
+	position: relative;
+	padding: 40px 0 40px;
+	width: 100%;
+	max-width: 760px;
+	margin: 0 auto;
 }
 
 figure img {display:block;}

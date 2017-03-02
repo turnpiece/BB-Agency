@@ -159,7 +159,7 @@ if ( is_admin() ){
 		class bb_agencyinteract_widget_loginactions extends WP_Widget {
 			
 			// Setup
-			function bb_agencyinteract_widget_loginactions() {
+			function __construct() {
 				$widget_ops = array('classname' => 'bb_agencyinteract_widget_profileaction', 'description' => __("Displays profile actions such as login and links to edit", bb_agencyinteract_TEXTDOMAIN) );
 				$this->WP_Widget('bb_agencyinteract_widget_profileaction', __("Agency Interact Login", bb_agencyinteract_TEXTDOMAIN), $widget_ops);
 			}
@@ -170,9 +170,6 @@ if ( is_admin() ){
 				echo $before_widget;
 				$title = empty($instance['title']) ? ' ' : apply_filters('widget_title', $instance['title']);
 				$count = $instance['trendShowCount'];
-				# $title = empty($instance['title']) ? ' ' : apply_filters('widget_title', $instance['title']);
-				# $entry_title = empty($instance['entry_title']) ? ' ' : apply_filters('widget_entry_title', $instance['entry_title']);
-				# $comments_title = empty($instance['comments_title']) ? ' ' : apply_filters('widget_comments_title', $instance['comments_title']);
 				
 				$atts = array('count' => $count);
  				
