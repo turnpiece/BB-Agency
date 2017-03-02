@@ -890,8 +890,11 @@ video {background-color:#000000;}
 	position: relative;
 	padding: 40px 0 40px;
 	width: 100%;
-	max-width: 760px;
 	margin: 0 auto;
+}
+
+.bb-agency-interact > #content {
+	max-width: 760px;
 }
 
 figure img {display:block;}
