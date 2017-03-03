@@ -34,11 +34,11 @@
 		<div id="stats" class="col_3 column">
 			<h2><?php echo $ProfileContactDisplay . (bb_agency_isfamily($ProfileType) ? __(' and family', bb_agency_TEXTDOMAIN) : '') ?></h2>
 			<ul>
-			<?php if (bb_agency_SITETYPE == 'children' && !bb_agency_isfamily($ProfileType)) : ?>
+			<?php if (bb_agency_SITETYPE == 'children' && !bb_agency_isfamily($ProfileType) && ($age = bb_agency_get_age($ProfileDateBirth)) && !empty($age)) : ?>
 				<li>
 					<strong><?php _e('Age', bb_agency_TEXTDOMAIN) ?>
 					<span class="divider">:</span></strong> 
-					<?php echo bb_agency_get_age($ProfileDateBirth) ?>
+					<?php echo $age ?>
 				</li>
 			<?php 
 				endif;

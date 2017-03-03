@@ -489,12 +489,12 @@ class Style {
       }
           
       if ( ($i = mb_strpos($l, "cm")) !== false ) {
-        $ret += mb_substr($l, 0, $i) * 72 / 2.54;
+        $ret += mb_substr($l, 0, $i) * 72;
         continue;
       }
 
       if ( ($i = mb_strpos($l, "mm")) !== false ) {
-        $ret += mb_substr($l, 0, $i) * 72 / 25.4;
+        $ret += mb_substr($l, 0, $i) * 72 / 10;
         continue;
       }
       
@@ -505,7 +505,7 @@ class Style {
       }
       
       if ( ($i = mb_strpos($l, "in")) !== false ) {
-        $ret += mb_substr($l, 0, $i) * 72;
+        $ret += mb_substr($l, 0, $i) * 72 * 2.54;
         continue;
       }
           

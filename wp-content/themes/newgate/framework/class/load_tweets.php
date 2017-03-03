@@ -31,16 +31,16 @@ class ezTweet {
 	/*************************************** config ***************************************/
 
    // Your Twitter App Consumer Key
-	private $consumer_key = 'o8ej4zq4uG5LtNlpbAkjA';
+	private $consumer_key = 'FoyUHH9yVOjwMobCRcfBFcfFF';//'o8ej4zq4uG5LtNlpbAkjA';
 
 	// Your Twitter App Consumer Secret
-	private $consumer_secret = 'W1YL6BDdHmaqRdnx8CxMGtSc7nV9nsQV0qobL8qrU';
+	private $consumer_secret = 'Lx8CgyFv126yTdomCnYw62ryefrPLMrFtkAMkQ8M7aWk13kP5X';//'W1YL6BDdHmaqRdnx8CxMGtSc7nV9nsQV0qobL8qrU';
 
 	// Your Twitter App Access Token
-	private $user_token = '298558518-TBHJO5lqD4YyasHx5IxpOhe8XDmMxpI513MtAp5F';
+	private $user_token = '892963219-ftPZRyXDchzV7IVtTiM9LTk0hUZi0Ckv6qSOBIHl';//'298558518-TBHJO5lqD4YyasHx5IxpOhe8XDmMxpI513MtAp5F';
 
 	// Your Twitter App Access Token Secret
-	private $user_secret = 'Iy3QbojR7SmO94hUFAUL5No2pr3BYA72FVuKJ8IaBs';
+	private $user_secret = 'ZeugyrhJgK8v2r7EaFdcihqeNJFOz1VGkDpN2DEsumJ8d';//'Iy3QbojR7SmO94hUFAUL5No2pr3BYA72FVuKJ8IaBs';
 
 	// Path to tmhOAuth libraries
 	private $lib = './';
@@ -55,7 +55,7 @@ class ezTweet {
 	private $cache_dir = './';
 
 	// Enable debugging
-	private $debug = false;
+	private $debug = true;
 
 	/**************************************************************************************/
 
@@ -80,6 +80,8 @@ class ezTweet {
 				'message' => ($this->debug) ? $this->message : false
 			)
 		);
+
+		error_log($this->message);
 	}
 
 	private function getJSON() {

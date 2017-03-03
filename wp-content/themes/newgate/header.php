@@ -154,7 +154,6 @@ wp_head();
 
 ?>
 </head>
-<a href="https://plus.google.com/108406575773494236177" rel="publisher">Google+</a>
 <?php
 	if ($cmsms_option[CMSMS_SHORTNAME . '_boxed_version'] || is_page(3027)) {
 		$cmsms_boxed = 'cmsms_boxed';
@@ -183,13 +182,13 @@ if (
 <header id="header"<?php echo (is_admin_bar_showing()) ? ' class="h_mt"' : ''; ?>>
 	<div class="header_inner">
 	<?php 
-		if ($cmsms_option[CMSMS_SHORTNAME . '_header_custom_html']) {
+		if (!empty($cmsms_option[CMSMS_SHORTNAME . '_header_custom_html'])) {
 			echo '<div class="header_html">' . "\n";
 			echo stripslashes($cmsms_option[CMSMS_SHORTNAME . '_header_html']) . "\n";
 			echo '</div>' . "\n";
 		}
 		
-		if ($cmsms_option[CMSMS_SHORTNAME . '_text_logo']) {
+		if (!empty($cmsms_option[CMSMS_SHORTNAME . '_text_logo'])) {
 			if ($cmsms_option[CMSMS_SHORTNAME . '_text_logo_title'] !== '') {
 				$blog_title = $cmsms_option[CMSMS_SHORTNAME . '_text_logo_title'];
 			} else {
@@ -212,7 +211,7 @@ if (
 			
 			echo '</a>';
 		} else {
-			if ($cmsms_option[CMSMS_SHORTNAME . '_logo_url'] === '') {
+			if (empty($cmsms_option[CMSMS_SHORTNAME . '_logo_url'])) {
 				echo '<a href="' . home_url() . '/" title="' . get_bloginfo('name') . '" class="logo">' . "\n\t" . 
 					'<img src="' . get_template_directory_uri() . '/img/logo.png" alt="' . get_bloginfo('name') . '" />' . "\r" . 
 				'</a>' . "\n";

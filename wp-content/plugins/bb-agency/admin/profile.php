@@ -943,7 +943,7 @@ function bb_display_manage($ProfileID) {
 
             $resultsImg = $wpdb->get_results($queryImg);
             $countImg = count($resultsImg);
-            if (!rempty($resultsImg)) :
+            if (!empty($resultsImg)) :
                 foreach ($resultsImg as $dataImg) :
                     $styleClass = '';
                     if ($dataImg->ProfileMediaPrimary) {

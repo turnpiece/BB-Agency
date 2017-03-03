@@ -41,7 +41,7 @@
     	    </tr>
     	  <?php endforeach; ?>
             <tr valign="top">
-                <td scope="row"></td>
+                <td scope="row" class="label""></td>
                 <td>
                     <input type="hidden" name="action" value="deleteBookings" />
                     <input type="submit" name="submit" value="<?php _e("Remove selected", bb_agencyinteract_TEXTDOMAIN) ?>" class="button-primary" />
@@ -70,7 +70,7 @@
                     </td>
                 </tr>
 	    		<tr valign="top">
-					<td scope="row"></td>
+					<td scope="row" class="label""></td>
 					<td>
 						<input type="hidden" name="action" value="addBooking" />
 						<input type="submit" name="submit" value="<?php _e("Save and Continue", bb_agencyinteract_TEXTDOMAIN) ?>" class="button-primary" />

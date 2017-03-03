@@ -59,7 +59,7 @@
 		echo "	  </tr>\n";
 		/*
 		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\">". __("Gallery Folder", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+		echo "		<td scope=\"row\" class=\"label\">". __("Gallery Folder", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 		echo "		<td>\n";
 					if (!empty($ProfileGallery) && is_dir(bb_agency_UPLOADPATH .$ProfileGallery)) { 
 						echo "<div id=\"message\"><span class=\"updated\"><a href=\"".network_site_url("/")."profile/". $ProfileGallery ."/\" target=\"_blank\">/profile/". $ProfileGallery ."/</a></span></div>\n";
@@ -74,14 +74,14 @@
 		*/
 		echo "<input type=\"hidden\" id=\"ProfileGallery\" name=\"ProfileGallery\" value=\"". $ProfileGallery ."\" />\n";
 		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\">". __("First Name", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+		echo "		<td scope=\"row\" class=\"label\">". __("First Name", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 		echo "		<td>\n";
 		echo "			<input type=\"text\" id=\"ProfileContactNameFirst\" name=\"ProfileContactNameFirst\" value=\"". $ProfileContactNameFirst ."\" />\n";
 		echo "		</td>\n";
 		/*
 		echo "	  </tr>\n";
 		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\">". __("Last Name", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+		echo "		<td scope=\"row\" class=\"label\">". __("Last Name", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 		echo "		<td>\n";
 		echo "			<input type=\"text\" id=\"ProfileContactNameLast\" name=\"ProfileContactNameLast\" value=\"". $ProfileContactNameLast ."\" />\n";
 		echo "		</td>\n";
@@ -92,7 +92,7 @@
 		$queryShowGender = $wpdb->get_results("SELECT `GenderID`, `GenderTitle` FROM " .  table_agency_data_gender . " GROUP BY `GenderTitle`");
 		if (!empty($queryShowGender)) {
 			echo "    <tr valign=\"top\">\n";
-			echo "		<td scope=\"row\">". __("Gender", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+			echo "		<td scope=\"row\" class=\"label\">". __("Gender", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 			echo "		<td>";
 			
 			echo "<select name=\"ProfileGender\">";
@@ -108,23 +108,23 @@
 		}
 		// Private Information
 		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\" colspan=\"2\"><h3>". __("Private Information", bb_agencyinteract_TEXTDOMAIN) ."</h3>The following information will appear only in administrative areas.</th>\n";
+		echo "		<td scope=\"row\" class=\"label\" colspan=\"2\"><h3>". __("Private Information", bb_agencyinteract_TEXTDOMAIN) ."</h3>The following information will appear only in administrative areas.</th>\n";
 		echo "	  </tr>\n";
 		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\">". __("Email Address", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+		echo "		<td scope=\"row\" class=\"label\">". __("Email Address", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 		echo "		<td>\n";
 		echo "			<input type=\"text\" id=\"ProfileContactEmail\" name=\"ProfileContactEmail\" value=\"". $ProfileContactEmail ."\" />\n";
 		echo "		</td>\n";
 		echo "	  </tr>\n";
 		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\">". __("Birth date", bb_agencyinteract_TEXTDOMAIN) ." <em>YYYY-MM-DD</em></th>\n";
+		echo "		<td scope=\"row\" class=\"label\">". __("Birth date", bb_agencyinteract_TEXTDOMAIN) ." <em>YYYY-MM-DD</em></th>\n";
 		echo "		<td>\n";
 		echo "			<input class=\"bbdatepicker\" type=\"text\" id=\"ProfileDateBirth\" name=\"ProfileDateBirth\" value=\"". $ProfileDateBirth ."\" />\n";
 		echo "		</td>\n";
 		echo "	  </tr>\n";
 		if (defined('bb_agency_SITETYPE') && bb_agency_SITETYPE == 'bumps') :
 		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\">". __("Due date", bb_agencyinteract_TEXTDOMAIN) ." <em>YYYY-MM-DD</em></th>\n";
+		echo "		<td scope=\"row\" class=\"label\">". __("Due date", bb_agencyinteract_TEXTDOMAIN) ." <em>YYYY-MM-DD</em></th>\n";
 		echo "		<td>\n";
 		echo "			<input class=\"bbdatepicker\" type=\"text\" id=\"ProfileDateDue\" name=\"ProfileDateDue\" value=\"". $ProfileDateDue ."\" />\n";
 		echo "		</td>\n";
@@ -132,45 +132,45 @@
 		endif;
 		// Address
 		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\">". __("Street", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+		echo "		<td scope=\"row\" class=\"label\">". __("Street", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 		echo "		<td>\n";
 		echo "			<input type=\"text\" id=\"ProfileLocationStreet\" name=\"ProfileLocationStreet\" value=\"". $ProfileLocationStreet ."\" />\n";
 		echo "		</td>\n";
 		echo "	  </tr>\n";
 		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\">". __("Town", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+		echo "		<td scope=\"row\" class=\"label\">". __("Town", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 		echo "		<td>\n";
 		echo "			<input type=\"text\" id=\"ProfileLocationCity\" name=\"ProfileLocationCity\" value=\"". $ProfileLocationCity ."\" />\n";
 		echo "		</td>\n";
 		echo "	  </tr>\n";
 		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\">". __("County", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+		echo "		<td scope=\"row\" class=\"label\">". __("County", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 		echo "		<td>\n";
 		echo "			<input type=\"text\" id=\"ProfileLocationState\" name=\"ProfileLocationState\" value=\"". $ProfileLocationState ."\" />\n";
 		echo "		</td>\n";
 		echo "	  </tr>\n";
 		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\">". __("Post code", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+		echo "		<td scope=\"row\" class=\"label\">". __("Post code", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 		echo "		<td>\n";
 		echo "			<input type=\"text\" id=\"ProfileLocationZip\" name=\"ProfileLocationZip\" value=\"". $ProfileLocationZip ."\" />\n";
 		echo "		</td>\n";
 		echo "	  </tr>\n";
 		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\">". __("Country", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+		echo "		<td scope=\"row\" class=\"label\">". __("Country", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 		echo "		<td>\n";
 		echo "			<input type=\"text\" id=\"ProfileLocationCountry\" name=\"ProfileLocationCountry\" value=\"". $ProfileLocationCountry ."\" />\n";
 		echo "		</td>\n";
 		echo "	  </tr>\n";
 		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\">". __("Phone", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
-		echo "		<td>\n";
-		echo "			<label style=\"width: 50px;float:left;line-height: 24px;\">Home:</label> <input type=\"text\" style=\"width: 144px;\" id=\"ProfileContactPhoneHome\" name=\"ProfileContactPhoneHome\" value=\"". $ProfileContactPhoneHome ."\" /><br />\n";
-		echo "			<label style=\"width: 50px;float:left;line-height: 24px;\">Mobile:</label> <input type=\"text\" style=\"width: 144px;\" id=\"ProfileContactPhoneCell\" name=\"ProfileContactPhoneCell\" value=\"". $ProfileContactPhoneCell ."\" /><br />\n";
-		echo "			<label style=\"width: 50px;float:left;line-height: 24px;\">Work:</label> <input type=\"text\" style=\"width: 144px;\" id=\"ProfileContactPhoneWork\" name=\"ProfileContactPhoneWork\" value=\"". $ProfileContactPhoneWork ."\" /><br />\n";
+		echo "		<td scope=\"row\" class=\"label\">". __("Phone", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+		echo "		<td class=\"labelled\">\n";
+		echo "			<label>Home:</label> <input type=\"text\" style=\"width: 144px;\" id=\"ProfileContactPhoneHome\" name=\"ProfileContactPhoneHome\" value=\"". $ProfileContactPhoneHome ."\" /><br />\n";
+		echo "			<label>Mobile:</label> <input type=\"text\" style=\"width: 144px;\" id=\"ProfileContactPhoneCell\" name=\"ProfileContactPhoneCell\" value=\"". $ProfileContactPhoneCell ."\" /><br />\n";
+		echo "			<label>Work:</label> <input type=\"text\" style=\"width: 144px;\" id=\"ProfileContactPhoneWork\" name=\"ProfileContactPhoneWork\" value=\"". $ProfileContactPhoneWork ."\" /><br />\n";
 		echo "		</td>\n";
 		echo "	  </tr>\n";
 		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\">". __("Website", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+		echo "		<td scope=\"row\" class=\"label\">". __("Website", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 		echo "		<td>\n";
 		echo "			<input type=\"text\" id=\"ProfileContactWebsite\" name=\"ProfileContactWebsite\" value=\"". $ProfileContactWebsite ."\" />\n";
 		echo "		</td>\n";
@@ -216,28 +216,28 @@
 		// Show Social Media Links
 		if (bb_agency_get_option('bb_agency_options_showsocial')) { 
 		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\" colspan=\"2\"><h3>". __("Social Media Profiles", bb_agencyinteract_TEXTDOMAIN) ."</h3></th>\n";
+		echo "		<td scope=\"row\" class=\"label\" colspan=\"2\"><h3>". __("Social Media Profiles", bb_agencyinteract_TEXTDOMAIN) ."</h3></th>\n";
 		echo "	  </tr>\n";
 		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\">". __("Facebook", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+		echo "		<td scope=\"row\" class=\"label\">". __("Facebook", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 		echo "		<td>\n";
 		echo "			<input type=\"text\" id=\"ProfileContactLinkFacebook\" name=\"ProfileContactLinkFacebook\" value=\"". $ProfileContactLinkFacebook ."\" />\n";
 		echo "		</td>\n";
 		echo "	  </tr>\n";
 		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\">". __("Twitter", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+		echo "		<td scope=\"row\" class=\"label\">". __("Twitter", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 		echo "		<td>\n";
 		echo "			<input type=\"text\" id=\"ProfileContactLinkTwitter\" name=\"ProfileContactLinkTwitter\" value=\"". $ProfileContactLinkTwitter ."\" />\n";
 		echo "		</td>\n";
 		echo "	  </tr>\n";
 		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\">". __("YouTube", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+		echo "		<td scope=\"row\" class=\"label\">". __("YouTube", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 		echo "		<td>\n";
 		echo "			<input type=\"text\" id=\"ProfileContactLinkYouTube\" name=\"ProfileContactLinkYouTube\" value=\"". $ProfileContactLinkYouTube ."\" />\n";
 		echo "		</td>\n";
 		echo "	  </tr>\n";
 		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\">". __("Flickr", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+		echo "		<td scope=\"row\" class=\"label\">". __("Flickr", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 		echo "		<td>\n";
 		echo "			<input type=\"text\" id=\"ProfileContactLinkFlickr\" name=\"ProfileContactLinkFlickr\" value=\"". $ProfileContactLinkFlickr ."\" />\n";
 		echo "		</td>\n";
@@ -245,7 +245,7 @@
 		} 
 		if ($bb_agencyinteract_option_registerallow  == 1) {
 			echo "    <tr valign=\"top\">\n";
-			echo "		<td scope=\"row\">". __("Username(cannot be changed.)", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+			echo "		<td scope=\"row\" class=\"label\">". __("Username(cannot be changed.)", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 			echo "		<td>\n";
 			if(isset($current_user->user_login)){
 			echo "			<input type=\"text\" id=\"ProfileUsername\"  name=\"ProfileUsername\" disabled=\"disabled\" value=\"".$current_user->user_login."\" />\n";
@@ -256,19 +256,19 @@
 			echo "	  </tr>\n";
 	 	}
 		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\">". __("Password (Leave blank to keep same password)", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+		echo "		<td scope=\"row\" class=\"label\">". __("Password (Leave blank to keep same password)", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 		echo "		<td>\n";
 		echo "			<input type=\"password\" id=\"ProfilePassword\" name=\"ProfilePassword\" />\n";
 		echo "		</td>\n";
 		echo "	  </tr>\n";
 		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\">". __("Password (Retype to Confirm)", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+		echo "		<td scope=\"row\" class=\"label\">". __("Password (Retype to Confirm)", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 		echo "		<td>\n";
 		echo "			<input type=\"password\" id=\"ProfilePasswordConfirm\" name=\"ProfilePasswordConfirm\" />\n";
 		echo "		</td>\n";
 		echo "	  </tr>\n";
 		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\">". __("Last updated ", bb_agencyinteract_TEXTDOMAIN) ." ". bb_agency_makeago(bb_agency_convertdatetime($ProfileDateUpdated), $bb_agency_option_locationtimezone) ."</th>\n";
+		echo "		<td scope=\"row\" class=\"label\">". __("Last updated ", bb_agencyinteract_TEXTDOMAIN) ." ". bb_agency_makeago(bb_agency_convertdatetime($ProfileDateUpdated), $bb_agency_option_locationtimezone) ."</th>\n";
 		echo "		<td>\n";
 		echo "			<input type=\"hidden\" name=\"action\" value=\"editRecord\" />\n";
 		echo "			<input type=\"submit\" name=\"submit\" value=\"". __("Save and Continue", bb_agencyinteract_TEXTDOMAIN) ."\" class=\"button-primary\" />\n";

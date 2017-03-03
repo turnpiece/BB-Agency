@@ -295,7 +295,7 @@
 	echo " <table class=\"form-table\">\n";
 	echo "	<tbody>\n";
 	echo "    <tr valign=\"top\">\n";
-	echo "		<td scope=\"row\"><span style=\"width:185px;float:left;\">". __("Last updated ", bb_agencyinteract_TEXTDOMAIN) ." ". bb_agency_makeago(bb_agency_convertdatetime($ProfileDateUpdated), $bb_agency_option_locationtimezone) ."</span></th>\n";
+	echo "		<td scope=\"row\" class=\"label\"><span>". __("Last updated ", bb_agencyinteract_TEXTDOMAIN) ." ". bb_agency_makeago(bb_agency_convertdatetime($ProfileDateUpdated), $bb_agency_option_locationtimezone) ."</span></th>\n";
 	echo "		<td>\n";
 	echo "			<input type=\"hidden\" name=\"action\" value=\"editRecord\" />\n";
 	echo "			<input type=\"submit\" name=\"submit\" value=\"". __("Save and Continue", bb_agencyinteract_TEXTDOMAIN) ."\" class=\"button-primary\" />\n";

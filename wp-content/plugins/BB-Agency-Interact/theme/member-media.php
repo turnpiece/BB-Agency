@@ -7,7 +7,7 @@ Template Name: Member Details
 */
 
 session_start();
-header("Cache-control: private"); //IE 6 Fix
+
 global $wpdb;
 
 /* Get User Info ******************************************/ 
@@ -17,24 +17,22 @@ get_currentuserinfo();
 $bb_agency_options_arr = get_option('bb_agency_options');
 $bb_agency_option_agencyimagemaxheight 	= $bb_agency_options_arr['bb_agency_option_agencyimagemaxheight'];
 if (empty($bb_agency_option_agencyimagemaxheight) || $bb_agency_option_agencyimagemaxheight < 500) { $bb_agency_option_agencyimagemaxheight = 800; }
-$bb_agency_option_profilenaming 		= (int)$bb_agency_options_arr['bb_agency_option_profilenaming'];
-$bb_agency_option_locationtimezone 		= (int)$bb_agency_options_arr['bb_agency_option_locationtimezone'];
 
 // Change Title
 add_filter('wp_title', 'bb_agencyinteractive_override_title', 10, 2);
-	function bb_agencyinteractive_override_title(){
-		return "Manage Media";
-	}   
+function bb_agencyinteractive_override_title(){
+	return "Manage Media";
+}   
 
 // Form Post
 if (isset($_POST['action'])) {
 
-	$ProfileID					=$_POST['ProfileID'];
-	$ProfileUserLinked			=$_POST['ProfileUserLinked'];
-	$ProfileGallery				=$_POST['ProfileGallery'];
+	$ProfileID					= $_POST['ProfileID'];
+	$ProfileUserLinked			= $_POST['ProfileUserLinked'];
+	$ProfileGallery				= $_POST['ProfileGallery'];
 
 	// Get Primary Image
-	$ProfileMediaPrimaryID		=$_POST['ProfileMediaPrimary'];
+	$ProfileMediaPrimaryID		= $_POST['ProfileMediaPrimary'];
 
 	// Error checking
 	$error = "";
