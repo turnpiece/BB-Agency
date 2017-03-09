@@ -54,10 +54,9 @@ p.submit { margin-top: 15px!important; }
 #profile-manage .manage-profile p select { width: 165px; }
 
 /* Profile Gallery */
-/*#profile-manage .manage-section.gallery .profileimage { float: left; margin: 0 10px 10px 0; height: 150px; position: relative; overflow: hidden; background: #eee; }*/
 
 #profile-manage .manage-section.gallery .profileimage {
-    background: #EEEEEE;
+    background: #666666;
     float: left;
     height: 220px;
     margin: 0 3% 10px 0;
@@ -65,17 +64,15 @@ p.submit { margin-top: 15px!important; }
     padding: 0;
     position: relative;
     width: 30%;
-    border: 1px solid transparent;
     opacity: 0.6;
 }
 
 #profile-manage .manage-section.gallery .profileimage.live {
     opacity: 1;
 }
-#profile-manage .manage-section.gallery .primaryimage.primary-picture {
-    border: 1px solid #900000;
+#profile-manage .manage-section.gallery .profileimage.primary-picture {
+    background: #cc3333;
     opacity: 1;
-
 }
 
 #profile-manage .manage-section.gallery .profileimage .delete a { display: block; text-align: center; }

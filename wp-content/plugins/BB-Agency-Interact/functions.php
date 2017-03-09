@@ -17,12 +17,20 @@
 		function bb_agencyinteract_inserthead() {
 		  if( !is_admin() ) {
 			echo "<link rel=\"stylesheet\" href=\"". bb_agencyinteract_BASEDIR ."style/style.css\" type=\"text/css\" media=\"screen\" />\n";
-			echo "<script type=\"text/javascript\" src=\"". bb_agencyinteract_BASEDIR ."jquery-page.js\"></script>";
 		  }
 		  if(!wp_script_is('jquery')) {
 			echo "<script type=\"text/javascript\" src=\"". bb_agencyinteract_BASEDIR ."style/jquery.1.8.js\"></script>";
 			
 			} 
+		}
+
+	add_action('wp_enqueue_scripts', 'bb_agencyinteract_scripts');
+
+		function bb_agencyinteract_scripts() {
+			if (!is_admin()) {
+				wp_enqueue_script( 'bb_agencyinteract_page', bb_agencyinteract_BASEDIR .'jquery-page.js', array('jquery'), null, true );
+				wp_localize_script( 'bb_agencyinteract_page', 'page', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
+			}
 		}
 
 // *************************************************************************************************** //
@@ -278,6 +286,34 @@
 			}
 		}
 	}
+
+	// set primary profile image
+	add_action('wp_ajax_set_primary_image', 'set_primary_image');
+
+	if (!function_exists('set_primary_image')) {
+		function set_primary_image() {
+			global $wpdb;
+
+			$image = filter_input(INPUT_POST, 'image');
+			$profile = filter_input(INPUT_POST, 'profile');
+
+			error_log( __FUNCTION__ . " $image $profile" );
+
+			if ($image && $profile) {
+				$wpdb->update( 
+					table_agency_profile_media, 
+					array( 'ProfileMediaPrimary' => 0 ), 
+					array( 'ProfileID' => $profile, 'ProfileMediaPrimary' => 1 ) 
+				);
+				$wpdb->update( 
+					table_agency_profile_media, 
+					array( 'ProfileMediaPrimary' => 1 ), 
+					array( 'ProfileID' => $profile, 'ProfileMediaID' => $image ) 
+				);
+			}
+		}
+	}
+
 
 
 ?>

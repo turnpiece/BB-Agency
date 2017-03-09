@@ -95,7 +95,7 @@
 			<?php if ($profileImg->ProfileMediaLive || $profileImg->ProfileMediaPrimary) : ?>
 			<div class="bb_button action">
 				<label>
-					<input type="radio" name="ProfileMediaPrimary" value="<?php echo $profileImg->ProfileMediaID ?>" class="button-primary" <?php checked( $profileImg->ProfileMediaPrimary ) ?> /> &nbsp; <?php $profileImg->ProfileMediaPrimary ? _e('Primary', bb_agencyinteract_TEXTDOMAIN) : _e('Select', bb_agencyinteract_TEXTDOMAIN) ?>
+					<input type="radio" name="ProfileMediaPrimary" data-profile="<?php echo $ProfileID ?>" value="<?php echo $profileImg->ProfileMediaID ?>" class="button-primary" <?php checked( $profileImg->ProfileMediaPrimary ) ?> /> &nbsp; <?php _e('Primary', bb_agencyinteract_TEXTDOMAIN) ?>
 				</label>
 			</div>
 			<?php else : ?>
