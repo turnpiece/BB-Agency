@@ -47,7 +47,7 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 	define('bb_agency_SITETYPE', 'children'); // bumps or children
 	define('bb_agency_MAX_AGE', 18);
 	define('bb_agency_PLUGIN_TITLE', 'BB Agency'. (bb_agency_SITETYPE == 'children' ? ' (Kiddiwinks)' : ''));
-	define('bb_agency_PHONE', bb_agency_SITETYPE == 'children' ? '020 3051 8894' : '020 3355 8743');
+	define('bb_agency_PHONE', bb_agency_SITETYPE == 'children' ? '07740 334325' : '020 3355 8743');
 	define('bb_agency_LOGOPATH', ABSPATH . '/wp-content/uploads/' . (bb_agency_SITETYPE == 'children' ? '2014/07/Kiddiwinks-Logo.png' : '2013/07/Beautiful_Bumps_Logo1.jpg'));
 	define('bb_agency_DEBUGGING', true); // debugging
 	
