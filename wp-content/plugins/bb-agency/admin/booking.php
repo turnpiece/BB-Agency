@@ -40,7 +40,7 @@ if ($_POST) {
         // Add/Edit Record
         case 'edit' :
             if (!isset($_POST['BookedID']) || !$_POST['BookedID']) {
-                $error[] = 'No booking id was passed.';
+                $error[] = 'No holiday id was passed.';
             } else {
                 $id = $_POST['BookedID'];
             }
@@ -72,9 +72,9 @@ if ($_POST) {
                 // display success messsage
                 if ($action == 'add') {
                     $id = $wpdb->insert_id;
-                    $message = __("New booking added successfully.", bb_agency_TEXTDOMAIN);
+                    $message = __("New holiday added successfully.", bb_agency_TEXTDOMAIN);
                 } else {
-                    $message = __("Booking successfully updated.", bb_agency_TEXTDOMAIN);
+                    $message = __("holiday successfully updated.", bb_agency_TEXTDOMAIN);
                 }
                 bb_agency_admin_message("<p>$message</p>");
 
@@ -100,7 +100,7 @@ switch ($action) {
     case 'delete' :
         if ($_GET['BookedID']) {
             $wpdb->query("DELETE FROM $t_booking WHERE `BookedID` = ".$_GET['BookedID']);
-            bb_agency_admin_message('<p>'. __("That booking has been deleted.", bb_agency_TEXTDOMAIN) . '</p>');
+            bb_agency_admin_message('<p>'. __("That holiday has been deleted.", bb_agency_TEXTDOMAIN) . '</p>');
         }
         elseif (!empty($_GET['BookedIDs'])) {
             $i = 0;
@@ -109,10 +109,10 @@ switch ($action) {
                 $i++;
             }
             // display success messsage
-            bb_agency_admin_message('<p>'. sprintf(__("Those %d bookings have been deleted.", bb_agency_TEXTDOMAIN), $i) . '</p>');
+            bb_agency_admin_message('<p>'. sprintf(__("Those %d holidays have been deleted.", bb_agency_TEXTDOMAIN), $i) . '</p>');
         }
         else {
-            bb_agency_admin_message('<p>Unable to delete as no booking id was received.</p>', 'error');
+            bb_agency_admin_message('<p>Unable to delete as no holiday id was received.</p>', 'error');
         }
         $action = 'list';
 
@@ -153,27 +153,27 @@ switch ($action) {
             if (count($results))
                 include('booking/list.php');
             else
-                bb_agency_admin_message('<p>No bookings found.</p>', 'error');
+                bb_agency_admin_message('<p>No holidays found.</p>', 'error');
         ?>
         </form>
         <?php
             break;
 
         elseif ($action == 'search') : ?>
-            <p><?php printf( __( 'No bookings found for "%s"', bb_agency_TEXTDOMAIN ), $name ) ?></p>
+            <p><?php printf( __( 'No holidays found for "%s"', bb_agency_TEXTDOMAIN ), $name ) ?></p>
 
             <?php
             $action = 'add';
 
         else : ?>
 
-            <p><?php _e( 'There are no bookings in the database at the moment. Use this form to set one up.', bb_agency_TEXTDOMAIN ) ?></p>
+            <p><?php _e( 'There are no holidays in the database at the moment. Use this form to set one up.', bb_agency_TEXTDOMAIN ) ?></p>
             <?php
             $action = 'add';
         endif;
 
     case 'edit' :
-        // get booking from database
+        // get holiday from database
         $sql = "SELECT * FROM $t_booking WHERE `BookedID` = ".(int)$_REQUEST['BookedID'];
         $Booking = $wpdb->get_row($sql, ARRAY_A);
 

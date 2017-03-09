@@ -1,5 +1,5 @@
 <h2 class="title"><?php $action == 'edit' ? _e("Edit", bb_agency_TEXTDOMAIN) : _e("Add", bb_agency_TEXTDOMAIN) ?> job 
-    <a class="button-secondary" href="<?php echo admin_url('admin.php?page=' . $_GET['page']) ?>"><?php _e("Back to bookings list", bb_agency_TEXTDOMAIN) ?></a> 
+    <a class="button-secondary" href="<?php echo admin_url('admin.php?page=' . $_GET['page']) ?>"><?php _e("Back to holidays list", bb_agency_TEXTDOMAIN) ?></a> 
 </h2>
 <p><?php _e("Make changes in the form below to edit a booking", bb_agency_TEXTDOMAIN) ?> <strong><?php _e("Required fields are marked", bb_agency_TEXTDOMAIN) ?>*</strong></p>
 <form method="post" action="<?php echo admin_url('admin.php?page=' . $_GET['page']) ?>">

@@ -13,10 +13,10 @@
       <td><a href="<?php echo admin_url('admin.php?page=bb_agency_profiles&amp;action=editRecord&amp;ProfileID='.$data->ProfileID) ?>" title="Edit profile"><?php echo $data->ModelName ?></a>
         <div class="row-actions">
             <span class="edit">
-                <a href="<?php echo admin_url('admin.php?page=bb_agency_bookings&amp;action=edit&amp;BookedID='. $id) ?>" title="Edit this booking"><?php _e('Edit', bb_agency_TEXTDOMAIN) ?></a> | 
+                <a href="<?php echo admin_url('admin.php?page=bb_agency_bookings&amp;action=edit&amp;BookedID='. $id) ?>" title="Edit this holiday"><?php _e('Edit', bb_agency_TEXTDOMAIN) ?></a> | 
             </span>
             <span class="delete">
-                <a class="submitdelete" title="Remove this booking" href="<?php echo admin_url('admin.php?page=bb_agency_bookings&amp;action=delete&amp;BookedID='. $id) ?>" onclick="if ( confirm('You are about to delete a booking.') ) { return true; } return false;"><?php _e('Delete', bb_agency_TEXTDOMAIN) ?></a>
+                <a class="submitdelete" title="Remove this holiday" href="<?php echo admin_url('admin.php?page=bb_agency_bookings&amp;action=delete&amp;BookedID='. $id) ?>" onclick="if ( confirm('You are about to delete a holiday.') ) { return true; } return false;"><?php _e('Delete', bb_agency_TEXTDOMAIN) ?></a>
             </span>
         </div>
       </td> 
