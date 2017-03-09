@@ -1,7 +1,7 @@
 // JavaScript Document
 jQuery(document).ready(function($){
 
-	var debugging = true;
+	var debugging = false;
 	
 	$('input.button-primary').change(function() {
 		var $this = $(this);

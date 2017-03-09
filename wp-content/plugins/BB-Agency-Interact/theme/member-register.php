@@ -10,32 +10,32 @@
 	/* Get Options */
 	$bb_agencyinteract_options_arr = get_option('bb_agencyinteract_options');
 
-		//Sidebar
-		$bb_agencyinteract_option_profilemanage_sidebar = $bb_agencyinteract_options_arr['bb_agencyinteract_option_profilemanage_sidebar'];
-		if($bb_agencyinteract_option_profilemanage_sidebar){
-			$columnWidth = "nine";
-		} else {
-			$columnWidth = "twelve";
-		}
-		
-		//Facebook Integration
-		$bb_agencyinteract_option_fb_app_id = $bb_agencyinteract_options_arr['bb_agencyinteract_option_fb_app_id'];
-		$bb_agencyinteract_option_fb_app_secret = $bb_agencyinteract_options_arr['bb_agencyinteract_option_fb_app_secret'];
-		$bb_agencyinteract_option_fb_app_register_uri = $bb_agencyinteract_options_arr['bb_agencyinteract_option_fb_app_register_uri'];
-	    $bb_agencyinteract_option_fb_registerallow = $bb_agencyinteract_options_arr['bb_agencyinteract_option_fb_registerallow'];
+	//Sidebar
+	$bb_agencyinteract_option_profilemanage_sidebar = $bb_agencyinteract_options_arr['bb_agencyinteract_option_profilemanage_sidebar'];
+	if($bb_agencyinteract_option_profilemanage_sidebar){
+		$columnWidth = "nine";
+	} else {
+		$columnWidth = "twelve";
+	}
+	
+	//Facebook Integration
+	$bb_agencyinteract_option_fb_app_id = $bb_agencyinteract_options_arr['bb_agencyinteract_option_fb_app_id'];
+	$bb_agencyinteract_option_fb_app_secret = $bb_agencyinteract_options_arr['bb_agencyinteract_option_fb_app_secret'];
+	$bb_agencyinteract_option_fb_app_register_uri = $bb_agencyinteract_options_arr['bb_agencyinteract_option_fb_app_register_uri'];
+    $bb_agencyinteract_option_fb_registerallow = $bb_agencyinteract_options_arr['bb_agencyinteract_option_fb_registerallow'];
 
-	    //+Registration
-	    // - show/hide registration for Agent/Producers
-		$bb_agencyinteract_option_registerallowAgentProducer = $registration['bb_agencyinteract_option_registerallowAgentProducer'];
+    //+Registration
+    // - show/hide registration for Agent/Producers
+	$bb_agencyinteract_option_registerallowAgentProducer = $registration['bb_agencyinteract_option_registerallowAgentProducer'];
 
-		// - show/hide  self-generate password
-		$bb_agencyinteract_option_registerconfirm = (int)$bb_agencyinteract_options_arr['bb_agencyinteract_option_registerconfirm'];
-		
-	   	if($bb_agencyinteract_option_fb_registerallow == 1){
-		 	if(!class_exists("FacebookApiException")){   
-		   		require_once(ABSPATH."wp-content/plugins/".bb_agencyinteract_TEXTDOMAIN."/tasks/facebook.php");
-		 	}
-	    }
+	// - show/hide  self-generate password
+	$bb_agencyinteract_option_registerconfirm = (int)$bb_agencyinteract_options_arr['bb_agencyinteract_option_registerconfirm'];
+	
+   	if($bb_agencyinteract_option_fb_registerallow == 1){
+	 	if(!class_exists("FacebookApiException")){   
+	   		require_once(ABSPATH."wp-content/plugins/".bb_agencyinteract_TEXTDOMAIN."/tasks/facebook.php");
+	 	}
+    }
 
 	/* Check if users can register. */
 	$registration = get_option( 'users_can_register' );	
@@ -168,8 +168,14 @@
 				$login = wp_login( $user_login, $user_pass );
 				$login = wp_signon( array( 'user_login' => $user_login, 'user_password' => $user_pass, 'remember' => 1 ), false );	
 			}				
-				// Notify admin and user
-				wp_new_user_notification($new_user, $user_pass);	
+			// Notify admin and user
+			wp_new_user_notification($new_user, null, 'both');	
+			/*
+			// email admin
+			$subject = 'New '.get_bloginfo('name').' model profile added: ' . $ProfileContactDisplay;
+			$message = admin_url( '?page=bb_agency_profiles&action=editRecord&ProfileID='.$ProfileID );
+			wp_mail( get_bloginfo('admin_email'), $subject, $message );
+			*/
 			
 		}
 		
@@ -287,7 +293,7 @@
     $results3 = $wpdb->get_results($query3);
     $count3 = count($results3);
     
-    while ($results3 as $data3) {
+    foreach ($results3 as $data3) {
     	echo "<td><input type=\"checkbox\" name=\"ProfileType[]\" value=\"" . $data3->DataTypeID . "\" id=\"ProfileType[]\" /> " . $data3->DataTypeTitle . "</td>";
     }
 	echo "</tr></table>";

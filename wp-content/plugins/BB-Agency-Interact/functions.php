@@ -297,14 +297,14 @@
 			$image = filter_input(INPUT_POST, 'image');
 			$profile = filter_input(INPUT_POST, 'profile');
 
-			error_log( __FUNCTION__ . " $image $profile" );
-
 			if ($image && $profile) {
+				// remove existing primary flag
 				$wpdb->update( 
 					table_agency_profile_media, 
 					array( 'ProfileMediaPrimary' => 0 ), 
 					array( 'ProfileID' => $profile, 'ProfileMediaPrimary' => 1 ) 
 				);
+				// add primary flag to selected image
 				$wpdb->update( 
 					table_agency_profile_media, 
 					array( 'ProfileMediaPrimary' => 1 ), 

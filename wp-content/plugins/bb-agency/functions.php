@@ -754,8 +754,8 @@
 				"profiledatedue_max" => null,
 				"featured" => null,
 				"stars" => null,
-				"paging" => null,
-				"pagingperpage" => null,
+				"paging" => 0,
+				"pagingperpage" => 40,
 				"override_privacy" => null,
 				"profilefavorite" => null,
 				"profilecastingcart" => null,
@@ -767,7 +767,7 @@
 			$atts)
 		);
 
-		if (bb_agency_SITETYPE == 'bumps' && defined('bb_agency_MUMSTOBE_ID') && defined('bb_agency_BABIES_ID')) {
+		if (bb_agency_SITETYPE === 'bumps' && defined('bb_agency_MUMSTOBE_ID') && defined('bb_agency_BABIES_ID')) {
 			// Settings for a Beautiful Bumps type site of pregnant women
 			// Sort by due date if a mum to be, by date of birth if a baby, otherwise sort alphabetically
 			switch(intval($type)) {
@@ -1222,7 +1222,9 @@
 		 	if (!$isDownload) { //if its printing or PDF no need for pagination below
 		  
 				/*********** Paginate **************/
-				$limit = isset($limit) ? $limit : '';
+
+				$limit = $pagingperpage ? 'LIMIT '. ($paging ? $paging : '') . " $pagingperpage" : '';
+
 				$sql = <<<EOF
 SELECT
 profile.`ProfileID` as pID, 
@@ -1236,12 +1238,14 @@ LEFT JOIN $CustomTable AS customfield_mux
 ON profile.`ProfileID` = customfield_mux.`ProfileID`  
 $filter  
 GROUP BY profile.`ProfileID` 
-ORDER BY $sort $dir $limit
+ORDER BY $sort $dir 
+$limit
 EOF;
+
+				bb_agency_debug( __FUNCTION__ . ' ' . $sql );
 
 				$qItem = $wpdb->get_results($sql, ARRAY_A);
 				$items = count($qItem); // number of total rows returned
-				$limit = ''; // pagination not working here
 	  
 	  		}//if (get_query_var('target')!="print" 
 					  
@@ -1264,7 +1268,7 @@ EOF;
 			 */
 			if (!empty($profilefavorite)) {
 				// Execute query showing favorites
-				$queryList = "SELECT profile.ProfileID, profile.ProfileGallery, profile.ProfileContactDisplay, profile.ProfileDateBirth, profile.ProfileDateDue, profile.ProfileLocationState, profile.ProfileID as pID, fav.SavedFavoriteTalentID, fav.SavedFavoriteProfileID, (SELECT media.ProfileMediaURL FROM ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1) AS ProfileMediaURL FROM ". table_agency_profile ." profile INNER JOIN  ".table_agency_savedfavorite." fav WHERE $sqlFavorite_userID AND profile.ProfileIsActive = 1 GROUP BY fav.SavedFavoriteTalentID";
+				$queryList = "SELECT profile.`ProfileID`, profile.`ProfileGallery`, profile.`ProfileContactDisplay`, profile.`ProfileDateBirth`, profile.`ProfileDateDue`, profile.`ProfileLocationState`, profile.`ProfileID` as pID, fav.`SavedFavoriteTalentID`, fav.`SavedFavoriteProfileID`, (SELECT media.`ProfileMediaURL` FROM ". table_agency_profile_media ." media WHERE profile.`ProfileID` = media.`ProfileID` AND media.`ProfileMediaType` = \"Image\" AND media.`ProfileMediaPrimary` = 1) AS ProfileMediaURL FROM ". table_agency_profile ." profile INNER JOIN  ".table_agency_savedfavorite." fav WHERE $sqlFavorite_userID AND profile.`ProfileIsActive` = 1 GROUP BY fav.`SavedFavoriteTalentID`";
 				
 			} elseif (!empty($profilecastingcart)) {
 				// There is a Casting Cart ID present

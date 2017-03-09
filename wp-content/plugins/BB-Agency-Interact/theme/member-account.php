@@ -236,11 +236,6 @@ if (isset($_POST['action'])) {
 			}			
 			
 			$alerts = "<div id=\"message\" class=\"updated\"><p>". __("New Profile added successfully", bb_agencyinteract_TEXTDOMAIN) ."!</p></div>"; 
-
-			// email admin
-			$subject = 'New '.get_bloginfo('name').' model profile added: ' . $ProfileContactDisplay;
-			$message = admin_url( '?page=bb_agency_profiles&action=editRecord&ProfileID='.$ProfileID );
-			wp_mail( get_bloginfo('admin_email'), $subject, $message );
 					
 			/* Redirect so the page will show updated info. */
 			if ( !$error ) {
