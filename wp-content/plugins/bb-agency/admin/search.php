@@ -13,7 +13,6 @@
     $cusFields = array("Suit","Bust","Shirt","Dress","Height");  //for custom fields min and max
 
     $bb_agency_option_persearch = (int)bb_agency_get_option('bb_agency_option_persearch');
-    $bb_agency_option_agencyemail = (int)bb_agency_get_option('bb_agency_option_agencyemail');
     if ($bb_agency_option_persearch <= 1) { 
         $bb_agency_option_persearch = 100; 
     }

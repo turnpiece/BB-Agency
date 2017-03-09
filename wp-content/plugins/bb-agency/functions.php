@@ -3332,14 +3332,15 @@ function bulk_register_and_send_email() {
 
 function send_email_lp($login, $password, $email) {
     $admin_email = get_bloginfo('admin_email');
+    $site = get_bloginfo('name');
 
-    $headers = 'From: BB Agency <' . $admin_email . '>\r\n';
+    $headers = "From: $site <$admin_email>\r\n";
 
     $subject = 'Your new Login and Password';
     
     $message = read_email_content(true);
     if ($message == 'empty') {
-        $message = 'Hello, we generated new login and password for you at BB Agency\n\n[login]\n[password]\n\nYou can login [url]\n\nThanks.';
+        $message = "Hello, we generated new login and password for you at $site\n\n[login]\n[password]\n\nYou can login [url]\n\nThanks.";
     }
 
     $message = str_replace('[login]', 'Login: <strong>' . $login . '</strong>', $message);

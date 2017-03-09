@@ -33,11 +33,11 @@ if ($profiletype == 1) { $profiletypetext = __("Agent/Producer", bb_agencyintera
 
 // Form Post
 if (isset($_POST['action'])) {
-	$ProfileID					=$_POST['ProfileID'];
-	$ProfileUsername			=$_POST['ProfileUsername'];
-	$ProfilePassword			=$_POST['ProfilePassword'];
-	$ProfilePasswordConfirm		=$_POST['ProfilePasswordConfirm'];
-	$ProfileUserLinked			=$_POST['ProfileUserLinked'];
+	$ProfileID					= $_POST['ProfileID'];
+	$ProfileUsername			= $_POST['ProfileUsername'];
+	$ProfilePassword			= $_POST['ProfilePassword'];
+	$ProfilePasswordConfirm		= $_POST['ProfilePasswordConfirm'];
+	$ProfileUserLinked			= $_POST['ProfileUserLinked'];
 	$ProfileContactNameFirst	=trim($_POST['ProfileContactNameFirst']);
 	$ProfileContactNameLast		=trim($_POST['ProfileContactNameLast']);
 	$ProfileContactDisplay		=trim($_POST['ProfileContactDisplay']);
@@ -57,31 +57,31 @@ if (isset($_POST['action'])) {
                 }
   	}
 
-	$ProfileGallery				=$_POST['ProfileGallery'];
+	$ProfileGallery				= $_POST['ProfileGallery'];
 
   	if (empty($ProfileGallery)) {  // Probably a new record... 
 		$ProfileGallery = bb_agency_safenames($ProfileContactDisplay); 
   	}
 
-	$ProfileContactEmail		=$_POST['ProfileContactEmail'];
-	$ProfileContactWebsite		=$_POST['ProfileContactWebsite'];
-	$ProfileContactLinkFacebook	=$_POST['ProfileContactLinkFacebook'];
-	$ProfileContactLinkTwitter	=$_POST['ProfileContactLinkTwitter'];
-	$ProfileContactLinkYouTube	=$_POST['ProfileContactLinkYouTube'];
-	$ProfileContactLinkFlickr	=$_POST['ProfileContactLinkFlickr'];
-	$ProfileContactPhoneHome	=$_POST['ProfileContactPhoneHome'];
-	$ProfileContactPhoneCell	=$_POST['ProfileContactPhoneCell'];
-	$ProfileContactPhoneWork	=$_POST['ProfileContactPhoneWork'];
-	$ProfileGender    		=$_POST['ProfileGender'];
-	$ProfileType    		=$_POST['ProfileType'];
-	$ProfileDateBirth	    		=$_POST['ProfileDateBirth'];
-	$ProfileDateDue	    		=$_POST['ProfileDateDue'];
-	$ProfileLocationStreet		=$_POST['ProfileLocationStreet'];
-	$ProfileLocationCity		=bb_agency_strtoproper($_POST['ProfileLocationCity']);
-	$ProfileLocationState		=strtoupper($_POST['ProfileLocationState']);
-	$ProfileLocationZip		=$_POST['ProfileLocationZip'];
-	$ProfileLocationCountry		=$_POST['ProfileLocationCountry'];
-	$ProfileLanguage			=$_POST['ProfileLanguage'];
+	$ProfileContactEmail		= $_POST['ProfileContactEmail'];
+	$ProfileContactWebsite		= $_POST['ProfileContactWebsite'];
+	$ProfileContactLinkFacebook	= $_POST['ProfileContactLinkFacebook'];
+	$ProfileContactLinkTwitter	= $_POST['ProfileContactLinkTwitter'];
+	$ProfileContactLinkYouTube	= $_POST['ProfileContactLinkYouTube'];
+	$ProfileContactLinkFlickr	= $_POST['ProfileContactLinkFlickr'];
+	$ProfileContactPhoneHome	= $_POST['ProfileContactPhoneHome'];
+	$ProfileContactPhoneCell	= $_POST['ProfileContactPhoneCell'];
+	$ProfileContactPhoneWork	= $_POST['ProfileContactPhoneWork'];
+	$ProfileGender    			= $_POST['ProfileGender'];
+	$ProfileType    			= $_POST['ProfileType'];
+	$ProfileDateBirth	    	= $_POST['ProfileDateBirth'];
+	$ProfileDateDue	    		= $_POST['ProfileDateDue'];
+	$ProfileLocationStreet		= $_POST['ProfileLocationStreet'];
+	$ProfileLocationCity		= bb_agency_strtoproper($_POST['ProfileLocationCity']);
+	$ProfileLocationState		= strtoupper($_POST['ProfileLocationState']);
+	$ProfileLocationZip			= $_POST['ProfileLocationZip'];
+	$ProfileLocationCountry		= $_POST['ProfileLocationCountry'];
+	$ProfileLanguage			= $_POST['ProfileLanguage'];
 
 	if ($bb_agencyinteract_option_registerapproval == 1) {
 
@@ -236,6 +236,11 @@ if (isset($_POST['action'])) {
 			}			
 			
 			$alerts = "<div id=\"message\" class=\"updated\"><p>". __("New Profile added successfully", bb_agencyinteract_TEXTDOMAIN) ."!</p></div>"; 
+
+			// email admin
+			$subject = 'New '.get_bloginfo('name').' model profile added: ' . $ProfileContactDisplay;
+			$message = admin_url( '?page=bb_agency_profiles&action=editRecord&ProfileID='.$ProfileID );
+			wp_mail( get_bloginfo('admin_email'), $subject, $message );
 					
 			/* Redirect so the page will show updated info. */
 			if ( !$error ) {
