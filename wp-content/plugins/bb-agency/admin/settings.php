@@ -17,7 +17,7 @@
         6 => __("Profile Types", bb_agency_TEXTDOMAIN),
         7 => __("Custom Fields", bb_agency_TEXTDOMAIN),
 //        8 => __("Media Categories", bb_agency_TEXTDOMAIN),
-        11 => __("Interactive Settings", bb_agency_TEXTDOMAIN),
+//        11 => __("Interactive Settings", bb_agency_TEXTDOMAIN),
     );
 
     $ConfigID = isset($_REQUEST['ConfigID']) ? $_REQUEST['ConfigID'] : 0;
@@ -66,10 +66,11 @@ switch ($ConfigID) {
     case 8 :
     echo "Media Categories";
     break;
-
+/*
     case 11 :
     echo "Interactive Settings";
     break;
+*/
 }
 ?>  
 </h2>
@@ -86,36 +87,36 @@ switch ($ConfigID) {
         <p><?php _e("The following settings modify the core BB Agency settings.", bb_agency_TEXTDOMAIN) ?></p>
         <div class="boxlink">
             <h3><?php _e("Features", bb_agency_TEXTDOMAIN) ?></h3>
-            <a class="button-primary" href="?page=<?php echo $_GET["page"] ?>&amp;ConfigID=1=" title="<?php _e("Settings", bb_agency_TEXTDOMAIN) ?>"><?php _e("Settings", bb_agency_TEXTDOMAIN) ?></a><br />
+            <a class="button-primary" href="<?php echo admin_url( 'admin.php?page=' . $page . "&amp;ConfigID=1" ) ?>" title="<?php _e("Settings", bb_agency_TEXTDOMAIN) ?>"><?php _e("Settings", bb_agency_TEXTDOMAIN) ?></a><br />
             <p><?php _e("Access this area to manage all of the core settings including layout types, privacy settings and more", bb_agency_TEXTDOMAIN) ?></p>
         </div>
         <div class="boxlink">
             <h3><?php _e("Style", bb_agency_TEXTDOMAIN) ?></h3>
-            <a class="button-primary" href="?page=<?php echo $_GET["page"] ?>&amp;ConfigID=10=" title="<?php _e("Style", bb_agency_TEXTDOMAIN) ?>"><?php _e("Style", bb_agency_TEXTDOMAIN) ?></a><br />
+            <a class="button-primary" href="<?php echo admin_url( 'admin.php?page=' . $page . "&amp;ConfigID=10" ) ?>" title="<?php _e("Style", bb_agency_TEXTDOMAIN) ?>"><?php _e("Style", bb_agency_TEXTDOMAIN) ?></a><br />
             <p><?php _e("Manage the stylesheet (CSS) controlling the category and profile layouts", bb_agency_TEXTDOMAIN) ?></p>
         </div>
     </div>
     <hr />
 
-	<?php if (function_exists('bb_agencyinteract_settings')) : ?>
+	<?php /*if (function_exists('bb_agencyinteract_settings')) : ?>
     <div class="boxlinkgroup">
         <h2><?php _e("Interactive Settings", bb_agency_TEXTDOMAIN) ?></h2>
-        <p><?php _e("These settings modify the behavior of the BB Agency Interactive plugin.", bb_agency_TEXTDOMAIN) ?></p>
+        <p><?php _e("These settings modify the behaviour of the BB Agency Interactive plugin.", bb_agency_TEXTDOMAIN) ?></p>
         <div class="boxlink">
             <h3><?php _e("Interactive Settings", bb_agency_TEXTDOMAIN) ?></h3>
-            <a class="button-primary" href="?page=<?php echo $_GET["page"] ?>&amp;ConfigID=11=" title="<?php _e("Interactive Settings", bb_agency_TEXTDOMAIN) ?>"><?php _e("Settings", bb_agency_TEXTDOMAIN) ?></a><br />
+            <a class="button-primary" href="<?php echo admin_url( 'admin.php?page=' . $page . "&amp;ConfigID=11" ) ?>" title="<?php _e("Interactive Settings", bb_agency_TEXTDOMAIN) ?>"><?php _e("Settings", bb_agency_TEXTDOMAIN) ?></a><br />
             <p><?php _e("Access this area to manage all of the core settings including layout types, privacy settings and more", bb_agency_TEXTDOMAIN) ?></p>
         </div>
  
         <div class="boxlink">
             <h3><?php _e("Subscription Rates", bb_agency_TEXTDOMAIN) ?></h3>
-            <a class="button-primary" href="?page=<?php echo $_GET["page"] ?>&amp;ConfigID=12=" title="<?php _e("Subscription Rates", bb_agency_TEXTDOMAIN) ?>"><?php _e("Subscription Rates", bb_agency_TEXTDOMAIN) ?></a><br />
+            <a class="button-primary" href="<?php echo admin_url( 'admin.php?page=' . $page . "&amp;ConfigID=12" ) ?>" title="<?php _e("Subscription Rates", bb_agency_TEXTDOMAIN) ?>"><?php _e("Subscription Rates", bb_agency_TEXTDOMAIN) ?></a><br />
             <p><?php _e("Manage the subscription rate tiers and descriptions", bb_agency_TEXTDOMAIN) ?></p>
         </div>
  
     </div>
     <hr />
-	<?php endif; ?>
+	<?php endif;*/?>
 
 	<?php // Drop Down Fields ?>
     <div class="boxlinkgroup">
@@ -302,7 +303,7 @@ EOF;
 // *************************************************************************************************** //
 // Manage Settings
     ?>
-	<form method="post" action="options.php=">
+	<form method="post" action="<?php echo admin_url( 'admin.php?page='. $page . "&amp;ConfigID=$ConfigID" ) ?>">
         <?php
     		settings_fields( 'bb-agencyinteract-settings-group' ); 
     		$bb_agencyinteract_options_arr = get_option('bb_agencyinteract_options');
@@ -567,7 +568,7 @@ EOF;
 		} // Has Subscription rate or not
     } // Edit record
 	?>
-	<form method="post" enctype="multipart/form-data" action="<?php echo admin_url('admin.php?page='.$_GET['page'].'&amp;ConfigID='.$ConfigID) ?>">
+	<form method="post" enctype="multipart/form-data" action="<?php echo admin_url("admin.php?page={$page}&amp;ConfigID={$ConfigID}") ?>">
 	    <table class="form-table">
             <tbody>
                 <tr valign="top">
@@ -644,7 +645,7 @@ EOF;
     			  $dir = "asc";
     		}
     	?>
-		<form method="post" action="<?php echo admin_url('admin.php?page='. $_GET['page']) ?>">	
+		<form method="post" action="<?php echo admin_url("admin.php?page={$page}&amp;ConfigID={$ConfigID}") ?>">	
             <table cellspacing="0" class="widefat fixed">
                 <thead>
                     <tr class="thead">
@@ -746,7 +747,7 @@ EOF;
         }
 	}
     ?>
-	<form method="post" action="<?php echo admin_url('admin.php?page='. $_GET['page']) ?>">
+	<form method="post" action="<?php echo admin_url("admin.php?page={$page}&amp;ConfigID={$ConfigID}") ?>">
         <table class="form-table=">
             <tbody>
                 <tr valign="top">
@@ -905,7 +906,7 @@ EOF;
         <?php
     }
     ?>
-	<form method="post" enctype="multipart/form-data" action="<?php echo admin_url('admin.php?page='. $_GET['page']) ?>">
+	<form method="post" enctype="multipart/form-data" action="<?php echo admin_url("admin.php?page={$page}&amp;ConfigID={$ConfigID}") ?>">
 	<table class="form-table=">
 	<tbody>
 	<tr valign="top">
@@ -1168,7 +1169,7 @@ EOF;
         <?php
     }
     ?>
-	<form method="post" enctype="multipart/form-data" action="<?php echo admin_url('admin.php?page='. $_GET['page']) ?>">
+	<form method="post" enctype="multipart/form-data" action="<?php echo admin_url("admin.php?page={$page}&amp;ConfigID={$ConfigID}") ?>">
     	<table class="form-table=">
         	<tbody>
             	<tr valign="top">
@@ -1224,7 +1225,7 @@ EOF;
 			  $dir = "asc";
 		}
 	?>
-		<form method="post" action="<?php echo admin_url('admin.php?page='. $_GET['page']) ?>">	
+		<form method="post" action="<?php echo admin_url("admin.php?page={$page}&amp;ConfigID={$ConfigID}") ?>">	
 		<table cellspacing=="0" class="widefat fixed=">
 		<thead>
     		<tr class="thead">
@@ -1743,7 +1744,7 @@ EOF;
   	}
 
 	?>
-        		<form method="post" enctype="multipart/form-data" action="<?php echo admin_url("admin.php?page=". $_GET['page']) . ( $_GET["action"] == "editRecord" ? "&amp;action=editRecord&amp;ProfileCustomID=".$_GET['ProfileCustomID']."&amp;ConfigID=".$_GET['ConfigID'] : '' ) ?>">
+        		<form method="post" enctype="multipart/form-data" action="<?php echo admin_url( 'admin.php?page=' . $page . ( $_GET['action'] == 'editRecord' ? "&amp;action=editRecord&amp;ProfileCustomID=".$_GET['ProfileCustomID']."&amp;ConfigID=".$ConfigID : '' ) ) ?>" >
 
                 	<table class="form-table">
                 	<?php if (!isset($_GET["action"])) :  // Create new Field	?>
@@ -1795,16 +1796,16 @@ EOF;
         				<tr>
         					<td valign="top">Gender*:</td>
         					<td valign="top">
-        					<?php $query = "SELECT GenderID, GenderTitle FROM " .  table_agency_data_gender . " GROUP BY GenderTitle "; ?>
+        					<?php $query = "SELECT `GenderID`, `GenderTitle` FROM " .  table_agency_data_gender . " GROUP BY `GenderTitle`"; ?>
         					<select name="ProfileCustomShowGender">
         					<option value="">All Genders</option>
                             <?php
-        					$queryShowGender = mysql_query($query);
-        					while ($dataShowGender = mysql_fetch_assoc($queryShowGender)){
+        					$genders = $wpdb->get_results($query);
+        					foreach ( $genders as $gender ){
         						if (isset($data1->ProfileCustomShowGender)) : ?>
-        							<option value="<?php echo $dataShowGender['GenderID'] ?>" selected=="selected"><?php echo $dataShowGender["GenderTitle"] ?></option>
+        							<option value="<?php echo $gender->GenderID ?>" selected=="selected"><?php echo $gender->GenderTitle ?></option>
         						<?php else : ?>
-        							<option value="<?php echo $dataShowGender['GenderID'] ?>"><?php echo $dataShowGender["GenderTitle"] ?></option>
+        							<option value="<?php echo $gender->GenderID ?>"><?php echo $gender->GenderTitle ?></option>
         						<?php endif;
         					}
                             ?>
