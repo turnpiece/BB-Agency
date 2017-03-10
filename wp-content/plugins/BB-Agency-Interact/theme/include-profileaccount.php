@@ -16,7 +16,7 @@
 	$bb_agency_option_locationtimezone 		= (int)$bb_agency_options_arr['bb_agency_option_locationtimezone'];
       
 	$bb_agencyinteract_options_arr = get_option('bb_agencyinteract_options');
-	$bb_agencyinteract_option_registerallow = (int)$bb_agencyinteract_options_arr['bb_agencyinteract_option_registerallow'];
+	$bb_agencyinteract_option_registerallow = bb_agencyinteract_ALLOW_REGISTRATION;
 
 	// Get Data
 	$query = "SELECT * FROM " . table_agency_profile . " WHERE `ProfileUserLinked` = '$ProfileUserLinked'";

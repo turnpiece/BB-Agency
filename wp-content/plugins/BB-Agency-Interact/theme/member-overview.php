@@ -18,7 +18,7 @@ get_currentuserinfo();
 $bb_agency_options_arr 							= get_option('bb_agency_options');
 $bb_agency_option_profilenaming 				= (int)$bb_agency_options_arr['bb_agency_option_profilenaming'];
 $bb_agencyinteract_options_arr 					= get_option('bb_agencyinteract_options');
-$bb_agencyinteract_option_registerallow 		= (int)$bb_agencyinteract_options_arr['bb_agencyinteract_option_registerallow'];
+$bb_agencyinteract_option_registerallow 		= bb_agencyinteract_ALLOW_REGISTRATION;
 $bb_agencyinteract_option_overviewpagedetails 	= (int)$bb_agencyinteract_options_arr['bb_agencyinteract_option_overviewpagedetails'];
 
 // Check Sidebar

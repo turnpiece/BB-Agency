@@ -38,7 +38,7 @@
     }
 
 	/* Check if users can register. */
-	$registration = get_option( 'users_can_register' );	
+	$registration = bb_agencyinteract_ALLOW_REGISTRATION && get_option( 'users_can_register' );	
 	
 	define('FACEBOOK_APP_ID', $bb_agencyinteract_option_fb_app_id);
 	define('FACEBOOK_SECRET', $bb_agencyinteract_option_fb_app_secret);
@@ -240,73 +240,84 @@
 			}	
 
 			// Self Registration
-			if ( $registration || current_user_can("create_users") ) {
+			if ( $registration || current_user_can("create_users") ) { ?>
 
-	echo "    <form method=\"post\" id=\"adduser\" class=\"user-forms\" action=\"". $bb_agencyinteract_WPURL ."/profile-register/\">\n";
-      echo "<h1 class=\"entry-title\">JOIN OUR TEAM</h1>";
-	echo "<p class=\"form-title\">To Join Our Team please complete the application below.</p>";		
-	//echo "    <h1>Register</h1>\n";
+			<form method="post" enctype="multipart/form-data" id="adduser" class="user-forms" action="<?php echo $bb_agencyinteract_WPURL ?>/profile-register/">
+    			<h1 class="entry-title"><?php _e('Register', bb_agencyinteract_TEXTDOMAIN) ?></h1>
+				<p class="form-title"><?php _e('Please complete the application below.', bb_agencyinteract_TEXTDOMAIN) ?></p>		
 				
-	echo "       <p class=\"form-username\">\n";
-	echo "       	<label for=\"profile_user_name\">". __("Username (required)", bb_agencyinteract_TEXTDOMAIN) ."</label>\n";
-	echo "       	<input class=\"text-input\" name=\"profile_user_name\" type=\"text\" id=\"profile_user_name\" value=\""; if ( $error ) echo wp_specialchars( $_POST['profile_user_name'], 1 ); echo "\" />\n";
-	echo "       </p><!-- .form-username -->\n";
+	       		<p class="form-username">
+	       			<label for="profile_user_name"><?php _e("Username (required)", bb_agencyinteract_TEXTDOMAIN) ?></label>
+	       			<input class="text-input" name="profile_user_name" type="text" id="profile_user_name" value="<?php if ( $error ) echo wp_specialchars( $_POST['profile_user_name'], 1 ); ?>" />
+	       		</p><!-- .form-username -->
 			
-	if ($bb_agencyinteract_option_registerconfirm == 1) {
-	echo "       <p class=\"form-password\">\n";
-	echo "       	<label for=\"profile_password\">". __("Password (required)", bb_agencyinteract_TEXTDOMAIN) ."</label>\n";
-	echo "       	<input class=\"text-input\" name=\"profile_password\" type=\"password\" id=\"profile_password\" value=\""; if ( $error ) echo wp_specialchars( $_POST['profile_password'], 1 ); echo "\" />\n";
-	echo "       </p><!-- .form-username -->\n";
-	}
+			<?php if ($bb_agencyinteract_option_registerconfirm == 1) : ?>
+	       		<p class="form-password">
+	       			<label for="profile_password"><?php _e("Password (required)", bb_agencyinteract_TEXTDOMAIN) ?></label>
+	       			<input class="text-input" name="profile_password" type="password" id="profile_password" value="<?php if ( $error ) echo wp_specialchars( $_POST['profile_password'], 1 ); ?>" />
+	       		</p><!-- .form-username -->
+			<?php endif; ?>
 				
-	echo "       <p class=\"profile_first_name\">\n";
-	echo "       	<label for=\"profile_first_name\">". __("First Name", bb_agencyinteract_TEXTDOMAIN) ."</label>\n";
-	echo "       	<input class=\"text-input\" name=\"profile_first_name\" type=\"text\" id=\"profile_first_name\" value=\""; if ( $error ) echo wp_specialchars( $_POST['profile_first_name'], 1 ); echo "\" />\n";
-	echo "       </p><!-- .profile_first_name -->\n";
+	       		<p class="profile_first_name">
+	       			<label for="profile_first_name"><?php _e("First Name", bb_agencyinteract_TEXTDOMAIN) ?></label>
+	       			<input class="text-input" name="profile_first_name" type="text" id="profile_first_name" value="<?php if ( $error ) echo wp_specialchars( $_POST['profile_first_name'], 1 ); ?>" />
+	       		</p><!-- .profile_first_name -->
 				
-	echo "       <p class=\"profile_last_name\">\n";
-	echo "       	<label for=\"profile_last_name\">". __("Last Name", bb_agencyinteract_TEXTDOMAIN) ."</label>\n";
-	echo "       	<input class=\"text-input\" name=\"profile_last_name\" type=\"text\" id=\"profile_last_name\" value=\""; if ( $error ) echo wp_specialchars( $_POST['profile_last_name'], 1 ); echo "\" />\n";
-	echo "       </p><!-- .profile_last_name -->\n";
+	       		<p class="profile_last_name">
+	       			<label for="profile_last_name"><?php _e("Last Name", bb_agencyinteract_TEXTDOMAIN) ?></label>
+	       			<input class="text-input" name="profile_last_name" type="text" id="profile_last_name" value="<?php if ( $error ) echo wp_specialchars( $_POST['profile_last_name'], 1 ); ?>" />
+	       		</p><!-- .profile_last_name -->
 				
-	echo "       <p class=\"form-email\">\n";
-	echo "       	<label for=\"email\">". __("E-mail (required)", bb_agencyinteract_TEXTDOMAIN) ."</label>\n";
-	echo "       	<input class=\"text-input\" name=\"profile_email\" type=\"text\" id=\"profile_email\" value=\""; if ( $error ) echo wp_specialchars( $_POST['profile_email'], 1 ); echo "\" />\n";
-	echo "       </p><!-- .form-email -->\n";
+	       		<p class="form-email">
+	       			<label for="email"><?php _e("E-mail (required)", bb_agencyinteract_TEXTDOMAIN) ?></label>
+	       			<input class="text-input" name="profile_email" type="text" id="profile_email" value="<?php if ( $error ) echo wp_specialchars( $_POST['profile_email'], 1 ); ?>" />
+	       		</p><!-- .form-email -->
 
-    echo "     <p class=\"form-profile_gender\">\n";
- 	echo "		<label for=\"profile_gender\">". __("Gender", bb_agencyinteract_TEXTDOMAIN) ."</label>\n";
-	$query= "SELECT GenderID, GenderTitle FROM " .  table_agency_data_gender . " GROUP BY GenderTitle ";
-	echo "<select id='ProfileGender' name=\"ProfileGender\">";
-	$queryShowGender = $wpdb->get_results($query);
-	echo "<option value=''>--Please Select--</option>";
-	foreach ($queryShowGender as $dataShowGender){
-		echo "<option value=\"".$dataShowGender->GenderID."\" ". selected($ProfileGender, $dataShowGender->GenderID, false).">".$dataShowGender->GenderTitle."</option>";
-	}
-	echo "</select>";
-	echo "	  </p>";
-	echo "       <p class=\"form-profile_type\" >\n";
-	echo "       	<label for=\"profile_type\">". __("Type of Profile", bb_agencyinteract_TEXTDOMAIN) ."</label>\n";
-	echo "<table><tr>";
-	$ProfileTypeArray = array();
-    $query3 = "SELECT * FROM " . table_agency_data_type . " ORDER BY `DataTypeTitle`";
-    $results3 = $wpdb->get_results($query3);
-    $count3 = count($results3);
-    
-    foreach ($results3 as $data3) {
-    	echo "<td><input type=\"checkbox\" name=\"ProfileType[]\" value=\"" . $data3->DataTypeID . "\" id=\"ProfileType[]\" /> " . $data3->DataTypeTitle . "</td>";
-    }
-	echo "</tr></table>";
-	echo "       </p><!-- .form-profile_type -->\n";
+	       		<?php 
+	       			$query = "SELECT GenderID, GenderTitle FROM " .  table_agency_data_gender . " GROUP BY GenderTitle "; 
+	       			$queryShowGender = $wpdb->get_results($query);
+	       			if (!empty($queryShowGender)) :
+	       		?>
+         		<p class="form-profile_gender">
+ 					<label for="ProfileGender"><?php _e("Gender", bb_agencyinteract_TEXTDOMAIN) ?></label>
+					<select id='ProfileGender' name="ProfileGender">
+						<option value=''>--Please Select--</option>
+					<?php foreach ($queryShowGender as $dataShowGender) : ?>
+						<option value="<?php echo $dataShowGender->GenderID ?>" <?php echo selected($ProfileGender, $dataShowGender->GenderID, false) ?>><?php echo $dataShowGender->GenderTitle ?></option>
+					<?php endforeach; ?>
+					</select>
+		  		</p>
+		  		<?php endif; ?>
+
+		  		<?php if (bb_agencyinteract_ALLOW_UPLOADS) : ?>
+         		<p class="form-profile_image">
+ 					<label for="ProfileImage"><?php _e("Image", bb_agencyinteract_TEXTDOMAIN) ?></label>
+					<input type="file" id="ProfileImage" name="ProfileImage" />
+		  		</p>
+		  		<?php endif; ?>
+	       		
+	       		<p class="form-profile_type">
+	       			<label for="profile_type"><?php _e("Type of Profile", bb_agencyinteract_TEXTDOMAIN) ?></label>
+					<ul><?php
+						$ProfileTypeArray = array();
+					    $query3 = "SELECT * FROM " . table_agency_data_type . " ORDER BY `DataTypeTitle`";
+					    $results3 = $wpdb->get_results($query3);
+					    $count3 = count($results3);
+					    
+					    foreach ($results3 as $data3) : ?>
+					    	<li><input type="checkbox" name="ProfileType[]" value="<?php echo $data3->DataTypeID ?>" id="ProfileType[]" /> &nbsp; <?php echo $data3->DataTypeTitle ?></li>
+					    <?php endforeach; ?>
+					</ul>
+				</p><!-- .form-profile_type -->
   	
-	echo "       <p class=\"form-profile_agree\">\n";
-					$profile_agree = get_the_author_meta("profile_agree", $current_user->ID );
-	echo "       		<input type=\"checkbox\" name=\"profile_agree\" value=\"yes\" /> ". sprintf(__("I agree to the %s terms of service", bb_agencyinteract_TEXTDOMAIN), "<a href=\"/terms-of-use/\" target=\"_blank\">") ."</a>\n";
-	echo "       </p><!-- .form-profile_agree -->\n";
+	       		<p class="form-profile_agree"><?php
+					$profile_agree = get_the_author_meta("profile_agree", $current_user->ID ); ?>
+	       			<input type="checkbox" name="profile_agree" value="yes" /><?php printf(__("I agree to the %s terms of service", bb_agencyinteract_TEXTDOMAIN), '<a href="/terms-of-use/" target="_blank">') ?></a>
+	       		</p><!-- .form-profile_agree -->
  
-	echo "       <p class=\"form-submit\">\n";
-	echo "       	<input name=\"adduser\" type=\"submit\" id=\"addusersub\" class=\"submit button\" value='Register'/>";
-
+	       		<p class="form-submit">
+	       			<input name="adduser" type="submit" id="addusersub" class="submit button" value='Register'/>
+<?php
 	// if ( current_user_can("create_users") ) {  _e("Add User", bb_agencyinteract_TEXTDOMAIN); } else {  _e("Register", bb_agencyinteract_TEXTDOMAIN); } echo "\" />\n";
 	
 	wp_nonce_field("add-user");
