@@ -131,7 +131,7 @@
 		}
 	
 		// Bug Free!
-		if($have_error == false){
+		if ($have_error == false){
 			$new_user = wp_insert_user( $userdata );
 			$new_user_type = array();
 			$new_user_type =implode(",", $_POST['ProfileType']);
@@ -158,7 +158,7 @@
 				}
 			}
 			
-			add_user_meta($new_user, 'bb_agency_new_registeredUser',$arr);			
+			add_user_meta($new_user, 'bb_agency_new_registeredUser', $arr);			
 			
 			// Log them in if no confirmation required.			
 			if ($bb_agencyinteract_option_registerconfirm == 1) {
@@ -176,6 +176,46 @@
 			$message = admin_url( '?page=bb_agency_profiles&action=editRecord&ProfileID='.$ProfileID );
 			wp_mail( get_bloginfo('admin_email'), $subject, $message );
 			*/
+
+			// create gallery directory
+			$gallery = bb_agency_createdir( 
+				bb_agency_safenames( $first_name . " " . substr($last_name, 0, 1) )
+			);  // Check Directory - create directory if does not exist
+
+			// get profile image
+			if (bb_agencyinteract_ALLOW_UPLOADS && !empty($_FILES['ProfileImage'])) {
+
+				$bb_agency_options_arr = get_option('bb_agency_options');
+				$bb_agency_option_agencyimagemaxheight 	= $bb_agency_options_arr['bb_agency_option_agencyimagemaxheight'];
+				if (empty($bb_agency_option_agencyimagemaxheight) || $bb_agency_option_agencyimagemaxheight < 500) { 
+					$bb_agency_option_agencyimagemaxheight = 800; 
+				}
+
+				if ($_FILES['ProfileImage']['type'] == "image/pjpeg" || 
+					$_FILES['ProfileImage']['type'] == "image/jpeg" || 
+					$_FILES['ProfileImage']['type'] == "image/gif" || 
+					$_FILES['ProfileImage']['type'] == "image/png") {
+
+					// Upload if it doesnt exist already
+					$path_parts = pathinfo($_FILES['ProfileImage']['name']);
+					$safeProfileMediaFilename =  bb_agency_safenames($path_parts['filename'].".".$path_parts['extension']);
+
+					$image = new bb_agency_image();
+					$image->load($_FILES['ProfileImage']['tmp_name']);
+
+					if ($image->getHeight() > $bb_agency_option_agencyimagemaxheight) {
+						$image->resizeToHeight($bb_agency_option_agencyimagemaxheight);
+					}
+					$image->save(bb_agency_UPLOADPATH . $gallery ."/". $safeProfileMediaFilename);
+
+					// Add to database
+					$results = $wpdb->query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL) VALUES ('$new_user','Image','$safeProfileMediaFilename','$safeProfileMediaFilename')");
+
+				} else {
+					$error .= __("Please upload an image for your profile.<br />", bb_agencyinteract_TEXTDOMAIN);
+					$have_error = true;
+				}
+			}
 			
 		}
 		
