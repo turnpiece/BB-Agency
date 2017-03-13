@@ -89,7 +89,7 @@ if (isset($_POST['action'])) {
 		// Delete bulk
 		case 'deleteRecord':
 			foreach($_POST as $CastingID) {
-				mysql_query("DELETE FROM " . table_agency_casting . " WHERE CastingID=$CastingID");
+				$wpdb->delete( table_agency_casting, array( 'CastingID' => $CastingID ) );
 			}
 			echo ('<div id="message" class="updated"><p>Casting deleted successfully!</p></div>');
 			bb_display_list();
@@ -101,16 +101,9 @@ if (isset($_POST['action'])) {
 
 	$CastingID = $_GET['CastingID'];
 
-	// Verify Record
-	$queryDelete = "SELECT * FROM ". table_agency_casting ." WHERE CastingID =  \"". $CastingID ."\"";
-	$resultsDelete = mysql_query($queryDelete);
-	while ($dataDelete = mysql_fetch_array($resultsDelete)) {
-
-		// Remove Casting
-		$delete = "DELETE FROM " . table_agency_casting . " WHERE CastingID = \"". $CastingID ."\"";
-		$results = $wpdb->query($delete);
-		echo ('<div id="message" class="updated"><p>Casting deleted successfully!</p></div>');			
-	}
+	// Remove Casting
+	$wpdb->delete( table_agency_casting, array( 'CastingID' => $CastingID ) );
+	echo ('<div id="message" class="updated"><p>Casting deleted successfully!</p></div>');			
 			
 	bb_display_list();
 
@@ -124,24 +117,24 @@ if (isset($_POST['action'])) {
 
 		$xCastingID = $_GET['xCastingID'];
 		$query = "SELECT * FROM " . table_agency_casting . " WHERE CastingID='$xCastingID'";
-		$results = mysql_query($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ));
-		$count = mysql_num_rows($results);
-		while ($data = mysql_fetch_array($results)) {
+		$results = $wpdb->get_results($query);
+		$count = count($results);
+		foreach ($results as $data) {
 			$CastingID				=$data['CastingID'];
-			$CastingContactNameFirst	=stripslashes($data['CastingContactNameFirst']);
-			$CastingContactNameLast	=stripslashes($data['CastingContactNameLast']);
-			$CastingContactEmail		=stripslashes($data['CastingContactEmail']);
-			$CastingContactWebsite	=stripslashes($data['CastingContactWebsite']);
-			$CastingContactPhoneHome	=stripslashes($data['CastingContactPhoneHome']);
-			$CastingContactPhoneCell	=stripslashes($data['CastingContactPhoneCell']);
-			$CastingContactPhoneWork	=stripslashes($data['CastingContactPhoneWork']);
-			$CastingLocationCity		=stripslashes($data['CastingLocationCity']);
-			$CastingLocationState	=stripslashes($data['CastingLocationState']);
-			$CastingLocationZip		=stripslashes($data['CastingLocationZip']);
-			$CastingLocationCountry	=stripslashes($data['CastingLocationCountry']);
-			$CastingDateUpdated		=stripslashes($data['CastingDateUpdated']);
-			$CastingIsActive			=stripslashes($data['CastingIsActive']);
-			$CastingCompany		=stripslashes($data['CastingCompany']);
+			$CastingContactNameFirst	=stripslashes($data->CastingContactNameFirst);
+			$CastingContactNameLast	=stripslashes($data->CastingContactNameLast);
+			$CastingContactEmail		=stripslashes($data->CastingContactEmail);
+			$CastingContactWebsite	=stripslashes($data->CastingContactWebsite);
+			$CastingContactPhoneHome	=stripslashes($data->CastingContactPhoneHome);
+			$CastingContactPhoneCell	=stripslashes($data->CastingContactPhoneCell);
+			$CastingContactPhoneWork	=stripslashes($data->CastingContactPhoneWork);
+			$CastingLocationCity		=stripslashes($data->CastingLocationCity);
+			$CastingLocationState	=stripslashes($data->CastingLocationState);
+			$CastingLocationZip		=stripslashes($data->CastingLocationZip);
+			$CastingLocationCountry	=stripslashes($data->CastingLocationCountry);
+			$CastingDateUpdated		=stripslashes($data->CastingDateUpdated);
+			$CastingIsActive			=stripslashes($data->CastingIsActive);
+			$CastingCompany		=stripslashes($data->CastingCompany);
 		?>
 		<h3 class="title">Edit Casting</h3>
 		<p>Make changes in the form below to edit a Casting. <strong>Required fields are marked *</strong></p>
@@ -344,13 +337,13 @@ function bb_display_list() { ?>
 								global $wpdb;
 								table_agency_casting = $wpdb->prefix . "modelagency_casting";
 
-								$CastingLocations = mysql_query("SELECT DISTINCT CastingLocationCity, CastingLocationState FROM ". table_agency_casting ."");
+								$CastingLocations = $wpdb->get_results("SELECT DISTINCT CastingLocationCity, CastingLocationState FROM ". table_agency_casting ."");
 									echo "<option value=\"\">Any Location</option>";
-								while ($dataLocation = mysql_fetch_array($CastingLocations)) {
-								  	if (isset($_GET['CastingLocationCity']) && !empty($_GET['CastingLocationCity']) && $selectedCity == $dataLocation["CastingLocationCity"]) {
-										echo "<option value=\"". $dataLocation["CastingLocationCity"] ."\" selected>". bb_agency_strtoproper($dataLocation["CastingLocationCity"]) .", ". strtoupper($dataLocation["CastingLocationState"]) ."</option>";
+								foreach ($CastingLocations as $dataLocation) {
+								  	if (isset($_GET['CastingLocationCity']) && !empty($_GET['CastingLocationCity']) && $selectedCity == $dataLocation->CastingLocationCity) {
+										echo "<option value=\"". $dataLocation->CastingLocationCity ."\" selected>". bb_agency_strtoproper($dataLocation->CastingLocationCity) .", ". strtoupper($dataLocation->CastingLocationState) ."</option>";
 								  	} else {
-										echo "<option value=\"". $dataLocation["CastingLocationCity"] ."\">". bb_agency_strtoproper($dataLocation["CastingLocationCity"]) .", ". strtoupper($dataLocation["CastingLocationState"]) ."</option>";
+										echo "<option value=\"". $dataLocation->CastingLocationCity ."\">". bb_agency_strtoproper($dataLocation->CastingLocationCity) .", ". strtoupper($dataLocation->CastingLocationState) ."</option>";
 								  	}
 								}
 							?>
@@ -386,17 +379,17 @@ function bb_display_list() { ?>
 	       	<tbody>
 		       	<?php
 		       	$query = "SELECT * FROM ". table_agency_casting . $filter ." ORDER BY $sort $dir";
-		       	$results2 = mysql_query($query);
-		       	$count = mysql_num_rows($results2);
-		       	while ($data = mysql_fetch_array($results2)) {
+		       	$results2 = $wpdb->get_results($query);
+		       	$count = count($results2);
+		       	foreach ($results2 as $data) {
 		           
-		           	$CastingID = $data['CastingID'];
-		           	$CastingCompany = stripslashes($data['CastingCompany']);
-		           	$CastingContactNameFirst = stripslashes($data['CastingContactNameFirst']);
-		           	$CastingContactNameLast = stripslashes($data['CastingContactNameLast']);
-		           	$CastingLocationCity = bb_agency_strtoproper(stripslashes($data['CastingLocationCity']));
-		           	$CastingLocationState = stripslashes($data['CastingLocationState']);
-					if ($data['CastingIsActive']) { $rowColor = ""; } else { $rowColor = " style=\"background: #FFEBE8\""; } ?>
+		           	$CastingID = $data->CastingID;
+		           	$CastingCompany = stripslashes($data->CastingCompany);
+		           	$CastingContactNameFirst = stripslashes($data->CastingContactNameFirst);
+		           	$CastingContactNameLast = stripslashes($data->CastingContactNameLast);
+		           	$CastingLocationCity = bb_agency_strtoproper(stripslashes($data->CastingLocationCity));
+		           	$CastingLocationState = stripslashes($data->CastingLocationState);
+					if ($data->CastingIsActive) { $rowColor = ""; } else { $rowColor = " style=\"background: #FFEBE8\""; } ?>
 			       	<tr<?php echo $rowColor; ?>>
 			           	<th class="check-column" scope="row">
 			               	<input type="checkbox" value="<?php echo $CastingID; ?>" class="administrator" id="<?php echo $CastingID; ?>" name="<?php echo $CastingID; ?>"/>
