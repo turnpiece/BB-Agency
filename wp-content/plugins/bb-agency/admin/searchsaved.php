@@ -54,7 +54,7 @@ if (isset($_POST['action'])) {
     	case 'deleteRecord':
 
     		foreach ($_POST as $SearchID) {
-    			mysql_query("DELETE FROM " . table_agency_searchsaved . " WHERE SearchID= $SearchID");
+    			$wpdb->delete(table_agency_searchsaved, array( 'SearchID' => $SearchID ) );
     		}
 
     		echo ('<div id="message" class="updated"><p>Profile deleted successfully!</p></div>');
@@ -165,26 +165,13 @@ if (isset($_POST['action'])) {
 	$SearchID = $_GET['SearchID'];
 
 	// Verify Record
-
-	$queryDelete = "SELECT * FROM ". table_agency_searchsaved ." WHERE SearchID =  \"". $SearchID ."\"";
-
-	$resultsDelete = mysql_query($queryDelete);
-
-	while ($dataDelete = mysql_fetch_array($resultsDelete)) {
-		// Remove Casting
-
-		$delete = "DELETE FROM " . table_agency_searchsaved . " WHERE SearchID = \"". $SearchID ."\"";
-
-		$results = $wpdb->query($delete);
-
-		echo ('<div id="message" class="updated"><p>Record deleted successfully!</p></div>');
-	}
+	if ( $wpdb->delete( table_agency_searchsaved, array( 'SearchID' => $SearchID ) ) )
+        echo ('<div id="message" class="updated"><p>Record deleted successfully!</p></div>');
+	
 } elseif (($_GET['action'] == "emailCompose") && isset($_GET['SearchID'])) {
 
 	$SearchID = $_GET['SearchID'];
-      $querySearch = mysql_query("SELECT * FROM " . table_agency_searchsaved_mux ." WHERE SearchID=".$SearchID." ");
-
-	 $dataSearchSavedMux = mysql_fetch_assoc($querySearch);
+    $dataSearchSavedMux = $wpdb->get_row("SELECT * FROM " . table_agency_searchsaved_mux ." WHERE SearchID=".$SearchID." ");
 
 	?>
     <div class="create-email">
@@ -199,10 +186,10 @@ if (isset($_POST['action'])) {
                 <input type="text" id="FromEmail" name="FromEmail" value="<?php echo $bb_agency_option_agencyemail ?>" />
             </p>
             <p class="form-input">
-                <label for="SearchMuxToName"><strong>Send to name:</strong></label><br/><input style="width:300px;" type="text" id="SearchMuxToName" name="SearchMuxToName" value="<?php echo $dataSearchSavedMux["SearchMuxToName"]; ?>" />
+                <label for="SearchMuxToName"><strong>Send to name:</strong></label><br/><input style="width:300px;" type="text" id="SearchMuxToName" name="SearchMuxToName" value="<?php echo $dataSearchSavedMux->SearchMuxToName; ?>" />
             </p>
             <p class="form-input">
-                <label for="SearchMuxToEmail"><strong>Send to email:</strong></label><br/><input type="text" id="SearchMuxToEmail" name="SearchMuxToEmail" value="<?php echo $dataSearchSavedMux["SearchMuxToEmail"]; ?>" />
+                <label for="SearchMuxToEmail"><strong>Send to email:</strong></label><br/><input type="text" id="SearchMuxToEmail" name="SearchMuxToEmail" value="<?php echo $dataSearchSavedMux->SearchMuxToEmail; ?>" />
             </p>
             <p class="form-input">
                 <label for="SearchMuxSubject"><strong>Subject:</strong></label><br/>
@@ -210,7 +197,7 @@ if (isset($_POST['action'])) {
             </p>
             <p class="form-input">
                 <label for="SearchMuxMessage"><strong>Message:</strong></label><br/>
-		        <textarea id="SearchMuxMessage" name="SearchMuxMessage" style="width: 500px; height: 300px; "><?php if (!isset($_GET["SearchMuxHash"]) && isset($dataSearchSavedMux["SearchMuxMessage"])) echo $dataSearchSavedMux["SearchMuxMessage"]; ?></textarea>
+		        <textarea id="SearchMuxMessage" name="SearchMuxMessage" style="width: 500px; height: 300px; "><?php if (!isset($_GET["SearchMuxHash"]) && isset($dataSearchSavedMux->SearchMuxMessage)) echo $dataSearchSavedMux->SearchMuxMessage; ?></textarea>
             </p>
             <p class="submit">
                 <input type="hidden" name="SearchID" value="<?php echo $SearchID; ?>" />
@@ -223,25 +210,23 @@ if (isset($_POST['action'])) {
 	 
         $query = "SELECT search.`SearchTitle`, search.`SearchProfileID`, search.`SearchOptions`, searchsent.`SearchMuxHash` FROM ". table_agency_searchsaved ." search LEFT JOIN ". table_agency_searchsaved_mux ." searchsent ON search.`SearchID` = searchsent.`SearchID` WHERE search.`SearchID` = \"". $_GET["SearchID"]."\"";
 
-        $qProfiles =  mysql_query($query);
+        $data = $wpdb->get_row($query);
 
-        $data = mysql_fetch_array($qProfiles);
-
-        if (empty($data) || !$data['SearchProfileID'])
+        if (empty($data) || !$data->SearchProfileID)
             wp_die('Failed to find that saved search.');
             
-        $query = "SELECT * FROM ". table_agency_profile ." profile, ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1 AND profile.ProfileID IN (".$data['SearchProfileID'].") ORDER BY ProfileContactNameFirst ASC";
+        $query = "SELECT * FROM ". table_agency_profile ." profile, ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1 AND profile.ProfileID IN ({$data->SearchProfileID}) ORDER BY ProfileContactNameFirst ASC";
 
-        $results = mysql_query($query);
+        $results = $wpdb->get_results($query);
 
-        $count = mysql_num_rows($results);
+        $count = count($results);
                               
 	?>
     <div style="padding:10px;max-width:580px;float:left;">
         <b>Preview: <?php echo  $count." Profile(s)"; ?></b>
         <div style="height:550px; width:580px; overflow-y:scroll;">
             <?php
-            while ($data2 = mysql_fetch_array($results)) : ?>
+            foreach ($results as $data2) : ?>
                 <div style="background:black; color:white;float: left; max-width: 100px; height: 180px; margin: 2px; overflow:hidden;">
 				    <div style="margin:3px; max-width:250px; max-height:300px; overflow:hidden;">
 				        <?php echo stripslashes($data2->ProfileContactNameFirst) ." ". stripslashes($data2->ProfileContactNameLast); ?>
@@ -255,7 +240,7 @@ if (isset($_POST['action'])) {
                         </a>
 				    </div>
 				</div>
-            <?php endwhile;
+            <?php endforeach;
         ?>
         </div>
     </div>
@@ -264,9 +249,8 @@ if (isset($_POST['action'])) {
 } elseif (($_GET['action'] == "LBDAemailCompose") && isset($_GET['SearchID'])) {
 
     $SearchID = $_GET['SearchID'];
-    $querySearch = mysql_query("SELECT * FROM " . table_agency_searchsaved_mux ." WHERE SearchID=".$SearchID." ");
 
-    $dataSearchSavedMux = mysql_fetch_assoc($querySearch);
+    $dataSearchSavedMux = $wpdb->get_row("SELECT * FROM " . table_agency_searchsaved_mux ." WHERE SearchID=".$SearchID." ");
 
     ?>
     <div class="create-email create-lbda-email">
@@ -283,18 +267,18 @@ if (isset($_POST['action'])) {
             </p>
             <p class="form-input">
                 <label for="SearchMuxToName"><strong>Send to name:</strong></label><br/>
-                <input type="text" id="SearchMuxToName" name="SearchMuxToName" value="<?php echo $dataSearchSavedMux["SearchMuxToName"]; ?>" />
+                <input type="text" id="SearchMuxToName" name="SearchMuxToName" value="<?php echo $dataSearchSavedMux->SearchMuxToName; ?>" />
             </p>
             <p class="form-input">
                 <label for="SearchMuxToEmail"><strong>Send to email:</strong></label><br/>
-                <input type="text" id="SearchMuxToEmail" name="SearchMuxToEmail" value="<?php echo $dataSearchSavedMux["SearchMuxToEmail"]; ?>" />
+                <input type="text" id="SearchMuxToEmail" name="SearchMuxToEmail" value="<?php echo $dataSearchSavedMux->SearchMuxToEmail; ?>" />
             </p>
             <p class="form-input">
                 <label for="SearchMuxSubject"><strong>Subject:</strong></label><br/><input type="text" id="SearchMuxSubject" name="SearchMuxSubject" value="<?php echo $bb_agency_option_agencyname; ?> Casting Cart" />
             </p>
             <p class="form-input">
                 <label for="SearchMuxMessage"><strong>Message:</strong></label><br/>
-                <textarea id="SearchMuxMessage" name="SearchMuxMessage" style=" "><?php if (!isset($_GET["SearchMuxHash"]) && isset($dataSearchSavedMux["SearchMuxMessage"])) echo $dataSearchSavedMux["SearchMuxMessage"]; ?></textarea>
+                <textarea id="SearchMuxMessage" name="SearchMuxMessage" style=" "><?php if (!isset($_GET["SearchMuxHash"]) && isset($dataSearchSavedMux->SearchMuxMessage)) echo $dataSearchSavedMux->SearchMuxMessage; ?></textarea>
             </p>
             <p class="submit">
                 <input type="hidden" name="SearchID" value="<?php echo $SearchID; ?>" />
@@ -307,25 +291,23 @@ if (isset($_POST['action'])) {
      
         $query = "SELECT search.`SearchTitle`, search.`SearchProfileID`, search.`SearchOptions`, searchsent.`SearchMuxHash` FROM ". table_agency_searchsaved ." search LEFT JOIN ". table_agency_searchsaved_mux ." searchsent ON search.`SearchID` = searchsent.`SearchID` WHERE search.`SearchID` = \"". $_GET["SearchID"]."\"";
 
-        $qProfiles =  mysql_query($query);
+        $data = $wpdb->get_row($query);
 
-        $data = mysql_fetch_array($qProfiles);
-
-        if (empty($data) || !$data['SearchProfileID'])
+        if (empty($data) || !$data->SearchProfileID)
             wp_die('Failed to find that saved search.');
             
-        $query = "SELECT * FROM ". table_agency_profile ." profile, ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1 AND profile.ProfileID IN (".$data['SearchProfileID'].") ORDER BY ProfileContactNameFirst ASC";
+        $query = "SELECT * FROM ". table_agency_profile ." profile, ". table_agency_profile_media ." media WHERE profile.`ProfileID` = media.`ProfileID` AND media.`ProfileMediaType` = \"Image\" AND media.`ProfileMediaPrimary` = 1 AND profile.`ProfileID` IN ({$data->SearchProfileID}) ORDER BY `ProfileContactNameFirst` ASC";
 
-        $results = mysql_query($query);
+        $results = $wpdb->get_results($query);
 
-        $count = mysql_num_rows($results);
+        $count = count($results);
                               
     ?>
     <div style="padding:10px;max-width:580px;float:left;">
-        <b>Preview: <?php echo  $count." Profile(s)"; ?></b>
+        <b>Preview: <?php echo "$count profile" . ($count > 1 ? 's' : ''); ?></b>
         <div style="height:550px; width:580px; overflow-y:scroll;">
             <?php
-            while ($data2 = mysql_fetch_array($results)) : ?>
+            foreach ($results as $data2) : ?>
                 <div style="background:black; color:white;float: left; max-width: 100px; height: 180px; margin: 2px; overflow:hidden;">
                     <div style="margin:3px; max-width:250px; max-height:300px; overflow:hidden;">
                         <?php echo stripslashes($data2->ProfileContactNameFirst) ." ". stripslashes($data2->ProfileContactNameLast); ?>
@@ -339,7 +321,7 @@ if (isset($_POST['action'])) {
                         </a>
                     </div>
                 </div>
-            <?php endwhile;
+            <?php endforeach;
         ?>
         </div>
     </div>
@@ -547,7 +529,7 @@ if (isset($_POST['action'])) {
 
 		<?php
 
-		$query2 = "SELECT search.SearchID, search.SearchTitle, search.SearchProfileID, search.SearchDate FROM ". table_agency_searchsaved ." search ". $filter  ." ORDER BY $sort $dir $limit";
+		$query2 = "SELECT search.`SearchID`, search.`SearchTitle`, search.`SearchProfileID`, search.`SearchDate` FROM ". table_agency_searchsaved ." search ". $filter  ." ORDER BY $sort $dir $limit";
 
 		//$query2 = "SELECT search.SearchID, search.SearchTitle, search.SearchProfileID, search.SearchOptions, search.SearchDate FROM ". table_agency_searchsaved_mux ." searchsent LEFT JOIN ". table_agency_searchsaved ." search ON searchsent.SearchID = search.SearchID ". $filter  ." ORDER BY $sort $dir $limit";
 
@@ -563,7 +545,7 @@ if (isset($_POST['action'])) {
 			$SearchProfileID = stripslashes($data2->SearchProfileID);
 
 			$SearchDate = stripslashes($data2->SearchDate);
-			$query3 = "SELECT SearchID, SearchMuxHash, SearchMuxToName, SearchMuxToEmail, SearchMuxSent FROM ". table_agency_searchsaved_mux ." WHERE SearchID = ". $SearchID;
+			$query3 = "SELECT `SearchID`, `SearchMuxHash`, `SearchMuxToName`, `SearchMuxToEmail`, `SearchMuxSent` FROM ". table_agency_searchsaved_mux ." WHERE `SearchID` = ". $SearchID;
 
 			$results3 = $wpdb->get_results($query3);
 			$count3 = count($results3);
@@ -622,7 +604,7 @@ if (isset($_POST['action'])) {
 
 			<th class="check-column" scope="row"></th>
 			<td class="name column-name" colspan="3">
-				<p>No profiles found with this criteria.</p>
+				<p><?php _e('No profiles found with this criteria.', bb_agency_TEXTDOMAIN) ?></p>
 			</td>
 		</tr>
 		<?php

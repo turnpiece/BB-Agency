@@ -669,8 +669,8 @@ WHERE profile.ProfileID IN ($cartString)
 ORDER BY profile.ProfileContactNameFirst ASC
 EOF;
 
-            $results = mysql_query($query) or die('Get casting cart database query failed - '.mysql_error());
-            $count = mysql_num_rows($results);
+            $results = $wpdb->get_results($query);
+            $count = count($results);
         ?>
             <div class="empty-cart">
                 <a href="<?php echo admin_url('admin.php?page='. $_GET['page'] .'&action=cartEmpty') ?>" class="button-secondary empty"><?php _e('Empty Cart', bb_agency_TEXTDOMAIN) ?></a>
@@ -751,11 +751,11 @@ EOF;
         }
         // Search Results   
         $query = "SELECT profile.*  FROM ". table_agency_profile ." profile WHERE profile.ProfileID > 0 ".$cartQuery;
-        $results2 = mysql_query($query);
-        $count = mysql_num_rows($results2);
+        $results2 = $wpdb->get_results($query);
+        $count = count($results2);
         $pos = 0; 
         $recipient = "";            
-        while ($data = mysql_fetch_array($results2)) {
+        foreach ($results2 as $data) {
             $pos ++;
             $ProfileID = $data->ProfileID;
             $recipient .=$data->ProfileContactEmail;
@@ -907,10 +907,10 @@ EOF;
                                     <option value="">--</option>
                                     <?php
                                         $query2 = "SELECT GenderID, GenderTitle FROM ". table_agency_data_gender ." ORDER BY GenderID";
-                                        $results2 = mysql_query($query2);
-                                        while ($dataGender = mysql_fetch_array($results2)) : ?>
-                                    <option value="<?php echo $dataGender['GenderID'] ?>" <?php selected(isset($_SESSION['ProfileGender']) ? $_SESSION['ProfileGender'] : 0, $dataGender['GenderID']) ?>><?php echo $dataGender['GenderTitle'] ?></option>
-                                        <?php endwhile; ?>
+                                        $results2 = $wpdb->get_results($query2);
+                                        foreach ($results2 as $dataGender) : ?>
+                                    <option value="<?php echo $dataGender->GenderID ?>" <?php selected(isset($_SESSION['ProfileGender']) ? $_SESSION['ProfileGender'] : 0, $dataGender->GenderID) ?>><?php echo $dataGender->GenderTitle ?></option>
+                                        <?php endforeach; ?>
                                 </select>
                             </td>
                         </tr>
@@ -951,11 +951,11 @@ EOF;
                                 <select name="ProfileLocationCity" id="ProfileLocationCity">               
                                     <option value="">--</option>
                                     <?php  // get a list of cities 
-                                    $profilecity = mysql_query('SELECT DISTINCT `ProfileLocationCity` FROM '.table_agency_profile);
+                                    $profilecity = $wpdb->get_results('SELECT DISTINCT `ProfileLocationCity` FROM '.table_agency_profile);
                                     
-                                    while ($dataLocation = mysql_fetch_array($profilecity)) : $city = $dataLocation['ProfileLocationCity']; ?>
+                                    foreach ($profilecity as $dataLocation) : $city = $dataLocation->ProfileLocationCity; ?>
                                     <option value="<?php echo $city ?>" <?php selected(isset($_GET['ProfileLocationCity']) ? $_GET['ProfileLocationCity'] : false, $city) ?>><?php echo bb_agency_strtoproper($city) ?></option>
-                                    <?php endwhile; ?>
+                                    <?php endforeach; ?>
                                 </select>
                             </td>
                         </tr>
@@ -966,11 +966,11 @@ EOF;
                                 <select name="ProfileLocationState" id="ProfileLocationState">               
                                     <option value="">--</option>
                                     <?php  // get a list of states
-                                    $profilestate = mysql_query('SELECT DISTINCT `ProfileLocationState` FROM '.table_agency_profile);
+                                    $profilestate = $wpdb->get_results('SELECT DISTINCT `ProfileLocationState` FROM '.table_agency_profile);
                                     
-                                    while ($dataLocation = mysql_fetch_array($profilestate)) : $state = $dataLocation['ProfileLocationState']; ?>
+                                    foreach ($profilestate as $dataLocation) : $state = $dataLocation->ProfileLocationState; ?>
                                     <option value="<?php echo $state ?>" <?php selected(isset($_GET['ProfileLocationState']) ? $_GET['ProfileLocationState'] : false, $state) ?>><?php echo bb_agency_strtoproper($state) ?></option>
-                                    <?php endwhile; ?>
+                                    <?php endforeach; ?>
                                 </select>
                             </td>
                         </tr>
