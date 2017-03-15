@@ -1540,14 +1540,13 @@ function bb_display_list() {
                             <select name="ProfileLocationCity">
                                 <option value=""><?php _e("Any Location", bb_agency_TEXTDOMAIN) ?></option>
                                 <?php
-                                $query = "SELECT DISTINCT ProfileLocationCity, ProfileLocationState FROM `$t_profile` ORDER BY ProfileLocationState, ProfileLocationCity ASC";
+                                $query = "SELECT DISTINCT `ProfileLocationCity`, `ProfileLocationState` FROM `$t_profile` ORDER BY `ProfileLocationState`, `ProfileLocationCity` ASC";
                                 $results = $wpdb->get_results($query);
-                                $count = count($results);
-                                while ($data = mysql_fetch_array($results)) :
-                                    if (isset($data['ProfileLocationCity']) && !empty($data['ProfileLocationCity'])) : ?>
-                                        <option value="<?php echo $data['ProfileLocationCity'] ?>" <?php selected($selectedCity, $data["ProfileLocationCity"]) ?>><?php echo $data['ProfileLocationCity'] ?></option>
+                                if (!empty($results)) : foreach ($results as $data) :
+                                    if (!empty($data->ProfileLocationCity)) : ?>
+                                        <option value="<?php echo $data->ProfileLocationCity ?>" <?php selected($selectedCity, $data->ProfileLocationCity) ?>><?php echo $data->ProfileLocationCity ?></option>
                                     <?php endif;
-                                endwhile; ?>
+                                endforeach; endif; ?>
                             </select>
                         </span>
                         <span><?php _e("Gender", bb_agency_TEXTDOMAIN) ?>:

@@ -669,11 +669,8 @@ EOF;
                 <tbody>
                 <?php
             		$query = "SELECT * FROM ". table_agencyinteract_subscription_rates ." ORDER BY $sort $dir";
-            		$results = $wpdb->get_results($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ));
-            		$count = count($results);
-            		while ($data = mysql_fetch_array($results)) {
-            			$SubscriptionRateID	=$data->SubscriptionRateID;
-                    ?>
+            		$results = $wpdb->get_results($query);
+            		if (!empty($results)) : foreach ($results as $data) : $SubscriptionRateID = $data->SubscriptionRateID; ?>
             		<tr>
                         <th class="check-column" scope="row"><input type="checkbox" class="administrator" id="<?php echo $SubscriptionRateID ?>" name="<?php echo $SubscriptionRateID ?>" value="<?php echo $SubscriptionRateID ?>" /></th>
                 		<td class="column">". stripslashes($data->SubscriptionRateTitle) ."\n";
@@ -686,10 +683,7 @@ EOF;
                 		<td class="column">&pound;<?php echo $data->SubscriptionRatePrice ." / ". $data->SubscriptionRateTerm ?> Month Term</td>
                 		<td class="column"><?php echo $data->SubscriptionRateText ?></td>
             		</tr>
-                    <?php
-            		}
-            		mysql_free_result($results);
-            		if ($count < 1) : ?>
+                    <?php endforeach; else : ?>
             		<tr>
                 		<td class="check-column" scope="row"></th>
                 		<td class="column" colspan=="5"><p><?php _e("There aren't any records loaded yet", bb_agency_TEXTDOMAIN) ?>!</p></td>
@@ -832,19 +826,17 @@ EOF;
     			foreach($_POST as $GenderID) {
                     if (is_numeric($GenderID)) {
                         // Verify Record
-                        $queryDelete = "SELECT GenderID, GenderTitle FROM ". table_agency_data_gender ." WHERE GenderID = $GenderID";
+                        $queryDelete = "SELECT `GenderID`, `GenderTitle` FROM ". table_agency_data_gender ." WHERE `GenderID` = $GenderID";
                         $resultsDelete = $wpdb->get_results($queryDelete);
-                        while ($dataDelete = mysql_fetch_array($resultsDelete)) {
-
+                        foreach ($resultsDelete as $dataDelete) {
                         	// Remove Record
-                        	$delete = "DELETE FROM " . table_agency_data_gender . " WHERE `GenderID` = $GenderID";
-                        	$results = $wpdb->query($delete);
+                        	if ( $wpdb->delete( table_agency_data_gender, array( 'GenderID' => $GenderID ) ) ) :
                         	?>
                         	<div id="message" class="updated">
-                                <p><?php _e(LabelSingular ." <strong>". $dataDelete['GenderTitle'] .'</strong> deleted successfully', bb_agency_TEXTDOMAIN) ?>!</p>
+                                <p><?php printf( __( '%s <strong>%s</strong> deleted successfully', bb_agency_TEXTDOMAIN), LabelSingular, $dataDelete->GenderTitle ) ?></p>
                             </div>
-                        	<?php
-                        } // while
+                        	<?php endif;
+                        } // foreach
                     } // it was numeric
     			} // for each
                 break;
@@ -859,16 +851,15 @@ EOF;
     		// Verify Record
     		$queryDelete = "SELECT GenderID, GenderTitle FROM ". table_agency_data_gender ." WHERE `GenderID` = $GenderID";
     		$resultsDelete = $wpdb->get_results($queryDelete);
-    		while ($dataDelete = mysql_fetch_array($resultsDelete)) {
+    		foreach ($resultsDelete as $dataDelete) {
     	
     			// Remove Record
-    			$delete = "DELETE FROM " . table_agency_data_gender . " WHERE `GenderID` = $GenderID";
-    			$results = $wpdb->query($delete);
+    			if ( $wpdb->delete( table_agency_data_gender, array( 'GenderID' => $GenderID ) ) ) :
     			?>
     			<div id="message" class="updated">
-                    <p><?php _e(LabelSingular ." <strong>". $dataDelete['GenderTitle'] ."</strong> deleted successfully", bb_agency_TEXTDOMAIN) ?>!</p>
+                    <p><?php printf( __( '%s <strong>%s</strong> deleted successfully', bb_agency_TEXTDOMAIN), LabelSingular, $dataDelete->GenderTitle ) ?></p>
                 </div>
-                <?php
+                <?php endif;
     				
     		} // is there record?
         } // it was numeric
@@ -878,15 +869,15 @@ EOF;
 		$action = $_GET['action'];
 		$GenderID = $_GET['GenderID'];
 		
-		if ( $GenderID > 0) {
-			$query = "SELECT * FROM " . table_agency_data_gender . " WHERE GenderID='$GenderID'";
-			$results = $wpdb->get_results($query) or die (__('Error, query failed', bb_agency_TEXTDOMAIN));
-			$count = count($results);
-			while ($data = mysql_fetch_array($results)) {
-				$GenderID	=$data->GenderID;
-				$GenderTitle	=stripslashes($data->GenderTitle);
-			} 
-		      
+		if ($GenderID > 0) {
+			$query = "SELECT * FROM " . table_agency_data_gender . " WHERE `GenderID` = '$GenderID'";
+			$results = $wpdb->get_results($query);
+			if (!empty($results)) {
+    			foreach ($results as $data) {
+    				$GenderID = $data->GenderID;
+    				$GenderTitle = stripslashes($data->GenderTitle);
+    			} 
+    		}
             ?>
 			<h3 class="title"><?php printf(__("Edit %1$s", bb_agency_TEXTDOMAIN), LabelPlural) ?></h3>
 			<p><?php printf(__("Fill in the form below to add a new record %1$s", bb_agency_TEXTDOMAIN), LabelPlural) ?><strong><?php _e("Required fields are marked", bb_agency_TEXTDOMAIN) ?> *</strong></p>
@@ -970,11 +961,8 @@ EOF;
             <tbody>
 	    <?php
 		$query = "SELECT * FROM ". table_agency_data_gender ." ORDER BY $sort $dir";
-		$results = $wpdb->get_results($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ));
-		$count = count($results);
-		while ($data = mysql_fetch_array($results)) :
-			$GenderID	=$data->GenderID;
-		?>	
+		$results = $wpdb->get_results($query);
+		if (!empty($results)) : foreach ($results as $data) : $GenderID = $data->GenderID; ?>	
     		<tr>
         		<th class="check-column" scope="row">
                     <input type="checkbox" class="administrator" id="<?php echo $GenderID ?>" name="<?php echo $GenderID ?>" value="<?php echo $GenderID ?>" />
@@ -990,10 +978,7 @@ EOF;
             		</div>
         		</td>
     		</tr>
-        <?php endwhile; 
-		
-		mysql_free_result($results);
-		if ($count < 1) : ?>
+        <?php endforeach; else : ?>
 		<tr>
     		<td class="check-column" scope="row"></th>
     		<td class="column" colspan=="3"><p><?php _e("There aren't any records loaded yet", bb_agency_TEXTDOMAIN) ?>!</p></td>
@@ -1094,19 +1079,18 @@ EOF;
     			foreach($_POST as $DataTypeID) {
         			if (is_numeric($DataTypeID)) {
         				// Verify Record
-        				$queryDelete = "SELECT DataTypeID, DataTypeTitle FROM ". table_agency_data_type ." WHERE DataTypeID = $DataTypeID";
+        				$queryDelete = "SELECT `DataTypeID`, `DataTypeTitle` FROM ". table_agency_data_type ." WHERE `DataTypeID` = $DataTypeID";
         				$resultsDelete = $wpdb->get_results($queryDelete);
-        				while ($dataDelete = mysql_fetch_array($resultsDelete)) {
+        				foreach ($resultsDelete as $dataDelete) {
         			
         					// Remove Record
-        					$delete = "DELETE FROM " . table_agency_data_type . " WHERE `DataTypeID` = $DataTypeID";
-        					$results = $wpdb->query($delete);
+        					if ( $wpdb->delete( table_agency_data_type, array( 'DataTypeID' => $DataTypeID ) ) ) :
         					?>
         					<div id="message" class="updated">
-                                <p><?php _e(LabelSingular ." <strong>". $dataDelete['DataTypeTitle'] ."</strong> deleted successfully", bb_agency_TEXTDOMAIN) ?>!</p>
+                                <p><?php printf( __( '%s <strong>%s</strong> deleted successfully', bb_agency_TEXTDOMAIN), LabelSingular, $dataDelete->DataTypeTitle ) ?></p>
                             </div>
-        					<?php
-        				} // while
+        					<?php endif;
+        				} // foreach
         			 } // it was numeric
     			} // for each
                 break;
@@ -1119,19 +1103,18 @@ EOF;
         $DataTypeID = $_GET['DataTypeID'];
         if (is_numeric($DataTypeID)) {
     		// Verify Record
-    		$queryDelete = "SELECT DataTypeID, DataTypeTitle FROM ". table_agency_data_type ." WHERE `DataTypeID` = $DataTypeID";
+    		$queryDelete = "SELECT `DataTypeID`, `DataTypeTitle` FROM ". table_agency_data_type ." WHERE `DataTypeID` = $DataTypeID";
     		$resultsDelete = $wpdb->get_results($queryDelete);
-    		while ($dataDelete = mysql_fetch_array($resultsDelete)) {
-    	
-    			// Remove Record
-    			$delete = "DELETE FROM " . table_agency_data_type . " WHERE `DataTypeID` = $DataTypeID";
-    			$results = $wpdb->query($delete);
-    			?>
-    			<div id="message" class="updated">
-                    <p><?php _e(LabelSingular ." <strong>". $dataDelete['DataTypeTitle'] ."</strong> deleted successfully", bb_agency_TEXTDOMAIN) ?>!</p>
+    		foreach ($resultsDelete as $dataDelete) {
+                    
+                // Remove Record
+                if ( $wpdb->delete( table_agency_data_type, array( 'DataTypeID' => $DataTypeID ) ) ) :
+                ?>
+                <div id="message" class="updated">
+                    <p><?php printf( __( '%s <strong>%s</strong> deleted successfully', bb_agency_TEXTDOMAIN), LabelSingular, $dataDelete->DataTypeTitle ) ?></p>
                 </div>
-    			<?php	
-    		} // is there record?
+                <?php endif;
+            } // foreach
         } // it was numeric
     }
     elseif ($_GET['action'] == "editRecord") {
@@ -1140,14 +1123,13 @@ EOF;
 		
 		if ( $DataTypeID > 0) {
 			$query = "SELECT * FROM " . table_agency_data_type . " WHERE DataTypeID='$DataTypeID'";
-			$results = $wpdb->get_results($query) or die (__('Error, query failed', bb_agency_TEXTDOMAIN));
-			$count = count($results);
-			while ($data = mysql_fetch_array($results)) {
-				$DataTypeID		=$data->DataTypeID;
-				$DataTypeTitle	=stripslashes($data->DataTypeTitle);
-				$DataTypeTitle = str_replace(' ', '_', $DataTypeTitle);
-				$DataTypeTag	=$data->DataTypeTag;
-			} 
+			$results = $wpdb->get_results($query);
+			if (!empty($results)) : foreach ($results as $data) :
+				$DataTypeID		= $data->DataTypeID;
+				$DataTypeTitle	= stripslashes($data->DataTypeTitle);
+				$DataTypeTitle  = str_replace(' ', '_', $DataTypeTitle);
+				$DataTypeTag	= $data->DataTypeTag;
+			endforeach; endif;
             ?>
 			<h3 class="title"><?php printf(__("Edit %1$s", bb_agency_TEXTDOMAIN), LabelPlural) ?></h3>
 			<p><?php printf(__("Fill in the form below to add a new record %1$s", bb_agency_TEXTDOMAIN), LabelPlural) ?><strong><?php _e("Required fields are marked", bb_agency_TEXTDOMAIN) ?> *</strong>
@@ -1157,8 +1139,8 @@ EOF;
     } else {
 		
 		$DataTypeID		= 0;
-		$DataTypeTitle	="";
-		$DataTypeTag	="";
+		$DataTypeTitle	= "";
+		$DataTypeTag	= "";
 		?>
 		<h3><?php printf(__("Create New %1$s", bb_agency_TEXTDOMAIN), LabelPlural) ?></h3>
 		<p><?php _e("Make changes in the form below to edit a ", bb_agency_TEXTDOMAIN) ?> <?php echo LabelSingular ?> <strong><?php _e("Required fields are marked", bb_agency_TEXTDOMAIN) ?> *</strong>
@@ -1909,9 +1891,9 @@ EOF;
                                     <option value="=">All Gender</option>
                                     <?php
                                     $queryShowGender = $wpdb->get_results($query);
-        							while($dataShowGender = mysql_fetch_assoc($queryShowGender)) : ?>	
-        							<option value="<?php echo $dataShowGender['GenderID'] ?>" <?php echo selected($data1->ProfileCustomShowGender,$dataShowGender['GenderID'],false) ?>><?php echo $dataShowGender["GenderTitle"] ?></option>
-        							<?php endwhile; ?>
+        							foreach ($queryShowGender as $dataShowGender) : ?>	
+        							<option value="<?php echo $dataShowGender->GenderID ?>" <?php echo selected($data1->ProfileCustomShowGender, $dataShowGender->GenderID, false) ?>><?php echo $dataShowGender->GenderTitle ?></option>
+        							<?php endforeach; ?>
         						</select>
         							
         					</td>
@@ -2182,9 +2164,7 @@ EOF;
             $bb_options = bb_agency_get_option();
     		$bb_agency_option_unittype  = bb_agency_get_option('bb_agency_option_unittype');
     		
-    		while ($data = mysql_fetch_array($results)) :
-    			$ProfileCustomID = $data->ProfileCustomID;
-            ?>
+    		if (!empty($results)) : foreach ($results as $data) : $ProfileCustomID = $data->ProfileCustomID; ?>
     		<tr>
         		<th class="check-column" scope="row"><input type="checkbox" class="administrator" id="<?php echo $ProfileCustomID ?>" name="<?php echo $ProfileCustomID ?>" value="<?php echo $ProfileCustomID ?>" /></th>
         		<td class="column"><?php echo stripslashes($data->ProfileCustomTitle) ?>
@@ -2289,21 +2269,16 @@ EOF;
         		<th class="column"><?php echo $data->ProfileCustomOrder ?></th>
                 <?php
         		// get genders
-                $queryGender = $wpdb->get_results("SELECT GenderID, GenderTitle FROM ".table_agency_data_gender." WHERE GenderID=".$data->ProfileCustomShowGender); 
-        		$fetchGender = mysql_fetch_assoc($queryGender);
-        		$countGender = count($queryGender);
+                $fetchGender = $wpdb->get_row("SELECT `GenderID`, `GenderTitle` FROM ".table_agency_data_gender." WHERE GenderID=".$data->ProfileCustomShowGender); 
 
-        		if ($countGender > 0) : ?>
-                    <th class="column"><?php echo $fetchGender["GenderTitle"] ?></th>
+        		if (!empty($fetchGender)) : ?>
+                    <th class="column"><?php echo $fetchGender->GenderTitle ?></th>
         		<?php else : ?>
                     <th class="column">All Gender</th>
         		<?php endif; ?>
         		</tr>
 
-            <?php endwhile;
-
-    		mysql_free_result($results);
-    		if ($count < 1) : ?>
+            <?php endforeach; else : ?>
                 <tr>
             		<td class="check-column" scope="row"></th>
             		<td class="column" colspan="5"><p><?php _e("There aren't any records loaded yet", bb_agency_TEXTDOMAIN) ?>!</p></td>
@@ -2356,14 +2331,12 @@ EOF;
         <div>
         <?php
         // Add new Record
-		if(isset($_GET["action"]) =="editRecord") : ?>
+		if(isset($_GET["action"]) == "editRecord") : ?>
 		
     		<h3 class="title"><?php _e("Edit Record", bb_agency_TEXTDOMAIN) ?></h3>
     		<?php
     		$query = "SELECT * FROM ". table_agency_mediacategory ." WHERE MediaCategoryID='".$_GET["MediaCategoryID"]."'";
-    		$results = $wpdb->get_results($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ));
-    		$count = count($results);
-    		$data = mysql_fetch_array($results);
+    		$data = $wpdb->get_row($query);
             ?>
             <form method="post" action="<?php echo admin_url("admin.php?page=". $_GET['page']) ."&action=editRecord&amp;ConfigID=8&amp;MediaCategoryID=".$_GET["MediaCategoryID"] ?>">
 		<?php else : ?>
@@ -2373,7 +2346,7 @@ EOF;
             <table>
                 <tr>
                     <td>Title:</td>
-                    <td><input type="text" name="MediaCategoryTitle" value="<?php echo $data["MediaCategoryTitle"] ?>" style="width:500px;" /></td>
+                    <td><input type="text" name="MediaCategoryTitle" value="<?php echo $data->MediaCategoryTitle ?>" style="width:500px;" /></td>
                 </tr>
                 <tr>
                     <td>Gender:</td>
@@ -2385,18 +2358,18 @@ EOF;
             		<option value="=">All Gender</option>
                     <?php
             		$queryShowGender = $wpdb->get_results($query);
-            		while($dataShowGender = mysql_fetch_assoc($queryShowGender)) : ?>
+            		foreach ($queryShowGender as $dataShowGender) : ?>
             							
-            			<option value="<?php echo $dataShowGender['GenderID'] ?>" <?php echo selected($data["MediaCategoryGender"] ,$dataShowGender['GenderID'],false) ?>><?php echo $dataShowGender["GenderTitle"] ?></option>
+            			<option value="<?php echo $dataShowGender->GenderID ?>" <?php echo selected($data->MediaCategoryGender, $dataShowGender->GenderID, false) ?>><?php echo $dataShowGender->GenderTitle ?></option>
             												
-            		<?php endwhile; ?>
+            		<?php endforeach; ?>
             		</select>
             		<br/>
             		</td>
             	</tr>
                 <tr>
             		<td>Order:</td>
-                    <td><input type="text" name="MediaCategoryOrder" value="<?php echo (0+(int)$data["MediaCategoryOrder"]) ?>" /></td>
+                    <td><input type="text" name="MediaCategoryOrder" value="<?php echo (0+(int)$data->MediaCategoryOrder) ?>" /></td>
                 </tr>
             	<tr>
             		<td>
@@ -2461,11 +2434,8 @@ EOF;
         		<tbody>
                 <?php
         		$query = "SELECT * FROM ". table_agency_mediacategory ." ORDER BY $sort $dir";
-        		$results = $wpdb->get_results($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ).mysql_error());
-        		$count = count($results);
-        		while ($data = mysql_fetch_array($results)) :
-        			$MediaCategoryID = $data->MediaCategoryID;
-                ?>
+        		$results = $wpdb->get_results($query);
+        		if (!empty($results)) : foreach ($results as $data) : $MediaCategoryID = $data->MediaCategoryID; ?>
         		<tr>
         		<th class="check-column" scope="row"><input type="checkbox" class="administrator" id="<?php echo $MediaCategoryID ?>" name="MediaCategoryID[]" value="<?php echo $MediaCategoryID ?>" /></th>
         		<th class="column"><?php echo stripslashes($data->MediaCategoryTitle) ?>
@@ -2475,20 +2445,15 @@ EOF;
                     </div>
         		</th>
                 <?php
-        		$queryGender = $wpdb->get_results("SELECT GenderID, GenderTitle FROM ".table_agency_data_gender." WHERE GenderID = '".$data->MediaCategoryGender."'"); 
-        		$fetchGender = mysql_fetch_assoc($queryGender);
-        		$countGender = count($queryGender);
-        		if ($countGender > 0) : ?>
+        		$fetchGender = $wpdb->get_row("SELECT `GenderID`, `GenderTitle` FROM ".table_agency_data_gender." WHERE `GenderID` = '".$data->MediaCategoryGender."'"); 
+        		if (!empty($fetchGender)) : ?>
                         <th class="column">".$fetchGender["GenderTitle"]."</th>
         		<?php else : ?>
                         <th class="column">All Gender</th>
         		<?php endif; ?>
-                        <th class="column"><?php echo $data["MediaCategoryOrder"]; ?></th>
+                        <th class="column"><?php echo $data->MediaCategoryOrder; ?></th>
             		</tr>
-                <?php endwhile;
-        		
-        		mysql_free_result($results);
-        		if ($count < 1) : ?>
+                <?php endforeach; else : ?>
             		<tr>
                 		<td class="check-column" scope="row"></th>
                 		<td class="column" colspan=="5"><p><?php _e("There aren't any records loaded yet", bb_agency_TEXTDOMAIN) ?>!</p></td>

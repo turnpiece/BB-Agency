@@ -97,11 +97,9 @@
 
 				if (is_permitted("casting")) {
 
-					$query_castingcart = mysql_query("SELECT * FROM ". table_agency_castingcart."  WHERE CastingCartTalentID='".$ProfileID."'  AND CastingCartProfileID = '".bb_agency_get_current_userid()."'" ) or die("error");
+					$count_castingcart = $wpdb->get_var("SELECT COUNT(*) FROM ". table_agency_castingcart."  WHERE CastingCartTalentID='".$ProfileID."'  AND CastingCartProfileID = '".bb_agency_get_current_userid()."'" ) or die("error");
 
-					$count_castingcart = mysql_num_rows($query_castingcart);
-
-					if ($count_castingcart>0) { 
+					if ($count_castingcart > 0) { 
 						$cl2 = "cart_bg"; $tl2="Remove from Casting Cart"; 
 					}
 
@@ -111,13 +109,11 @@
 				
 				if (is_permitted("favorite")) {
 
-					$query_favorite = mysql_query("SELECT * FROM ".table_agency_savedfavorite." WHERE SavedFavoriteTalentID='".$ProfileID."'  AND SavedFavoriteProfileID = '".bb_agency_get_current_userid()."'" ) or die("error");
+					$count_favorite = mysql_query("SELECT COUNT(*) FROM ".table_agency_savedfavorite." WHERE SavedFavoriteTalentID='".$ProfileID."'  AND SavedFavoriteProfileID = '".bb_agency_get_current_userid()."'" ) or die("error");			
 
-					$count_favorite = mysql_num_rows($query_favorite);
-
-					$datas_favorite = mysql_fetch_assoc($query_favorite);				
-
-					if($count_favorite>0){ $cl1 = "fav_bg"; $tl1="Remove from Favorites"; }
+					if ($count_favorite>0) { 
+						$cl1 = "fav_bg"; $tl1="Remove from Favorites"; 
+					}
 
 					echo '<li class=\"favorite\"><a title="'.$tl1.'" href="javascript:;" id="mycart" class="save_fav '.$cl1.' bb_button">'.$tl1.'</a></li>';
 
@@ -132,40 +128,37 @@
 
 	    <div id="view_favorite" style="<?php if($tl1=="Add to Favorites"){?>display:none;<?php }else{?>display:block;<?php }?>"><li class="favorite"><a class="bb_button" href="<?php echo get_bloginfo('url')?>/profile-favorite/"><?php echo __("View favorite", bb_agency_TEXTDOMAIN);?></a></li></div>
 
-	    <?php
+	    <?php foreach (array( 
+	    		'Resume' => __( 'Download Resume', bb_agency_TEXTDOMAIN ),
+	    		'Comp Card' => __( 'Download Comp Card', bb_agency_TEXTDOMAIN ),
+	    		'Headshot' => __( 'Download Headshot', bb_agency_TEXTDOMAIN ),
+	    		'VoiceDemo' => __( 'Listen to Voice Demo', bb_agency_TEXTDOMAIN ) ) as $id => $download ) : $class = strtolower( str_replace( ' ', '', $id ) );
 
-				// Resume
-				$resultsMedia = mysql_query("SELECT * FROM ". table_agency_profile_media ." media WHERE ProfileID =  \"". $ProfileID ."\" AND ProfileMediaType = \"Resume\"");
+				$resultsMedia = $wpdb->get_results("SELECT * FROM ". table_agency_profile_media ." media WHERE ProfileID =  '". $ProfileID ."' AND ProfileMediaType = '$id'");
 
-				if ($resultsMedia) {
-					$countMedia = mysql_num_rows($resultsMedia);
-					if ($countMedia > 0) {
-					  	while ($dataMedia = mysql_fetch_array($resultsMedia)) {
-							echo "<li class=\"item resume\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"bb_button\">Download Resume</a></li>\n";
+				if (!empty($resultsMedia)) {
+				  	foreach ($resultsMedia as $dataMedia) {
+						echo "<li class=\"item $class\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia->ProfileMediaURL ."\" class=\"bb_button\">$download</a></li>\n";
 
-					  	}
-					}
+				  	}
 				}
 
+				endforeach;
+/*
 				// Comp Card
 
-				$resultsMedia = mysql_query("SELECT * FROM ". table_agency_profile_media ." media WHERE ProfileID =  \"". $ProfileID ."\" AND ProfileMediaType = \"Comp Card\"");
+				$resultsMedia = $wpdb->get_results("SELECT * FROM ". table_agency_profile_media ." media WHERE ProfileID =  \"". $ProfileID ."\" AND ProfileMediaType = \"Comp Card\"");
 
-				if ($resultsMedia) {
-					$countMedia = mysql_num_rows($resultsMedia);
-
-					if ($countMedia > 0) {
-
-					  	while ($dataMedia = mysql_fetch_array($resultsMedia)) {
-
-							echo "<li class=\"item compcard\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"bb_button\">Download Comp Card</a></li>\n";
-					  	}
+				if (!empty($resultsMedia)) {
+				  	foreach ($resultsMedia as $dataMedia) {
+						echo "<li class=\"item compcard\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"bb_button\">Download Comp Card</a></li>\n";
+		
 					}
 				}
 
 				// Headshots
 
-				$resultsMedia = mysql_query("SELECT * FROM ". table_agency_profile_media ." media WHERE ProfileID =  \"". $ProfileID ."\" AND ProfileMediaType = \"Headshot\"");
+				$resultsMedia = $wpdb->get_results("SELECT * FROM ". table_agency_profile_media ." media WHERE ProfileID =  \"". $ProfileID ."\" AND ProfileMediaType = \"Headshot\"");
 
 				if ($resultsMedia) {
 					$countMedia = mysql_num_rows($resultsMedia);
@@ -196,34 +189,34 @@
 					  	}
 					}
 				}
-
+*/
+			foreach (array( 
+	    		'Video Slate' => __( 'Watch Video Slate', bb_agency_TEXTDOMAIN ),
+	    		'Video Monologue' => __( 'Watch Video Monologue', bb_agency_TEXTDOMAIN ),
+	    		'Demo Reel' => __( 'Watch Demo Reel', bb_agency_TEXTDOMAIN ) ) as $id => $watch ) : $class = strtolower( str_replace( ' ', '', $id ) );
 				//Video Slate
 
-				$resultsMedia = mysql_query("SELECT * FROM ". table_agency_profile_media ." media WHERE ProfileID =  \"". $ProfileID ."\" AND ProfileMediaType = \"Video Slate\"");
+				$resultsMedia = $wpdb->get_results("SELECT * FROM ". table_agency_profile_media ." media WHERE ProfileID = $ProfileID AND ProfileMediaType = '$id'");
 
-				if ($resultsMedia) {
-					$countMedia = mysql_num_rows($resultsMedia);
+				if (!empty($resultsMedia)) {
+				  	foreach ($resultsMedia as $dataMedia) {
 
-					if ($countMedia > 0) {
+					 	$profileVideoEmbed = $dataMedia->ProfileMediaURL;
 
-					  	while ($dataMedia = mysql_fetch_array($resultsMedia)) {
-
-						 	$profileVideoEmbed = $dataMedia['ProfileMediaURL'];
-
-							echo "<li class=\"item video slate\"><a href=\"http://www.youtube.com/watch?v=". $dataMedia['ProfileMediaURL'] ."\" target=\"_blank\" class=\"bb_button\">Watch Video Slate</a></li>\n";
-					  	}
+						echo "<li class=\"item $class\"><a href=\"http://www.youtube.com/watch?v=". $dataMedia->ProfileMediaURL ."\" target=\"_blank\" class=\"bb_button\">$watch</a></li>\n";
+					  	
 					}
 				}
 
+				endforeach;
+/*
 				//Video Monologue
-				$resultsMedia = mysql_query("SELECT * FROM ". table_agency_profile_media ." media WHERE ProfileID =  \"". $ProfileID ."\" AND ProfileMediaType = \"Video Monologue\"");
+				$resultsMedia = $wpdb->get_results("SELECT * FROM ". table_agency_profile_media ." media WHERE ProfileID =  \"". $ProfileID ."\" AND ProfileMediaType = \"Video Monologue\"");
 
-				if ($resultsMedia) {
-					$countMedia = mysql_num_rows($resultsMedia);
+				if (!empty($resultsMedia)) {
+				  	foreach ($resultsMedia as $dataMedia) {
 
-					if ($countMedia > 0) {
-
-					  	while ($dataMedia = mysql_fetch_array($resultsMedia)) {
+					 	$profileVideoEmbed = $dataMedia->ProfileMediaURL;
 
 							echo "<li class=\"item video monologue\"><a href=\"http://www.youtube.com/watch?v=". $dataMedia['ProfileMediaURL'] ."\" target=\"_blank\" class=\"bb_button\">Watch Video Monologue</a></li>\n";
 					  	}
@@ -244,24 +237,17 @@
 					}
 				}
 
-
+*/
 				// Other Media Type not the 
 
 				// default ones
 
-				$resultsMedia = mysql_query("SELECT * FROM ". table_agency_profile_media ." media WHERE ProfileID =  \"". $ProfileID ."\" 
+				$resultsMedia = $wpdb->get_results("SELECT * FROM ". table_agency_profile_media ." media WHERE ProfileID = $ProfileID AND ProfileMediaType NOT IN ('Image','Resume','CompCard','Comp Card','Headshot','VoiceDemo','Voice Demo','Video Slate','Video Monologue','Demo Reel','Private')");
 
-				                             AND ProfileMediaType NOT IN ('Image','Resume','CompCard','Comp Card','Headshot','VoiceDemo','Voice Demo','Video Slate','Video Monologue','Demo Reel','Private')
-
-											 ");
-
-				if ($resultsMedia) {
-					$countMedia = mysql_num_rows($resultsMedia);
-
-					if ($countMedia > 0) {
-					  	while ($dataMedia = mysql_fetch_array($resultsMedia)) {
-	                        echo "<li class=\"item video demoreel\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia['ProfileMediaURL'] ."\" class=\"bb_button\">".$dataMedia['ProfileMediaType']. "</a></li>\n";
-					  	}
+				if (!empty($resultsMedia)) {
+				  	foreach ($resultsMedia as $dataMedia) {
+	                    echo "<li class=\"item video demoreel\"><a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataMedia->ProfileMediaURL ."\" class=\"bb_button\">".$dataMedia->ProfileMediaType. "</a></li>\n";
+					  	
 					}
 				}
                 
@@ -275,20 +261,11 @@
 			 			if(checkCart(bb_agency_get_current_userid(),$ProfileID)==0 ){ //check if profile is in cart already	?>
 
 							<script>
-
-
-
 		                    function addtoCart(pid){
-
 							 	var qString = 'usage=addtocart&pid=' +pid;
-
-
 						     	$.post('<?php echo get_bloginfo("url");?>/wp-content/plugins/bb-agency/theme/sub_db_handler.php', qString, processResponseAddtoCart);
-
 		                     		// alert(qString);
-
 							 }
-
 							 
 							function processResponseAddtoCart(data) {
 								document.getElementById('resultsGoHereAddtoCart').style.display="block";
@@ -298,18 +275,12 @@
 								//setTimeout('document.getElementById(\'view_casting_cart\').style.display="none";',3000);
 								setTimeout('document.getElementById(\'casting_cart_li\').style.display="none";',3000);
 							}
-
-							
-
 		                    </script>
-
 	                        <?php
-
 						}
 
 					}	//end if(checkCart(bb_agency_get_current_userid()
 
-					
 				}
 
 				

@@ -1,6 +1,8 @@
 <?php 
 #This page that will generate HTML to feed on domPDF
 
+global $wpdb;
+
 $bb_options = bb_agency_get_option();
 $bb_agency_option_agencyname = bb_agency_get_option('bb_agency_option_agencyname');
 $bb_agency_option_agencylogo = bb_agency_get_option('bb_agency_option_agencylogo');
@@ -239,42 +241,49 @@ if($_POST['print_option']==14){  // print for division
 					</ul>
 				</div>'."\n";
 				
-		//trim more infom
-		$modelInfo=str_replace("<li","<tr><td",$modelInfo);
-		$modelInfo=str_replace("</li>","</td></tr>",$modelInfo);
-		$modelInfo=str_replace("<ul>","<table>",$modelInfo);
-		$modelInfo=str_replace("</ul>","</table>",$modelInfo);  
-		$modelInfo=str_replace("</label>","</label>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",$modelInfo);  
+			//trim more infom
+			$modelInfo=str_replace("<li","<tr><td",$modelInfo);
+			$modelInfo=str_replace("</li>","</td></tr>",$modelInfo);
+			$modelInfo=str_replace("<ul>","<table>",$modelInfo);
+			$modelInfo=str_replace("</ul>","</table>",$modelInfo);  
+			$modelInfo=str_replace("</label>","</label>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",$modelInfo);  
 		
-			if($_POST['print_type']=="print-polaroids"){$printType="Polaroid";}
-			else{$printType="Image";}
+			if ($_POST['print_type'] == "print-polaroids") {
+				$printType="Polaroid"
+			}
+			else{
+				$printType="Image";
+			}
+
 			$queryImg = "SELECT * FROM ". table_agency_profile_media ." media WHERE ProfileID =  \"". $ProfileID ."\" AND ProfileMediaType = \"".$printType."\" ORDER BY $orderBy";
-					$resultsImg = mysql_query($queryImg);
-					$countImg = mysql_num_rows($resultsImg);
-					while ($dataImg = mysql_fetch_array($resultsImg)){$totalCount++;
-				
-					if($printType!="Polaroid"){ 
-						 if($totalCount==1 AND $_POST['print_option']!="3-1" AND $_POST['print_option']!="1-1"){
-							 
-							 $allImages.="<td>$modelInfo<img $widthAndHeight id='".$dataImg["ProfileMediaID"]."' src=\"".get_bloginfo("url")."/wp-content/plugins/bb-agency/theme/custom-layout6/images/trans.png\" alt=' ' class='allimages_thumbs'  /></td>";
-							$cnt=1;  $cnt2=1; 
-						 }
+			$resultsImg = $wpdb->get_results($queryImg);
+			$countImg = count($resultsImg);
+			
+			foreach ($resultsImg as $dataImg) {
+				$totalCount++;
+			
+				if($printType != "Polaroid"){ 
+					 if($totalCount==1 AND $_POST['print_option']!="3-1" AND $_POST['print_option']!="1-1"){
+						 
+						 $allImages.="<td>$modelInfo<img $widthAndHeight id='".$dataImg->ProfileMediaID."' src=\"".get_bloginfo("url")."/wp-content/plugins/bb-agency/theme/custom-layout6/images/trans.png\" alt=' ' class='allimages_thumbs'  /></td>";
+						$cnt=1;  $cnt2=1; 
 					 }
-							 
-					 //  if($_POST[$dataImg['ProfileMediaID']]==1){  - for the mean time as the were missed conception
-						   $cnt++;
-						   $cnt2++;
-						   
-					// $allImages.="<td><img $widthAndHeight id='".$dataImg["ProfileMediaID"]."' src=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" alt='' class='allimages_thumbs' /></td>\n";
-					//style="width:450px; height:650px;"
-					$timthumbHW=str_replace('style="width:',"&w=",$widthAndHeight);
-					$timthumbHW=str_replace('px; height:',"&h=",$timthumbHW);
-					$timthumbHW=str_replace('px;"',"",$timthumbHW);
+				 }
+						 
+				 //  if($_POST[$data->ProfileMediaID]==1){  - for the mean time as the were missed conception
+					   $cnt++;
+					   $cnt2++;
+					   
+				// $allImages.="<td><img $widthAndHeight id='".$dataImg["ProfileMediaID"]."' src=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $data->ProfileMediaURL ."\" alt='' class='allimages_thumbs' /></td>\n";
+				//style="width:450px; height:650px;"
+				$timthumbHW=str_replace('style="width:',"&w=",$widthAndHeight);
+				$timthumbHW=str_replace('px; height:',"&h=",$timthumbHW);
+				$timthumbHW=str_replace('px;"',"",$timthumbHW);
 					
 				
-			//	$allImages.="<td><img id='".$dataImg["ProfileMediaID"]."' src=\"".get_bloginfo("url")."/wp-content/plugins/bb-agency/tasks/timthumb.php?src=". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL']  .$timthumbHW."\" alt='' class='allimages_thumbs' /></td>\n";
+			//	$allImages.="<td><img id='".$dataImg["ProfileMediaID"]."' src=\"".get_bloginfo("url")."/wp-content/plugins/bb-agency/tasks/timthumb.php?src=". bb_agency_UPLOADDIR . $ProfileGallery ."/". $data->ProfileMediaURL  .$timthumbHW."\" alt='' class='allimages_thumbs' /></td>\n";
 
-				copy(get_bloginfo("url")."/wp-content/plugins/bb-agency/tasks/timthumb.php?src=". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL']  .$timthumbHW,"/home/content/99/6048999/html/rbplugin.agency/wp-content/plugins/bb-agency/cache/images/".$totalCount.".jpg");
+				copy(get_bloginfo("url")."/wp-content/plugins/bb-agency/tasks/timthumb.php?src=". bb_agency_UPLOADDIR . $ProfileGallery ."/". $data->ProfileMediaURL  .$timthumbHW,"/home/content/99/6048999/html/rbplugin.agency/wp-content/plugins/bb-agency/cache/images/".$totalCount.".jpg");
 					
 				$allImages.="<td><img $widthAndHeight id='".$dataImg["ProfileMediaID"]."' src='".get_bloginfo("url")."/wp-content/plugins/bb-agency/cache/images/".$totalCount.".jpg' alt='' class='allimages_thumbs' /></td>\n";
 
@@ -295,7 +304,7 @@ if($_POST['print_option']==14){  // print for division
 						 $allImages.="<table id='$totalCount' border='0'><tr>";
 						 $cnt="0";}
 						 
-						// } for if($_POST[$dataImg['ProfileMediaID']]==1){
+						// } for if($_POST[$data->ProfileMediaID]==1){
 					}
 			   
 			   
