@@ -560,6 +560,9 @@ elseif ($_GET['action'] == "editRecord" || $_GET['action'] == "addRecord") {
 // *************************************************************************************************** //
 // Manage Record
 function bb_display_manage($ProfileID) {
+    
+    bb_agency_debug( __FUNCTION__ . ' ' . $ProfileID );
+
     global $wpdb;
 
     // database tables
@@ -583,7 +586,7 @@ function bb_display_manage($ProfileID) {
     // Include Admin Menu
     include ("admin-menu.php");
 
-    if (!empty($ProfileID) && $ProfileID > 0) {
+    if (!empty($ProfileID)) {
 
         $query = "SELECT p.*, dt.`DataTypeTalent` AS HasTalent FROM `$t_profile` p LEFT JOIN `$t_data_type` dt ON dt.`DataTypeID` = p.`ProfileType` WHERE ProfileID = '$ProfileID' LIMIT 1";
 
@@ -829,7 +832,7 @@ function bb_display_manage($ProfileID) {
     </div>
 
     <div id="profile-manage-media" class="halfwidth alignright">
-        <?php if (!empty($ProfileID) && $ProfileID > 0) { // Editing Record ?>
+        <?php if (!empty($ProfileID)) : // Editing Record ?>
         <h3><?php _e("Gallery", bb_agency_TEXTDOMAIN) ?></h3>
         <script type="text/javascript">
             function confirmDelete(delMedia,mediaType) {
@@ -934,7 +937,7 @@ function bb_display_manage($ProfileID) {
                 }
             }
 
-            // Go about our biz-nazz
+            // Get images
             $queryImg = "SELECT * FROM `$t_media` WHERE `ProfileID` = '$ProfileID' AND `ProfileMediaType` = 'Image' ORDER BY `ProfileMediaPrimary` DESC, `ProfileMediaID` DESC";
 
             bb_agency_debug($queryImg);
@@ -1067,6 +1070,8 @@ function bb_display_manage($ProfileID) {
         <?php endif; ?>
         <div style="clear: both;"></div>
 
+    <?php endif; ?>
+
     <?php if (defined('bb_agency_ADMIN_MEDIA_UPLOAD') && bb_agency_ADMIN_MEDIA_UPLOAD) : ?>
         <h3><?php _e("Upload", bb_agency_TEXTDOMAIN) ?></h3>
         <p><?php _e("Upload new media using the forms below", bb_agency_TEXTDOMAIN) ?>.</p>
@@ -1109,9 +1114,7 @@ function bb_display_manage($ProfileID) {
             </p>
         </div>
     <?php endif; ?>
-    <?php
-    }
-    ?>
+
     </div>
 
     <div style="clear: both; "></div>

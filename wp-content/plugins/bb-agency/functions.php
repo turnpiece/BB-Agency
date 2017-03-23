@@ -2027,18 +2027,14 @@ function bb_custom_fields($visibility = 0, $ProfileID, $ProfileGender, $ProfileG
 	
 	if (!empty($results)) {
 		foreach ($results as $data) {
-			if ($ProfileGenderShow) {
-				if ($data->ProfileCustomShowGender == $ProfileGender ) { // Depends on Current LoggedIn User's Gender
-					bb_custom_fields_template($visibility, $ProfileID, $data);
-				} elseif (empty($data->ProfileCustomShowGender)) {
-					bb_custom_fields_template($visibility, $ProfileID, $data);
-				}
-			 } else {
-				bb_custom_fields_template($visibility, $ProfileID, $data);
-			 }
-			// END Query2
-			echo "    </td>\n";
-			echo "  </tr>\n";
+			
+			if ($ProfileGenderShow)
+				if ($data->ProfileCustomShowGender == $ProfileGender );
+
+			bb_custom_fields_template($visibility, $ProfileID, $data);
+
+			//echo "    </td>\n";
+			//echo "  </tr>\n";
 		} // End foreach
 
 	} else {
