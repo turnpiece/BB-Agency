@@ -125,7 +125,7 @@
 		       .gender_filter($data3->ProfileCustomShowGender)."\">\n"; 
 		 
 		 echo "<label style='width:200px; float:left;' for=\"".strtolower(trim($data3->ProfileCustomTitle))."\">"
-		       . __( $data3->ProfileCustomTitle.$measurements_label, bb_agencyinteract_TEXTDOMAIN) 
+		       . __( $data3->ProfileCustomTitle.$measurements_label, bb_agencyinteract_TEXTDOMAIN) . $ProfileCustomType 
 			   ."</label>\n";		  
 		 
 		if ($ProfileCustomType == 1) { //TEXT
@@ -140,9 +140,7 @@
 			$ProfileCustomOptions_String = str_replace(",",":",
 			                               strtok(strtok($data3->ProfileCustomOptions,"}"),"{"));
 			
-			list($ProfileCustomOptions_Min_label,$ProfileCustomOptions_Min_value,
-			$ProfileCustomOptions_Max_label,$ProfileCustomOptions_Max_value) 
-			= explode(":", $ProfileCustomOptions_String);
+			list($ProfileCustomOptions_Min_label, $ProfileCustomOptions_Min_value, $ProfileCustomOptions_Max_label,$ProfileCustomOptions_Max_value) = explode(":", $ProfileCustomOptions_String);
 		 
 			if (!empty($ProfileCustomOptions_Min_value) && !empty($ProfileCustomOptions_Max_value)) {
 					

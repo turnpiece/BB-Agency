@@ -1885,7 +1885,7 @@ EOF;
         					<td valign="top">Gender*:</td>
         					<td valign="top">
         						<?php
-        						$query= "SELECT GenderID, GenderTitle FROM " .  table_agency_data_gender . " GROUP BY GenderTitle";
+        						$query= "SELECT `GenderID`, `GenderTitle` FROM " .  table_agency_data_gender . " GROUP BY `GenderTitle`";
                                 ?>
         						<select name="ProfileCustomShowGender">
                                     <option value="=">All Gender</option>
@@ -1899,23 +1899,24 @@ EOF;
         					</td>
         				</tr>
 
+                        <?php if (!empty($array_type)) : ?>
         				<tr>
         					<td valign="top">Profile Type:</td>
         					<td>
         					<?php
-        				
-        					foreach ( $types as $type ) {
-        						$t = trim($type->DataTypeTitle);
+        					foreach ( $array_type as $type ) {
+        						$t = trim($type);
         						$t = str_replace(' ', '_', $t);
         						echo '<input type="checkbox" name="ProfileType'.$t.'" value="1" ' . 
         							($$t == true ? 'checked="checked"':''). '  />&nbsp;'.
-        							trim($type->DataTypeTitle)
+        							trim($type)
         							.'&nbsp;<br/>';
         					} 
         					?>
         					</td>
         				</tr>
-        						
+        				<?php endif; ?>
+
         				<tr>
         					<td valign="top">Custom Order*:</td>
         					<td style="font-size:13px;=" align="left">
@@ -1926,18 +1927,19 @@ EOF;
         			    <?php if($data1->ProfileCustomType == 1) : // text ?>
         				  <tr>
         						<td style="width:50px;">Title:</td>
-        						<td><input type="text" name="ProfileCustomTitle" value="<?php echo $data1['ProfileCustomTitle'] ?>"/></td>
+        						<td><input type="text" name="ProfileCustomTitle" value="<?php echo $data1->ProfileCustomTitle ?>"/></td>
         					</tr>
 
         				<?php elseif($data1->ProfileCustomType == 3) :	 // Dropdown ?>
         					<tr>
         						<td style="width:40px;">Title:</td>
-        						<td><input type="text" name="ProfileCustomTitle" value="<?php echo $data1['ProfileCustomTitle'] ?>" style="width:190px;"/></td>
+        						<td><input type="text" name="ProfileCustomTitle" value="<?php echo $data1->ProfileCustomTitle ?>" style="width:190px;"/></td>
         					</tr>
                             <?php
-                                list($option1,$option2) = explode(":",$data1['ProfileCustomOptions']);	
-        						$data1 = explode("|",$option1);
-        						$data2 = explode("|",$option2);
+                                list($option1, $option2) = explode(":", $data1->ProfileCustomOptions);	
+
+        						$optionData1 = explode("|",$option1);
+        						$optionData2 = explode("|",$option2);
         					?>
         					<tr>
         						<td>&nbsp;</td>
@@ -1945,8 +1947,8 @@ EOF;
         							<br/>
                                     <?php
         							   $pos = 0;
-        								foreach ($data1 as $val1) :
-        									if ($val1 != end($data1) && $val1 != $data1[0]) :
+        								foreach ($optionData1 as $val1) :
+        									if ($val1 != end($optionData1) && $val1 != $optionData1[0]) :
         										$pos++;
         										?>
                                                 Option: &nbsp; <input type="text"  value="<?php echo $val1 ?>" name="option[]" />
@@ -1954,21 +1956,21 @@ EOF;
         									<?php endif;
         								endforeach; ?>
         							<div  id="editfield_add_more_options_1"></div>
-        							<br/><a href="javascript:;" id="addmoreoption_1">add more option[+]</a>
+        							<br/><a href="javascript:;" id="addmoreoption_1"><?php _e('add more options', bb_agency_TEXTDOMAIN) ?>[+]</a>
         							<br/>	
         							<br/>	
         							<?php
-        							if (!empty($data2) && !empty($option2)) : ?>
-        								Label: &nbsp; <input type="text" name="option_label2" value="<?php echo current($data2) ?>" /><br/>
+        							if (!empty($optionData2) && !empty($option2)) : ?>
+        								Label: &nbsp; <input type="text" name="option_label2" value="<?php echo current($optionData2) ?>" /><br/>
         							<?php
         								$pos2 = 0;
-        							    foreach($data2 as $val2) :
-        									if ($val2 != end($data2) && $val2 !=  $data2[0]) :
+        							    foreach($optionData2 as $val2) :
+        									if ($val2 != end($optonData2) && $val2 != $optionData2[0]) :
         										$pos2++;
                                                 ?>
                                                 Option: &nbsp; <input type="text" value="<?php echo $val2 ?>" name="option2[]"/>
-                                                <?php if ($pos2==1) : ?>
-        										<input type="checkbox" ".(end($data2)=="yes" ? "checked=="checked"":"")." name="option_default_2"/><span style="font-size:11px;">(set as selected)</span>	
+                                                <?php if ($pos2 == 1) : ?>
+        										<input type="checkbox" ".(end($optionData2)=="yes" ? "checked=="checked"":"")." name="option_default_2"/><span style="font-size:11px;">(set as selected)</span>	
         										<a href="javascript:;" id="addmoreoption_2">add more option[+]</a>	
                                                 <?php endif; ?>
                                                 <br/>
@@ -1981,21 +1983,21 @@ EOF;
         						
         				<?php elseif($data1->ProfileCustomType == 4) :	 //textbox
         				  
-        				     $array_customOptions_values = explode("|",$data1['ProfileCustomOptions']);
+        				     $array_customOptions_values = explode("|",$data1->ProfileCustomTitle);
                              ?>
         				       <tr>
         							<td>Title:</td>
-        							<td><input type="text" name="ProfileCustomTitle" value="<?php echo $data1['ProfileCustomTitle'] ?>"/></td>
+        							<td><input type="text" name="ProfileCustomTitle" value="<?php echo $data1->ProfileCustomTitle ?>"/></td>
         						</tr>
         					
         				<?php elseif($data1->ProfileCustomType == 5) :	 //checkbox
         				 
-                            $array_customOptions_values = explode("|",$data1['ProfileCustomOptions']);
+                            $array_customOptions_values = explode("|",$data1->ProfileCustomTitle);
         					$pos =0;
         				    ?>
         						<tr>
         							<td>Title:</td>
-        							<td><input type="text" name="ProfileCustomTitle" value="<?php echo $data1['ProfileCustomTitle'] ?>"/></td>
+        							<td><input type="text" name="ProfileCustomTitle" value="<?php echo $data1->ProfileCustomTitle ?>"/></td>
         						</tr>  
         						<tr>
         							<td>&nbsp;</td>
@@ -2011,12 +2013,12 @@ EOF;
         						</tr>
                                     
         				<?php elseif($data1->ProfileCustomType == 6) :	 //radio button
-        				    $array_customOptions_values = explode("|",$data1['ProfileCustomOptions']);
+        				    $array_customOptions_values = explode("|",$data1->ProfileCustomTitle);
         					$pos =0;
                             ?>
         				        <tr>
         							<td>Title:</td>
-        							<td><input type="text" name="ProfileCustomTitle" value="<?php echo $data1['ProfileCustomTitle'] ?>"/></td>
+        							<td><input type="text" name="ProfileCustomTitle" value="<?php echo $data1->ProfileCustomTitle ?>"/></td>
         						</tr>
         							 
         						<tr>
@@ -2039,12 +2041,11 @@ EOF;
         						 							
         				<?php elseif ($data1->ProfileCustomType == 7) :	 ///metric/imperials ?>
         						<tr>
-                                    <td>Title*:<input type='text' name='ProfileCustomTitle' value="<?php echo $data1['ProfileCustomTitle'] ?>"/></td></tr>
-        						<tr>
-                                    <td>&nbsp;</td>
+                                    <td>Title*:</td>
+                                    <td><input type='text' name='ProfileCustomTitle' value="<?php echo $data1->ProfileCustomTitle ?>"/></td>
                                 </tr>
         						
-        				    <?php if (bb_agency_get_option('bb_agency_option_unittype')==0) : //  Metric (cm/kg) ?>
+        				    <?php /* if (bb_agency_get_option('bb_agency_option_unittype') == 0) : //  Metric (cm/kg) ?>
         						<tr>
                                     <td>
                                         <input type="radio" name="ProfileUnitType" value="1" <?php echo checked($data1->ProfileCustomOptions,1,false) ?> />cm
@@ -2056,7 +2057,7 @@ EOF;
                                     </td>
                                 </tr>  
         				
-                            <?php elseif (bb_agency_get_option('bb_agency_option_unittype')==1) : //  Imperial (in/lb) ?>
+                            <?php elseif (bb_agency_get_option('bb_agency_option_unittype') == 1) : //  Imperial (in/lb) ?>
         					
         						<tr>
                                     <td>
@@ -2073,7 +2074,7 @@ EOF;
                                         <input type="radio" name="ProfileUnitType" value="3" <?php echo checked($data1->ProfileCustomOptions,3,false) ?>/>Feet/Inches
                                     </td>
                                 </tr>
-        				    <?php endif; ?>
+        				    <?php endif; */ ?>
         													
                         <?php elseif($data1->ProfileCustomType == 9) : // date ?>
                                 <tr>
