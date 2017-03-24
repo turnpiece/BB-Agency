@@ -2182,11 +2182,12 @@ function bb_custom_fields_template($visibility = 0, $ProfileID, $data) {
 				echo "</fieldset>";
 			}
 		} elseif ($ProfileCustomType == 7) { //Imperial/Metrics 
-			$limit = 80; // 
+			$start = 50;
+			$limit = 220; // 
 			?>
             <select name="ProfileCustomID<?php echo $data->ProfileCustomID ?>">
                 <option value="">--</option>
-            	<?php for ($i = 12; $i <= $limit; $i++) : // display height options ?>
+            	<?php for ($i = $start; $i <= $limit; $i++) : // display height options ?>
                 <option value="<?php echo $i ?>" <?php selected($ProfileCustomValue, $i) ?>><?php echo bb_agency_display_height($i) ?></option>
             	<?php endfor; ?>
             </select>
