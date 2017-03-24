@@ -125,7 +125,7 @@
 		       .gender_filter($data3->ProfileCustomShowGender)."\">\n"; 
 		 
 		 echo "<label style='width:200px; float:left;' for=\"".strtolower(trim($data3->ProfileCustomTitle))."\">"
-		       . __( $data3->ProfileCustomTitle.$measurements_label, bb_agencyinteract_TEXTDOMAIN) . $ProfileCustomType 
+		       . __( $data3->ProfileCustomTitle.$measurements_label, bb_agencyinteract_TEXTDOMAIN) 
 			   ."</label>\n";		  
 		 
 		if ($ProfileCustomType == 1) { //TEXT
