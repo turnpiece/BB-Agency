@@ -115,7 +115,7 @@
 			
 	echo "		</div>\n";
 
-	$queryMedia = "SELECT * FROM ". table_agency_profile_media ." WHERE `ProfileID` = %d AND `ProfileMediaType` <> 'Image'";
+	$queryMedia = "SELECT * FROM ". table_agency_profile_media ." WHERE `ProfileID` = %d AND `ProfileMediaType` <> 'Image' AND `ProfileMediaType` <> 'Private'";
 
 	$media = $wpdb->get_results( $wpdb->prepare( $queryMedia, $ProfileID ) );
 
