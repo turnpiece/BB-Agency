@@ -30,7 +30,7 @@
 			// send message to admin
 			$subject = 'New media uploaded to '.get_bloginfo('name').' by '.$profile->ProfileContactDisplay;
 			$body = implode("\n", $UploadMedia);
-			$body .= "\n\n" . admin_url( '?page=bb_agency_profiles&action=editRecord&ProfileID='.$ProfileID );
+			$body .= "\n\n" . admin_url( 'admin.php?page=bb_agency_profiles&action=editRecord&ProfileID='.$ProfileID );
 
 			wp_mail( get_bloginfo('admin_email'), $subject, $body );
 		}

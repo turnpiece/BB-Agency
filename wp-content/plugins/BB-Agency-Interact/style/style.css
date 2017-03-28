@@ -131,7 +131,7 @@ p.submit { margin-top: 15px!important; }
 #bbsignin-register .inline-block .register { margin-bottom: 15px; }
 
 /* Register */
-.bb-agency-interact {  }
+.bb-agency-interact ul { list-style-type: none; }
 .bb-agency-interact p.alert { border-bottom: 3px solid #0C0; background:#fafafa; padding: 10px; }
 .bb-agency-interact h1 { margin-bottom:10px;text-align: left; }
 .bb-agency-interact form#adduser {  }

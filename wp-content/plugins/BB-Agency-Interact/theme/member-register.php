@@ -350,9 +350,8 @@
 					</ul>
 				</p><!-- .form-profile_type -->
   	
-	       		<p class="form-profile_agree"><?php
-					$profile_agree = get_the_author_meta("profile_agree", $current_user->ID ); ?>
-	       			<input type="checkbox" name="profile_agree" value="yes" /><?php printf(__("I agree to the %s terms of service", bb_agencyinteract_TEXTDOMAIN), '<a href="/terms-of-use/" target="_blank">') ?></a>
+	       		<p class="form-profile_agree"><?php $profile_agree = get_the_author_meta("profile_agree", $current_user->ID ); ?>
+	       			<input type="checkbox" name="profile_agree" value="yes" /> &nbsp; <?php printf(__("I agree to the %s terms of service", bb_agencyinteract_TEXTDOMAIN), '<a href="/terms-of-use/" target="_blank">') ?></a>
 	       		</p><!-- .form-profile_agree -->
  
 	       		<p class="form-submit">
