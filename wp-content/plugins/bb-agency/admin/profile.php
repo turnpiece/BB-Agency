@@ -187,8 +187,9 @@ if (isset($_POST['action'])) {
 			
                 // Notify admin and user
                 if (isset($ProfileNotifyUser) && $ProfileNotifyUser <> "yes" && isset($new_user) && function_exists('bb_agencyinteract_approvemembers')) {
-                    wp_new_user_notification($new_user, $ProfilePassword);
+                    wp_new_user_notification( $new_user, null, 'both' );
                 }
+
                 // Set Display Name as Record ID (We have to do this after so we know what record ID to use... right ;)
                 if ($bb_agency_option_profilenaming == 3) {
                     $ProfileContactDisplay = "ID-" . $ProfileID;
