@@ -466,6 +466,7 @@ if ( is_admin() ){
 
 	add_action( 'init', 'bb_agency_admin_print_styles', 100);
 		function bb_agency_admin_print_styles() {
+			wp_enqueue_style('bb-agency-admin', plugins_url('style/admin.css', __FILE__) );
 			wp_enqueue_style('jquery-ui-style', plugins_url('js/jquery-ui-1.10.3.custom.min.css', __FILE__) );
 		}
 
