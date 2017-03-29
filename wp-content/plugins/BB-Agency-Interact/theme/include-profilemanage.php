@@ -140,9 +140,7 @@
 			$ProfileCustomOptions_String = str_replace(",",":",
 			                               strtok(strtok($data3->ProfileCustomOptions,"}"),"{"));
 			
-			list($ProfileCustomOptions_Min_label,$ProfileCustomOptions_Min_value,
-			$ProfileCustomOptions_Max_label,$ProfileCustomOptions_Max_value) 
-			= explode(":", $ProfileCustomOptions_String);
+			list($ProfileCustomOptions_Min_label, $ProfileCustomOptions_Min_value, $ProfileCustomOptions_Max_label,$ProfileCustomOptions_Max_value) = explode(":", $ProfileCustomOptions_String);
 		 
 			if (!empty($ProfileCustomOptions_Min_value) && !empty($ProfileCustomOptions_Max_value)) {
 					
@@ -256,26 +254,18 @@
 			
 		} elseif ($ProfileCustomType == 7) { //Imperial/Metrics
 		
-		    if ($data3->ProfileCustomTitle=="Height" AND $bb_agency_option_unittype==1){
-		        
-		        echo "<select name=\"ProfileCustomID". $data3->ProfileCustomID ."\">\n";
-				echo "<option value=\"\">--</option>\n";
-	
-				$i=36;
-				$heightraw = 0;
-				$heightfeet = 0;
-				$heightinch = 0;
-				while($i<=90)  { 
-					$heightraw = $i;
-					$heightfeet = floor($heightraw/12);
-					$heightinch = $heightraw - floor($heightfeet*12);
-					echo " <option value=\"". $i ."\" ".
-					retrieve_datavalue("",$data3->ProfileCustomID,$ProfileID,"dropdown",$i)  .">"
-						 . $heightfeet ." ft ". $heightinch ." in</option>\n";
-					$i++;
-				}
-					
-	           	echo " </select>\n";
+		    if ($data3->ProfileCustomTitle == "Height"){
+
+	           	$start = 50;
+		        $limit = 220;
+				?>
+	            <select name="ProfileCustomID<?php echo $data3->ProfileCustomID ?>">
+	                <option value="">--</option>
+	            	<?php for ($i = $start; $i <= $limit; $i++) : // display height options ?>
+	                <option value="<?php echo $i ?>" <?php echo retrieve_datavalue("", $data3->ProfileCustomID, $ProfileID, "dropdown", $i) ?>><?php echo bb_agency_display_height($i) ?></option>
+	            	<?php endfor; ?>
+	            </select>
+				<?php	
 	   
 	       	} else {
 			   

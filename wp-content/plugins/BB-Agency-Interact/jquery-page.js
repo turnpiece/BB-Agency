@@ -1,6 +1,29 @@
 // JavaScript Document
 jQuery(document).ready(function($){
+
+	var debugging = false;
 	
+	$('input.button-primary').change(function() {
+		var $this = $(this);
+		var image = $this.attr('value');
+		var profile = $this.attr('data-profile');
+
+		debug( image + ' ' + profile );
+
+		$.ajax({
+			url: page.ajaxurl,
+			type: 'post',
+			data: {
+				action: 'set_primary_image',
+				image: image,
+				profile: profile
+			}
+		}).done(function() {
+			$this.closest('.gallery').find('.profileimage.primary-picture').removeClass('primary-picture');
+			$this.closest('.profileimage').addClass('primary-picture');
+		})
+	})
+
 	/*
 	 *	
 	 */
@@ -38,6 +61,11 @@ jQuery(document).ready(function($){
 
 		});	
 
+	 }
+
+	 function debug( message ) {
+	 	if (debugging)
+	 		console.log( 'jquery-page.js '+message );
 	 }
 
 });

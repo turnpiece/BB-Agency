@@ -99,6 +99,10 @@ ul {margin:0 0 18px;}
 
 ol {list-style-position:inside;}
 
+ul {
+	list-style-type: none;
+}
+
 ol li {line-height:24px;}
 
 ul li {

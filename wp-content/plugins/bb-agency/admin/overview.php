@@ -116,7 +116,7 @@
 
 							foreach ($results as $result) : ?>
 								<li>
-									<a href="?page=bb_agency_profiles&action=editRecord&ProfileID=<?php echo $data['ProfileID']; ?>"><?php echo stripslashes($result->ProfileContactDisplay) ?></a>
+									<a href="?page=bb_agency_profiles&action=editRecord&ProfileID=<?php echo $result->ProfileID ?>"><?php echo stripslashes($result->ProfileContactDisplay) ?></a>
 							    	<span class="add-new-h2">Updated <?php echo bb_agency_makeago(bb_agency_convertdatetime($result->ProfileDateUpdated)); ?></span>
 								</li><?php
 							endforeach;

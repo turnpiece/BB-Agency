@@ -151,7 +151,7 @@ if ($_REQUEST["action"] == "search") {
 	
 	// Pagination
 	$filterArray['paging'] = 1;
-	$filterArray['pagingperpage'] = 1000; 
+	$filterArray['pagingperpage'] = 0; 
 
 }
 

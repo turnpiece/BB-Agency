@@ -754,8 +754,8 @@
 				"profiledatedue_max" => null,
 				"featured" => null,
 				"stars" => null,
-				"paging" => null,
-				"pagingperpage" => null,
+				"paging" => 0,
+				"pagingperpage" => 40,
 				"override_privacy" => null,
 				"profilefavorite" => null,
 				"profilecastingcart" => null,
@@ -767,7 +767,7 @@
 			$atts)
 		);
 
-		if (bb_agency_SITETYPE == 'bumps' && defined('bb_agency_MUMSTOBE_ID') && defined('bb_agency_BABIES_ID')) {
+		if (bb_agency_SITETYPE === 'bumps' && defined('bb_agency_MUMSTOBE_ID') && defined('bb_agency_BABIES_ID')) {
 			// Settings for a Beautiful Bumps type site of pregnant women
 			// Sort by due date if a mum to be, by date of birth if a baby, otherwise sort alphabetically
 			switch(intval($type)) {
@@ -1222,7 +1222,9 @@
 		 	if (!$isDownload) { //if its printing or PDF no need for pagination below
 		  
 				/*********** Paginate **************/
-				$limit = isset($limit) ? $limit : '';
+
+				$limit = $pagingperpage ? 'LIMIT '. ($paging ? $paging : '') . " $pagingperpage" : '';
+
 				$sql = <<<EOF
 SELECT
 profile.`ProfileID` as pID, 
@@ -1236,12 +1238,14 @@ LEFT JOIN $CustomTable AS customfield_mux
 ON profile.`ProfileID` = customfield_mux.`ProfileID`  
 $filter  
 GROUP BY profile.`ProfileID` 
-ORDER BY $sort $dir $limit
+ORDER BY $sort $dir 
+$limit
 EOF;
+
+				bb_agency_debug( __FUNCTION__ . ' ' . $sql );
 
 				$qItem = $wpdb->get_results($sql, ARRAY_A);
 				$items = count($qItem); // number of total rows returned
-				$limit = ''; // pagination not working here
 	  
 	  		}//if (get_query_var('target')!="print" 
 					  
@@ -1264,7 +1268,7 @@ EOF;
 			 */
 			if (!empty($profilefavorite)) {
 				// Execute query showing favorites
-				$queryList = "SELECT profile.ProfileID, profile.ProfileGallery, profile.ProfileContactDisplay, profile.ProfileDateBirth, profile.ProfileDateDue, profile.ProfileLocationState, profile.ProfileID as pID, fav.SavedFavoriteTalentID, fav.SavedFavoriteProfileID, (SELECT media.ProfileMediaURL FROM ". table_agency_profile_media ." media WHERE profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1) AS ProfileMediaURL FROM ". table_agency_profile ." profile INNER JOIN  ".table_agency_savedfavorite." fav WHERE $sqlFavorite_userID AND profile.ProfileIsActive = 1 GROUP BY fav.SavedFavoriteTalentID";
+				$queryList = "SELECT profile.`ProfileID`, profile.`ProfileGallery`, profile.`ProfileContactDisplay`, profile.`ProfileDateBirth`, profile.`ProfileDateDue`, profile.`ProfileLocationState`, profile.`ProfileID` as pID, fav.`SavedFavoriteTalentID`, fav.`SavedFavoriteProfileID`, (SELECT media.`ProfileMediaURL` FROM ". table_agency_profile_media ." media WHERE profile.`ProfileID` = media.`ProfileID` AND media.`ProfileMediaType` = \"Image\" AND media.`ProfileMediaPrimary` = 1) AS ProfileMediaURL FROM ". table_agency_profile ." profile INNER JOIN  ".table_agency_savedfavorite." fav WHERE $sqlFavorite_userID AND profile.`ProfileIsActive` = 1 GROUP BY fav.`SavedFavoriteTalentID`";
 				
 			} elseif (!empty($profilecastingcart)) {
 				// There is a Casting Cart ID present
@@ -2023,18 +2027,14 @@ function bb_custom_fields($visibility = 0, $ProfileID, $ProfileGender, $ProfileG
 	
 	if (!empty($results)) {
 		foreach ($results as $data) {
-			if ($ProfileGenderShow) {
-				if ($data->ProfileCustomShowGender == $ProfileGender ) { // Depends on Current LoggedIn User's Gender
-					bb_custom_fields_template($visibility, $ProfileID, $data);
-				} elseif (empty($data->ProfileCustomShowGender)) {
-					bb_custom_fields_template($visibility, $ProfileID, $data);
-				}
-			 } else {
-				bb_custom_fields_template($visibility, $ProfileID, $data);
-			 }
-			// END Query2
-			echo "    </td>\n";
-			echo "  </tr>\n";
+			
+			if ($ProfileGenderShow)
+				if ($data->ProfileCustomShowGender == $ProfileGender );
+
+			bb_custom_fields_template($visibility, $ProfileID, $data);
+
+			//echo "    </td>\n";
+			//echo "  </tr>\n";
 		} // End foreach
 
 	} else {
@@ -2182,11 +2182,12 @@ function bb_custom_fields_template($visibility = 0, $ProfileID, $data) {
 				echo "</fieldset>";
 			}
 		} elseif ($ProfileCustomType == 7) { //Imperial/Metrics 
-			$limit = 80; // 
+			$start = 50;
+			$limit = 220; // 
 			?>
             <select name="ProfileCustomID<?php echo $data->ProfileCustomID ?>">
                 <option value="">--</option>
-            	<?php for ($i = 12; $i <= $limit; $i++) : // display height options ?>
+            	<?php for ($i = $start; $i <= $limit; $i++) : // display height options ?>
                 <option value="<?php echo $i ?>" <?php selected($ProfileCustomValue, $i) ?>><?php echo bb_agency_display_height($i) ?></option>
             	<?php endfor; ?>
             </select>
@@ -3332,14 +3333,15 @@ function bulk_register_and_send_email() {
 
 function send_email_lp($login, $password, $email) {
     $admin_email = get_bloginfo('admin_email');
+    $site = get_bloginfo('name');
 
-    $headers = 'From: BB Agency <' . $admin_email . '>\r\n';
+    $headers = "From: $site <$admin_email>\r\n";
 
     $subject = 'Your new Login and Password';
     
     $message = read_email_content(true);
     if ($message == 'empty') {
-        $message = 'Hello, we generated new login and password for you at BB Agency\n\n[login]\n[password]\n\nYou can login [url]\n\nThanks.';
+        $message = "Hello, we generated new login and password for you at $site\n\n[login]\n[password]\n\nYou can login [url]\n\nThanks.";
     }
 
     $message = str_replace('[login]', 'Login: <strong>' . $login . '</strong>', $message);

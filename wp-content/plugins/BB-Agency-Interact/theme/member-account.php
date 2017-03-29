@@ -13,9 +13,9 @@ global $current_user, $wp_roles;
 get_currentuserinfo();
 // Get Settings
 $bb_agency_options_arr = get_option('bb_agency_options');
-	$bb_agency_option_profilenaming 		= (int)$bb_agency_options_arr['bb_agency_option_profilenaming'];
+$bb_agency_option_profilenaming = (int)$bb_agency_options_arr['bb_agency_option_profilenaming'];
 $bb_agencyinteract_options_arr = get_option('bb_agencyinteract_options');
-	$bb_agencyinteract_option_registerallow = (int)$bb_agencyinteract_options_arr['bb_agencyinteract_option_registerallow'];
+$bb_agencyinteract_option_registerallow = bb_agencyinteract_ALLOW_REGISTRATION;
 
 // Were they users or agents?
 $profiletype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
@@ -33,14 +33,14 @@ if ($profiletype == 1) { $profiletypetext = __("Agent/Producer", bb_agencyintera
 
 // Form Post
 if (isset($_POST['action'])) {
-	$ProfileID					=$_POST['ProfileID'];
-	$ProfileUsername			=$_POST['ProfileUsername'];
-	$ProfilePassword			=$_POST['ProfilePassword'];
-	$ProfilePasswordConfirm		=$_POST['ProfilePasswordConfirm'];
-	$ProfileUserLinked			=$_POST['ProfileUserLinked'];
-	$ProfileContactNameFirst	=trim($_POST['ProfileContactNameFirst']);
-	$ProfileContactNameLast		=trim($_POST['ProfileContactNameLast']);
-	$ProfileContactDisplay		=trim($_POST['ProfileContactDisplay']);
+	$ProfileID					= $_POST['ProfileID'];
+	$ProfileUsername			= $_POST['ProfileUsername'];
+	$ProfilePassword			= $_POST['ProfilePassword'];
+	$ProfilePasswordConfirm		= $_POST['ProfilePasswordConfirm'];
+	$ProfileUserLinked			= $_POST['ProfileUserLinked'];
+	$ProfileContactNameFirst	= trim($_POST['ProfileContactNameFirst']);
+	$ProfileContactNameLast		= trim($_POST['ProfileContactNameLast']);
+	$ProfileContactDisplay		= trim($_POST['ProfileContactDisplay']);
 
   	if (empty($ProfileContactDisplay)) {  // Probably a new record... 
 		if ($bb_agency_option_profilenaming == 0) { 
@@ -57,31 +57,31 @@ if (isset($_POST['action'])) {
                 }
   	}
 
-	$ProfileGallery				=$_POST['ProfileGallery'];
+	$ProfileGallery				= $_POST['ProfileGallery'];
 
   	if (empty($ProfileGallery)) {  // Probably a new record... 
 		$ProfileGallery = bb_agency_safenames($ProfileContactDisplay); 
   	}
 
-	$ProfileContactEmail		=$_POST['ProfileContactEmail'];
-	$ProfileContactWebsite		=$_POST['ProfileContactWebsite'];
-	$ProfileContactLinkFacebook	=$_POST['ProfileContactLinkFacebook'];
-	$ProfileContactLinkTwitter	=$_POST['ProfileContactLinkTwitter'];
-	$ProfileContactLinkYouTube	=$_POST['ProfileContactLinkYouTube'];
-	$ProfileContactLinkFlickr	=$_POST['ProfileContactLinkFlickr'];
-	$ProfileContactPhoneHome	=$_POST['ProfileContactPhoneHome'];
-	$ProfileContactPhoneCell	=$_POST['ProfileContactPhoneCell'];
-	$ProfileContactPhoneWork	=$_POST['ProfileContactPhoneWork'];
-	$ProfileGender    		=$_POST['ProfileGender'];
-	$ProfileType    		=$_POST['ProfileType'];
-	$ProfileDateBirth	    		=$_POST['ProfileDateBirth'];
-	$ProfileDateDue	    		=$_POST['ProfileDateDue'];
-	$ProfileLocationStreet		=$_POST['ProfileLocationStreet'];
-	$ProfileLocationCity		=bb_agency_strtoproper($_POST['ProfileLocationCity']);
-	$ProfileLocationState		=strtoupper($_POST['ProfileLocationState']);
-	$ProfileLocationZip		=$_POST['ProfileLocationZip'];
-	$ProfileLocationCountry		=$_POST['ProfileLocationCountry'];
-	$ProfileLanguage			=$_POST['ProfileLanguage'];
+	$ProfileContactEmail		= $_POST['ProfileContactEmail'];
+	$ProfileContactWebsite		= $_POST['ProfileContactWebsite'];
+	$ProfileContactLinkFacebook	= $_POST['ProfileContactLinkFacebook'];
+	$ProfileContactLinkTwitter	= $_POST['ProfileContactLinkTwitter'];
+	$ProfileContactLinkYouTube	= $_POST['ProfileContactLinkYouTube'];
+	$ProfileContactLinkFlickr	= $_POST['ProfileContactLinkFlickr'];
+	$ProfileContactPhoneHome	= $_POST['ProfileContactPhoneHome'];
+	$ProfileContactPhoneCell	= $_POST['ProfileContactPhoneCell'];
+	$ProfileContactPhoneWork	= $_POST['ProfileContactPhoneWork'];
+	$ProfileGender    			= $_POST['ProfileGender'];
+	$ProfileType    			= $_POST['ProfileType'];
+	$ProfileDateBirth	    	= $_POST['ProfileDateBirth'];
+	$ProfileDateDue	    		= $_POST['ProfileDateDue'];
+	$ProfileLocationStreet		= $_POST['ProfileLocationStreet'];
+	$ProfileLocationCity		= bb_agency_strtoproper($_POST['ProfileLocationCity']);
+	$ProfileLocationState		= strtoupper($_POST['ProfileLocationState']);
+	$ProfileLocationZip			= $_POST['ProfileLocationZip'];
+	$ProfileLocationCountry		= $_POST['ProfileLocationCountry'];
+	$ProfileLanguage			= $_POST['ProfileLanguage'];
 
 	if ($bb_agencyinteract_option_registerapproval == 1) {
 

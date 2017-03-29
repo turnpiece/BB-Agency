@@ -1,17 +1,20 @@
 <?php
-/*
-Default Contact
-*/
+	/*
+	Default Contact
+	*/
+
+	global $wpdb;
+
+	// images
+	$queryImg = "SELECT * FROM ". table_agency_profile_media ." media WHERE ProfileID =  \"". $ProfileID ."\" AND ProfileMediaType = \"Image\" AND ProfileMediaPrimary = 1";
+	$resultsImg = $wpdb->get_results($queryImg);
 
 	echo "<div id=\"profile-contact\">\n";
 	echo "	<div id=\"profile-picture\">\n";
 
-		// images
-		$queryImg = "SELECT * FROM ". table_agency_profile_media ." media WHERE ProfileID =  \"". $ProfileID ."\" AND ProfileMediaType = \"Image\" AND ProfileMediaPrimary = 1";
-		$resultsImg = mysql_query($queryImg);
-		$countImg = mysql_num_rows($resultsImg);
-		while ($dataImg = mysql_fetch_array($resultsImg)) {
-			echo "		<a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" rel=\"lightbox-profile". $ProfileID ."\"><img src=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg['ProfileMediaURL'] ."\" /></a>\n";
+	if (!empty($resultsImg))
+		foreach ($resultsImg as $dataImg) {
+			echo "<a href=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg->ProfileMediaURL ."\" rel=\"lightbox-profile". $ProfileID ."\"><img src=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $dataImg->ProfileMediaURL ."\" /></a>\n";
 		}
 
 	echo "	</div> <!-- #profile-picture -->\n";
@@ -39,4 +42,3 @@ Default Contact
 	echo "	  <div style=\"clear: both;\"></div>\n"; // Clear All
 	echo "	</div>\n";  // Close info
 	echo "</div>\n";  // Close Contact
-?>

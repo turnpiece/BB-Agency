@@ -187,8 +187,9 @@ if (isset($_POST['action'])) {
 			
                 // Notify admin and user
                 if (isset($ProfileNotifyUser) && $ProfileNotifyUser <> "yes" && isset($new_user) && function_exists('bb_agencyinteract_approvemembers')) {
-                    wp_new_user_notification($new_user, $ProfilePassword);
+                    wp_new_user_notification( $new_user, null, 'both' );
                 }
+
                 // Set Display Name as Record ID (We have to do this after so we know what record ID to use... right ;)
                 if ($bb_agency_option_profilenaming == 3) {
                     $ProfileContactDisplay = "ID-" . $ProfileID;
@@ -315,8 +316,8 @@ if (isset($_POST['action'])) {
                             // Upload if it doesnt exist already
                             $path_parts = pathinfo($_FILES['profileMedia' . $i]['name']);
                             $safeProfileMediaFilename = bb_agency_safenames($path_parts['filename'] . "." . $path_parts['extension']);
-                            $results = mysql_query("SELECT * FROM `$t_media` WHERE ProfileID='" . $ProfileID . "' AND ProfileMediaURL = '" . $safeProfileMediaFilename . "'") or die(mysql_error());
-                            $count = mysql_num_rows($results);
+                            $results = $wpdb->get_results("SELECT * FROM `$t_media` WHERE ProfileID='" . $ProfileID . "' AND ProfileMediaURL = '" . $safeProfileMediaFilename . "'");
+                            $count = count($results);
 
                             if ($count < 1) {
                                 if ($uploadMediaType == "Image") {
@@ -412,11 +413,11 @@ if (isset($_POST['action'])) {
 
                 /* --------------------------------------------------------- CLEAN THIS UP -------------- */
                 // Do we have a custom image yet? Lets just set the first one as primary.
-                $results = mysql_query("SELECT * FROM `$t_media` WHERE ProfileID='$ProfileID' AND ProfileMediaType = 'Image' AND ProfileMediaPrimary='1'");
-                $count = mysql_num_rows($results);
+                $results = $wpdb->get_results("SELECT * FROM `$t_media` WHERE ProfileID='$ProfileID' AND ProfileMediaType = 'Image' AND ProfileMediaPrimary='1'");
+                $count = count($results);
                 if ($count < 1) {
-                    $resultsNeedOne = mysql_query("SELECT * FROM `$t_media` WHERE ProfileID='" . $ProfileID . "' AND ProfileMediaType = 'Image' LIMIT 0, 1");
-                    while ($dataNeedOne = mysql_fetch_array($resultsNeedOne)) {
+                    $resultsNeedOne = $wpdb->get_results("SELECT * FROM `$t_media` WHERE ProfileID='" . $ProfileID . "' AND ProfileMediaType = 'Image' LIMIT 0, 1");
+                    foreach ($resultsNeedOne as $dataNeedOne) {
                         $resultsFoundOne = $wpdb->query("UPDATE `$t_media` SET ProfileMediaPrimary='1' WHERE ProfileID='" . $ProfileID . "' AND ProfileMediaID = '" . $dataNeedOne['ProfileMediaID'] . "'");
                         break;
                     }
@@ -453,17 +454,16 @@ if (isset($_POST['action'])) {
 
                 // Verify Record
                 $queryDelete = "SELECT * FROM `$t_profile` WHERE `ProfileID` = '$ProfileID'";
-                $resultsDelete = mysql_query($queryDelete);
+                $resultsDelete = $wpdb->get_results($queryDelete);
 
-                while ($dataDelete = mysql_fetch_array($resultsDelete)) {
-                    $ProfileGallery = $dataDelete['ProfileGallery'];
+                foreach ($resultsDelete as $dataDelete) {
+                    $ProfileGallery = $dataDelete->ProfileGallery;
 
                     // Remove Profile
-                    $delete = "DELETE FROM `$t_profile` WHERE `ProfileID` = '$ProfileID'";
-                    $results = $wpdb->query($delete);
+                    $wpdb->delete($t_profile, array( 'ProfileID' => $ProfileID ) );
+
                     // Remove Media
-                    $delete = "DELETE FROM `$t_media` WHERE `ProfileID` = '$ProfileID'";
-                    $results = $wpdb->query($delete);
+                    $wpdb->delete($t_media, array( 'ProfileID' => $ProfileID ) );
 
                     if (isset($ProfileGallery)) {
                         // Remove Folder
@@ -509,16 +509,15 @@ elseif ($_GET['action'] == "deleteRecord" || $_GET['action'] == "deleteDuplicate
     $ProfileID = $_GET['ProfileID'];
     // Verify Record
     $queryDelete = "SELECT * FROM `$t_profile` WHERE `ProfileID` =  '$ProfileID'";
-    $resultsDelete = mysql_query($queryDelete);
-    while ($dataDelete = mysql_fetch_array($resultsDelete)) {
-        $ProfileGallery = $dataDelete['ProfileGallery'];
+    $resultsDelete = $wpdb->get_results($queryDelete);
+    foreach ($resultsDelete as $dataDelete) {
+        $ProfileGallery = $dataDelete->ProfileGallery;
 
         // Remove Profile
-        $delete = "DELETE FROM `$t_profile` WHERE `ProfileID` =  '$ProfileID'";
-        $results = $wpdb->query($delete);
+        $wpdb->delete($t_profile, array( 'ProfileID' => $ProfileID ) );
+
         // Remove Media
-        $delete = "DELETE FROM `$t_media` WHERE `ProfileID` =  '$ProfileID'";
-        $results = $wpdb->query($delete);
+        $wpdb->delete($t_media, array( 'ProfileID' => $ProfileID ) );
 
         if ($_GET['action'] == "deleteRecord") {
             if (isset($ProfileGallery)) {
@@ -562,6 +561,9 @@ elseif ($_GET['action'] == "editRecord" || $_GET['action'] == "addRecord") {
 // *************************************************************************************************** //
 // Manage Record
 function bb_display_manage($ProfileID) {
+    
+    bb_agency_debug( __FUNCTION__ . ' ' . $ProfileID );
+
     global $wpdb;
 
     // database tables
@@ -585,7 +587,7 @@ function bb_display_manage($ProfileID) {
     // Include Admin Menu
     include ("admin-menu.php");
 
-    if (!empty($ProfileID) && $ProfileID > 0) {
+    if (!empty($ProfileID)) {
 
         $query = "SELECT p.*, dt.`DataTypeTalent` AS HasTalent FROM `$t_profile` p LEFT JOIN `$t_data_type` dt ON dt.`DataTypeID` = p.`ProfileType` WHERE ProfileID = '$ProfileID' LIMIT 1";
 
@@ -831,7 +833,7 @@ function bb_display_manage($ProfileID) {
     </div>
 
     <div id="profile-manage-media" class="halfwidth alignright">
-        <?php if (!empty($ProfileID) && $ProfileID > 0) { // Editing Record ?>
+        <?php if (!empty($ProfileID)) : // Editing Record ?>
         <h3><?php _e("Gallery", bb_agency_TEXTDOMAIN) ?></h3>
         <script type="text/javascript">
             function confirmDelete(delMedia,mediaType) {
@@ -936,7 +938,7 @@ function bb_display_manage($ProfileID) {
                 }
             }
 
-            // Go about our biz-nazz
+            // Get images
             $queryImg = "SELECT * FROM `$t_media` WHERE `ProfileID` = '$ProfileID' AND `ProfileMediaType` = 'Image' ORDER BY `ProfileMediaPrimary` DESC, `ProfileMediaID` DESC";
 
             bb_agency_debug($queryImg);
@@ -978,64 +980,64 @@ function bb_display_manage($ProfileID) {
 
             if ($countImg < 1) : ?>
                 <div><?php _e("There are no images loaded for this profile yet.", bb_agency_TEXTDOMAIN) ?></div>
-            <?php endif; ?>
-            <div style="clear: both;"></div>
+            <?php else : ?>
+                <div style="clear: both;"></div>
                 <p>
-                    <a id="mass_gallery_delete" href="#"><?php _e('Delete Selected Images') ?></a>
+                    <a id="mass_gallery_delete" href="#"><?php _e('Delete Selected Images', bb_agency_TEXTDOMAIN) ?></a>
                 </p>
                 <p>
-                    <a id="mass_gallery_show" href="#"><?php _e('Show Selected Images') ?></a>
+                    <a id="mass_gallery_show" href="#"><?php _e('Show Selected Images', bb_agency_TEXTDOMAIN) ?></a>
                 </p>
                 <p>
-                    <a id="mass_gallery_hide" href="#"><?php _e('Hide Selected Images') ?></a>
+                    <a id="mass_gallery_hide" href="#"><?php _e('Hide Selected Images', bb_agency_TEXTDOMAIN) ?></a>
                 </p>
-            <script language="javascript">
+                <script language="javascript">
 
-                jQuery(document).ready(function($) {
+                    jQuery(document).ready(function($) {
 
-                    var pID = <?php echo $ProfileID ?>;
-                    var adminUrl = '<?php echo admin_url('admin.php?page='.$_GET['page']) ?>';
+                        var pID = <?php echo $ProfileID ?>;
+                        var adminUrl = '<?php echo admin_url('admin.php?page='.$_GET['page']) ?>';
 
-                    function getIds() {
-                        var ids = '&';
-                        $("input:checkbox[name=massgalsel]:checked").each(function() {
-                            if(ids != '&'){
-                                ids += '&';
-                            }
-                            ids += 'targetids[]='+$(this).val();
-                        });
-                        return ids;
-                    }
-
-                    $('#mass_gallery_delete').on( 'click', function() {
-                        mass_gallery_action( 'delete' )     
-                    })
-
-                    $('#mass_gallery_show').on( 'click', function() {
-                        mass_gallery_action( 'show' )  
-                    })
-
-                    $('#mass_gallery_hide').on( 'click', function() {
-                        mass_gallery_action( 'hide' )  
-                    })
-
-                    function mass_gallery_action( type ) {
-                        var ids = getIds();
-
-                        if( ids != '&'){
-                            if(confirm("Do you want to "+type+" all the selected images?")){
-                                var url = adminUrl + "&action=editRecord&ProfileID=" + pID + "&actionsub=massphoto" + type + ids;
-                                document.location = url;
-                            }
+                        function getIds() {
+                            var ids = '&';
+                            $("input:checkbox[name=massgalsel]:checked").each(function() {
+                                if(ids != '&'){
+                                    ids += '&';
+                                }
+                                ids += 'targetids[]='+$(this).val();
+                            });
+                            return ids;
                         }
-                        else{
-                            alert("You have to select images to "+type);
-                        }  
-                    }
-                })
 
-            </script>
+                        $('#mass_gallery_delete').on( 'click', function() {
+                            mass_gallery_action( 'delete' )     
+                        })
 
+                        $('#mass_gallery_show').on( 'click', function() {
+                            mass_gallery_action( 'show' )  
+                        })
+
+                        $('#mass_gallery_hide').on( 'click', function() {
+                            mass_gallery_action( 'hide' )  
+                        })
+
+                        function mass_gallery_action( type ) {
+                            var ids = getIds();
+
+                            if( ids != '&'){
+                                if(confirm("Do you want to "+type+" all the selected images?")){
+                                    var url = adminUrl + "&action=editRecord&ProfileID=" + pID + "&actionsub=massphoto" + type + ids;
+                                    document.location = url;
+                                }
+                            }
+                            else{
+                                alert("You have to select images to "+type);
+                            }  
+                        }
+                    })
+
+                </script>
+            <?php endif; ?>
             <br /><br />
             <h3><?php _e("Media", bb_agency_TEXTDOMAIN) ?></h3>
             <p><?php _e("The following files (pdf, audio file, etc.) are associated with this record", bb_agency_TEXTDOMAIN) ?>.</p>
@@ -1068,6 +1070,8 @@ function bb_display_manage($ProfileID) {
             </div>
         <?php endif; ?>
         <div style="clear: both;"></div>
+
+    <?php endif; ?>
 
     <?php if (defined('bb_agency_ADMIN_MEDIA_UPLOAD') && bb_agency_ADMIN_MEDIA_UPLOAD) : ?>
         <h3><?php _e("Upload", bb_agency_TEXTDOMAIN) ?></h3>
@@ -1111,9 +1115,7 @@ function bb_display_manage($ProfileID) {
             </p>
         </div>
     <?php endif; ?>
-    <?php
-    }
-    ?>
+
     </div>
 
     <div style="clear: both; "></div>
@@ -1542,25 +1544,24 @@ function bb_display_list() {
                             <select name="ProfileLocationCity">
                                 <option value=""><?php _e("Any Location", bb_agency_TEXTDOMAIN) ?></option>
                                 <?php
-                                $query = "SELECT DISTINCT ProfileLocationCity, ProfileLocationState FROM `$t_profile` ORDER BY ProfileLocationState, ProfileLocationCity ASC";
+                                $query = "SELECT DISTINCT `ProfileLocationCity`, `ProfileLocationState` FROM `$t_profile` ORDER BY `ProfileLocationState`, `ProfileLocationCity` ASC";
                                 $results = $wpdb->get_results($query);
-                                $count = count($results);
-                                while ($data = mysql_fetch_array($results)) :
-                                    if (isset($data['ProfileLocationCity']) && !empty($data['ProfileLocationCity'])) : ?>
-                                        <option value="<?php echo $data['ProfileLocationCity'] ?>" <?php selected($selectedCity, $data["ProfileLocationCity"]) ?>><?php echo $data['ProfileLocationCity'] ?></option>
+                                if (!empty($results)) : foreach ($results as $data) :
+                                    if (!empty($data->ProfileLocationCity)) : ?>
+                                        <option value="<?php echo $data->ProfileLocationCity ?>" <?php selected($selectedCity, $data->ProfileLocationCity) ?>><?php echo $data->ProfileLocationCity ?></option>
                                     <?php endif;
-                                endwhile; ?>
+                                endforeach; endif; ?>
                             </select>
                         </span>
                         <span><?php _e("Gender", bb_agency_TEXTDOMAIN) ?>:
                             <select name="ProfileGender">
                                 <option value=""><?php _e("Any Gender", bb_agency_TEXTDOMAIN) ?></option>
                                 <?php
-                                $query2 = "SELECT GenderID, GenderTitle FROM " . table_agency_data_gender . " ORDER BY GenderID";
-                                $results2 = mysql_query($query2);
-                                while ($dataGender = mysql_fetch_array($results2)) : ?>
-                                <option value="<?php echo  $dataGender["GenderID"] ?>" <?php selected($_GET["ProfileGender"], $dataGender["GenderID"], false) ?>><?php echo $dataGender["GenderTitle"] ?></option>
-                                <?php endwhile; ?>
+                                $query2 = "SELECT `GenderID`, `GenderTitle` FROM " . table_agency_data_gender . " ORDER BY `GenderID`";
+                                $results2 = $wpdb->get_results($query2);
+                                foreach ($results2 as $dataGender) : ?>
+                                <option value="<?php echo  $dataGender->GenderID ?>" <?php selected($_GET['ProfileGender'], $dataGender->GenderID, false) ?>><?php echo $dataGender->GenderTitle ?></option>
+                                <?php endforeach; ?>
                             </select>
                         </span>
                         <span class="submit"><input type="submit" value="<?php _e("Filter", bb_agency_TEXTDOMAIN) ?>" class="button-primary" /></span>

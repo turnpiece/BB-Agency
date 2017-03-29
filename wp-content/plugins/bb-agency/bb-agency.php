@@ -5,7 +5,7 @@
   Description: Forked from RB Agency plugin and adapted for the Beautiful Bumps agency. With this plugin you can easily manage models' profiles and information.
   Author: Paul Jenkins
   Author URI: http://turnpiece.com/
-  Version: 0.0.7
+  Version: 0.0.8
 */
 
 $bb_agency_VERSION = "2.0.0"; // starter
@@ -47,9 +47,9 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 	define('bb_agency_SITETYPE', 'children'); // bumps or children
 	define('bb_agency_MAX_AGE', 18);
 	define('bb_agency_PLUGIN_TITLE', 'BB Agency'. (bb_agency_SITETYPE == 'children' ? ' (Kiddiwinks)' : ''));
-	define('bb_agency_PHONE', bb_agency_SITETYPE == 'children' ? '020 3051 8894' : '020 3355 8743');
+	define('bb_agency_PHONE', bb_agency_SITETYPE == 'children' ? '07740 334325' : '020 3355 8743');
 	define('bb_agency_LOGOPATH', ABSPATH . '/wp-content/uploads/' . (bb_agency_SITETYPE == 'children' ? '2014/07/Kiddiwinks-Logo.png' : '2013/07/Beautiful_Bumps_Logo1.jpg'));
-	define('bb_agency_DEBUGGING', true); // debugging
+	define('bb_agency_DEBUGGING', false); // debugging
 	
 	//define('bb_agency_TESTING', true);
 	define('bb_agency_TERMS', get_bloginfo('url').'/clients-standard-terms-conditions');
@@ -466,6 +466,7 @@ if ( is_admin() ){
 
 	add_action( 'init', 'bb_agency_admin_print_styles', 100);
 		function bb_agency_admin_print_styles() {
+			wp_enqueue_style('bb-agency-admin', plugins_url('style/admin.css', __FILE__) );
 			wp_enqueue_style('jquery-ui-style', plugins_url('js/jquery-ui-1.10.3.custom.min.css', __FILE__) );
 		}
 

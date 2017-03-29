@@ -17,7 +17,7 @@
         6 => __("Profile Types", bb_agency_TEXTDOMAIN),
         7 => __("Custom Fields", bb_agency_TEXTDOMAIN),
 //        8 => __("Media Categories", bb_agency_TEXTDOMAIN),
-        11 => __("Interactive Settings", bb_agency_TEXTDOMAIN),
+//        11 => __("Interactive Settings", bb_agency_TEXTDOMAIN),
     );
 
     $ConfigID = isset($_REQUEST['ConfigID']) ? $_REQUEST['ConfigID'] : 0;
@@ -66,10 +66,11 @@ switch ($ConfigID) {
     case 8 :
     echo "Media Categories";
     break;
-
+/*
     case 11 :
     echo "Interactive Settings";
     break;
+*/
 }
 ?>  
 </h2>
@@ -86,36 +87,36 @@ switch ($ConfigID) {
         <p><?php _e("The following settings modify the core BB Agency settings.", bb_agency_TEXTDOMAIN) ?></p>
         <div class="boxlink">
             <h3><?php _e("Features", bb_agency_TEXTDOMAIN) ?></h3>
-            <a class="button-primary" href="?page=<?php echo $_GET["page"] ?>&amp;ConfigID=1=" title="<?php _e("Settings", bb_agency_TEXTDOMAIN) ?>"><?php _e("Settings", bb_agency_TEXTDOMAIN) ?></a><br />
+            <a class="button-primary" href="<?php echo admin_url( 'admin.php?page=' . $page . "&amp;ConfigID=1" ) ?>" title="<?php _e("Settings", bb_agency_TEXTDOMAIN) ?>"><?php _e("Settings", bb_agency_TEXTDOMAIN) ?></a><br />
             <p><?php _e("Access this area to manage all of the core settings including layout types, privacy settings and more", bb_agency_TEXTDOMAIN) ?></p>
         </div>
         <div class="boxlink">
             <h3><?php _e("Style", bb_agency_TEXTDOMAIN) ?></h3>
-            <a class="button-primary" href="?page=<?php echo $_GET["page"] ?>&amp;ConfigID=10=" title="<?php _e("Style", bb_agency_TEXTDOMAIN) ?>"><?php _e("Style", bb_agency_TEXTDOMAIN) ?></a><br />
+            <a class="button-primary" href="<?php echo admin_url( 'admin.php?page=' . $page . "&amp;ConfigID=10" ) ?>" title="<?php _e("Style", bb_agency_TEXTDOMAIN) ?>"><?php _e("Style", bb_agency_TEXTDOMAIN) ?></a><br />
             <p><?php _e("Manage the stylesheet (CSS) controlling the category and profile layouts", bb_agency_TEXTDOMAIN) ?></p>
         </div>
     </div>
     <hr />
 
-	<?php if (function_exists('bb_agencyinteract_settings')) : ?>
+	<?php /*if (function_exists('bb_agencyinteract_settings')) : ?>
     <div class="boxlinkgroup">
         <h2><?php _e("Interactive Settings", bb_agency_TEXTDOMAIN) ?></h2>
-        <p><?php _e("These settings modify the behavior of the BB Agency Interactive plugin.", bb_agency_TEXTDOMAIN) ?></p>
+        <p><?php _e("These settings modify the behaviour of the BB Agency Interactive plugin.", bb_agency_TEXTDOMAIN) ?></p>
         <div class="boxlink">
             <h3><?php _e("Interactive Settings", bb_agency_TEXTDOMAIN) ?></h3>
-            <a class="button-primary" href="?page=<?php echo $_GET["page"] ?>&amp;ConfigID=11=" title="<?php _e("Interactive Settings", bb_agency_TEXTDOMAIN) ?>"><?php _e("Settings", bb_agency_TEXTDOMAIN) ?></a><br />
+            <a class="button-primary" href="<?php echo admin_url( 'admin.php?page=' . $page . "&amp;ConfigID=11" ) ?>" title="<?php _e("Interactive Settings", bb_agency_TEXTDOMAIN) ?>"><?php _e("Settings", bb_agency_TEXTDOMAIN) ?></a><br />
             <p><?php _e("Access this area to manage all of the core settings including layout types, privacy settings and more", bb_agency_TEXTDOMAIN) ?></p>
         </div>
  
         <div class="boxlink">
             <h3><?php _e("Subscription Rates", bb_agency_TEXTDOMAIN) ?></h3>
-            <a class="button-primary" href="?page=<?php echo $_GET["page"] ?>&amp;ConfigID=12=" title="<?php _e("Subscription Rates", bb_agency_TEXTDOMAIN) ?>"><?php _e("Subscription Rates", bb_agency_TEXTDOMAIN) ?></a><br />
+            <a class="button-primary" href="<?php echo admin_url( 'admin.php?page=' . $page . "&amp;ConfigID=12" ) ?>" title="<?php _e("Subscription Rates", bb_agency_TEXTDOMAIN) ?>"><?php _e("Subscription Rates", bb_agency_TEXTDOMAIN) ?></a><br />
             <p><?php _e("Manage the subscription rate tiers and descriptions", bb_agency_TEXTDOMAIN) ?></p>
         </div>
  
     </div>
     <hr />
-	<?php endif; ?>
+	<?php endif;*/?>
 
 	<?php // Drop Down Fields ?>
     <div class="boxlinkgroup">
@@ -198,9 +199,9 @@ switch ($ConfigID) {
             <ul>
             <?php foreach ($_REQUEST['ProfileID'] as $id) : if ($id) : ?> 
                 <li><?php 
-                $result = mysql_query("SELECT * FROM $table WHERE `ProfileID` = $id");
-                if ($result && mysql_num_rows($result)) {
-                    $record = mysql_fetch_array($result);
+                $record = $wpdb->get_row("SELECT * FROM $table WHERE `ProfileID` = $id");
+                if ($record) {
+
                     echo '<strong>'.$record->ProfileContactDisplay.'</strong>: ';
                     // get address to geocode
                     $address = array();
@@ -218,8 +219,6 @@ switch ($ConfigID) {
                             $sql = "UPDATE $table SET $set WHERE `ProfileID` = $id";
                             echo '('.$location['lat'].', '.$location['lng'].')';
                             $wpdb->query($sql);
-                            if (mysql_error())
-                                wp_die("Database Error: $sql - ".mysql_error());
                         } else {
                             echo 'Failed to geocode'; 
                         }
@@ -302,7 +301,7 @@ EOF;
 // *************************************************************************************************** //
 // Manage Settings
     ?>
-	<form method="post" action="options.php=">
+	<form method="post" action="<?php echo admin_url( 'admin.php?page='. $page . "&amp;ConfigID=$ConfigID" ) ?>">
         <?php
     		settings_fields( 'bb-agencyinteract-settings-group' ); 
     		$bb_agencyinteract_options_arr = get_option('bb_agencyinteract_options');
@@ -486,20 +485,19 @@ EOF;
         			if (is_numeric($SubscriptionRateID)) {
         				// Verify Record
         				$queryDelete = "SELECT SubscriptionRateID, SubscriptionRateTitle FROM ". table_agencyinteract_subscription_rates ." WHERE SubscriptionRateID = $SubscriptionRateID";
-        				$resultsDelete = mysql_query($queryDelete);
-        				while ($dataDelete = mysql_fetch_array($resultsDelete)) {
+        				$resultsDelete = $wpdb->get_results($queryDelete);
+        				foreach ($resultsDelete as $dataDelete) {
         			
         					// Remove Record
-        					$delete = "DELETE FROM " . table_agencyinteract_subscription_rates . " WHERE `SubscriptionRateID` = $SubscriptionRateID";
-        					$results = $wpdb->query($delete);
+        					$deleted = $wpdb->delete( table_agencyinteract_subscription_rates, array( 'SubscriptionRateID' => $SubscriptionRateID ) );
         					
-        					?>
+        					if ($deleted) : ?>
                             <div id="message" class="updated">
                                 <p>
-                                    <?php _e(LabelSingular ." <strong>". $dataDelete['SubscriptionRateTitle'] ."</strong> deleted successfully", bb_agency_TEXTDOMAIN) ?>!
+                                    <?php _e(LabelSingular ." <strong>". $dataDelete->SubscriptionRateTitle ."</strong> deleted successfully", bb_agency_TEXTDOMAIN) ?>!
                                 </p>
                             </div>
-        					<?php
+        					<?php endif; 
         				} // while
         			} // it was numeric
     			} // for each
@@ -513,19 +511,18 @@ EOF;
         $SubscriptionRateID = $_GET['SubscriptionRateID'];
         if (is_numeric($SubscriptionRateID)) {
             // Verify Record
-            $queryDelete = "SELECT SubscriptionRateID, SubscriptionRateTitle FROM ". table_agencyinteract_subscription_rates ." WHERE SubscriptionRateID = $SubscriptionRateID";
-            $resultsDelete = mysql_query($queryDelete);
-            while ($dataDelete = mysql_fetch_array($resultsDelete)) {
+            $queryDelete = "SELECT `SubscriptionRateID`, `SubscriptionRateTitle` FROM ". table_agencyinteract_subscription_rates ." WHERE `SubscriptionRateID` = $SubscriptionRateID";
+            $resultsDelete = $wpdb->get_results($queryDelete);
+            foreach ($resultsDelete as $dataDelete) {
 	
     			// Remove Record
-    			$delete = "DELETE FROM " . table_agencyinteract_subscription_rates . " WHERE SubscriptionRateID = $SubscriptionRateID";
-    			$results = $wpdb->query($delete);
+    			if ( $wpdb->delete( table_agencyinteract_subscription_rates, array( 'SubscriptionRateID' => $SubscriptionRateID ) ) ) :
     			?>
     			<div id="message" class="updated">
-                    <p><?php _e(LabelSingular ." <strong>". $dataDelete['SubscriptionRateTitle'] ."</strong> deleted successfully", bb_agency_TEXTDOMAIN) ?>!
+                    <p><?php _e(LabelSingular ." <strong>". $dataDelete->SubscriptionRateTitle ."</strong> deleted successfully", bb_agency_TEXTDOMAIN) ?>!
                     </p>
                 </div>
-                <?php
+                <?php endif;
 				
             } // is there record?
         } // it was numeric
@@ -536,16 +533,17 @@ EOF;
 		
 		if ( $SubscriptionRateID > 0) {
 			$query = "SELECT * FROM " . table_agencyinteract_subscription_rates . " WHERE SubscriptionRateID='$SubscriptionRateID'";
-			$results = mysql_query($query) or die (__('Error, query failed', bb_agency_TEXTDOMAIN));
-			$count = mysql_num_rows($results);
-			while ($data = mysql_fetch_array($results)) {
-				$SubscriptionRateID		=$data['SubscriptionRateID'];
-				$SubscriptionRateTitle	=stripslashes($data['SubscriptionRateTitle']);
-				$SubscriptionRateType	=$data['SubscriptionRateType'];
-				$SubscriptionRateText	=$data['SubscriptionRateText'];
-				$SubscriptionRatePrice	=$data['SubscriptionRatePrice'];
-				$SubscriptionRateTerm	=$data['SubscriptionRateTerm'];
-			} 
+			$results = $wpdb->get_results($query);
+            if (!empty($results)) {
+    			foreach ($results as $data) {
+    				$SubscriptionRateID		= $data->SubscriptionRateID;
+    				$SubscriptionRateTitle	= stripslashes($data->SubscriptionRateTitle);
+    				$SubscriptionRateType	= $data->SubscriptionRateType;
+    				$SubscriptionRateText	= $data->SubscriptionRateText;
+    				$SubscriptionRatePrice	= $data->SubscriptionRatePrice;
+    				$SubscriptionRateTerm	= $data->SubscriptionRateTerm;
+    			} 
+            }
 		    ?>
 			<h3 class="title"><?php printf( __("Edit %1$s", bb_agency_TEXTDOMAIN), LabelPlural) ?></h3>
 			<p><?php printf( __("Fill in the form below to add a new record %1$s", bb_agency_TEXTDOMAIN), LabelPlural) ?><strong><?php _e("Required fields are marked", bb_agency_TEXTDOMAIN) ?> *</strong></p>
@@ -554,9 +552,9 @@ EOF;
 		} else {
 		
 			$SubscriptionRateID		= 0;
-			$SubscriptionRateTitle	="";
-			$SubscriptionRateType	="";
-			$SubscriptionRateText	="";
+			$SubscriptionRateTitle	= "";
+			$SubscriptionRateType	= "";
+			$SubscriptionRateText	= "";
 			$SubscriptionRatePrice	= 0;
 			$SubscriptionRateTerm	= 1;
 			
@@ -567,7 +565,7 @@ EOF;
 		} // Has Subscription rate or not
     } // Edit record
 	?>
-	<form method="post" enctype="multipart/form-data" action="<?php echo admin_url('admin.php?page='.$_GET['page'].'&amp;ConfigID='.$ConfigID) ?>">
+	<form method="post" enctype="multipart/form-data" action="<?php echo admin_url("admin.php?page={$page}&amp;ConfigID={$ConfigID}") ?>">
 	    <table class="form-table">
             <tbody>
                 <tr valign="top">
@@ -644,7 +642,7 @@ EOF;
     			  $dir = "asc";
     		}
     	?>
-		<form method="post" action="<?php echo admin_url('admin.php?page='. $_GET['page']) ?>">	
+		<form method="post" action="<?php echo admin_url("admin.php?page={$page}&amp;ConfigID={$ConfigID}") ?>">	
             <table cellspacing="0" class="widefat fixed">
                 <thead>
                     <tr class="thead">
@@ -671,27 +669,21 @@ EOF;
                 <tbody>
                 <?php
             		$query = "SELECT * FROM ". table_agencyinteract_subscription_rates ." ORDER BY $sort $dir";
-            		$results = mysql_query($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ));
-            		$count = mysql_num_rows($results);
-            		while ($data = mysql_fetch_array($results)) {
-            			$SubscriptionRateID	=$data['SubscriptionRateID'];
-                    ?>
+            		$results = $wpdb->get_results($query);
+            		if (!empty($results)) : foreach ($results as $data) : $SubscriptionRateID = $data->SubscriptionRateID; ?>
             		<tr>
                         <th class="check-column" scope="row"><input type="checkbox" class="administrator" id="<?php echo $SubscriptionRateID ?>" name="<?php echo $SubscriptionRateID ?>" value="<?php echo $SubscriptionRateID ?>" /></th>
-                		<td class="column">". stripslashes($data['SubscriptionRateTitle']) ."\n";
+                		<td class="column">". stripslashes($data->SubscriptionRateTitle) ."\n";
                     		<div class="row-actions=">
                     		<span class="edit"><a href="<?php echo admin_url("admin.php?page=". $_GET['page']) ."&amp;action=editRecord&amp;SubscriptionRateID=". $SubscriptionRateID ."&amp;ConfigID=". $ConfigID ?>" title="<?php _e("Edit this Record", bb_agency_TEXTDOMAIN) ?>"><?php _e("Edit", bb_agency_TEXTDOMAIN) ?></a> | </span>
                     		<span class="delete"><a class="submitdelete" href="<?php echo admin_url("admin.php?page=". $_GET['page']) ."&amp;action=deleteRecord&amp;SubscriptionRateID=". $SubscriptionRateID ."&amp;ConfigID=". $ConfigID ?>" onclick="if ( confirm('<?php _e("You are about to delete this ". LabelSingular, bb_agency_TEXTDOMAIN) ?>.\'<?php _e("Cancel", bb_agency_TEXTDOMAIN) ?>\' <?php _e("to stop", bb_agency_TEXTDOMAIN) ?>, \'<?php _e("OK", bb_agency_TEXTDOMAIN) ?>\' <?php _e("to delete", bb_agency_TEXTDOMAIN) ?>.') ) { return true;}return false;=" title="<?php _e("Delete this Record", bb_agency_TEXTDOMAIN) ?>"><?php _e("Delete", bb_agency_TEXTDOMAIN) ?></a> </span>
                     		</div>
                 		</td>
-                		<td class="column"><?php if ($data['SubscriptionRateType'] == 0) { echo "Standard"; } ?></td>
-                		<td class="column">&pound;<?php echo $data['SubscriptionRatePrice'] ." / ". $data['SubscriptionRateTerm'] ?> Month Term</td>
-                		<td class="column"><?php echo $data['SubscriptionRateText'] ?></td>
+                		<td class="column"><?php if ($data->SubscriptionRateType == 0) { echo "Standard"; } ?></td>
+                		<td class="column">&pound;<?php echo $data->SubscriptionRatePrice ." / ". $data->SubscriptionRateTerm ?> Month Term</td>
+                		<td class="column"><?php echo $data->SubscriptionRateText ?></td>
             		</tr>
-                    <?php
-            		}
-            		mysql_free_result($results);
-            		if ($count < 1) : ?>
+                    <?php endforeach; else : ?>
             		<tr>
                 		<td class="check-column" scope="row"></th>
                 		<td class="column" colspan=="5"><p><?php _e("There aren't any records loaded yet", bb_agency_TEXTDOMAIN) ?>!</p></td>
@@ -746,7 +738,7 @@ EOF;
         }
 	}
     ?>
-	<form method="post" action="<?php echo admin_url('admin.php?page='. $_GET['page']) ?>">
+	<form method="post" action="<?php echo admin_url("admin.php?page={$page}&amp;ConfigID={$ConfigID}") ?>">
         <table class="form-table=">
             <tbody>
                 <tr valign="top">
@@ -834,19 +826,17 @@ EOF;
     			foreach($_POST as $GenderID) {
                     if (is_numeric($GenderID)) {
                         // Verify Record
-                        $queryDelete = "SELECT GenderID, GenderTitle FROM ". table_agency_data_gender ." WHERE GenderID = $GenderID";
-                        $resultsDelete = mysql_query($queryDelete);
-                        while ($dataDelete = mysql_fetch_array($resultsDelete)) {
-
+                        $queryDelete = "SELECT `GenderID`, `GenderTitle` FROM ". table_agency_data_gender ." WHERE `GenderID` = $GenderID";
+                        $resultsDelete = $wpdb->get_results($queryDelete);
+                        foreach ($resultsDelete as $dataDelete) {
                         	// Remove Record
-                        	$delete = "DELETE FROM " . table_agency_data_gender . " WHERE `GenderID` = $GenderID";
-                        	$results = $wpdb->query($delete);
+                        	if ( $wpdb->delete( table_agency_data_gender, array( 'GenderID' => $GenderID ) ) ) :
                         	?>
                         	<div id="message" class="updated">
-                                <p><?php _e(LabelSingular ." <strong>". $dataDelete['GenderTitle'] .'</strong> deleted successfully', bb_agency_TEXTDOMAIN) ?>!</p>
+                                <p><?php printf( __( '%s <strong>%s</strong> deleted successfully', bb_agency_TEXTDOMAIN), LabelSingular, $dataDelete->GenderTitle ) ?></p>
                             </div>
-                        	<?php
-                        } // while
+                        	<?php endif;
+                        } // foreach
                     } // it was numeric
     			} // for each
                 break;
@@ -860,17 +850,16 @@ EOF;
         if (is_numeric($GenderID)) {
     		// Verify Record
     		$queryDelete = "SELECT GenderID, GenderTitle FROM ". table_agency_data_gender ." WHERE `GenderID` = $GenderID";
-    		$resultsDelete = mysql_query($queryDelete);
-    		while ($dataDelete = mysql_fetch_array($resultsDelete)) {
+    		$resultsDelete = $wpdb->get_results($queryDelete);
+    		foreach ($resultsDelete as $dataDelete) {
     	
     			// Remove Record
-    			$delete = "DELETE FROM " . table_agency_data_gender . " WHERE `GenderID` = $GenderID";
-    			$results = $wpdb->query($delete);
+    			if ( $wpdb->delete( table_agency_data_gender, array( 'GenderID' => $GenderID ) ) ) :
     			?>
     			<div id="message" class="updated">
-                    <p><?php _e(LabelSingular ." <strong>". $dataDelete['GenderTitle'] ."</strong> deleted successfully", bb_agency_TEXTDOMAIN) ?>!</p>
+                    <p><?php printf( __( '%s <strong>%s</strong> deleted successfully', bb_agency_TEXTDOMAIN), LabelSingular, $dataDelete->GenderTitle ) ?></p>
                 </div>
-                <?php
+                <?php endif;
     				
     		} // is there record?
         } // it was numeric
@@ -880,15 +869,15 @@ EOF;
 		$action = $_GET['action'];
 		$GenderID = $_GET['GenderID'];
 		
-		if ( $GenderID > 0) {
-			$query = "SELECT * FROM " . table_agency_data_gender . " WHERE GenderID='$GenderID'";
-			$results = mysql_query($query) or die (__('Error, query failed', bb_agency_TEXTDOMAIN));
-			$count = mysql_num_rows($results);
-			while ($data = mysql_fetch_array($results)) {
-				$GenderID	=$data['GenderID'];
-				$GenderTitle	=stripslashes($data['GenderTitle']);
-			} 
-		      
+		if ($GenderID > 0) {
+			$query = "SELECT * FROM " . table_agency_data_gender . " WHERE `GenderID` = '$GenderID'";
+			$results = $wpdb->get_results($query);
+			if (!empty($results)) {
+    			foreach ($results as $data) {
+    				$GenderID = $data->GenderID;
+    				$GenderTitle = stripslashes($data->GenderTitle);
+    			} 
+    		}
             ?>
 			<h3 class="title"><?php printf(__("Edit %1$s", bb_agency_TEXTDOMAIN), LabelPlural) ?></h3>
 			<p><?php printf(__("Fill in the form below to add a new record %1$s", bb_agency_TEXTDOMAIN), LabelPlural) ?><strong><?php _e("Required fields are marked", bb_agency_TEXTDOMAIN) ?> *</strong></p>
@@ -905,7 +894,7 @@ EOF;
         <?php
     }
     ?>
-	<form method="post" enctype="multipart/form-data" action="<?php echo admin_url('admin.php?page='. $_GET['page']) ?>">
+	<form method="post" enctype="multipart/form-data" action="<?php echo admin_url("admin.php?page={$page}&amp;ConfigID={$ConfigID}") ?>">
 	<table class="form-table=">
 	<tbody>
 	<tr valign="top">
@@ -972,16 +961,13 @@ EOF;
             <tbody>
 	    <?php
 		$query = "SELECT * FROM ". table_agency_data_gender ." ORDER BY $sort $dir";
-		$results = mysql_query($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ));
-		$count = mysql_num_rows($results);
-		while ($data = mysql_fetch_array($results)) :
-			$GenderID	=$data['GenderID'];
-		?>	
+		$results = $wpdb->get_results($query);
+		if (!empty($results)) : foreach ($results as $data) : $GenderID = $data->GenderID; ?>	
     		<tr>
         		<th class="check-column" scope="row">
                     <input type="checkbox" class="administrator" id="<?php echo $GenderID ?>" name="<?php echo $GenderID ?>" value="<?php echo $GenderID ?>" />
                 </th>
-        		<td class="column">". stripslashes($data['GenderTitle']) ."\n";
+        		<td class="column">". stripslashes($data->GenderTitle) ."\n";
             		<div class="row-actions=">
                 		<span class="edit">
                             <a href="<?php echo admin_url("admin.php?page=". $_GET['page']) ."&amp;action=editRecord&amp;GenderID=". $GenderID ."&amp;ConfigID=". $ConfigID ?>" title="<?php _e("Edit this Record", bb_agency_TEXTDOMAIN) ?>"><?php _e("Edit", bb_agency_TEXTDOMAIN) ?>
@@ -992,10 +978,7 @@ EOF;
             		</div>
         		</td>
     		</tr>
-        <?php endwhile; 
-		
-		mysql_free_result($results);
-		if ($count < 1) : ?>
+        <?php endforeach; else : ?>
 		<tr>
     		<td class="check-column" scope="row"></th>
     		<td class="column" colspan=="3"><p><?php _e("There aren't any records loaded yet", bb_agency_TEXTDOMAIN) ?>!</p></td>
@@ -1096,19 +1079,18 @@ EOF;
     			foreach($_POST as $DataTypeID) {
         			if (is_numeric($DataTypeID)) {
         				// Verify Record
-        				$queryDelete = "SELECT DataTypeID, DataTypeTitle FROM ". table_agency_data_type ." WHERE DataTypeID = $DataTypeID";
-        				$resultsDelete = mysql_query($queryDelete);
-        				while ($dataDelete = mysql_fetch_array($resultsDelete)) {
+        				$queryDelete = "SELECT `DataTypeID`, `DataTypeTitle` FROM ". table_agency_data_type ." WHERE `DataTypeID` = $DataTypeID";
+        				$resultsDelete = $wpdb->get_results($queryDelete);
+        				foreach ($resultsDelete as $dataDelete) {
         			
         					// Remove Record
-        					$delete = "DELETE FROM " . table_agency_data_type . " WHERE `DataTypeID` = $DataTypeID";
-        					$results = $wpdb->query($delete);
+        					if ( $wpdb->delete( table_agency_data_type, array( 'DataTypeID' => $DataTypeID ) ) ) :
         					?>
         					<div id="message" class="updated">
-                                <p><?php _e(LabelSingular ." <strong>". $dataDelete['DataTypeTitle'] ."</strong> deleted successfully", bb_agency_TEXTDOMAIN) ?>!</p>
+                                <p><?php printf( __( '%s <strong>%s</strong> deleted successfully', bb_agency_TEXTDOMAIN), LabelSingular, $dataDelete->DataTypeTitle ) ?></p>
                             </div>
-        					<?php
-        				} // while
+        					<?php endif;
+        				} // foreach
         			 } // it was numeric
     			} // for each
                 break;
@@ -1121,19 +1103,18 @@ EOF;
         $DataTypeID = $_GET['DataTypeID'];
         if (is_numeric($DataTypeID)) {
     		// Verify Record
-    		$queryDelete = "SELECT DataTypeID, DataTypeTitle FROM ". table_agency_data_type ." WHERE `DataTypeID` = $DataTypeID";
-    		$resultsDelete = mysql_query($queryDelete);
-    		while ($dataDelete = mysql_fetch_array($resultsDelete)) {
-    	
-    			// Remove Record
-    			$delete = "DELETE FROM " . table_agency_data_type . " WHERE `DataTypeID` = $DataTypeID";
-    			$results = $wpdb->query($delete);
-    			?>
-    			<div id="message" class="updated">
-                    <p><?php _e(LabelSingular ." <strong>". $dataDelete['DataTypeTitle'] ."</strong> deleted successfully", bb_agency_TEXTDOMAIN) ?>!</p>
+    		$queryDelete = "SELECT `DataTypeID`, `DataTypeTitle` FROM ". table_agency_data_type ." WHERE `DataTypeID` = $DataTypeID";
+    		$resultsDelete = $wpdb->get_results($queryDelete);
+    		foreach ($resultsDelete as $dataDelete) {
+                    
+                // Remove Record
+                if ( $wpdb->delete( table_agency_data_type, array( 'DataTypeID' => $DataTypeID ) ) ) :
+                ?>
+                <div id="message" class="updated">
+                    <p><?php printf( __( '%s <strong>%s</strong> deleted successfully', bb_agency_TEXTDOMAIN), LabelSingular, $dataDelete->DataTypeTitle ) ?></p>
                 </div>
-    			<?php	
-    		} // is there record?
+                <?php endif;
+            } // foreach
         } // it was numeric
     }
     elseif ($_GET['action'] == "editRecord") {
@@ -1142,14 +1123,13 @@ EOF;
 		
 		if ( $DataTypeID > 0) {
 			$query = "SELECT * FROM " . table_agency_data_type . " WHERE DataTypeID='$DataTypeID'";
-			$results = mysql_query($query) or die (__('Error, query failed', bb_agency_TEXTDOMAIN));
-			$count = mysql_num_rows($results);
-			while ($data = mysql_fetch_array($results)) {
-				$DataTypeID		=$data['DataTypeID'];
-				$DataTypeTitle	=stripslashes($data['DataTypeTitle']);
-				$DataTypeTitle = str_replace(' ', '_', $DataTypeTitle);
-				$DataTypeTag	=$data['DataTypeTag'];
-			} 
+			$results = $wpdb->get_results($query);
+			if (!empty($results)) : foreach ($results as $data) :
+				$DataTypeID		= $data->DataTypeID;
+				$DataTypeTitle	= stripslashes($data->DataTypeTitle);
+				$DataTypeTitle  = str_replace(' ', '_', $DataTypeTitle);
+				$DataTypeTag	= $data->DataTypeTag;
+			endforeach; endif;
             ?>
 			<h3 class="title"><?php printf(__("Edit %1$s", bb_agency_TEXTDOMAIN), LabelPlural) ?></h3>
 			<p><?php printf(__("Fill in the form below to add a new record %1$s", bb_agency_TEXTDOMAIN), LabelPlural) ?><strong><?php _e("Required fields are marked", bb_agency_TEXTDOMAIN) ?> *</strong>
@@ -1159,8 +1139,8 @@ EOF;
     } else {
 		
 		$DataTypeID		= 0;
-		$DataTypeTitle	="";
-		$DataTypeTag	="";
+		$DataTypeTitle	= "";
+		$DataTypeTag	= "";
 		?>
 		<h3><?php printf(__("Create New %1$s", bb_agency_TEXTDOMAIN), LabelPlural) ?></h3>
 		<p><?php _e("Make changes in the form below to edit a ", bb_agency_TEXTDOMAIN) ?> <?php echo LabelSingular ?> <strong><?php _e("Required fields are marked", bb_agency_TEXTDOMAIN) ?> *</strong>
@@ -1168,7 +1148,7 @@ EOF;
         <?php
     }
     ?>
-	<form method="post" enctype="multipart/form-data" action="<?php echo admin_url('admin.php?page='. $_GET['page']) ?>">
+	<form method="post" enctype="multipart/form-data" action="<?php echo admin_url("admin.php?page={$page}&amp;ConfigID={$ConfigID}") ?>">
     	<table class="form-table=">
         	<tbody>
             	<tr valign="top">
@@ -1224,7 +1204,7 @@ EOF;
 			  $dir = "asc";
 		}
 	?>
-		<form method="post" action="<?php echo admin_url('admin.php?page='. $_GET['page']) ?>">	
+		<form method="post" action="<?php echo admin_url("admin.php?page={$page}&amp;ConfigID={$ConfigID}") ?>">	
 		<table cellspacing=="0" class="widefat fixed=">
 		<thead>
     		<tr class="thead">
@@ -1243,24 +1223,23 @@ EOF;
 		<tbody>
         <?php
 		$query = "SELECT * FROM ". table_agency_data_type ." ORDER BY $sort $dir";
-		$results = mysql_query($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ));
-		$count = mysql_num_rows($results);
-		while ($data = mysql_fetch_array($results)) :
-			$DataTypeID	=$data['DataTypeID'];
+		$results = $wpdb->get_results($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ));
+		$count = count($results);
+		foreach ($results as $data) :
+			$DataTypeID	=$data->DataTypeID;
         ?>
     		<tr>
                 <th class="check-column" scope="row"><input type="checkbox" class="administrator" id="<?php echo $DataTypeID ?>" name="<?php echo $DataTypeID ?>" value="<?php echo $DataTypeID ?>" /></th>
-        		<td class="column"><?php echo stripslashes($data['DataTypeTitle']) ?>
+        		<td class="column"><?php echo stripslashes($data->DataTypeTitle) ?>
             		<div class="row-actions=">
                 		<span class="edit"><a href="<?php echo admin_url("admin.php?page=". $_GET['page']) ."&amp;action=editRecord&amp;DataTypeID=". $DataTypeID ."&amp;ConfigID=". $ConfigID ?>" title="<?php _e("Edit this Record", bb_agency_TEXTDOMAIN) ?>"><?php _e("Edit", bb_agency_TEXTDOMAIN) ?></a> | </span>
                 		<span class="delete"><a class="submitdelete" href="<?php echo admin_url("admin.php?page=". $_GET['page']) ."&amp;action=deleteRecord&amp;DataTypeID=". $DataTypeID ."&amp;ConfigID=". $ConfigID ?>"  onclick="if ( confirm('<?php _e("You are about to delete this ". LabelSingular, bb_agency_TEXTDOMAIN) ?>.\'<?php _e("Cancel", bb_agency_TEXTDOMAIN) ?>\' <?php _e("to stop", bb_agency_TEXTDOMAIN) ?>, \'<?php _e("OK", bb_agency_TEXTDOMAIN) ?>\' <?php _e("to delete", bb_agency_TEXTDOMAIN) ?>.') ) { return true;}return false;=" title="<?php _e("Delete this Record", bb_agency_TEXTDOMAIN) ?>"><?php _e("Delete", bb_agency_TEXTDOMAIN) ?></a> </span>
             		</div>
         		</td>
-    		  <td class="column"><?php echo $data['DataTypeTag'] ?></td>
+    		  <td class="column"><?php echo $data->DataTypeTag ?></td>
     		</tr>
-        <?php endwhile;
+        <?php endforeach;
 
-		mysql_free_result($results);
 		if ($count < 1) : ?>
     		<tr>
                 <td class="check-column" scope="row"></th>
@@ -1534,7 +1513,7 @@ EOF;
     								ProfileCustomShowRegistration=" . $wpdb->escape($ProfileCustomShowRegistration) . " ,
     								ProfileCustomShowAdmin=" . $wpdb->escape($ProfileCustomShowAdmin) . " 
     							WHERE ProfileCustomID='$ProfileCustomID'";
-    				$updated = mysql_query($update) or die(mysql_error());
+    				$updated = $wpdb->get_results($update) or die(mysql_error());
 
     				/*
     				* Check if There is Custom client
@@ -1614,22 +1593,20 @@ EOF;
         			if (is_numeric($ProfileCustomID)) {
         				// Verify Record
         				$queryDelete = "SELECT ProfileCustomID, ProfileCustomTitle FROM ". table_agency_customfields ." WHERE ProfileCustomID = $ProfileCustomID";
-        				$resultsDelete = mysql_query($queryDelete);
-        				while ($dataDelete = mysql_fetch_array($resultsDelete)) {
+        				$resultsDelete = $wpdb->get_results($queryDelete);
+        				foreach ($resultsDelete as $dataDelete) {
         			
         					// Remove Record
-        					$delete = "DELETE FROM " . table_agency_customfields . " WHERE `ProfileCustomID` = $ProfileCustomID";
-        					$results = $wpdb->query($delete);
+        					$deleted = $wpdb->delete(table_agency_customfields, array( 'ProfileCustomID' => $ProfileCustomID ) );
         					
         					// Rmove from Custom Types
-        					$delete_sql = "DELETE FROM " . table_agency_customfields_types . 
-        					" WHERE ProfileCustomID='$ProfileCustomID'";
-        					$deleted = mysql_query($delete_sql) or die(mysql_error());
-        					?>
+        					$wpdb->delete( table_agency_customfields_types, array( 'ProfileCustomID' => $ProfileCustomID ) );
+        					
+                            if ($deleted) : ?>
         					<div id="message" class="updated">
-                                <p><?php _e(LabelSingular ." <strong>". $dataDelete['ProfileCustomTitle'] ."</strong> deleted successfully", bb_agency_TEXTDOMAIN) ?>!</p>
+                                <p><?php _e(LabelSingular ." <strong>". $dataDelete->ProfileCustomTitle ."</strong> deleted successfully", bb_agency_TEXTDOMAIN) ?>!</p>
                             </div>
-        	                <?php  
+        	                <?php endif;
         				} // while
         			 } // it was numeric
     			} // for each
@@ -1654,21 +1631,20 @@ EOF;
         if (is_numeric($ProfileCustomID)) {
     		// Verify Record
     		$queryDelete = "SELECT ProfileCustomID, ProfileCustomTitle FROM ". table_agency_customfields ." WHERE ProfileCustomID = $ProfileCustomID";
-    		$resultsDelete = mysql_query($queryDelete);
-    		while ($dataDelete = mysql_fetch_array($resultsDelete)) {
+    		$resultsDelete = $wpdb->get_results($queryDelete);
+    		foreach ($resultsDelete as $dataDelete) {
     	
     			// Remove Record
-    			$delete = "DELETE FROM " . table_agency_customfields . " WHERE ProfileCustomID = $ProfileCustomID";
-    			$results = $wpdb->query($delete);
+    			$deleted = $wpdb->delete( table_agency_customfields, array( 'ProfileCustomID' => $ProfileCustomID ) );
 
     			// Rmove from Custom Types
-    			$delete_sql = "DELETE FROM " . table_agency_customfields_types . 
-    			" WHERE ProfileCustomID='$ProfileCustomID'";
-    			$deleted = mysql_query($delete_sql) or die(mysql_error());
-    			?>
+                $wpdb->delete( table_agency_customfields_types, array( 'ProfileCustomID' => $ProfileCustomID ) );
+
+             	if ($deleted) : ?>
     			<div id="message" class="updated">
-                    <p><?php _e(LabelSingular ." <strong>". $dataDelete['ProfileCustomTitle'] ."</strong> deleted successfully", bb_agency_TEXTDOMAIN) ?>!</p>
+                    <p><?php _e(LabelSingular ." <strong>". $dataDelete->ProfileCustomTitle ."</strong> deleted successfully", bb_agency_TEXTDOMAIN) ?>!</p>
                 </div>
+                <?php endif; ?>
     			<h3 style="width:430px;"><?php printf(__("Create New  %1$s", bb_agency_TEXTDOMAIN), LabelPlural) ?></h3>	
     			<div class="postbox ="  style="width:430px;float:left;border:0px solid black;">
     			<h3 class="hndle" style="margin:10px;font-size:11px;">
@@ -1687,21 +1663,21 @@ EOF;
 		
 		if ( $ProfileCustomID > 0) {
 			$query = "SELECT * FROM " . table_agency_customfields . " WHERE ProfileCustomID='$ProfileCustomID'";
-			$results = mysql_query($query) or die (__('Error, query failed', bb_agency_TEXTDOMAIN));
-			$count = mysql_num_rows($results);
-			while ($data = mysql_fetch_array($results)) {
-				$ProfileCustomID			=	$data['ProfileCustomID'];
-				$ProfileCustomTitle		    =	stripslashes($data['ProfileCustomTitle']);
-				$ProfileCustomType		    =	$data['ProfileCustomType'];
-				$ProfileCustomOptions		=	$data['ProfileCustomOptions'];
-				$ProfileCustomView		    =	$data['ProfileCustomView'];
-				$ProfileCustomOrder		    =	$data['ProfileCustomOrder'];
-				$ProfileCustomShowGender	=	$data['ProfileCustomShowGender'];
-				$ProfileCustomShowProfile	=	$data['ProfileCustomShowProfile'];
-				$ProfileCustomShowSearch	=	$data['ProfileCustomShowSearch'];
-				$ProfileCustomShowLogged	=	$data['ProfileCustomShowLogged'];
-				$ProfileCustomShowRegistration =	$data['ProfileCustomShowRegistration'];
-				$ProfileCustomShowAdmin		=	$data['ProfileCustomShowAdmin'];
+			$results = $wpdb->get_results($query) or die (__('Error, query failed', bb_agency_TEXTDOMAIN));
+			$count = count($results);
+			foreach ($results as $data) {
+				$ProfileCustomID			=	$data->ProfileCustomID;
+				$ProfileCustomTitle		    =	stripslashes($data->ProfileCustomTitle);
+				$ProfileCustomType		    =	$data->ProfileCustomType;
+				$ProfileCustomOptions		=	$data->ProfileCustomOptions;
+				$ProfileCustomView		    =	$data->ProfileCustomView;
+				$ProfileCustomOrder		    =	$data->ProfileCustomOrder;
+				$ProfileCustomShowGender	=	$data->ProfileCustomShowGender;
+				$ProfileCustomShowProfile	=	$data->ProfileCustomShowProfile;
+				$ProfileCustomShowSearch	=	$data->ProfileCustomShowSearch;
+				$ProfileCustomShowLogged	=	$data->ProfileCustomShowLogged;
+				$ProfileCustomShowRegistration =	$data->ProfileCustomShowRegistration;
+				$ProfileCustomShowAdmin		=	$data->ProfileCustomShowAdmin;
 			} 
             ?>
 			<h3 style="width:430px;"><?php printf(__("Edit %1$s", bb_agency_TEXTDOMAIN), LabelPlural) ?></h3>	
@@ -1743,7 +1719,7 @@ EOF;
   	}
 
 	?>
-        		<form method="post" enctype="multipart/form-data" action="<?php echo admin_url("admin.php?page=". $_GET['page']) . ( $_GET["action"] == "editRecord" ? "&amp;action=editRecord&amp;ProfileCustomID=".$_GET['ProfileCustomID']."&amp;ConfigID=".$_GET['ConfigID'] : '' ) ?>">
+        		<form method="post" enctype="multipart/form-data" action="<?php echo admin_url( 'admin.php?page=' . $page . ( $_GET['action'] == 'editRecord' ? "&amp;action=editRecord&amp;ProfileCustomID=".$_GET['ProfileCustomID']."&amp;ConfigID=".$ConfigID : '' ) ) ?>" >
 
                 	<table class="form-table">
                 	<?php if (!isset($_GET["action"])) :  // Create new Field	?>
@@ -1795,16 +1771,16 @@ EOF;
         				<tr>
         					<td valign="top">Gender*:</td>
         					<td valign="top">
-        					<?php $query = "SELECT GenderID, GenderTitle FROM " .  table_agency_data_gender . " GROUP BY GenderTitle "; ?>
+        					<?php $query = "SELECT `GenderID`, `GenderTitle` FROM " .  table_agency_data_gender . " GROUP BY `GenderTitle`"; ?>
         					<select name="ProfileCustomShowGender">
         					<option value="">All Genders</option>
                             <?php
-        					$queryShowGender = mysql_query($query);
-        					while ($dataShowGender = mysql_fetch_assoc($queryShowGender)){
+        					$genders = $wpdb->get_results($query);
+        					foreach ( $genders as $gender ){
         						if (isset($data1->ProfileCustomShowGender)) : ?>
-        							<option value="<?php echo $dataShowGender['GenderID'] ?>" selected=="selected"><?php echo $dataShowGender["GenderTitle"] ?></option>
+        							<option value="<?php echo $gender->GenderID ?>" selected=="selected"><?php echo $gender->GenderTitle ?></option>
         						<?php else : ?>
-        							<option value="<?php echo $dataShowGender['GenderID'] ?>"><?php echo $dataShowGender["GenderTitle"] ?></option>
+        							<option value="<?php echo $gender->GenderID ?>"><?php echo $gender->GenderTitle ?></option>
         						<?php endif;
         					}
                             ?>
@@ -1909,37 +1885,38 @@ EOF;
         					<td valign="top">Gender*:</td>
         					<td valign="top">
         						<?php
-        						$query= "SELECT GenderID, GenderTitle FROM " .  table_agency_data_gender . " GROUP BY GenderTitle";
+        						$query= "SELECT `GenderID`, `GenderTitle` FROM " .  table_agency_data_gender . " GROUP BY `GenderTitle`";
                                 ?>
         						<select name="ProfileCustomShowGender">
                                     <option value="=">All Gender</option>
                                     <?php
-                                    $queryShowGender = mysql_query($query);
-        							while($dataShowGender = mysql_fetch_assoc($queryShowGender)) : ?>	
-        							<option value="<?php echo $dataShowGender['GenderID'] ?>" <?php echo selected($data1->ProfileCustomShowGender,$dataShowGender['GenderID'],false) ?>><?php echo $dataShowGender["GenderTitle"] ?></option>
-        							<?php endwhile; ?>
+                                    $queryShowGender = $wpdb->get_results($query);
+        							foreach ($queryShowGender as $dataShowGender) : ?>	
+        							<option value="<?php echo $dataShowGender->GenderID ?>" <?php echo selected($data1->ProfileCustomShowGender, $dataShowGender->GenderID, false) ?>><?php echo $dataShowGender->GenderTitle ?></option>
+        							<?php endforeach; ?>
         						</select>
         							
         					</td>
         				</tr>
 
+                        <?php if (!empty($array_type)) : ?>
         				<tr>
         					<td valign="top">Profile Type:</td>
         					<td>
         					<?php
-        				
-        					foreach ( $types as $type ) {
-        						$t = trim($type->DataTypeTitle);
+        					foreach ( $array_type as $type ) {
+        						$t = trim($type);
         						$t = str_replace(' ', '_', $t);
         						echo '<input type="checkbox" name="ProfileType'.$t.'" value="1" ' . 
         							($$t == true ? 'checked="checked"':''). '  />&nbsp;'.
-        							trim($type->DataTypeTitle)
+        							trim($type)
         							.'&nbsp;<br/>';
         					} 
         					?>
         					</td>
         				</tr>
-        						
+        				<?php endif; ?>
+
         				<tr>
         					<td valign="top">Custom Order*:</td>
         					<td style="font-size:13px;=" align="left">
@@ -1950,18 +1927,19 @@ EOF;
         			    <?php if($data1->ProfileCustomType == 1) : // text ?>
         				  <tr>
         						<td style="width:50px;">Title:</td>
-        						<td><input type="text" name="ProfileCustomTitle" value="<?php echo $data1['ProfileCustomTitle'] ?>"/></td>
+        						<td><input type="text" name="ProfileCustomTitle" value="<?php echo $data1->ProfileCustomTitle ?>"/></td>
         					</tr>
 
         				<?php elseif($data1->ProfileCustomType == 3) :	 // Dropdown ?>
         					<tr>
         						<td style="width:40px;">Title:</td>
-        						<td><input type="text" name="ProfileCustomTitle" value="<?php echo $data1['ProfileCustomTitle'] ?>" style="width:190px;"/></td>
+        						<td><input type="text" name="ProfileCustomTitle" value="<?php echo $data1->ProfileCustomTitle ?>" style="width:190px;"/></td>
         					</tr>
                             <?php
-                                list($option1,$option2) = explode(":",$data1['ProfileCustomOptions']);	
-        						$data1 = explode("|",$option1);
-        						$data2 = explode("|",$option2);
+                                list($option1, $option2) = explode(":", $data1->ProfileCustomOptions);	
+
+        						$optionData1 = explode("|",$option1);
+        						$optionData2 = explode("|",$option2);
         					?>
         					<tr>
         						<td>&nbsp;</td>
@@ -1969,8 +1947,8 @@ EOF;
         							<br/>
                                     <?php
         							   $pos = 0;
-        								foreach ($data1 as $val1) :
-        									if ($val1 != end($data1) && $val1 != $data1[0]) :
+        								foreach ($optionData1 as $val1) :
+        									if ($val1 != end($optionData1) && $val1 != $optionData1[0]) :
         										$pos++;
         										?>
                                                 Option: &nbsp; <input type="text"  value="<?php echo $val1 ?>" name="option[]" />
@@ -1978,21 +1956,21 @@ EOF;
         									<?php endif;
         								endforeach; ?>
         							<div  id="editfield_add_more_options_1"></div>
-        							<br/><a href="javascript:;" id="addmoreoption_1">add more option[+]</a>
+        							<br/><a href="javascript:;" id="addmoreoption_1"><?php _e('add more options', bb_agency_TEXTDOMAIN) ?>[+]</a>
         							<br/>	
         							<br/>	
         							<?php
-        							if (!empty($data2) && !empty($option2)) : ?>
-        								Label: &nbsp; <input type="text" name="option_label2" value="<?php echo current($data2) ?>" /><br/>
+        							if (!empty($optionData2) && !empty($option2)) : ?>
+        								Label: &nbsp; <input type="text" name="option_label2" value="<?php echo current($optionData2) ?>" /><br/>
         							<?php
         								$pos2 = 0;
-        							    foreach($data2 as $val2) :
-        									if ($val2 != end($data2) && $val2 !=  $data2[0]) :
+        							    foreach($optionData2 as $val2) :
+        									if ($val2 != end($optonData2) && $val2 != $optionData2[0]) :
         										$pos2++;
                                                 ?>
                                                 Option: &nbsp; <input type="text" value="<?php echo $val2 ?>" name="option2[]"/>
-                                                <?php if ($pos2==1) : ?>
-        										<input type="checkbox" ".(end($data2)=="yes" ? "checked=="checked"":"")." name="option_default_2"/><span style="font-size:11px;">(set as selected)</span>	
+                                                <?php if ($pos2 == 1) : ?>
+        										<input type="checkbox" ".(end($optionData2)=="yes" ? "checked=="checked"":"")." name="option_default_2"/><span style="font-size:11px;">(set as selected)</span>	
         										<a href="javascript:;" id="addmoreoption_2">add more option[+]</a>	
                                                 <?php endif; ?>
                                                 <br/>
@@ -2005,21 +1983,21 @@ EOF;
         						
         				<?php elseif($data1->ProfileCustomType == 4) :	 //textbox
         				  
-        				     $array_customOptions_values = explode("|",$data1['ProfileCustomOptions']);
+        				     $array_customOptions_values = explode("|",$data1->ProfileCustomTitle);
                              ?>
         				       <tr>
         							<td>Title:</td>
-        							<td><input type="text" name="ProfileCustomTitle" value="<?php echo $data1['ProfileCustomTitle'] ?>"/></td>
+        							<td><input type="text" name="ProfileCustomTitle" value="<?php echo $data1->ProfileCustomTitle ?>"/></td>
         						</tr>
         					
         				<?php elseif($data1->ProfileCustomType == 5) :	 //checkbox
         				 
-                            $array_customOptions_values = explode("|",$data1['ProfileCustomOptions']);
+                            $array_customOptions_values = explode("|",$data1->ProfileCustomTitle);
         					$pos =0;
         				    ?>
         						<tr>
         							<td>Title:</td>
-        							<td><input type="text" name="ProfileCustomTitle" value="<?php echo $data1['ProfileCustomTitle'] ?>"/></td>
+        							<td><input type="text" name="ProfileCustomTitle" value="<?php echo $data1->ProfileCustomTitle ?>"/></td>
         						</tr>  
         						<tr>
         							<td>&nbsp;</td>
@@ -2035,12 +2013,12 @@ EOF;
         						</tr>
                                     
         				<?php elseif($data1->ProfileCustomType == 6) :	 //radio button
-        				    $array_customOptions_values = explode("|",$data1['ProfileCustomOptions']);
+        				    $array_customOptions_values = explode("|",$data1->ProfileCustomTitle);
         					$pos =0;
                             ?>
         				        <tr>
         							<td>Title:</td>
-        							<td><input type="text" name="ProfileCustomTitle" value="<?php echo $data1['ProfileCustomTitle'] ?>"/></td>
+        							<td><input type="text" name="ProfileCustomTitle" value="<?php echo $data1->ProfileCustomTitle ?>"/></td>
         						</tr>
         							 
         						<tr>
@@ -2063,12 +2041,11 @@ EOF;
         						 							
         				<?php elseif ($data1->ProfileCustomType == 7) :	 ///metric/imperials ?>
         						<tr>
-                                    <td>Title*:<input type='text' name='ProfileCustomTitle' value="<?php echo $data1['ProfileCustomTitle'] ?>"/></td></tr>
-        						<tr>
-                                    <td>&nbsp;</td>
+                                    <td>Title*:</td>
+                                    <td><input type='text' name='ProfileCustomTitle' value="<?php echo $data1->ProfileCustomTitle ?>"/></td>
                                 </tr>
         						
-        				    <?php if (bb_agency_get_option('bb_agency_option_unittype')==0) : //  Metric (cm/kg) ?>
+        				    <?php /* if (bb_agency_get_option('bb_agency_option_unittype') == 0) : //  Metric (cm/kg) ?>
         						<tr>
                                     <td>
                                         <input type="radio" name="ProfileUnitType" value="1" <?php echo checked($data1->ProfileCustomOptions,1,false) ?> />cm
@@ -2080,7 +2057,7 @@ EOF;
                                     </td>
                                 </tr>  
         				
-                            <?php elseif (bb_agency_get_option('bb_agency_option_unittype')==1) : //  Imperial (in/lb) ?>
+                            <?php elseif (bb_agency_get_option('bb_agency_option_unittype') == 1) : //  Imperial (in/lb) ?>
         					
         						<tr>
                                     <td>
@@ -2097,7 +2074,7 @@ EOF;
                                         <input type="radio" name="ProfileUnitType" value="3" <?php echo checked($data1->ProfileCustomOptions,3,false) ?>/>Feet/Inches
                                     </td>
                                 </tr>
-        				    <?php endif; ?>
+        				    <?php endif; */ ?>
         													
                         <?php elseif($data1->ProfileCustomType == 9) : // date ?>
                                 <tr>
@@ -2182,25 +2159,23 @@ EOF;
     		<tbody>
             <?php
     		$query = "SELECT * FROM ". table_agency_customfields ." ORDER BY $sort $dir";
-    		$results = mysql_query($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ));
-    		$count = mysql_num_rows($results);
+    		$results = $wpdb->get_results($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ));
+    		$count = count($results);
                
             $bb_options = bb_agency_get_option();
     		$bb_agency_option_unittype  = bb_agency_get_option('bb_agency_option_unittype');
     		
-    		while ($data = mysql_fetch_array($results)) :
-    			$ProfileCustomID = $data['ProfileCustomID'];
-            ?>
+    		if (!empty($results)) : foreach ($results as $data) : $ProfileCustomID = $data->ProfileCustomID; ?>
     		<tr>
         		<th class="check-column" scope="row"><input type="checkbox" class="administrator" id="<?php echo $ProfileCustomID ?>" name="<?php echo $ProfileCustomID ?>" value="<?php echo $ProfileCustomID ?>" /></th>
-        		<td class="column"><?php echo stripslashes($data['ProfileCustomTitle']) ?>
+        		<td class="column"><?php echo stripslashes($data->ProfileCustomTitle) ?>
             		<div class="row-actions=">
             		<span class="edit"><a href="<?php echo admin_url("admin.php?page=". $_GET['page']) ."&amp;action=editRecord&amp;ProfileCustomID=". $ProfileCustomID ."&amp;ConfigID=". $ConfigID ?>" title="<?php _e("Edit this Record", bb_agency_TEXTDOMAIN) ?>"><?php _e("Edit", bb_agency_TEXTDOMAIN) ?></a> | </span>
             		<span class="delete"><a class="submitdelete" href="<?php echo admin_url("admin.php?page=". $_GET['page']) ."&amp;deleteRecord&amp;ProfileCustomID=". $ProfileCustomID ."&amp;ConfigID=". $ConfigID ?>"  onclick="if ( confirm('<?php _e("You are about to delete this ". LabelSingular, bb_agency_TEXTDOMAIN) ?>.\'<?php _e("Cancel", bb_agency_TEXTDOMAIN) ?>\' <?php _e("to stop", bb_agency_TEXTDOMAIN) ?>, \'<?php _e("OK", bb_agency_TEXTDOMAIN) ?>\' <?php _e("to delete", bb_agency_TEXTDOMAIN) ?>.') ) { return true;}return false;" title="<?php _e("Delete this Record", bb_agency_TEXTDOMAIN) ?>"><?php _e("Delete", bb_agency_TEXTDOMAIN) ?></a> </span>
             		</div>
         		</td>
         		<td class="column">
-                    <?php switch ($data['ProfileCustomType']) {
+                    <?php switch ($data->ProfileCustomType) {
 
                         case 1 :
                             echo "Text";
@@ -2229,19 +2204,19 @@ EOF;
                         case 7 :
                         
                             if (bb_agency_get_option('bb_agency_option_unittype') == 1) { 
-                                if ($data['ProfileCustomOptions'] == 1) {
+                                if ($data->ProfileCustomOptions == 1) {
                                     echo "Imperial(in)";
-                                } elseif($data['ProfileCustomOptions'] == 2) {
+                                } elseif($data->ProfileCustomOptions == 2) {
                                     echo "Imperial(lb)";
-                                } elseif($data['ProfileCustomOptions'] == 3) {
+                                } elseif($data->ProfileCustomOptions == 3) {
                                     echo "Imperial(in/ft)";
                                 } 
                             } else { 
-                                if ($data['ProfileCustomOptions'] == 1) {
+                                if ($data->ProfileCustomOptions == 1) {
                                     echo "Metric(cm)";
-                                } elseif($data['ProfileCustomOptions'] == 2) {
+                                } elseif($data->ProfileCustomOptions == 2) {
                                     echo "Metric(kg)";
-                                } elseif($data['ProfileCustomOptions'] == 3) {
+                                } elseif($data->ProfileCustomOptions == 3) {
                                     echo "Imperial(in/ft)";
                                 } 
                             } 
@@ -2257,59 +2232,54 @@ EOF;
                 <?php 
     			$measurements_label = "";
     			 
-                if ($data['ProfileCustomType'] == 7) : //measurements field type
+                if ($data->ProfileCustomType == 7) : //measurements field type
 
                     if($bb_agency_option_unittype ==0){ // 0 = Metrics(ft/kg)
-    					if($data['ProfileCustomOptions'] == 1){	    
+    					if($data->ProfileCustomOptions == 1){	    
     						$measurements_label  ="cm";
-    					}elseif($data['ProfileCustomOptions'] == 2){	
+    					}elseif($data->ProfileCustomOptions == 2){	
     						$measurements_label  ="Kg";
-    					}elseif($data['ProfileCustomOptions'] == 3){
+    					}elseif($data->ProfileCustomOptions == 3){
     						$measurements_label  ="Feet/Inches";
     					}
     				}elseif($bb_agency_option_unittype ==1){ //1 = Imperial(in/lb)
-    					if($data['ProfileCustomOptions'] == 1){
+    					if($data->ProfileCustomOptions == 1){
      						$measurements_label  ="Inches";   
-    					}elseif($data['ProfileCustomOptions'] == 2){	    
+    					}elseif($data->ProfileCustomOptions == 2){	    
     						$measurements_label  ="Pounds";
-    					}elseif($data['ProfileCustomOptions'] == 3){
+    					}elseif($data->ProfileCustomOptions == 3){
     						$measurements_label  ="(Feet/Inches)";
     					}
     				}		
                     ?>
                 <td class="column"><?php echo $measurements_label ?></td> 
                 <?php else : ?> 
-                <td class="column"><?php echo str_replace("|", ",", $data['ProfileCustomOptions']) ?></td> 
+                <td class="column"><?php echo str_replace("|", ",", $data->ProfileCustomOptions) ?></td> 
                 <?php endif; ?>
         		<td class="column"> 
                 <?php
-                if ($data['ProfileCustomView'] == 0) { 
+                if ($data->ProfileCustomView == 0) { 
                     echo "Public"; 
-                } elseif ($data['ProfileCustomView'] == 1) { 
+                } elseif ($data->ProfileCustomView == 1) { 
                     echo "Private"; 
-                } elseif ($data['ProfileCustomView'] == 2) { 
+                } elseif ($data->ProfileCustomView == 2) { 
                     echo "Custom"; 
                 } 
                 ?>
                 </td>
-        		<th class="column"><?php echo $data['ProfileCustomOrder'] ?></th>
+        		<th class="column"><?php echo $data->ProfileCustomOrder ?></th>
                 <?php
         		// get genders
-                $queryGender = mysql_query("SELECT GenderID, GenderTitle FROM ".table_agency_data_gender." WHERE GenderID=".$data['ProfileCustomShowGender']); 
-        		$fetchGender = mysql_fetch_assoc($queryGender);
-        		$countGender = mysql_num_rows($queryGender);
+                $fetchGender = $wpdb->get_row("SELECT `GenderID`, `GenderTitle` FROM ".table_agency_data_gender." WHERE GenderID=".$data->ProfileCustomShowGender); 
 
-        		if ($countGender > 0) : ?>
-                    <th class="column"><?php echo $fetchGender["GenderTitle"] ?></th>
+        		if (!empty($fetchGender)) : ?>
+                    <th class="column"><?php echo $fetchGender->GenderTitle ?></th>
         		<?php else : ?>
                     <th class="column">All Gender</th>
         		<?php endif; ?>
         		</tr>
 
-            <?php endwhile;
-
-    		mysql_free_result($results);
-    		if ($count < 1) : ?>
+            <?php endforeach; else : ?>
                 <tr>
             		<td class="check-column" scope="row"></th>
             		<td class="column" colspan="5"><p><?php _e("There aren't any records loaded yet", bb_agency_TEXTDOMAIN) ?>!</p></td>
@@ -2336,12 +2306,12 @@ EOF;
     	// Edit Record
     	switch($_POST["action"]){
         	case "editRecord":
-        	    mysql_query("UPDATE ".table_agency_mediacategory." SET MediaCategoryTitle = '".$_POST["MediaCategoryTitle"]."',MediaCategoryGender = '".$_POST["MediaCategoryGender"]."',MediaCategoryOrder = '".$_POST["MediaCategoryOrder"]."' WHERE  MediaCategoryID ='".$_GET["MediaCategoryID"]."' ") or die("1".mysql_error());
+        	    $wpdb->get_results("UPDATE ".table_agency_mediacategory." SET MediaCategoryTitle = '".$_POST["MediaCategoryTitle"]."',MediaCategoryGender = '".$_POST["MediaCategoryGender"]."',MediaCategoryOrder = '".$_POST["MediaCategoryOrder"]."' WHERE  MediaCategoryID ='".$_GET["MediaCategoryID"]."' ") or die("1".mysql_error());
                 break;
 
         	// Add Record
         	case "addRecord":
-                mysql_query("INSERT INTO ".table_agency_mediacategory." (MediaCategoryID,MediaCategoryTitle,MediaCategoryGender,MediaCategoryOrder) VALUES('','".$_POST["MediaCategoryTitle"]."','".$_POST["MediaCategoryGender"]."','".$_POST["MediaCategoryOrder"]."') ") or die("Error: ".mysql_error());
+                $wpdb->get_results("INSERT INTO ".table_agency_mediacategory." (MediaCategoryID,MediaCategoryTitle,MediaCategoryGender,MediaCategoryOrder) VALUES('','".$_POST["MediaCategoryTitle"]."','".$_POST["MediaCategoryGender"]."','".$_POST["MediaCategoryOrder"]."') ") or die("Error: ".mysql_error());
                 break;
     	
     	}
@@ -2349,11 +2319,11 @@ EOF;
     	if(isset($_POST["action"])=="deleteRecord"  || isset($_GET["deleteRecord"])){
     		
     		if(isset($_GET["deleteRecord"])){
-    				mysql_query("DELETE FROM ". table_agency_mediacategory ." WHERE MediaCategoryID = '".$_GET["MediaCategoryID"]."'");
+    				$wpdb->get_results("DELETE FROM ". table_agency_mediacategory ." WHERE MediaCategoryID = '".$_GET["MediaCategoryID"]."'");
     		}
     		if(isset($_POST["MediaCategoryID"])){
     			foreach($_POST["MediaCategoryID"] as $id){
-    				mysql_query("DELETE FROM ". table_agency_mediacategory ." WHERE MediaCategoryID = '".$id."'");
+    				$wpdb->get_results("DELETE FROM ". table_agency_mediacategory ." WHERE MediaCategoryID = '".$id."'");
     			}
     		}
     		
@@ -2362,14 +2332,12 @@ EOF;
         <div>
         <?php
         // Add new Record
-		if(isset($_GET["action"]) =="editRecord") : ?>
+		if(isset($_GET["action"]) == "editRecord") : ?>
 		
     		<h3 class="title"><?php _e("Edit Record", bb_agency_TEXTDOMAIN) ?></h3>
     		<?php
     		$query = "SELECT * FROM ". table_agency_mediacategory ." WHERE MediaCategoryID='".$_GET["MediaCategoryID"]."'";
-    		$results = mysql_query($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ));
-    		$count = mysql_num_rows($results);
-    		$data = mysql_fetch_array($results);
+    		$data = $wpdb->get_row($query);
             ?>
             <form method="post" action="<?php echo admin_url("admin.php?page=". $_GET['page']) ."&action=editRecord&amp;ConfigID=8&amp;MediaCategoryID=".$_GET["MediaCategoryID"] ?>">
 		<?php else : ?>
@@ -2379,7 +2347,7 @@ EOF;
             <table>
                 <tr>
                     <td>Title:</td>
-                    <td><input type="text" name="MediaCategoryTitle" value="<?php echo $data["MediaCategoryTitle"] ?>" style="width:500px;" /></td>
+                    <td><input type="text" name="MediaCategoryTitle" value="<?php echo $data->MediaCategoryTitle ?>" style="width:500px;" /></td>
                 </tr>
                 <tr>
                     <td>Gender:</td>
@@ -2390,19 +2358,19 @@ EOF;
             		<select name="MediaCategoryGender">
             		<option value="=">All Gender</option>
                     <?php
-            		$queryShowGender = mysql_query($query);
-            		while($dataShowGender = mysql_fetch_assoc($queryShowGender)) : ?>
+            		$queryShowGender = $wpdb->get_results($query);
+            		foreach ($queryShowGender as $dataShowGender) : ?>
             							
-            			<option value="<?php echo $dataShowGender['GenderID'] ?>" <?php echo selected($data["MediaCategoryGender"] ,$dataShowGender['GenderID'],false) ?>><?php echo $dataShowGender["GenderTitle"] ?></option>
+            			<option value="<?php echo $dataShowGender->GenderID ?>" <?php echo selected($data->MediaCategoryGender, $dataShowGender->GenderID, false) ?>><?php echo $dataShowGender->GenderTitle ?></option>
             												
-            		<?php endwhile; ?>
+            		<?php endforeach; ?>
             		</select>
             		<br/>
             		</td>
             	</tr>
                 <tr>
             		<td>Order:</td>
-                    <td><input type="text" name="MediaCategoryOrder" value="<?php echo (0+(int)$data["MediaCategoryOrder"]) ?>" /></td>
+                    <td><input type="text" name="MediaCategoryOrder" value="<?php echo (0+(int)$data->MediaCategoryOrder) ?>" /></td>
                 </tr>
             	<tr>
             		<td>
@@ -2467,34 +2435,26 @@ EOF;
         		<tbody>
                 <?php
         		$query = "SELECT * FROM ". table_agency_mediacategory ." ORDER BY $sort $dir";
-        		$results = mysql_query($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ).mysql_error());
-        		$count = mysql_num_rows($results);
-        		while ($data = mysql_fetch_array($results)) :
-        			$MediaCategoryID = $data['MediaCategoryID'];
-                ?>
+        		$results = $wpdb->get_results($query);
+        		if (!empty($results)) : foreach ($results as $data) : $MediaCategoryID = $data->MediaCategoryID; ?>
         		<tr>
         		<th class="check-column" scope="row"><input type="checkbox" class="administrator" id="<?php echo $MediaCategoryID ?>" name="MediaCategoryID[]" value="<?php echo $MediaCategoryID ?>" /></th>
-        		<th class="column"><?php echo stripslashes($data['MediaCategoryTitle']) ?>
+        		<th class="column"><?php echo stripslashes($data->MediaCategoryTitle) ?>
                     <div class="row-actions=">
                         <span class="edit"><a href="<?php echo admin_url("admin.php?page=". $_GET['page']) ."&amp;action=editRecord&amp;MediaCategoryID=". $MediaCategoryID.'&amp;ConfigID=8' ?>" title="<?php _e("Edit this Record", bb_agency_TEXTDOMAIN) ?>"><?php _e("Edit", bb_agency_TEXTDOMAIN) ?></a> | </span>
                         <span class="delete"><a class="submitdelete" href="<?php echo admin_url("admin.php?page=". $_GET['page']) ."&amp;deleteRecord&amp;MediaCategoryID=". $MediaCategoryID .'&amp;ConfigID=8'?>" onclick="if ( confirm('<?php _e("You are about to delete this ". LabelSingular, bb_agency_TEXTDOMAIN) ?>.\'<?php _e("Cancel", bb_agency_TEXTDOMAIN) ?>\' <?php _e("to stop", bb_agency_TEXTDOMAIN) ?>, \'<?php _e("OK", bb_agency_TEXTDOMAIN) ?>\' <?php _e("to delete", bb_agency_TEXTDOMAIN) ?>.') ) { return true;}return false;" title="<?php _e("Delete this Record", bb_agency_TEXTDOMAIN) ?>"><?php _e("Delete", bb_agency_TEXTDOMAIN) ?></a> </span>
                     </div>
         		</th>
                 <?php
-        		$queryGender = mysql_query("SELECT GenderID, GenderTitle FROM ".table_agency_data_gender." WHERE GenderID = '".$data['MediaCategoryGender']."'"); 
-        		$fetchGender = mysql_fetch_assoc($queryGender);
-        		$countGender = mysql_num_rows($queryGender);
-        		if ($countGender > 0) : ?>
+        		$fetchGender = $wpdb->get_row("SELECT `GenderID`, `GenderTitle` FROM ".table_agency_data_gender." WHERE `GenderID` = '".$data->MediaCategoryGender."'"); 
+        		if (!empty($fetchGender)) : ?>
                         <th class="column">".$fetchGender["GenderTitle"]."</th>
         		<?php else : ?>
                         <th class="column">All Gender</th>
         		<?php endif; ?>
-                        <th class="column"><?php echo $data["MediaCategoryOrder"]; ?></th>
+                        <th class="column"><?php echo $data->MediaCategoryOrder; ?></th>
             		</tr>
-                <?php endwhile;
-        		
-        		mysql_free_result($results);
-        		if ($count < 1) : ?>
+                <?php endforeach; else : ?>
             		<tr>
                 		<td class="check-column" scope="row"></th>
                 		<td class="column" colspan=="5"><p><?php _e("There aren't any records loaded yet", bb_agency_TEXTDOMAIN) ?>!</p></td>

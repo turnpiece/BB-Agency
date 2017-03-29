@@ -54,10 +54,9 @@ p.submit { margin-top: 15px!important; }
 #profile-manage .manage-profile p select { width: 165px; }
 
 /* Profile Gallery */
-/*#profile-manage .manage-section.gallery .profileimage { float: left; margin: 0 10px 10px 0; height: 150px; position: relative; overflow: hidden; background: #eee; }*/
 
 #profile-manage .manage-section.gallery .profileimage {
-    background: #EEEEEE;
+    background: #666666;
     float: left;
     height: 220px;
     margin: 0 3% 10px 0;
@@ -65,17 +64,15 @@ p.submit { margin-top: 15px!important; }
     padding: 0;
     position: relative;
     width: 30%;
-    border: 1px solid transparent;
     opacity: 0.6;
 }
 
 #profile-manage .manage-section.gallery .profileimage.live {
     opacity: 1;
 }
-#profile-manage .manage-section.gallery .primaryimage.primary-picture {
-    border: 1px solid #900000;
+#profile-manage .manage-section.gallery .profileimage.primary-picture {
+    background: #cc3333;
     opacity: 1;
-
 }
 
 #profile-manage .manage-section.gallery .profileimage .delete a { display: block; text-align: center; }
@@ -134,7 +131,7 @@ p.submit { margin-top: 15px!important; }
 #bbsignin-register .inline-block .register { margin-bottom: 15px; }
 
 /* Register */
-.bb-agency-interact {  }
+.bb-agency-interact ul { list-style-type: none; }
 .bb-agency-interact p.alert { border-bottom: 3px solid #0C0; background:#fafafa; padding: 10px; }
 .bb-agency-interact h1 { margin-bottom:10px;text-align: left; }
 .bb-agency-interact form#adduser {  }
