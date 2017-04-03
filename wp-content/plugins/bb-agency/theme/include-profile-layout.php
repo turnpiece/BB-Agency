@@ -8,14 +8,15 @@
 			$queryImg = "SELECT * FROM ". table_agency_profile_media ." media WHERE `ProfileID` =  \"". $ProfileID ."\" AND `ProfileMediaType` = \"Image\" AND `ProfileMediaLive` = 1 ORDER BY $orderBy";
 			$resultsImg = $wpdb->get_results($queryImg);
 			$countImg = count($resultsImg);
+			$dir = bb_agency_UPLOADDIR . $ProfileGallery .'/';
 			$path = bb_agency_UPLOADPATH . $ProfileGallery .'/';
-			foreach ($resultsImg as $dataImg) : if (file_exists($path . $dataImg->ProfileMediaURL)) : ?>
+			foreach ($resultsImg as $dataImg) : ?>
 			<div class="photo">
-				<a href="<?php echo bb_agency_UPLOADDIR . $ProfileGallery .'/'. $dataImg->ProfileMediaURL ?>" rel="lightbox" title="<?php $ProfileContactDisplay ?>">
-					<img src="<?php echo bb_agency_BASEDIR.'/tasks/timthumb.php?src=' . $path . $dataImg->ProfileMediaURL . '&h=139' ?>" alt="<?php echo $ProfileContactDisplay ?>" />
+				<a href="<?php echo bb_agency_UPLOADREL . $ProfileGallery .'/'. $dataImg->ProfileMediaURL ?>" rel="lightbox" title="<?php $ProfileContactDisplay ?>">
+					<img src="<?php echo bb_agency_BASEDIR.'tasks/timthumb.php?src=' . $dir . $dataImg->ProfileMediaURL . '&h=139' ?>" alt="<?php echo $ProfileContactDisplay ?>" />
 				</a>
 			</div>
-			<?php else :
+			<?php /*else :
 			// remove missing image
 			$wpdb->delete( 
 				table_agency_profile_media, 
@@ -25,7 +26,7 @@
 				) 
 			);
 
-			endif; endforeach; ?>
+			endif;*/ endforeach; ?>
 
 				<div class="cb"></div>
 			</div>
