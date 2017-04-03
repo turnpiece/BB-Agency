@@ -268,44 +268,40 @@ if($_POST['print_option']==14){  // print for division
 						 $allImages.="<td>$modelInfo<img $widthAndHeight id='".$dataImg->ProfileMediaID."' src=\"".get_bloginfo("url")."/wp-content/plugins/bb-agency/theme/custom-layout6/images/trans.png\" alt=' ' class='allimages_thumbs'  /></td>";
 						$cnt=1;  $cnt2=1; 
 					 }
-				 }
+				}
 						 
-				 //  if($_POST[$data->ProfileMediaID]==1){  - for the mean time as the were missed conception
-					   $cnt++;
-					   $cnt2++;
+				$cnt++;
+				$cnt2++;
 					   
-				// $allImages.="<td><img $widthAndHeight id='".$dataImg["ProfileMediaID"]."' src=\"". bb_agency_UPLOADDIR . $ProfileGallery ."/". $data->ProfileMediaURL ."\" alt='' class='allimages_thumbs' /></td>\n";
-				//style="width:450px; height:650px;"
 				$timthumbHW=str_replace('style="width:',"&w=",$widthAndHeight);
 				$timthumbHW=str_replace('px; height:',"&h=",$timthumbHW);
 				$timthumbHW=str_replace('px;"',"",$timthumbHW);
 					
-				
-			//	$allImages.="<td><img id='".$dataImg["ProfileMediaID"]."' src=\"".get_bloginfo("url")."/wp-content/plugins/bb-agency/tasks/timthumb.php?src=". bb_agency_UPLOADDIR . $ProfileGallery ."/". $data->ProfileMediaURL  .$timthumbHW."\" alt='' class='allimages_thumbs' /></td>\n";
-
-				copy(get_bloginfo("url")."/wp-content/plugins/bb-agency/tasks/timthumb.php?src=". bb_agency_UPLOADDIR . $ProfileGallery ."/". $data->ProfileMediaURL  .$timthumbHW,"/home/content/99/6048999/html/rbplugin.agency/wp-content/plugins/bb-agency/cache/images/".$totalCount.".jpg");
+				copy(get_bloginfo("url")."/wp-content/plugins/bb-agency/tasks/timthumb.php?src=". bb_agency_BASEREL . $ProfileGallery ."/". $data->ProfileMediaURL  .$timthumbHW,"/home/content/99/6048999/html/rbplugin.agency/wp-content/plugins/bb-agency/cache/images/".$totalCount.".jpg");
 					
 				$allImages.="<td><img $widthAndHeight id='".$dataImg["ProfileMediaID"]."' src='".get_bloginfo("url")."/wp-content/plugins/bb-agency/cache/images/".$totalCount.".jpg' alt='' class='allimages_thumbs' /></td>\n";
 
-					
-					 //src=\"".get_bloginfo("url")."/wp-content/plugins/bb-agency/tasks/timthumb.php?src=".bb_agency_UPLOADDIR ."". $dataList["ProfileGallery"] ."/". $dataList["ProfileMediaURL"]."&w=200&q=60\"
 						
-						 if($cnt==$col){ $allImages.="</tr></table>\n";
-						   if($cnt2==$perPage){
-							
-								  $allImages.='<br><br clear=""><img style="width:347px;" src="'.get_bloginfo("url").'/wp-content/plugins/bb-agency/style/address.jpg">';
-								  
-								  if($printType=="Polaroid" AND $excape!=1){$allImages.="<td></tr></table>"; $excape=1;}
-								  
-								  $allImages.='<div style="page-break-before:always" /></div><br>';
-						   
-						   $cnt2=0;}
-							   
-						 $allImages.="<table id='$totalCount' border='0'><tr>";
-						 $cnt="0";}
-						 
-						// } for if($_POST[$data->ProfileMediaID]==1){
-					}
+				if($cnt==$col) { 
+					$allImages.="</tr></table>\n";
+				   	if($cnt2==$perPage) {
+					
+					  	$allImages.='<br><br clear=""><img style="width:347px;" src="'.get_bloginfo("url").'/wp-content/plugins/bb-agency/style/address.jpg">';
+					  
+					  	if($printType=="Polaroid" AND $excape!=1){
+					  		$allImages.="<td></tr></table>"; $excape=1;
+					  	}
+					  
+					  	$allImages.='<div style="page-break-before:always" /></div><br>';
+				   
+				   		$cnt2=0;
+				   	}
+					   
+				 	$allImages.="<table id='$totalCount' border='0'><tr>";
+				 	$cnt="0";
+				}
+				 
+			}
 			   
 			   
 		$table="<table border='0'><tr>".$allImages;

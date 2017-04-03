@@ -23,6 +23,12 @@
 				echo "<p>File <strong>".$mediaFile. "</strong> successfully uploaded!</p>";
 			}
 			echo "<p>You may continue uploading more files. If you are done, please click the EXIT link below to go back to homepage.</p>";
+			
+			if (count($UploadMedia) > 1)
+				echo "<p>Your photos will need to be reviewed by an administrator before they appear on the site.</p>";
+			else
+				echo "<p>Your photo will need to be reviewed by an administrator before it appears on the site.</p>";
+
 			$back = $bb_agencyinteract_WPURL ."/profile-member/";
 			echo '<p><a class="bb_button" href='.$back.'>EXIT</a></p>';
 			echo "</div>";
