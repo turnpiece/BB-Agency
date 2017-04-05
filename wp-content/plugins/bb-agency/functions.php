@@ -739,7 +739,7 @@
 				"profilelocationcity" => null,
 				"profiletype" => null,
 				"type" => null,
-				"profileisactive" => null,
+				"profileisactive" => 1,
 				"profilegender" => null,
 				"gender" => null,
 				"profilestatheight_min" => null,
