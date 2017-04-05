@@ -121,18 +121,20 @@ if ($_POST) {
                     // delete existing booking records
                     $wpdb->delete( $t_booking, array( 'JobID' => $id ) );
                 }
-
-                foreach ($_POST['JobModelBooked'] as $model) {
-                    $wpdb->insert( 
-                        $t_booking, 
-                        array( 
-                            'BookedFrom'        => $date,
-                            'BookedTo'          => $date,
-                            'JobID'             => $id,
-                            'ProfileID'         => $model
-                        ),
-                        array( '%s', '%s', '%d', '%d' )
-                    );          
+                
+                if (!empty($_POST['JobModelBooked'])) {
+                    foreach ($_POST['JobModelBooked'] as $model) {
+                        $wpdb->insert( 
+                            $t_booking, 
+                            array( 
+                                'BookedFrom'        => $date,
+                                'BookedTo'          => $date,
+                                'JobID'             => $id,
+                                'ProfileID'         => $model
+                            ),
+                            array( '%s', '%s', '%d', '%d' )
+                        );          
+                    }
                 }
 
                 // display success messsage
