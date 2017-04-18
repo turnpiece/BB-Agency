@@ -418,7 +418,7 @@ if (isset($_POST['action'])) {
                 if ($count < 1) {
                     $resultsNeedOne = $wpdb->get_results("SELECT * FROM `$t_media` WHERE ProfileID='" . $ProfileID . "' AND ProfileMediaType = 'Image' LIMIT 0, 1");
                     foreach ($resultsNeedOne as $dataNeedOne) {
-                        $resultsFoundOne = $wpdb->query("UPDATE `$t_media` SET ProfileMediaPrimary='1' WHERE ProfileID='" . $ProfileID . "' AND ProfileMediaID = '" . $dataNeedOne['ProfileMediaID'] . "'");
+                        $resultsFoundOne = $wpdb->query("UPDATE `$t_media` SET ProfileMediaPrimary='1' WHERE ProfileID='" . $ProfileID . "' AND ProfileMediaID = '" . $dataNeedOne->ProfileMediaID . "'");
                         break;
                     }
                 }
