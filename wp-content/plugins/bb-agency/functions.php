@@ -2192,7 +2192,7 @@ function bb_custom_fields_template($visibility = 0, $ProfileID, $data) {
             	<?php endfor; ?>
             </select>
 			<?php					
-		} elseif ($ProfileCustomType == 8) { //Dates
+		} elseif ($ProfileCustomType == 8 || $ProfileCustomType == 9) { //Dates
 			echo "<input class=\"stubby bbdatepicker\" type=\"text\" name=\"ProfileCustomID". $data->ProfileCustomID ."\" value=\"". $ProfileCustomValue ."\" /><br />\n";	
 		}									
 	} // End if Empty ProfileCustomID
