@@ -98,6 +98,12 @@ p.submit { margin-top: 15px!important; }
     top: auto;
     bottom: 0;
 }
+#profile-manage .manage-section.gallery .profileimage.live .action.delete {
+    opacity: 0.5;
+}
+#profile-manage .manage-section.gallery .profileimage.live .action.delete:hover {
+    opacity: 1.0;
+}
 #profile-manage .manage-section.gallery .profileimage.primary-picture .action.delete {
     display: none;
 }
