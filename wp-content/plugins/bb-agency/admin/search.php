@@ -1073,13 +1073,13 @@ EOF;
                             <?php    
                             if (in_array($title, $cusFields)) : // use alternative inputs for custom fields defined at top of this page
 
-                                if ($title == 'Height') : $limit = 90; ?>
+                                if ($title == 'Height') : $limit = bb_agency_MAX_HEIGHT; ?>
                                     <fieldset class="bbselect">
                                         <div>
                                             <label>Min</label>
                                             <select name="<?php echo $field ?>_min">
                                                 <option value="">--</option>
-                                            <?php for ($i = 12; $i <= $limit; $i++) : // display height options ?>
+                                            <?php for ($i = 30; $i <= $limit; $i++) : // display height options ?>
                                                 <option value="<?php echo bb_agency_get_height($i) ?>" <?php selected(isset($_GET[$field.'_min']) ? $_GET[$field.'_min'] : false, $i) ?>><?php echo bb_agency_display_height($i) ?></option>
                                             <?php endfor; ?>
                                             </select>
@@ -1088,7 +1088,7 @@ EOF;
                                             <label>Max</label>
                                             <select name="<?php echo $field ?>_max">
                                                 <option value="">--</option>
-                                            <?php for ($i = 12; $i <= $limit; $i++) : // display height options ?>
+                                            <?php for ($i = 30; $i <= $limit; $i++) : // display height options ?>
                                                 <option value="<?php echo bb_agency_get_height($i) ?>" <?php selected(isset($_GET[$field.'_max']) ? $_GET[$field.'_max'] : false, $i) ?>><?php echo bb_agency_display_height($i) ?></option>
                                             <?php endfor; ?>
                                             </select>

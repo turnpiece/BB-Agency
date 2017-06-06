@@ -196,11 +196,11 @@ if($ProfileCustomType!=4)	{
 						echo "  <option value=\"\">--</option>\n";
 					}
 					// 
-					$i=12;
+					$i=30;
 					$heightraw = 0;
 					$heightfeet = 0;
 					$heightinch = 0;
-					while($i<=90)  { 
+					while($i<=bb_agency_MAX_HEIGHT)  { 
 					  $heightraw = $i;
 					  $heightfeet = floor($heightraw/12);
 					  $heightinch = $heightraw - floor($heightfeet*12);
@@ -214,11 +214,11 @@ if($ProfileCustomType!=4)	{
 						echo "  <option value=\"\">--</option>\n";
 					}
 					// 
-					$i=12;
+					$i=30;
 					$heightraw = 0;
 					$heightfeet = 0;
 					$heightinch = 0;
-					while($i<=90)  { 
+					while($i<=bb_agency_MAX_HEIGHT)  { 
 					  $heightraw = $i;
 					  $heightfeet = floor($heightraw/12);
 					  $heightinch = $heightraw - floor($heightfeet*12);
