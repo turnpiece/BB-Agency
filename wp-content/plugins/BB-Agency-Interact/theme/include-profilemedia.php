@@ -105,13 +105,13 @@
 						<input type="radio" name="ProfileMediaPrimary" data-profile="<?php echo $ProfileID ?>" value="<?php echo $profileImg->ProfileMediaID ?>" class="button-primary" <?php checked( $profileImg->ProfileMediaPrimary ) ?> /> &nbsp; <?php _e('Primary', bb_agencyinteract_TEXTDOMAIN) ?>
 					</label>
 				</div>
-				<?php else : ?>
+				<?php endif; ?>
+
 				<div class="delete action">
 					<a href="#" class="btn-small-red" data-id="<?php echo $profileImg->ProfileMediaID ?>" data-type="<?php echo $profileImg->ProfileMediaType ?>" onclick="confirmDelete(<?php echo $profileImg->ProfileMediaID . ', \'' . trim($profileImg->ProfileMediaType) . '\'' ?>); return false;">
 						<span><?php _e('Delete', bb_agencyinteract_TEXTDOMAIN) ?></span> &raquo;
 					</a>
 				</div>
-				<?php endif; ?>
 			</div>
 			<?php
 		}
