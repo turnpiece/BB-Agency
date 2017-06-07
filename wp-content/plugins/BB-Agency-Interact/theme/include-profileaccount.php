@@ -179,20 +179,20 @@
 		// Include Profile Customfields
 		$ProfileInformation = "1"; // Private fields only
 
-		$query1 = "SELECT ProfileCustomID, ProfileCustomTitle, ProfileCustomType, ProfileCustomOptions, ProfileCustomOrder, ProfileCustomView, ProfileCustomShowGender, ProfileCustomShowProfile, ProfileCustomShowSearch, ProfileCustomShowLogged, ProfileCustomShowAdmin,ProfileCustomShowRegistration FROM ". table_agency_customfields ." WHERE ProfileCustomView = ". $ProfileInformation ." ORDER BY ProfileCustomOrder ASC";
+		$query = "SELECT `ProfileCustomID`, `ProfileCustomTitle`, `ProfileCustomType`, `ProfileCustomOptions`, `ProfileCustomOrder`, `ProfileCustomView`, `ProfileCustomShowGender`, `ProfileCustomShowProfile`, `ProfileCustomShowSearch`, `ProfileCustomShowLogged`, `ProfileCustomShowAdmin`, `ProfileCustomShowRegistration` FROM ". table_agency_customfields ." WHERE ProfileCustomView = ". $ProfileInformation ." ORDER BY ProfileCustomOrder ASC";
 
-		$results1 = $wpdb->get_results($query1);
-		$count1 = count($results1);
+		$results = $wpdb->get_results($query);
+		$count = count($results);
 		$pos = 0;
 		
-		foreach ($results1 as $data1) { 
+		foreach ($results as $data) { 
            /*
             * Get Profile Types to
             * filter models from clients
             */
             $permit_type = false;
 
-            $PID = $data1->ProfileCustomID;
+            $PID = $data->ProfileCustomID;
 
             $get_types = "SELECT `ProfileCustomTypes` FROM ". table_agency_customfields_types .
                         " WHERE `ProfileCustomID` = " . $PID;
@@ -206,8 +206,8 @@
                 } 
             } 
                             
-			if ( ($data1->ProfileCustomShowGender == $ProfileGender) || 
-				($data1->ProfileCustomShowGender == 0) && $permit_type == true )  {
+			if ( ($data->ProfileCustomShowGender == $ProfileGender) || 
+				($data->ProfileCustomShowGender == 0) && $permit_type == true )  {
 				include("view-custom-fields.php");
 			}
 		}
