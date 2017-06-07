@@ -418,7 +418,7 @@ if (isset($_POST['action'])) {
                 if ($count < 1) {
                     $resultsNeedOne = $wpdb->get_results("SELECT * FROM `$t_media` WHERE ProfileID='" . $ProfileID . "' AND ProfileMediaType = 'Image' LIMIT 0, 1");
                     foreach ($resultsNeedOne as $dataNeedOne) {
-                        $resultsFoundOne = $wpdb->query("UPDATE `$t_media` SET ProfileMediaPrimary='1' WHERE ProfileID='" . $ProfileID . "' AND ProfileMediaID = '" . $dataNeedOne['ProfileMediaID'] . "'");
+                        $resultsFoundOne = $wpdb->query("UPDATE `$t_media` SET ProfileMediaPrimary='1' WHERE ProfileID='" . $ProfileID . "' AND ProfileMediaID = '" . $dataNeedOne->ProfileMediaID . "'");
                         break;
                     }
                 }
@@ -538,7 +538,7 @@ elseif ($_GET['action'] == "deleteRecord" || $_GET['action'] == "deleteDuplicate
                 echo __("No valid record found.", bb_agency_TEXTDOMAIN);
             }
 
-            wp_delete_user($dataDelete["ProfileUserLinked"]);
+            wp_delete_user($dataDelete->ProfileUserLinked);
         }
         echo ('<div id="message" class="updated"><p>' . __("Profile deleted successfully!", bb_agency_TEXTDOMAIN) . '</p></div>');
     } // is there record?
@@ -1046,7 +1046,7 @@ function bb_display_manage($ProfileID) {
             $resultsMedia = $wpdb->get_results($queryMedia);
             $countMedia = count($resultsMedia);
             foreach ($resultsMedia as $dataMedia) :
-                $deleteLink = '<a href="javascript:confirmDelete(\'' . $dataMedia->ProfileMediaID . '\',\'' . ($dataMedia['ProfileMediaType'] == 'Private' ? 'private file' : strtolower($dataMedia->ProfileMediaType)) . '\')">DELETE</a>';
+                $deleteLink = '<a href="javascript:confirmDelete(\'' . $dataMedia->ProfileMediaID . '\',\'' . ($dataMedia->ProfileMediaType == 'Private' ? 'private file' : strtolower($dataMedia->ProfileMediaType)) . '\')">DELETE</a>';
                 $galleryDir = bb_agency_UPLOADDIR . $ProfileGallery . '/' . $dataMedia->ProfileMediaURL;
                 if ($dataMedia->ProfileMediaType == "Demo Reel" || 
                     $dataMedia->ProfileMediaType == "Video Monologue" || 

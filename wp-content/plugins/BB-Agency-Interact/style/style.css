@@ -56,7 +56,7 @@ p.submit { margin-top: 15px!important; }
 /* Profile Gallery */
 
 #profile-manage .manage-section.gallery .profileimage {
-    background: #666666;
+    border: 1px solid #eee;
     float: left;
     height: 220px;
     margin: 0 3% 10px 0;
@@ -65,24 +65,27 @@ p.submit { margin-top: 15px!important; }
     position: relative;
     width: 30%;
     opacity: 0.6;
+    text-align: center;
 }
 
 #profile-manage .manage-section.gallery .profileimage.live {
     opacity: 1;
 }
 #profile-manage .manage-section.gallery .profileimage.primary-picture {
-    background: #cc3333;
+    border: 1px solid #cc3333;
     opacity: 1;
 }
-
-#profile-manage .manage-section.gallery .profileimage .delete a { display: block; text-align: center; }
-
+#profile-manage .manage-section.gallery .profileimage .delete a { 
+    display: block; 
+    text-align: center;
+    font-size: 14px;
+}
 #profile-manage .manage-section.gallery .profileimage .action {
     position: absolute;
-    bottom: 0;
+    top: 0;
     height: 25px;
     border-radius: 0;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: normal;
     left: 0;
     padding: 5px 10px;
@@ -93,22 +96,26 @@ p.submit { margin-top: 15px!important; }
 }
 #profile-manage .manage-section.gallery .profileimage .action.delete {
     opacity: 1.0;
+    top: auto;
+    bottom: 0;
 }
-
+#profile-manage .manage-section.gallery .profileimage.live .action.delete {
+    opacity: 0.7;
+}
+#profile-manage .manage-section.gallery .profileimage.live .action:hover {
+    opacity: 1.0 !important;
+}
+#profile-manage .manage-section.gallery .profileimage.primary-picture .action {
+    display: none;
+}
 #profile-manage .manage-section.gallery .profileimage .action > label {
     margin: 0;
     display: block;
 }
-
 #profile-manage .manage-section.gallery .profileimage > img {
-    width: 100%;
-}
-
-#profile-manage .manage-section.gallery .profileimage .bb_button,
-#profile-manage .manage-section.gallery .profileimage .bb_button:hover,
-#profile-manage .manage-section.gallery .profileimage .bb_button:active {
-    top: auto;
-    bottom: 0;
+    min-height: 75%;
+    max-height: 100%;
+    max-width: 150%;
 }
 #profile-manage .manage-section.gallery .profileimage .bb_button label { cursor: pointer; }
 

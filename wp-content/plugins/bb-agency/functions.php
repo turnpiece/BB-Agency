@@ -739,7 +739,7 @@
 				"profilelocationcity" => null,
 				"profiletype" => null,
 				"type" => null,
-				"profileisactive" => null,
+				"profileisactive" => 1,
 				"profilegender" => null,
 				"gender" => null,
 				"profilestatheight_min" => null,
@@ -894,9 +894,9 @@
                              * create its own filter here and change
                              * AND should be OR
                              */
-                            if (in_array($ProfileCustomType['ProfileCustomTitle'], $cusFields)) {
-                                $minVal=trim($_GET['ProfileCustomID'.$ProfileCustomType['ProfileCustomID'].'_min']);
-                                $maxVal=trim($_GET['ProfileCustomID'.$ProfileCustomType['ProfileCustomID'].'_max']);
+                            if (in_array($ProfileCustomType->ProfileCustomTitle, $cusFields)) {
+                                $minVal=trim($_GET['ProfileCustomID'.$ProfileCustomType->ProfileCustomID.'_min']);
+                                $maxVal=trim($_GET['ProfileCustomID'.$ProfileCustomType->ProfileCustomID.'_max']);
 								if (!empty($minVal) && !empty($maxVal)) {
 									if ($filter2 == "") {
 										$filter2 .= " AND (( customfield_mux.ProfileCustomValue BETWEEN '".$minVal."' AND '".$maxVal."' AND customfield_mux.ProfileCustomID = '".substr($key,15)."') ";
@@ -919,7 +919,7 @@
                                 8 - Date
                                 *********************/
 
-                                if ($ProfileCustomType["ProfileCustomType"] == 1) { //TEXT
+                                if ($ProfileCustomType->ProfileCustomType == 1) { //TEXT
                                     if ($filter2 == "") {
 									    $filter2 .= " AND ( (customfield_mux.ProfileCustomValue like('%".$val."%'))";
                                     } else {
@@ -927,7 +927,7 @@
                                     }                                                           
                                     $_SESSION[$key] = $val;
 
-                                } elseif ($ProfileCustomType["ProfileCustomType"] == 3) { // Dropdown
+                                } elseif ($ProfileCustomType->ProfileCustomType == 3) { // Dropdown
 
 								   	if ($filter2=="") {
 									 	$filter2 .=" AND (( customfield_mux.ProfileCustomValue IN('".$val."') and customfield_mux.ProfileCustomID = '".substr($key,15)."')";
@@ -936,7 +936,7 @@
 								   	}
                                            
 
-                                } elseif ($ProfileCustomType["ProfileCustomType"] == 4) { //Textarea
+                                } elseif ($ProfileCustomType->ProfileCustomType == 4) { //Textarea
                                     if ($filter2=="") {
                                         $filter2 .= " AND ( (customfield_mux.ProfileCustomValue like('%".$val."%'))";
                                     } else {
@@ -945,7 +945,7 @@
                                     $_SESSION[$key] = $val;
 
 
-                                } elseif ($ProfileCustomType["ProfileCustomType"] == 5) { //Checkbox
+                                } elseif ($ProfileCustomType->ProfileCustomType == 5) { //Checkbox
                                     if (!empty($val)) {
                                         if (strpos($val,",") === false) {
                                            // $val = implode("','",explode(",",$val));
@@ -988,8 +988,8 @@
                                     } else {
                                         $_SESSION[$key] = '';
                                     }
-                                } elseif ($ProfileCustomType["ProfileCustomType"] == 6) { //Radiobutton 
-                                        //var_dump($ProfileCustomType["ProfileCustomType"]);
+                                } elseif ($ProfileCustomType->ProfileCustomType == 6) { //Radiobutton 
+                                        //var_dump($ProfileCustomType->ProfileCustomType);
                                           // $val = implode("','",explode(",",$val));
                                     if ($filter2=="") {
                                         $filter2 .= " AND ( (customfield_mux.ProfileCustomValue like('%".$val."%')and customfield_mux.ProfileCustomID = '".substr($key,15)."')";
@@ -1000,7 +1000,7 @@
                                        
 
                                 }
-                                elseif ($ProfileCustomType["ProfileCustomType"] == 7) { //Measurements 
+                                elseif ($ProfileCustomType->ProfileCustomType == 7) { //Measurements 
 
                                 	if (substr($key, -3) == 'min') {
                                 		$name = str_replace('_min', '', $key);
@@ -1037,7 +1037,7 @@
                                         }                                   		
                                 	}
                                 }
-                                elseif ($ProfileCustomType["ProfileCustomType"] == 8) { //Dates
+                                elseif ($ProfileCustomType->ProfileCustomType == 8) { //Dates
 
                                     if ($filter2=="") {
                                         $filter2 .= " AND ( (customfield_mux.ProfileCustomValue like('%".$val."%')and customfield_mux.ProfileCustomID = '".substr($key,15)."')";
@@ -2192,7 +2192,7 @@ function bb_custom_fields_template($visibility = 0, $ProfileID, $data) {
             	<?php endfor; ?>
             </select>
 			<?php					
-		} elseif ($ProfileCustomType == 8) { //Dates
+		} elseif ($ProfileCustomType == 8 || $ProfileCustomType == 9) { //Dates
 			echo "<input class=\"stubby bbdatepicker\" type=\"text\" name=\"ProfileCustomID". $data->ProfileCustomID ."\" value=\"". $ProfileCustomValue ."\" /><br />\n";	
 		}									
 	} // End if Empty ProfileCustomID

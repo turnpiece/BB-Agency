@@ -16,7 +16,7 @@
 		// Call Custom Code to put in header
 		function bb_agencyinteract_inserthead() {
 		  if( !is_admin() ) {
-			echo "<link rel=\"stylesheet\" href=\"". bb_agencyinteract_BASEDIR ."style/style.css\" type=\"text/css\" media=\"screen\" />\n";
+			echo "<link rel=\"stylesheet\" href=\"". bb_agencyinteract_BASEDIR ."style/style.min.css\" type=\"text/css\" media=\"screen\" />\n";
 		  }
 		  if(!wp_script_is('jquery')) {
 			echo "<script type=\"text/javascript\" src=\"". bb_agencyinteract_BASEDIR ."style/jquery.1.8.js\"></script>";

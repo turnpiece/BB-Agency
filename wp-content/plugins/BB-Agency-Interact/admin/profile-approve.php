@@ -276,7 +276,7 @@ function bb_display_list() {
 		$query = "SELECT DISTINCT ProfileLocationCity, ProfileLocationState FROM ". table_agency_profile ." ORDER BY ProfileLocationState, ProfileLocationCity ASC";
 		$results = $wpdb->get_results($query);
 		$count = count($results);
-		foreach $results as $data) {
+		foreach ($results as $data) {
 			if (isset($data->ProfileLocationCity) && !empty($data->ProfileLocationCity)) {
 				echo "<option value=\"". $data->ProfileLocationCity ."\" ". selected($selectedCity, $data->ProfileLocationCity) ."\">". $data->ProfileLocationCity .", ". strtoupper($dataLocation->ProfileLocationState) ."</option>\n";
 			}
@@ -350,9 +350,9 @@ function bb_display_list() {
 		echo " </tfoot>\n";
 		echo " <tbody>\n";
         $query = "SELECT * FROM ". table_agency_profile ." profile LEFT JOIN ". table_agency_data_type ." profiletype ON profile.ProfileType = profiletype.DataTypeID ". $filter  ." ORDER BY $sort $limit";
-        $results2 = @$wpdb->get_results($query);
-        $count = @count($results2);
-        while ($results2 as $data) {
+        $results2 = $wpdb->get_results($query);
+        $count = count($results2);
+        foreach ($results2 as $data) {
             
             $ProfileID = $data->ProfileID;
             $ProfileGallery = stripslashes($data->ProfileGallery);
