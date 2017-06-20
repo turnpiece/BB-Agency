@@ -158,4 +158,3 @@ get_header();
 
 // Get Footer
 get_footer();
-?>

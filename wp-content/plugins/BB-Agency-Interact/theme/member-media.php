@@ -74,13 +74,9 @@ if (isset($_POST['action'])) {
 
 						} while( $wpdb->get_var("SELECT COUNT(*) FROM " . table_agency_profile_media . " WHERE `ProfileID` = $ProfileID AND `ProfileMediaURL` = '{$safeProfileMediaFilename}'") > 0 );
 
-						//wp_die( $wpdb->get_var("SELECT COUNT(*) FROM " . table_agency_profile_media . " WHERE `ProfileID` = $ProfileID AND `ProfileMediaURL` = '{$safeProfileMediaFilename}'") . ' ==> ' . $safeProfileMediaFilename . ' -- ' . $j );
-
 						if($uploadMediaType == "Image") { 
 						    if ($_FILES['profileMedia'. $i]['type'] == "image/pjpeg" || 
-						    	$_FILES['profileMedia'. $i]['type'] == "image/jpeg" || 
-						    	$_FILES['profileMedia'. $i]['type'] == "image/gif" || 
-						    	$_FILES['profileMedia'. $i]['type'] == "image/png"){
+						    	$_FILES['profileMedia'. $i]['type'] == "image/jpeg"){
 						
 								$image = new bb_agency_image();
 								$image->load($_FILES['profileMedia'. $i]['tmp_name']);
@@ -93,7 +89,7 @@ if (isset($_POST['action'])) {
 								// Add to database
 								$results = $wpdb->query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL) VALUES ('". $ProfileID ."','". $uploadMediaType ."','". $safeProfileMediaFilename ."','". $safeProfileMediaFilename ."')");
 						    }else{
-								$error .= "<b><i>".__("Please upload an image file only", bb_agencyinteract_TEXTDOMAIN)."</i></b><br />";
+								$error .= "<b><i>".__("Please upload a jpeg image", bb_agencyinteract_TEXTDOMAIN)."</i></b><br />";
 						        $have_error = true;
 							}
 						}

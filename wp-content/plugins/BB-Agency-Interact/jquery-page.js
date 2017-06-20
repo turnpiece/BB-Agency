@@ -3,6 +3,10 @@ jQuery(document).ready(function($){
 
 	var debugging = false;
 	
+	$('.bbdatepicker').datepicker({\n";
+		dateFormat : 'yy-mm-dd'
+	});
+
 	$('input.button-primary').change(function() {
 		var $this = $(this);
 		var image = $this.attr('value');

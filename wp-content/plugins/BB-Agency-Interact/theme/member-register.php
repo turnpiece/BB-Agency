@@ -192,9 +192,7 @@
 				}
 
 				if ($_FILES['ProfileImage']['type'] == "image/pjpeg" || 
-					$_FILES['ProfileImage']['type'] == "image/jpeg" || 
-					$_FILES['ProfileImage']['type'] == "image/gif" || 
-					$_FILES['ProfileImage']['type'] == "image/png") {
+					$_FILES['ProfileImage']['type'] == "image/jpeg") {
 
 					// Upload if it doesnt exist already
 					$path_parts = pathinfo($_FILES['ProfileImage']['name']);
@@ -212,7 +210,7 @@
 					$results = $wpdb->query("INSERT INTO " . table_agency_profile_media . " (ProfileID, ProfileMediaType, ProfileMediaTitle, ProfileMediaURL) VALUES ('$new_user','Image','$safeProfileMediaFilename','$safeProfileMediaFilename')");
 
 				} else {
-					$error .= __("Please upload an image for your profile.<br />", bb_agencyinteract_TEXTDOMAIN);
+					$error .= __("Please upload a jpeg image for your profile.<br />", bb_agencyinteract_TEXTDOMAIN);
 					$have_error = true;
 				}
 			}

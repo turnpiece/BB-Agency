@@ -57,36 +57,13 @@
 		echo "    <tr>\n";
 		echo "		<td colspan=\"2\" scope=\"row\"><h3>". __("Contact Information", bb_agencyinteract_TEXTDOMAIN) ."</h3></th>\n";
 		echo "	  </tr>\n";
-		/*
-		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\" class=\"label\">". __("Gallery Folder", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
-		echo "		<td>\n";
-					if (!empty($ProfileGallery) && is_dir(bb_agency_UPLOADPATH .$ProfileGallery)) { 
-						echo "<div id=\"message\"><span class=\"updated\"><a href=\"".network_site_url("/")."profile/". $ProfileGallery ."/\" target=\"_blank\">/profile/". $ProfileGallery ."/</a></span></div>\n";
-						echo "<input type=\"hidden\" id=\"ProfileGallery\" name=\"ProfileGallery\" value=\"". $ProfileGallery ."\" />\n";
-					} else {
-						echo "<input type=\"text\" id=\"ProfileGallery\" name=\"ProfileGallery\" value=\"". $ProfileGallery ."\" />\n";
-						echo "<div id=\"message\"><span class=\"error\">". __("Folder Pending Creation", bb_agencyinteract_TEXTDOMAIN) ."</span>\n";
-					}
-		echo "             	</div>\n";
-		echo "		</td>\n";
-		echo "	</tr>\n";
-		*/
 		echo "<input type=\"hidden\" id=\"ProfileGallery\" name=\"ProfileGallery\" value=\"". $ProfileGallery ."\" />\n";
 		echo "    <tr valign=\"top\">\n";
 		echo "		<td scope=\"row\" class=\"label\">". __("First Name", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 		echo "		<td>\n";
 		echo "			<input type=\"text\" id=\"ProfileContactNameFirst\" name=\"ProfileContactNameFirst\" value=\"". $ProfileContactNameFirst ."\" />\n";
 		echo "		</td>\n";
-		/*
-		echo "	  </tr>\n";
-		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\" class=\"label\">". __("Last Name", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
-		echo "		<td>\n";
-		echo "			<input type=\"text\" id=\"ProfileContactNameLast\" name=\"ProfileContactNameLast\" value=\"". $ProfileContactNameLast ."\" />\n";
-		echo "		</td>\n";
-		echo "	  </tr>\n";
-		*/
+
 		// disable editing of last name
 		echo "<input type=\"hidden\" name=\"ProfileContactNameLast\" value=\"". $ProfileContactNameLast ."\" />\n";
 		$queryShowGender = $wpdb->get_results("SELECT `GenderID`, `GenderTitle` FROM " .  table_agency_data_gender . " GROUP BY `GenderTitle`");

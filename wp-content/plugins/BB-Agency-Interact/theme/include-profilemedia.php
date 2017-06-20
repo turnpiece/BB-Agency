@@ -159,19 +159,15 @@
 		endforeach; ?>
 		</ul>
 
-	<?php endif;
-	/*
-	if ($countMedia < 1) {
-		echo "<p><em>". __("There are no additional media linked", bb_agencyinteract_TEXTDOMAIN) ."</em></p>\n";
-	}
-	*/
-	echo "		</div>\n";
+	<?php endif; ?>
+	
+	</div>
 
-	if (defined('bb_agencyinteract_ALLOW_UPLOADS') && bb_agencyinteract_ALLOW_UPLOADS) :
+	<?php if (defined('bb_agencyinteract_ALLOW_UPLOADS') && bb_agencyinteract_ALLOW_UPLOADS) :
 
 		echo "	<div class=\"manage-section upload\">\n";
 		echo "		<h3>". __("Upload Media Files", bb_agencyinteract_TEXTDOMAIN) ."</h3>\n";
-		echo "		<p>". __("Upload new media using the forms below. The following formats are available: jpg, png, mp3, and pdf. If uploading an mp3 for a voice monolouge, use the  \"Voice Demo\" option. For Resumes, make sure the file is a PDF ", bb_agencyinteract_TEXTDOMAIN) .".</p>\n";
+		echo "		<p>". __("Upload new media using the forms below. The following formats are available: jpg, mp3 and pdf. If uploading an mp3 for a voice monologue, use the  \"Voice Demo\" option. For resumes, make sure the file is a PDF ", bb_agencyinteract_TEXTDOMAIN) .".</p>\n";
 	
 		for( $i=1; $i<10; $i++ ) {
 			echo "<div><label>Type: </label><select name=\"profileMedia". $i ."Type\"><option value=\"Image\">Image</option><option value=\"Headshot\">Headshot</option><option value=\"CompCard\">Comp Card</option><option>Resume</option><option>Voice Demo</option>"; 
