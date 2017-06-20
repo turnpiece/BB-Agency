@@ -167,15 +167,10 @@
 				
 				$login = wp_login( $user_login, $user_pass );
 				$login = wp_signon( array( 'user_login' => $user_login, 'user_password' => $user_pass, 'remember' => 1 ), false );	
-			}				
+			}	
+						
 			// Notify admin and user
-			wp_new_user_notification($new_user, null, 'both');	
-			/*
-			// email admin
-			$subject = 'New '.get_bloginfo('name').' model profile added: ' . $ProfileContactDisplay;
-			$message = admin_url( '?page=bb_agency_profiles&action=editRecord&ProfileID='.$ProfileID );
-			wp_mail( get_bloginfo('admin_email'), $subject, $message );
-			*/
+			wp_new_user_notification($new_user, $user_pass, 'both');	
 
 			// create gallery directory
 			$gallery = bb_agency_createdir( 
