@@ -215,7 +215,7 @@ function explode_url($url) {
     $protocol = ""; // "file://"; ? why doesn't this work... It's because of
                     // network filenames like //COMPU/SHARENAME
 
-    $host = ""; // localhost, really
+    $host = ""; // 10.169.0.141, really
     $file = basename($url);
 
     $path = dirname($url);
