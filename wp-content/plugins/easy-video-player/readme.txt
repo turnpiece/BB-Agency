@@ -3,8 +3,8 @@ Contributors: naa986
 Donate link: https://noorsplugin.com/
 Tags: video, wpvideo, flash, html5, iPad, iphone, ipod, mobile, playlists, embed video, flowplayer, video html5, flash player, player, video player
 Requires at least: 4.3
-Tested up to: 4.8
-Stable tag: 1.1.6
+Tested up to: 4.9
+Stable tag: 1.1.7
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -131,6 +131,10 @@ Yes.
 none
 
 == Changelog ==
+
+= 1.1.7 =
+* Updated the player to version 7.2.1.
+* Easy Video Player is now compatible with WordPress 4.9.
 
 = 1.1.6 =
 * Added a shortcode parameter to disable the sharing option in the player.
