@@ -4056,5 +4056,5 @@ function bb_agency_types_checkboxes() {
  */
 function bb_agency_debug( $message ) {
 	if (bb_agency_DEBUGGING)
-		error_log( "DEBUG: $message" );
+		error_log( "BB Agency: $message" );
 }

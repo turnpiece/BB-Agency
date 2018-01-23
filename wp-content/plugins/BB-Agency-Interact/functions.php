@@ -61,7 +61,9 @@
 	// Set Custom Template
 	add_filter('template_include', 'bb_agencyinteract_template_include', 1, 1); 
 		function bb_agencyinteract_template_include( $template ) {
-			if ( get_query_var( 'type' ) ) {
+			bb_agencyinteract_debug( __FUNCTION__ . " $template" );
+			if ( !is_admin() && get_query_var( 'type' ) ) {
+				bb_agencyinteract_debug( __FUNCTION__ . ' query => ' . get_query_var( 'type' ) );
 				if (get_query_var( 'type' ) == "profileoverview") {
 					return dirname(__FILE__) . '/theme/member-overview.php'; 
 			  	} elseif (get_query_var( 'type' ) == "account") {
@@ -82,6 +84,7 @@
 			}
 			return $template;
 		}
+	
 	
 	// Remember to flush_rules() when adding rules
 	add_filter('init','bb_agencyinteract_flushrules');
@@ -312,6 +315,11 @@
 				);
 			}
 		}
+	}
+
+	function bb_agencyinteract_debug( $message ) {
+		if (bb_agencyinteract_DEBUG)
+			error_log( 'BB Agency Interact: ' . $message );
 	}
 
 
