@@ -17,12 +17,18 @@ get_currentuserinfo();
 // Were they users or agents?
 $profiletype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
 
-if ($profiletype == 1) { $profiletypetext = __("Agent/Producer", bb_agencyinteract_TEXTDOMAIN); } else { $profiletypetext = __("Model/Talent", bb_agencyinteract_TEXTDOMAIN); }
+if (current_user_can( 'manage_options' )) {
+	$profiletypetext = __('Administrator', bb_agencyinteract_TEXTDOMAIN); 
+} elseif ($profiletype == 1) { 
+	$profiletypetext = __("Agent/Producer", bb_agencyinteract_TEXTDOMAIN); 
+} else { 
+	$profiletypetext = __("Model/Talent", bb_agencyinteract_TEXTDOMAIN); 
+}
 
 // Change Title
 add_filter('wp_title', 'bb_agencyinteractive_override_title', 10, 2);
 	function bb_agencyinteractive_override_title(){
-		return "Manage Profile";
+		return __( "Manage Profile", bb_agencyinteract_TEXTDOMAIN);
 	}   
 
 // Form Post
@@ -102,12 +108,12 @@ get_header();
 		// Check if User is Logged in or not
 		if (is_user_logged_in()) { 
 
-                        /*
+            /*
 			 * Set Media to not show to
 			 * client/s, agents, producers,
 			 */
 			$ptype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
-	                $ptype = retrieve_title($ptype);
+	        $ptype = retrieve_title($ptype);
 			
 			echo "<div id=\"profile-steps\">Profile Setup: Details</div>\n";
 
