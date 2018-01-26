@@ -4,8 +4,8 @@
 if ( $_SERVER['REQUEST_METHOD'] == "POST" && !empty( $_POST['action'] ) && $_POST['action'] == 'log-in' ) {
 
 	global $error;
-	$login = wp_login( $_POST['user-name'], $_POST['password'] );
-	$login = wp_signon( array( 'user_login' => $_POST['user-name'], 'user_password' => $_POST['password'], 'remember' => $_POST['remember-me'] ), false );
+	//$login = wp_login( $_POST['user-name'], $_POST['password'] );
+	$login = wp_signon( array( 'user_login' => $_POST['user-name'], 'user_password' => $_POST['password'], 'remember' => $_POST['remember-me'] ) );
 	
     get_currentuserinfo();
     

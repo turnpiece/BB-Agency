@@ -1,10 +1,10 @@
 <?php
 /*
 Plugin Name: Easy Video Player
-Version: 1.1.6
-Plugin URI: http://noorsplugin.com/wordpress-video-plugin/
+Version: 1.1.7
+Plugin URI: https://noorsplugin.com/wordpress-video-plugin/
 Author: naa986
-Author URI: http://noorsplugin.com/
+Author URI: https://noorsplugin.com/
 Description: Easily embed videos into your WordPress blog
 Text Domain: easy-video-player
 Domain Path: /languages
@@ -17,7 +17,8 @@ if (!class_exists('EASY_VIDEO_PLAYER')) {
 
     class EASY_VIDEO_PLAYER {
 
-        var $plugin_version = '1.1.6';
+        var $plugin_version = '1.1.7';
+        var $flowplayer_version = '7.2.1';
 
         function __construct() {
             define('EASY_VIDEO_PLAYER_VERSION', $this->plugin_version);
@@ -69,7 +70,7 @@ if (!class_exists('EASY_VIDEO_PLAYER')) {
         }
 
         function easy_video_player_options_page() {
-            $url = "http://noorsplugin.com/wordpress-video-plugin/";
+            $url = "https://noorsplugin.com/wordpress-video-plugin/";
             $link_text = sprintf(wp_kses(__('For detailed documentation please visit the plugin homepage <a target="_blank" href="%s">here</a>.', 'easy-video-player'), array('a' => array('href' => array(), 'target' => array()))), esc_url($url));          
             ?>
             <div class="wrap">
