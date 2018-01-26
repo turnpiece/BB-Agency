@@ -44,8 +44,7 @@
 			$newrules['profile-member/(.*)/(.*)$'] = 'index.php?type=$matches[0]';
 			$newrules['profile-member'] = 'index.php?type=profileoverview';
 			$newrules['profile-register/(.*)$'] = 'index.php?type=profileregister&typeofprofile=$matches[1]';
-			$newrules['profile-register'] = 'index.php?type=profileregister';
-			
+			$newrules['profile-register'] = 'index.php?type=profileregister';			
 			$newrules['profile-login'] = 'index.php?type=profilelogin';
 			return $newrules + $rules;
 		}
@@ -59,33 +58,52 @@
 		}
 	
 	// Set Custom Template
-	add_filter('template_include', 'bb_agencyinteract_template_include', 1, 1); 
+	add_filter('template_include', 'bb_agencyinteract_template_include', 90, 1); 
 		function bb_agencyinteract_template_include( $template ) {
-			if ( get_query_var( 'type' ) ) {
-				if (get_query_var( 'type' ) == "profileoverview") {
-					return dirname(__FILE__) . '/theme/member-overview.php'; 
-			  	} elseif (get_query_var( 'type' ) == "account") {
-					return dirname(__FILE__) . '/theme/member-account.php'; 
-			  	} elseif (get_query_var( 'type' ) == "subscription") {
-					return dirname(__FILE__) . '/theme/member-subscription.php'; 
-			  	} elseif (get_query_var( 'type' ) == "availability") {
-					return dirname(__FILE__) . '/theme/member-availability.php'; 
-			  	} elseif (get_query_var( 'type' ) == "manage") {
-					return dirname(__FILE__) . '/theme/member-profile.php'; 
-			  	} elseif (get_query_var( 'type' ) == "media") {
-					return dirname(__FILE__) . '/theme/member-media.php'; 
-			  	} elseif (get_query_var( 'type' ) == "profileregister") {
-					return dirname(__FILE__) . '/theme/member-register.php'; 
-			  	} elseif (get_query_var( 'type' ) == "profilelogin") {
-					return dirname(__FILE__) . '/theme/member-login.php'; 
-			  	}
+
+			if ( !is_page() && !is_home() || is_admin() || is_user_logged_in() && current_user_can('manage_options'))
+				return $template;
+
+			if ($type = get_query_var( 'type' )) {
+				bb_agencyinteract_debug( __FUNCTION__ . ' query => ' . $type );
+
+				$theme = dirname(__FILE__) . '/theme/';
+
+				switch( $type ) {
+					case 'profileoverview' :
+						return $theme . 'member-overview.php';
+
+					case 'subscription' :
+						return $theme . 'member-subscription.php';
+
+					case 'availability' :
+						return $theme . 'member-availability.php';
+
+					case 'manage' :
+						return $theme . 'member-profile.php';
+
+					case 'media' :
+						return $theme . 'member-media.php';
+
+					case 'profileregister' :
+						//if (!is_user_logged_in())
+							return $theme . 'member-register.php';
+						break;
+
+					case 'profilelogin' :
+						//if (!is_user_logged_in())
+							return $theme . 'member-login.php';
+						break;
+				}
 			}
+			bb_agencyinteract_debug( __FUNCTION__ . " returning $template" );
 			return $template;
 		}
 	
+	
 	// Remember to flush_rules() when adding rules
 	add_filter('init','bb_agencyinteract_flushrules');
-		function bb_agencyinteract_flushRules() {
+		function bb_agencyinteract_flushrules() {
 			global $wp_rewrite;
 			$wp_rewrite->flush_rules();
 		}
@@ -312,6 +330,11 @@
 				);
 			}
 		}
+	}
+
+	function bb_agencyinteract_debug( $message ) {
+		if (bb_agencyinteract_DEBUG)
+			error_log( 'BB Agency Interact: ' . $message );
 	}
 
 
