@@ -17,15 +17,17 @@ if ( $_SERVER['REQUEST_METHOD'] == "POST" && !empty( $_POST['action'] ) && $_POS
 
 function get_user_login_info(){
     
-    global $user_ID;  
-	$redirect = $_POST["lastviewed"];
-	get_currentuserinfo();
-	$user_info = get_userdata( $user_ID ); 
+    $user_ID = get_current_user_id();  
 				
-	if($user_ID){
+	if (!empty($user_ID)) {
 		
+		$redirect = $_POST["lastviewed"];
+		get_currentuserinfo();
+		$user_info = get_userdata( $user_ID ); 
+
 		// if there's a redirect to set let's use it
 		if (isset($_POST['redirect_to']) && $_POST['redirect_to']) {
+			die( $_POST['redirect_to'] );
 			wp_redirect($_POST['redirect_to']);
 			exit;
 		}
@@ -36,8 +38,8 @@ function get_user_login_info(){
 		} else {
 
 			// If Admin, redirect to plugin
-			if( $user_info->user_level > 7) {
-				header("Location: ". admin_url("admin.php?page=bb_agency_menu"));
+			if ( current_user_can( 'manage_options' ) ) {
+				//header("Location: ". admin_url("admin.php?page=bb_agency_menu"));
 			}
 
 			// Message will show for 48hrs after registration
@@ -52,8 +54,10 @@ function get_user_login_info(){
 
 	} else {
 		// Reload
-        header("Location: ". get_bloginfo("wpurl")."/profile-login/");
+		die( get_bloginfo("wpurl")."/profile-login/" );
+  	    header("Location: ". get_bloginfo("wpurl")."/profile-login/");
 	}
+	die( $user_ID );
 }
 
 // ****************************************************************************************** //
@@ -86,8 +90,8 @@ function get_user_login_info(){
 
 		echo "</div><!-- #bbcontent -->\n";
 
-	// Get Footer
-	get_footer();
+		// Get Footer
+		get_footer();
 	
 	} // Done
 	
