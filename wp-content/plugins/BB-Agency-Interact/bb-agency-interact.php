@@ -42,7 +42,7 @@ add_action( 'the_post', 'bbagency_interact_the_post_action' );
 	define("bb_agencyinteract_ALLOW_UPLOADS", true);
 	define("bb_agencyinteract_ALLOW_REGISTRATION", true);
 	define("bb_agencyinteract_TEXTDOMAIN", basename(dirname( __FILE__ )) ); //   bb-agency
-	define("bb_agencyinteract_DEBUG", true);
+	define("bb_agencyinteract_DEBUG", false);
 // Call Language Options
 	add_action('init', 'bb_agencyinteract_loadtranslation');
 		function bb_agencyinteract_loadtranslation(){
