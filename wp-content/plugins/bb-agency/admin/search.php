@@ -308,7 +308,7 @@ if ($action) {
                         $minVal = $_GET['ProfileCustomID'.$ProfileCustomType->ProfileCustomID.'_min'];
                         $maxVal = $_GET['ProfileCustomID'.$ProfileCustomType->ProfileCustomID.'_max'];
                         
-                        $filters[$keyID] = "cm{$keyID}.ProfileCustomValue BETWEEN $minVal AND $maxVal";
+                        $filters[$keyID] = "cm{$keyID}.ProfileCustomValue BETWEEN '$minVal' AND '$maxVal'";
 
                         $_SESSION[$key] = $val;
                     } else {
@@ -381,7 +381,7 @@ if ($action) {
 
                                 $_SESSION[$key] = $val;
 
-                                $filters[$keyID] = "cm{$keyID}.ProfileCustomValue BETWEEN $Min_val AND $Max_val";
+                                $filters[$keyID] = "cm{$keyID}.ProfileCustomValue BETWEEN '{$Min_val}' AND '{$Max_val}'";
                             }
                         }
                     }
@@ -447,6 +447,8 @@ if ($action) {
             GROUP BY profile.ProfileID ".
             (empty($having) ? '' : 'HAVING '.implode(' AND ', $having))." 
             ORDER BY $sort $dir $limit";
+
+
 
         // Search Results
         $results2 = $wpdb->get_results($query);

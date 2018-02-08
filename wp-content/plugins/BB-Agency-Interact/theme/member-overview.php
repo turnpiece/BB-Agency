@@ -96,9 +96,7 @@ get_header();
 					
 				echo "<h1>". __("Welcome", bb_agencyinteract_TEXTDOMAIN) ." ". $current_user->first_name ."!</h1>";
 
-				if (current_user_can('manage_options')) {
-					echo '<a href="' . admin_url( 'admin.php?admin.php?page=bb_agency_settings' ) . '">' . __( 'Administrate the site', bb_agencyinteract_TEXTDOMAIN ) . " &raquo;" . '</a>';
-				} elseif ($profiletype == 1) {
+				if ($profiletype == 1) {
 					echo "". __("We have you registered as", bb_agencyinteract_TEXTDOMAIN) ." <strong>". $profiletypetext ."</strong>";
 					echo "<h2><a href=\"". $bb_agencyinteract_WPURL ."/profile-search/\">". __("Begin Your Search", bb_agencyinteract_TEXTDOMAIN) ."</a></h2>";
 					

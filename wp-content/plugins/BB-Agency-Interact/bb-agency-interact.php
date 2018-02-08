@@ -6,9 +6,9 @@
   Description: Enhancement to the BB Agency software allowing models to manage their own information. Forked from RB Agency Interact plugin.
   Author: Paul Jenkins
   Author URI: http://turnpiece.com/
-  Version: 0.0.5
+  Version: 0.0.3
 */
-$bb_agencyinteract_VERSION = "0.0.5"; 
+$bb_agencyinteract_VERSION = "0.0.3"; 
 if (!session_id())
 session_start();
 if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], '2.8', '<') ) { // if less than 2.8 
@@ -32,17 +32,16 @@ add_action( 'the_post', 'bbagency_interact_the_post_action' );
 // Plugin Definitions
 	define("bb_agencyinteract_VERSION", $bb_agencyinteract_VERSION); // e.g. 1.0
 	define("bb_agencyinteract_BASENAME", plugin_basename(__FILE__) );  // bb-agency/bb-agency.php
-	$bb_agencyinteract_WPURL = site_url(); // http://domain.com/wordpress
+	$bb_agencyinteract_WPURL = get_bloginfo("wpurl"); // http://domain.com/wordpress
 	$bb_agencyinteract_EMAIL = get_bloginfo('admin_email');
 	$bb_agencyinteract_EMAIL_PHOTOS = preg_replace('/^\w+@/', 'jessica@', $bb_agencyinteract_EMAIL);
 	$bb_agencyinteract_WPUPLOADARRAY = wp_upload_dir(); // Array  $bb_agencyinteract_WPUPLOADARRAY['baseurl'] $bb_agencyinteract_WPUPLOADARRAY['basedir']
-	define("bb_agencyinteract_BASEDIR", site_url() ."/". PLUGINDIR ."/". dirname( plugin_basename(__FILE__) ) ."/" );  // http://domain.com/wordpress/wp-content/plugins/bb-agency-interact/
+	define("bb_agencyinteract_BASEDIR", get_bloginfo("wpurl") ."/". PLUGINDIR ."/". dirname( plugin_basename(__FILE__) ) ."/" );  // http://domain.com/wordpress/wp-content/plugins/bb-agency-interact/
 	define("bb_agencyinteract_UPLOADDIR", $bb_agencyinteract_WPUPLOADARRAY['baseurl'] ."/profile-media/" );  // http://domain.com/wordpress/wp-content/uploads/profile-media/
 	define("bb_agencyinteract_UPLOADPATH", $bb_agencyinteract_WPUPLOADARRAY['basedir'] ."/profile-media/" ); // /home/content/99/6048999/html/domain.com/wordpress/wp-content/uploads/profile-media/
 	define("bb_agencyinteract_ALLOW_UPLOADS", true);
 	define("bb_agencyinteract_ALLOW_REGISTRATION", true);
 	define("bb_agencyinteract_TEXTDOMAIN", basename(dirname( __FILE__ )) ); //   bb-agency
-	define("bb_agencyinteract_DEBUG", false);
 // Call Language Options
 	add_action('init', 'bb_agencyinteract_loadtranslation');
 		function bb_agencyinteract_loadtranslation(){
@@ -296,7 +295,7 @@ is_admin() || add_filter( 'the_posts', 'bb_agencyinteract_intercept_private_page
 		function bb_agencyinteract_shortcode_agencyregister($atts, $content = null){
 			ob_start();
 			wp_register_form($atts);
-			$output_string = ob_get_contents();
+			$output_string=ob_get_contents();
 			ob_end_clean();
 			return $output_string;
 		}
@@ -305,7 +304,7 @@ is_admin() || add_filter( 'the_posts', 'bb_agencyinteract_intercept_private_page
 		function bb_agencyinteract_shortcode_profileregister($atts, $content = null){
 			ob_start();
 			wp_register_form($atts);
-			$output_string = ob_get_contents();
+			$output_string=ob_get_contents();
 			ob_end_clean();
 			return $output_string;
 		}

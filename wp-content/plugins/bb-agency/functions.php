@@ -168,13 +168,9 @@
 		}
 	
 	// Set Custom Template
-	add_filter('template_include', 'bb_agency_template_include', 80, 1); 
+	add_filter('template_include', 'bb_agency_template_include', 1, 1); 
 		function bb_agency_template_include( $template ) {
-			if ( !is_page() && !is_home() || is_admin() || is_user_logged_in() && current_user_can('manage_options'))
-				return $template;
-
 			if ($type = get_query_var( 'type' )) {
-				bb_agency_debug( __FUNCTION__ . " $type" );
 				$dir = dirname(__FILE__) . '/theme/';
 				switch ($type) {
 					case 'search' :
@@ -201,6 +197,8 @@
 						return $dir.'view-model-card.php';
 					case 'lbda' :
 						return $dir.'view-lbda-card.php';
+					case "version-bb-agency" :
+						return dirname(__FILE__) . '/rbv.php';
 				}			  
 			}
 			return $template;
@@ -4058,5 +4056,5 @@ function bb_agency_types_checkboxes() {
  */
 function bb_agency_debug( $message ) {
 	if (bb_agency_DEBUGGING)
-		error_log( "BB Agency: $message" );
+		error_log( "DEBUG: $message" );
 }
