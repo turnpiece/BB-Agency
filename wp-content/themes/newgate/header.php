@@ -153,6 +153,7 @@ if (is_singular() && get_option('thread_comments')) {
 wp_head();
 
 ?>
+<script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="abd7b6c6-3635-45b3-9e99-d73fd0710102" type="text/javascript" async></script>
 </head>
 <?php
 	if ($cmsms_option[CMSMS_SHORTNAME . '_boxed_version'] || is_page(3027)) {
