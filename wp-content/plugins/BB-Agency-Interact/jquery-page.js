@@ -3,7 +3,7 @@ jQuery(document).ready(function($){
 
 	var debugging = false;
 	
-	$('.bbdatepicker').datepicker({\n";
+	$('.bbdatepicker').datepicker({
 		dateFormat : 'yy-mm-dd'
 	});
 

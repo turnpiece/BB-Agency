@@ -442,7 +442,6 @@ if ( is_admin() ){
 			wp_deregister_script('prettyPhoto');
 			wp_deregister_script('general');
 
-
 			wp_enqueue_script('jquery');
 			wp_enqueue_script('jquery-ui-script', plugins_url('js/jquery-ui-1.10.3.custom.min.js', __FILE__), array('jquery') );
 			wp_enqueue_style('jquery-ui-style', plugins_url('js/jquery-ui-1.10.3.custom.min.css', __FILE__) );
@@ -450,15 +449,15 @@ if ( is_admin() ){
 
 	add_action('wp_footer', 'bb_agency_wp_footer');
 	add_action( 'admin_print_scripts', 'bb_agency_wp_footer', 100);
-		function bb_agency_wp_footer() {
-			echo "<script type=\"text/javascript\">\n";
-			echo "jQuery(document).ready(function(){\n";
-			echo "	jQuery('.bbdatepicker').datepicker({\n";
-			echo "		dateFormat : 'yy-mm-dd'\n";
-			echo "	});\n";
-			echo "});\n";
-			echo "</script>\n";
-		}
+		function bb_agency_wp_footer() { ?>
+			<script type="text/javascript">
+				jQuery(document).ready(function($){
+					$('.bbdatepicker').datepicker({
+						dateFormat : 'yy-mm-dd'
+					});
+				});
+			</script>
+		<?php }
 
 	add_action( 'admin_print_scripts', 'bb_agency_admin_print_scripts', 100);
 		function bb_agency_admin_print_scripts() {
