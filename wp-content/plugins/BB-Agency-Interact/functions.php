@@ -74,6 +74,8 @@
 					return dirname(__FILE__) . '/theme/member-profile.php'; 
 			  	} elseif (get_query_var( 'type' ) == "media") {
 					return dirname(__FILE__) . '/theme/member-media.php'; 
+				} elseif (get_query_var( 'type' ) == "preferences") {
+					return dirname(__FILE__) . '/theme/member-preferences.php'; 
 			  	} elseif (get_query_var( 'type' ) == "profileregister") {
 					return dirname(__FILE__) . '/theme/member-register.php'; 
 			  	} elseif (get_query_var( 'type' ) == "profilelogin") {

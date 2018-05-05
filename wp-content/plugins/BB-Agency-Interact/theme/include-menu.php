@@ -69,6 +69,17 @@ global $wpdb;
 			echo " 		</div>\n";
 		}
                 
+		if ( ($_SERVER["REQUEST_URI"]) == "/profile-member/preferences/") { 
+			$tabclass = "active"; 
+		} else { 
+			$tabclass = "inactive"; 
+		}
+		echo " 		<div class=\"tab-inner tab-". $tabclass ."\">\n";
+		echo " 			<a  href=\"". get_bloginfo("wpurl") ."/profile-member/preferences/\">\n";
+		echo " 			  <div class=\"subMenuTabBG\"><div class=\"subMenuTabBorders\"><div class=\"subMenuTabText\">".__("Preferences", bb_agencyinteract_TEXTDOMAIN) ."</div></div></div>\n";
+		echo " 			</a>\n";
+		echo " 		</div>\n";
+
 		$bb_agencyinteract_options_arr = get_option('bb_agencyinteract_options');
 			$bb_agencyinteract_option_subscribeupsell = (int)$bb_agencyinteract_options_arr['bb_agencyinteract_option_subscribeupsell'];
 

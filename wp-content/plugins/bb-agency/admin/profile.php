@@ -599,6 +599,7 @@ function bb_display_manage($ProfileID) {
         $ProfileGallery = $profile->ProfileGallery;
         $ProfileType = $profile->ProfileType;
         $ProfileGender = $profile->ProfileGender;
+        $ProfileUser = $profile->ProfileUserLinked;
 
     } else {
         // Set default values for new records
@@ -606,6 +607,7 @@ function bb_display_manage($ProfileID) {
         $ProfileType = 1;
         $ProfileGender = "Unknown";
         $ProfileIsActive = 1;
+        $ProfileUser = null;
         $ProfileLocationCountry = $bb_agency_option_locationcountry;
         ?>
         <h2 class="title">Add New <?php echo LabelSingular ?> <a class="button-primary" href="<?php echo admin_url("admin.php?page=" . $_GET['page']) ?>"><?php _e("Back to " . LabelSingular . " List", bb_agency_TEXTDOMAIN) ?></a></h2>
@@ -689,6 +691,35 @@ function bb_display_manage($ProfileID) {
                 </tr>
             <?php endif;
 
+            if (!is_null($ProfileUser)) { ?>
+                <tr valign="top">
+                    <th colspan="2"><h3><?php _e( 'Preferences', bb_agency_TEXTDOMAIN ) ?></h3></th>
+                </tr>
+                <?php if ($ProfileType == 1) : ?>
+                <tr valign="top">
+                    <td scope="row"><?php _e( 'Can be emailed about castings and shoots' ) ?></td>
+                    <td><?php echo get_user_meta( $ProfileUser, 'email_updates', true ) == 1 ? __( 'Yes' ) : __( 'No' ) ?></td>
+                </tr>
+                <tr valign="top">
+                    <td scope="row"><?php _e( 'Wants to receive the newsletter' ) ?></td>
+                    <td><?php echo get_user_meta( $ProfileUser, 'newsletter', true ) == 1 ? __( 'Yes' ) : __( 'No' ) ?></td>
+                </tr>
+                <tr valign="top">
+                    <td scope="row"><?php _e( 'Can be sent cards in the post' ) ?></td>
+                    <td><?php echo get_user_meta( $ProfileUser, 'postal', true ) == 1 ? __( 'Yes' ) : __( 'No' ) ?></td>
+                </tr>
+                <?php else : ?>
+                <tr valign="top">
+                    <td scope="row"><?php _e( 'Details can be sent to clients' ) ?></td>
+                    <td><?php echo get_user_meta( $ProfileUser, 'clients', true ) == 1 ? __( 'Yes' ) : __( 'No' ) ?></td>
+                </tr>
+                <tr valign="top">
+                    <td scope="row"><?php _e( 'Images can be used on social media' ) ?></td>
+                    <td><?php echo get_user_meta( $ProfileUser, 'marketing', true ) == 1 ? __( 'Yes' ) : __( 'No' ) ?></td>
+                </tr>
+                <?php endif;
+            }
+            
             // Private Information
             ?>
             <tr valign="top">

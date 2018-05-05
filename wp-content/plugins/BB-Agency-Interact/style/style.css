@@ -9,7 +9,8 @@ p.submit { margin-top: 15px!important; }
 
 #profile-steps { font-size: 22px; text-align: center; background: #eee; border-bottom: 3px solid #aaa; padding: 10px; }
 
-#profile-manage { overflow: hidden; max-width: 640px; margin: 0 auto; }
+#profile-manage { overflow: hidden; max-width: 750px; margin: 0 auto; }
+#profile-manage .manage-content { max-width: 640px; margin: 20px auto; }
 #profile-manage h2 { margin: 20px 0 10px 0; }
 #profile-manage table { border: none; width: 100%; }
 #profile-manage table tr th,
@@ -118,6 +119,22 @@ p.submit { margin-top: 15px!important; }
     max-width: 150%;
 }
 #profile-manage .manage-section.gallery .profileimage .bb_button label { cursor: pointer; }
+
+#profile-manage.preferences form {
+    max-width: 500px;
+}
+
+#profile-manage.preferences form label {
+    position: relative;
+    display: inline-block;
+    padding-left: 25px;
+}
+
+#profile-manage.preferences form label input {
+    position: absolute;
+    left: 0;
+    top: 5px;
+}
 
 /** Sign In - Register **/
 #bbsignin-register { text-align: center; vertical-align: top; }
