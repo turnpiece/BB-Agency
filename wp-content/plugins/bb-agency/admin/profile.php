@@ -238,6 +238,9 @@ if (isset($_POST['action'])) {
         case 'editRecord':
             if (!empty($ProfileContactNameFirst) && !empty($ProfileID)) :
 
+                // get WP user
+                $ProfileUserLinked = $_REQUEST['wpuserid'];
+
                 $fields = bb_agency_get_profile_fields();
 
                 // Create update query
@@ -274,16 +277,40 @@ if (isset($_POST['action'])) {
 
                 $results = $wpdb->query($update) or wp_die(mysql_error() .': '. $update);
 
-				update_usermeta($_REQUEST['wpuserid'], 'bb_agency_interact_profiletype', esc_attr($ProfileType));
-                update_usermeta($_REQUEST['wpuserid'], 'bb_agency_interact_pgender', esc_attr($ProfileGender));
-                
+				update_user_meta($ProfileUserLinked, 'bb_agency_interact_profiletype', esc_attr($ProfileType));
+                update_user_meta($ProfileUserLinked, 'bb_agency_interact_pgender', esc_attr($ProfileGender));
+
+                bb_agency_debug( $ProfileUserLinked . ' => ' . print_r( $_POST, true ) );
+
                 if ($ProfileUserLinked > 0) {
                     /* Update WordPress user information. */
-                    update_usermeta($ProfileUserLinked, 'first_name', esc_attr($ProfileContactNameFirst));
-                    update_usermeta($ProfileUserLinked, 'last_name', esc_attr($ProfileContactNameLast));
-                    update_usermeta($ProfileUserLinked, 'nickname', esc_attr($ProfileContactDisplay));
-                    update_usermeta($ProfileUserLinked, 'display_name', esc_attr($ProfileContactDisplay));
-                    update_usermeta($ProfileUserLinked, 'user_email', esc_attr($ProfileContactEmail));
+                    update_user_meta($ProfileUserLinked, 'first_name', esc_attr($ProfileContactNameFirst) );
+                    update_user_meta($ProfileUserLinked, 'last_name', esc_attr($ProfileContactNameLast) );
+                    update_user_meta($ProfileUserLinked, 'nickname', esc_attr($ProfileContactDisplay) );
+                    update_user_meta($ProfileUserLinked, 'display_name', esc_attr($ProfileContactDisplay) );
+                    update_user_meta($ProfileUserLinked, 'user_email', esc_attr($ProfileContactEmail) );
+
+                    bb_agency_debug( 'profile type => ' . $ProfileType );
+
+                    if ($ProfileType == 1) { //client
+                        foreach( array( 
+                            'email_updates',
+                            'newsletter',
+                            'postal',
+                        ) as $id )
+                            update_user_meta( $ProfileUserLinked, $id, isset( $_POST[$id] ) );
+                        
+                    } else {
+                        
+                        foreach( array(
+                            'clients', 
+                            'marketing'
+                        ) as $id ) {
+                            bb_agency_debug( $id . ' => ' . isset( $_POST[$id] ) );
+                            update_user_meta( $ProfileUserLinked, $id, isset( $_POST[$id] ) );
+                        }
+                          
+                    }
                 }
 
                 // Remove Old Custom Field Values
@@ -604,7 +631,7 @@ function bb_display_manage($ProfileID) {
     } else {
         // Set default values for new records
         $ProfilesModelDate = $date;
-        $ProfileType = 1;
+        $ProfileType = 0;
         $ProfileGender = "Unknown";
         $ProfileIsActive = 1;
         $ProfileUser = null;
@@ -695,27 +722,24 @@ function bb_display_manage($ProfileID) {
                 <tr valign="top">
                     <th colspan="2"><h3><?php _e( 'Preferences', bb_agency_TEXTDOMAIN ) ?></h3></th>
                 </tr>
-                <?php if ($ProfileType == 1) : ?>
+                <?php if ($ProfileType == 1) : // clients
+                        foreach( array( 
+                            'email_updates' => __( 'Can be emailed about castings and shoots' ),
+                            'newsletter' => __( 'Wants to receive the newsletter' ),
+                            'postal' => __( 'Can be sent cards in the post' ),
+                        ) as $id => $label ) : ?>
                 <tr valign="top">
-                    <td scope="row"><?php _e( 'Can be emailed about castings and shoots' ) ?></td>
-                    <td><?php echo get_user_meta( $ProfileUser, 'email_updates', true ) == 1 ? __( 'Yes' ) : __( 'No' ) ?></td>
+                    <td scope="row"><?php echo $label ?></td>
+                    <td><input type="checkbox" name="<?php echo $id ?>" value="1" <?php checked( get_user_meta( $ProfileUser, $id, true ) ) ?>" /></td>
                 </tr>
-                <tr valign="top">
-                    <td scope="row"><?php _e( 'Wants to receive the newsletter' ) ?></td>
-                    <td><?php echo get_user_meta( $ProfileUser, 'newsletter', true ) == 1 ? __( 'Yes' ) : __( 'No' ) ?></td>
-                </tr>
-                <tr valign="top">
-                    <td scope="row"><?php _e( 'Can be sent cards in the post' ) ?></td>
-                    <td><?php echo get_user_meta( $ProfileUser, 'postal', true ) == 1 ? __( 'Yes' ) : __( 'No' ) ?></td>
-                </tr>
-                <?php else : ?>
+                <?php endforeach; else : // models ?>
                 <tr valign="top">
                     <td scope="row"><?php _e( 'Details can be sent to clients' ) ?></td>
-                    <td><?php echo get_user_meta( $ProfileUser, 'clients', true ) == 1 ? __( 'Yes' ) : __( 'No' ) ?></td>
+                    <td><input type="checkbox" name="clients" value="1" <?php checked( get_user_meta( $ProfileUser, 'clients', true ) ) ?>" /></td>
                 </tr>
                 <tr valign="top">
                     <td scope="row"><?php _e( 'Images can be used on social media' ) ?></td>
-                    <td><?php echo get_user_meta( $ProfileUser, 'marketing', true ) == 1 ? __( 'Yes' ) : __( 'No' ) ?></td>
+                    <td><input type="checkbox" name="marketing" value="1" <?php checked( get_user_meta( $ProfileUser, 'marketing', true ) ) ?>" /></td>
                 </tr>
                 <?php endif;
             }

@@ -54,7 +54,7 @@ class ModelCard {
                 imagecopy($this->canvas, $headshot, 50, 50, 0, 0, imagesx($headshot), imagesy($headshot));
 
             else
-                return $this->fatal("Failed to copy profile image to card: ".$this->error);
+                return $this->set_error("Failed to copy profile image to card: ".$this->error);
         }
         
         // set font
