@@ -1,8 +1,7 @@
 (function ($, window, document, undefined) {
     'use strict';
 
-    var ajaxLoading = false,
-        ajaxURL = wpgdprcData.ajaxURL,
+    var ajaxURL = wpgdprcData.ajaxURL,
         ajaxSecurity = wpgdprcData.ajaxSecurity,
         delay = (function () {
             var timer = 0;
@@ -12,39 +11,33 @@
             };
         })(),
         $wpgdprc = $('.wpgdprc'),
-        $wpgdprcCheckbox = $('.wpgdprc-checkbox input[type="checkbox"]', $wpgdprc),
-        $wpgdprcTabs = $('.wpgdprc-tabs'),
-        initCheckboxes = function () {
-            if (!$wpgdprcCheckbox.length) {
-                return;
+        $checkbox = $('input[type="checkbox"]', $('.wpgdprc-checkbox, .wpgdprc-setting', $wpgdprc)),
+        $selectAll = $('.wpgdprc-select-all', $wpgdprc),
+        $formProcessDeleteRequests = $('.wpgdprc-form--process-delete-requests'),
+        /**
+         * @param $checkboxes
+         * @returns {Array}
+         * @private
+         */
+        _getValuesByCheckedBoxes = function ($checkboxes) {
+            var output = [];
+            if ($checkboxes.length) {
+                $checkboxes.each(function () {
+                    var $this = $(this),
+                        value = $this.val();
+                    if ($this.is(':checked') && value > 0) {
+                        output.push(value);
+                    }
+                });
             }
-            $wpgdprcCheckbox.on('change', function (e) {
-                e.preventDefault();
-                doProcessAction($(this));
-            });
+            return output;
         },
-        initTabs = function () {
-            if (!$wpgdprcTabs.length) {
-                return;
-            }
-            var $wpgdprcTabsNavigation = $('.wpgdprc-tabs__navigation', $wpgdprcTabs),
-                $wpgdprcTabsNavigationItem = $('a', $wpgdprcTabsNavigation),
-                $wpgdprcTabsPanel = $('.wpgdprc-tabs__panel', $wpgdprcTabs);
-
-            $wpgdprcTabsNavigationItem.on('click', function (e) {
-                e.preventDefault();
-                var target = $(this).attr('href'),
-                    $target = $(target);
-                if (!$target.length) {
-                    return;
-                }
-                $wpgdprcTabsNavigationItem.removeClass('active').attr('aria-selected', false).attr('tabindex', '-1');
-                $wpgdprcTabsPanel.removeClass('active').attr('aria-hidden', true);
-                $(this).addClass('active').attr('aria-selected', true).attr('tabindex', 0);
-                $target.addClass('active').attr('aria-hidden', false);
-            });
-        },
-        getElementAjaxData = function ($element) {
+        /**
+         * @param $element
+         * @returns {*}
+         * @private
+         */
+        _getElementAjaxData = function ($element) {
             var data = $element.data();
             if (!data.option) {
                 data.option = $element.attr('name');
@@ -57,12 +50,14 @@
             }
             return data;
         },
-        doProcessAction = function ($element) {
+        /**
+         * @param $element
+         * @private
+         */
+        _doProcessAction = function ($element) {
             $element.addClass('processing');
-
-            var $wpgdprcCheckboxContainer = $element.closest('.wpgdprc-checkbox'),
-                $wpgdprcCheckboxData = ($wpgdprcCheckboxContainer.length) ? $wpgdprcCheckboxContainer.next('.wpgdprc-checkbox-data') : false;
-
+            var $checkboxContainer = $element.closest('.wpgdprc-checkbox'),
+                $checkboxData = ($checkboxContainer.length) ? $checkboxContainer.next('.wpgdprc-checkbox-data') : false;
             $.ajax({
                 url: ajaxURL,
                 type: 'POST',
@@ -70,15 +65,15 @@
                 data: {
                     action: 'wpgdprc_process_action',
                     security: ajaxSecurity,
-                    data: getElementAjaxData($element)
+                    data: _getElementAjaxData($element)
                 },
                 success: function (response) {
                     if (response) {
-                        if ($wpgdprcCheckboxData.length) {
+                        if ($checkboxData.length) {
                             if ($element.is(':checked')) {
-                                $wpgdprcCheckboxData.stop(true, true).slideDown('fast');
+                                $checkboxData.stop(true, true).slideDown('fast');
                             } else {
-                                $wpgdprcCheckboxData.stop(true, true).slideUp('fast');
+                                $checkboxData.stop(true, true).slideUp('fast');
                             }
                         }
 
@@ -98,6 +93,84 @@
                     }, 2000);
                 }
             });
+        },
+        _ajax = function (values, $form, delay) {
+            var value = values.slice(0, 1);
+            if (value.length > 0) {
+                var $feedback = $('.wpgdprc-feedback', $form),
+                    $row = $('tr[data-id="' + value[0] + '"]', $form);
+                $row.removeClass('wpgdprc-status--error');
+                $row.addClass('wpgdprc-status--processing');
+                $feedback.attr('style', 'display: none;');
+                $feedback.removeClass('wpgdprc-feedback--error');
+                $feedback.empty();
+                setTimeout(function () {
+                    $.ajax({
+                        url: ajaxURL,
+                        type: 'POST',
+                        dataType: 'JSON',
+                        data: {
+                            action: 'wpgdprc_process_delete_request',
+                            security: ajaxSecurity,
+                            data: {
+                                id: value[0]
+                            }
+                        },
+                        success: function (response) {
+                            if (response) {
+                                $row.removeClass('wpgdprc-status--processing');
+                                if (response.error) {
+                                    $row.addClass('wpgdprc-status--error');
+                                    $feedback.html(response.error);
+                                    $feedback.addClass('wpgdprc-feedback--error');
+                                    $feedback.removeAttr('style');
+                                } else {
+                                    values.splice(0, 1);
+                                    $('input[type="checkbox"]', $row).remove();
+                                    $row.addClass('wpgdprc-status--removed');
+                                    $('.dashicons-no', $row).removeClass('dashicons-no').addClass('dashicons-yes');
+                                    _ajax(values, $form, 500);
+
+                                }
+                            }
+                        }
+                    });
+                }, (delay || 0));
+            }
+        },
+        initCheckboxes = function () {
+            if (!$checkbox.length) {
+                return;
+            }
+            $checkbox.on('change', function (e) {
+                if ($(this).data('type')) {
+                    e.preventDefault();
+                    _doProcessAction($(this));
+                }
+            });
+        },
+        initSelectAll = function () {
+            if (!$selectAll.length) {
+                return;
+            }
+            $selectAll.on('change', function () {
+                var $this = $(this),
+                    checked = $this.is(':checked'),
+                    $checkboxes = $('tbody input[type="checkbox"]', $this.closest('table'));
+                $checkboxes.prop('checked', checked);
+            });
+        },
+        initProcessDeleteRequests = function () {
+            if (!$formProcessDeleteRequests.length) {
+                return;
+            }
+            $formProcessDeleteRequests.on('submit', function (e) {
+                e.preventDefault();
+                var $this = $(this),
+                    $checkboxes = $('.wpgdprc-checkbox', $this);
+                $selectAll.prop('checked', false);
+                _ajax(_getValuesByCheckedBoxes($checkboxes), $this);
+            });
         };
 
     $(function () {
@@ -105,6 +178,7 @@
             return;
         }
         initCheckboxes();
-        initTabs();
+        initSelectAll();
+        initProcessDeleteRequests();
     });
 })(jQuery, window, document);

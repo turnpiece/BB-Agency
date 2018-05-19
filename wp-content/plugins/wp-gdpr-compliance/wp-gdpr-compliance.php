@@ -4,7 +4,7 @@
  Plugin Name: WP GDPR Compliance
  Plugin URI:  https://www.wpgdprc.com/
  Description: This plugin assists website and webshop owners to comply with European privacy regulations known as GDPR. By May 24th, 2018 your website or shop has to comply to avoid large fines.
- Version:     1.2.4
+ Version:     1.3.4
  Author:      Van Ons
  Author URI:  https://www.van-ons.nl/
  License:     GPL2
@@ -30,10 +30,13 @@ along with this program. If not, see http://www.gnu.org/licenses.
 
 namespace WPGDPRC;
 
-use WPGDPRC\Includes\Actions;
+use WPGDPRC\Includes\Action;
 use WPGDPRC\Includes\Ajax;
-use WPGDPRC\Includes\Integrations;
-use WPGDPRC\Includes\Pages;
+use WPGDPRC\Includes\Cron;
+use WPGDPRC\Includes\Helper;
+use WPGDPRC\Includes\Integration;
+use WPGDPRC\Includes\Page;
+use WPGDPRC\Includes\Shortcode;
 
 // If this file is called directly, abort.
 if (!defined('WPINC')) {
@@ -64,28 +67,37 @@ class WPGDPRC {
     /** @var null */
     private static $instance = null;
 
-    /**
-     * @return null|WPGDPRC
-     */
-    public static function getInstance() {
-        if (!isset(self::$instance)) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
-
     public function init() {
+        $action = (isset($_REQUEST['wpgdprc-action'])) ? esc_html($_REQUEST['wpgdprc-action']) : false;
+        Helper::doAction($action);
         if (is_admin() && !function_exists('get_plugin_data')) {
             require_once(ABSPATH . 'wp-admin/includes/plugin.php');
         }
         load_plugin_textdomain(WP_GDPR_C_SLUG, false, basename(dirname(__FILE__)) . '/languages/');
         add_filter('plugin_action_links_' . plugin_basename(__FILE__), array($this, 'addActionLinksToPluginPage'));
-        add_action('admin_init', array(Pages::getInstance(), 'registerSettings'));
-        add_action('admin_menu', array(Pages::getInstance(), 'addAdminMenu'));
-        add_action('admin_enqueue_scripts', array($this, 'loadAssets'), 999);
-        add_action('core_version_check_query_args', array(Actions::getInstance(), 'onlySendEssentialDataDuringUpdateCheck'));
+        add_action('admin_init', array(Page::getInstance(), 'registerSettings'));
+        add_action('admin_menu', array(Page::getInstance(), 'addAdminMenu'));
+        add_action('wp_enqueue_scripts', array($this, 'loadAssets'), 999);
+        add_action('admin_enqueue_scripts', array($this, 'loadAdminAssets'), 999);
+        add_action('core_version_check_query_args', array(Action::getInstance(), 'onlySendEssentialDataDuringUpdateCheck'));
+        add_action('wp_ajax_nopriv_wpgdprc_process_action', array(Ajax::getInstance(), 'processAction'));
         add_action('wp_ajax_wpgdprc_process_action', array(Ajax::getInstance(), 'processAction'));
-        Integrations::getInstance();
+        add_action('update_option_wpgdprc_settings_enable_access_request', array(Action::getInstance(), 'processToggleAccessRequest'));
+        Integration::getInstance();
+        if (Helper::isEnabled('enable_access_request', 'settings')) {
+            add_action('init', array(Action::getInstance(), 'processEnableAccessRequest'));
+            add_action('admin_notices', array(Action::getInstance(), 'showNoticesRequestUserData'));
+            add_action('wpgdprc_deactivate_access_requests', array(Cron::getInstance(), 'deactivateAccessRequests'));
+            add_action('wp_ajax_wpgdprc_process_delete_request', array(Ajax::getInstance(), 'processDeleteRequest'));
+            add_shortcode('wpgdprc_access_request_form', array(Shortcode::getInstance(), 'accessRequestForm'));
+            if (!wp_next_scheduled('wpgdprc_deactivate_access_requests')) {
+                wp_schedule_event(time(), 'hourly', 'wpgdprc_deactivate_access_requests');
+            }
+        } else {
+            if (wp_next_scheduled('wpgdprc_deactivate_access_requests')) {
+                wp_clear_scheduled_hook('wpgdprc_deactivate_access_requests');
+            }
+        }
     }
 
     /**
@@ -94,18 +106,41 @@ class WPGDPRC {
      */
     public function addActionLinksToPluginPage($links = array()) {
         $actionLinks = array(
-            'settings' => '<a href="' . admin_url('tools.php?page=' . str_replace('-', '_', WP_GDPR_C_SLUG)) . '" aria-label="' . esc_attr__('View WP GDPR Compliance settings', WP_GDPR_C_SLUG) . '">' . esc_html__('Settings', WP_GDPR_C_SLUG) . '</a>',
+            'settings' => '<a href="' . add_query_arg(array('page' => str_replace('-', '_', WP_GDPR_C_SLUG)), admin_url('tools.php')) . '" aria-label="' . esc_attr__('View WP GDPR Compliance settings', WP_GDPR_C_SLUG) . '">' . esc_html__('Settings', WP_GDPR_C_SLUG) . '</a>',
         );
         return array_merge($actionLinks, $links);
     }
 
     public function loadAssets() {
-        wp_enqueue_style('wpgdprc.css', WP_GDPR_C_URI_CSS . '/admin.css', array(), filemtime(WP_GDPR_C_DIR_CSS . '/admin.css'));
-        wp_enqueue_script('wpgdprc.js', WP_GDPR_C_URI_JS . '/admin.js', array(), filemtime(WP_GDPR_C_DIR_JS . '/admin.js'), true);
-        wp_localize_script('wpgdprc.js', 'wpgdprcData', array(
+        wp_register_style('wpgdprc.css', WP_GDPR_C_URI_CSS . '/front.css', array(), filemtime(WP_GDPR_C_DIR_CSS . '/front.css'));
+        wp_register_script('wpgdprc.js', WP_GDPR_C_URI_JS . '/front.js', array(), filemtime(WP_GDPR_C_DIR_JS . '/front.js'), true);
+        $data = array(
+            'ajaxURL' => admin_url('admin-ajax.php'),
+            'ajaxSecurity' => wp_create_nonce('wpgdprc'),
+        );
+        if (!empty($_REQUEST['wpgdprc'])) {
+            $data['session'] = esc_html($_REQUEST['wpgdprc']);
+        }
+        wp_localize_script('wpgdprc.js', 'wpgdprcData', $data);
+    }
+
+    public function loadAdminAssets() {
+        wp_enqueue_style('wpgdprc.admin.css', WP_GDPR_C_URI_CSS . '/admin.css', array(), filemtime(WP_GDPR_C_DIR_CSS . '/admin.css'));
+        wp_enqueue_script('wpgdprc.admin.js', WP_GDPR_C_URI_JS . '/admin.js', array(), filemtime(WP_GDPR_C_DIR_JS . '/admin.js'), true);
+        wp_localize_script('wpgdprc.admin.js', 'wpgdprcData', array(
             'ajaxURL' => admin_url('admin-ajax.php'),
             'ajaxSecurity' => wp_create_nonce('wpgdprc'),
         ));
+    }
+
+    /**
+     * @return null|WPGDPRC
+     */
+    public static function getInstance() {
+        if (!isset(self::$instance)) {
+            self::$instance = new self();
+        }
+        return self::$instance;
     }
 }
 
