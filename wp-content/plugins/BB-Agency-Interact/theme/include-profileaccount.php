@@ -19,9 +19,10 @@
 	$bb_agencyinteract_option_registerallow = bb_agencyinteract_ALLOW_REGISTRATION;
 
 	// Get Data
-	$query = "SELECT * FROM " . table_agency_profile . " WHERE `ProfileUserLinked` = '$ProfileUserLinked'";
-	$results = $wpdb->get_results($query);
+	$results = bb_agencyinteract_get_profile( $ProfileUserLinked );
+
 	$count = count($results);
+
 	foreach ($results as $data) {
 		
 		// $ProfileGender = $data->ProfileGender;

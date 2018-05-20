@@ -38,7 +38,7 @@
 			$body = implode("\n", $UploadMedia);
 			$body .= "\n\n" . admin_url( 'admin.php?page=bb_agency_profiles&action=editRecord&ProfileID='.$ProfileID );
 
-			wp_mail( get_bloginfo('admin_email'), $subject, $body );
+			bb_agencyinteract_email_admin( $subject, $body );
 		}
 		
 		echo "	<h3>". __("Gallery", bb_agencyinteract_TEXTDOMAIN) ."</h3>\n";

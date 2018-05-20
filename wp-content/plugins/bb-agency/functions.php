@@ -1468,7 +1468,7 @@ EOF;
 			$displayHTML .= "</div><!-- #profile-results -->\n";
 				
 		} else {
-			if ($bb_agency_option_privacy == 3 && is_user_logged_in() && !is_client_profiletype()) {
+			if ($bb_agency_option_privacy == 3 && is_user_logged_in() && !bb_agency_is_client_profiletype()) {
 				echo "<h2>This is a restricted page for clients only.</h2>";
 			} else {
 				include("theme/include-login.php"); 	
@@ -3533,43 +3533,46 @@ function fullwidth_class() {
 function is_permitted($type) {
     
                 
-                $bb_agency_option_privacy = bb_agency_get_option('bb_agency_option_privacy');
-                $bb_agency_option_profilelist_castingcart  = bb_agency_get_option('bb_agency_option_profilelist_castingcart');
-				$bb_agency_option_profilelist_favorite	 = bb_agency_get_option('bb_agency_option_profilelist_favorite');
-              	
-			  	if ($type=="casting" && !$bb_agency_option_profilelist_castingcart) return false;
-                if ($type=="favorite" && !$bb_agency_option_profilelist_favorite) return false;
-                if (!is_user_logged_in()) return false;
-				
-                if ($type == "casting" || $type == "favorite" ) {
-                        
-                     if ( ($bb_agency_option_privacy == 2) || 
-			 
-                           // Model list public. Must be logged to view profile information
-                           ($bb_agency_option_privacy == 1) ||
-							
-							// Model list public and information
-                           ($bb_agency_option_privacy == 0) ||
-			 				
-							//admin users
-							(current_user_can( 'manage_options' )) ||
-			 
-							//  Must be logged as "Client" to view model list and profile information
-							($bb_agency_option_privacy == 3 && is_client_profiletype()) ) {
-                        
-                         return true;
-                       }
-                 }
+        $bb_agency_option_privacy = bb_agency_get_option('bb_agency_option_privacy');
+        $bb_agency_option_profilelist_castingcart  = bb_agency_get_option('bb_agency_option_profilelist_castingcart');
+		$bb_agency_option_profilelist_favorite	 = bb_agency_get_option('bb_agency_option_profilelist_favorite');
+      	
+	  	if ($type=="casting" && !$bb_agency_option_profilelist_castingcart) return false;
+        if ($type=="favorite" && !$bb_agency_option_profilelist_favorite) return false;
+        if (!is_user_logged_in()) return false;
+		
+        if ($type == "casting" || $type == "favorite" ) {
+                
+            if ( ($bb_agency_option_privacy == 2) || 
+	 
+                // Model list public. Must be logged to view profile information
+                ($bb_agency_option_privacy == 1) ||
+					
+				// Model list public and information
+                ($bb_agency_option_privacy == 0) ||
+	 				
+				//admin users
+				(current_user_can( 'manage_options' )) ||
+	 
+				//  Must be logged as "Client" to view model list and profile information
+				($bb_agency_option_privacy == 3 && bb_agency_is_client_profiletype()) ) {
+                
+                return true;
+            }
+        }
         return false;
 }
 
 /*
- * Check if profilet type ID is "Client" type
+ * Check if profile type ID is "Client" type
  */
-function is_client_profiletype() {
+function bb_agency_is_client_profiletype( $user_id = null ) {
 	global $wpdb;
 
-	$query = "SELECT `ProfileType` FROM ". table_agency_profile ." WHERE `ProfileUserLinked` = ". bb_agency_get_current_userid();
+	if (is_null($user_id))
+		$user_id = bb_agency_get_current_userid();
+
+	$query = "SELECT `ProfileType` FROM ". table_agency_profile ." WHERE `ProfileUserLinked` = ". $user_id;
 	
 	$type = $wpdb->get_var($query);
 	$title = $wpdb->get_var("SELECT `DataTypeTitle` FROM ". table_agency_data_type ." WHERE DataTypeID = ". $type);

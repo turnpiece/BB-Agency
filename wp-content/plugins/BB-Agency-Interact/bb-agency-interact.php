@@ -32,6 +32,7 @@ add_action( 'the_post', 'bbagency_interact_the_post_action' );
 // Plugin Definitions
 	define("bb_agencyinteract_VERSION", $bb_agencyinteract_VERSION); // e.g. 1.0
 	define("bb_agencyinteract_BASENAME", plugin_basename(__FILE__) );  // bb-agency/bb-agency.php
+	define('bb_agencyinteract_SEND_EMAILS', true);
 	$bb_agencyinteract_WPURL = get_bloginfo("wpurl"); // http://domain.com/wordpress
 	$bb_agencyinteract_EMAIL = get_bloginfo('admin_email');
 	$bb_agencyinteract_EMAIL_PHOTOS = preg_replace('/^\w+@/', 'jessica@', $bb_agencyinteract_EMAIL);

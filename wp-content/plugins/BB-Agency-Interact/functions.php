@@ -98,6 +98,7 @@
 	// Redefine user notification function  
 	if ( !function_exists('wp_new_user_notification') ) {  
 		function wp_new_user_notification( $user_id, $plaintext_pass = '' ) {  
+
 			$user = new WP_User($user_id);  
 	  
 			$user_login = stripslashes($user->user_login);  
@@ -107,7 +108,7 @@
 			$message .= sprintf(__('Username: %s'), $user_login) . "\r\n\r\n";  
 			$message .= sprintf(__('E-mail: %s'), $user_email) . "\r\n";  
 	  
-			@wp_mail(get_option('admin_email'), sprintf(__('[%s] New User Registration'), get_option('blogname')), $message);  
+			bb_agencyinteract_email_admin( sprintf(__('[%s] New User Registration'), get_option('blogname')), $message );
 	  
 			if ( empty($plaintext_pass) )  
 				return;  
@@ -125,8 +126,7 @@
 				$message .= sprintf(__('Any work undertaken is governed by our <a href="%s">Terms &amp; Conditions</a>', bb_agency_TEXTDOMAIN), bb_agency_TERMS);
 			}
 	 
-	 		$headers = 'From: '. get_option('blogname') .' <'. get_option('admin_email') .'>' . "\r\n";
-			wp_mail($user_email, sprintf(__('%s Registration Successful! Login Details'), get_option('blogname')), $message, $headers);  
+			bb_agencyinteract_email_user( $user_email, sprintf(__('%s Registration Successful! Login Details'), get_option('blogname')), $message);
 	  
 		}  
 	}  
@@ -140,7 +140,40 @@
 			return $ProfileGallery;
      }
 
+     // email admin
+     function bb_agencyinteract_email_admin( $subject, $message ) {
 
+     	if (!defined('bb_agencyinteract_SEND_EMAILS') || !bb_agencyinteract_SEND_EMAILS)
+     		return;
+
+     	global $bb_agencyinteract_EMAIL;
+     	return @wp_mail($bb_agencyinteract_EMAIL, $subject, $message);  
+     }
+
+     // email user
+     function bb_agencyinteract_email_user( $email, $subject, $message ) {
+
+     	if (!defined('bb_agencyinteract_SEND_EMAILS') || !bb_agencyinteract_SEND_EMAILS)
+     		return;
+
+     	global $bb_agencyinteract_EMAIL;
+     	$headers = 'From: '. get_option('blogname') .' <'. $bb_agencyinteract_EMAIL .'>' . "\r\n";
+     	return @wp_mail($email, $subject, $message, $headers);  
+     }
+
+     // get profile
+     function bb_agencyinteract_get_profile( $user_id ) {
+     	global $wpdb;
+		$query = "SELECT * FROM " . table_agency_profile . " WHERE `ProfileUserLinked` = '$user_id'";
+		return $wpdb->get_results($query);
+     }
+
+     // get contact name
+     function bb_agencyinteract_get_name( $user_id ) {
+     	global $wpdb;
+		$query = "SELECT `ProfileContactDisplay` FROM " . table_agency_profile . " WHERE `ProfileUserLinked` = '$user_id'";
+		return $wpdb->get_var($query);
+     }
 
 // *************************************************************************************************** //
 // Functions

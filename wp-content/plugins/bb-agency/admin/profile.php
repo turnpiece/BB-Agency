@@ -290,9 +290,7 @@ if (isset($_POST['action'])) {
                     update_user_meta($ProfileUserLinked, 'display_name', esc_attr($ProfileContactDisplay) );
                     update_user_meta($ProfileUserLinked, 'user_email', esc_attr($ProfileContactEmail) );
 
-                    bb_agency_debug( 'profile type => ' . $ProfileType );
-
-                    if ($ProfileType == 1) { //client
+                    if (bb_agency_is_client_profiletype( $ProfileUserLinked )) { //client
                         foreach( array( 
                             'email_updates',
                             'newsletter',
@@ -306,7 +304,6 @@ if (isset($_POST['action'])) {
                             'clients', 
                             'marketing'
                         ) as $id ) {
-                            bb_agency_debug( $id . ' => ' . isset( $_POST[$id] ) );
                             update_user_meta( $ProfileUserLinked, $id, isset( $_POST[$id] ) );
                         }
                           

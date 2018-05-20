@@ -5,13 +5,13 @@
 		<p>
 			<label for="clients">
 				<input type="checkbox" name="clients" id="clients" value="1" <?php checked( get_user_meta( get_current_user_id(), 'clients', true ) == 1 ) ?> />
-				<?php _e( 'I am happy for you to send my details to clients for shoots and castings. (details include pictures, height, age, location and name)' ) ?>
+				<?php _e( 'I am happy for you to send my details to clients for shoots and castings (details include pictures, height, age, location and name).' ) ?>
 			</label>
 		</p>
 		<p>
 			<label for="marketing">
 				<input type="checkbox" name="marketing" id="marketing" value="1" <?php checked( get_user_meta( get_current_user_id(), 'marketing', true ) ) ?> />
-				<?php _e( 'I am happy for you to post images from shoots undertaken, or images that you send to us, on our social media sites.' ) ?>
+				<?php _e( 'I am happy for you to post images from shoots undertaken, or images that I send to you, on your social media sites.' ) ?>
 			</label>
 		</p>
 	</fieldset>

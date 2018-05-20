@@ -40,19 +40,30 @@ $user_id = get_current_user_id();
 
 if (isset($_POST['action']) && $user_id == (int)$_POST['user_id']) {
 
-	if ($profiletype == 1) { 
+	$message = sprintf( __( '%s %s has set their contact preferences to:', bb_agencyinteract_TEXTDOMAIN ), $profiletypetext, bb_agencyinteract_get_name( $user_id ) ) . ':' . "\r\n";
+
+	if (function_exists('bb_agency_is_client_profiletype') && bb_agency_is_client_profiletype($user_id)) { 
 
 		// update user meta for clients
-		update_user_meta( $user_id, 'email_updates', $_POST['email_updates'] );
-		update_user_meta( $user_id, 'newsletter', $_POST['newsletter'] );
-		update_user_meta( $user_id, 'postal', $_POST['postal'] );
+		foreach ( array( 'email_updates', 'newsletter', 'postal' ) as $id ) {
+			update_user_meta( $user_id, $id, isset( $_POST[$id] ) );
+
+			$message .= ucfirst( str_replace( '_', ' ', $id ) ) . ' => ' . ( isset( $_POST[$id] ) ? 'yes' : 'no' ) . "\r\n";
+
+		}
 
 	} else {
 
 		// update user meta for models
-		update_user_meta( $user_id, 'clients', $_POST['clients'] );
-		update_user_meta( $user_id, 'marketing', $_POST['marketing'] );
+		foreach( array( 'clients', 'marketing' ) as $id ) {
+			update_user_meta( $user_id, $id, isset( $_POST[$id] ) );
+
+			$message .= ( $id == 'clients' ? 'Send my details to' : 'Use my photos for' ) . ' ' . ( str_replace( '_', ' ', $id ) ) . ' => ' . ( isset( $_POST[$id] ) ? 'yes' : 'no' ) . "\r\n";
+		}
 	}
+
+	// email admin
+	bb_agencyinteract_email_admin( sprintf( __( '%s %s has updated their contact preferences', bb_agencyinteract_TEXTDOMAIN ), $profiletypetext, bb_agencyinteract_get_name( $user_id ) ), $message );
 }
 
 
@@ -83,7 +94,7 @@ if (is_user_logged_in()) {
 		// Check if User is Logged in or not
 		if (is_user_logged_in()) { 
 			
-			if ($profiletype == 1)
+			if (function_exists('bb_agency_is_client_profiletype') && bb_agency_is_client_profiletype($user_id))
 				include 'include-profile-preferences-client.php';
 			else
 				include 'include-profile-preferences-model.php';

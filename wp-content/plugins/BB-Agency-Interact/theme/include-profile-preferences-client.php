@@ -5,7 +5,7 @@
 		<p>
 			<label for="email_updates">
 				<input type="checkbox" name="email_updates" id="email_updates" value="1" <?php checked( get_user_meta( get_current_user_id(), 'email_updates', true ) ) ?> />
-				<?php _e( 'I want to keep receiving information via text and email about castings and shoots.' ) ?>
+				<?php _e( 'I am happy to receive emails from Kiddiwinks Agency with details of models registered with them.' ) ?>
 			</label>
 		</p>
 		<p>
