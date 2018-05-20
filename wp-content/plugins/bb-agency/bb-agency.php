@@ -162,7 +162,7 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 		define('bb_agency_MUMSTOBE_ID', 1); // id of mums to be data type
 		define('bb_agency_AFTERBIRTH_ID', 2); // id of data type to move mums to be to once they've given birth
 	}
-	define('bb_agency_CLIENTS_ID', 7); // id of clients
+	define('bb_agency_CLIENTS_ID', bb_agency_client_id()); // id of clients
 	//define('bb_agency_BABIES_ID', 8); // id of babies
 
 

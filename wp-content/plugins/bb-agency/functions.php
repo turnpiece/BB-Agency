@@ -3483,37 +3483,13 @@ function featured_homepage() {
 /*
  *  Shortcodes
  */
-	// Search Form
-	function bb_agency_searchform($DataTypeID) {
-		$profilesearch_layout = "simple";
-		include("theme/include-profile-search.php"); 	
-	}
-/*
-// 5/15/2013 sverma@ Home page
-function featured_homepage_profile($count) {
-	global $wpdb;
-	$row = array();
-	$query = "SELECT profile.*,
-	(SELECT media.ProfileMediaURL FROM ". table_agency_profile_media ." media 
-	 WHERE profile.ProfileID = media.ProfileID 
-	 AND media.ProfileMediaType = \"Image\" 
-	 AND media.ProfileMediaPrimary = 1) AS ProfileMediaURL 
 
-	 FROM ". table_agency_profile ." profile 
-	 WHERE profile.ProfileIsActive = 1 ".(isset($sql) ? $sql : "") ."
-	 AND profile.ProfileIsFeatured = 1  
-	 ORDER BY RAND() LIMIT 0,".$count;						
-
-	$result = $wpdb->get_results($query);
-	$i = 0;
-	foreach ($result as $row) {
-		$row[$i] = $row ;
-		$i++;
-	}
-	return $row ;
-
+// Search Form
+function bb_agency_searchform($DataTypeID) {
+	$profilesearch_layout = "simple";
+	include("theme/include-profile-search.php"); 	
 }
-*/
+
 function primary_class() {
 	return $class = "col_8";
 }
@@ -3532,35 +3508,34 @@ function fullwidth_class() {
  */
 function is_permitted($type) {
     
-                
-        $bb_agency_option_privacy = bb_agency_get_option('bb_agency_option_privacy');
-        $bb_agency_option_profilelist_castingcart  = bb_agency_get_option('bb_agency_option_profilelist_castingcart');
-		$bb_agency_option_profilelist_favorite	 = bb_agency_get_option('bb_agency_option_profilelist_favorite');
-      	
-	  	if ($type=="casting" && !$bb_agency_option_profilelist_castingcart) return false;
-        if ($type=="favorite" && !$bb_agency_option_profilelist_favorite) return false;
-        if (!is_user_logged_in()) return false;
-		
-        if ($type == "casting" || $type == "favorite" ) {
-                
-            if ( ($bb_agency_option_privacy == 2) || 
-	 
-                // Model list public. Must be logged to view profile information
-                ($bb_agency_option_privacy == 1) ||
-					
-				// Model list public and information
-                ($bb_agency_option_privacy == 0) ||
-	 				
-				//admin users
-				(current_user_can( 'manage_options' )) ||
-	 
-				//  Must be logged as "Client" to view model list and profile information
-				($bb_agency_option_privacy == 3 && bb_agency_is_client_profiletype()) ) {
-                
-                return true;
-            }
+    $bb_agency_option_privacy = bb_agency_get_option('bb_agency_option_privacy');
+    $bb_agency_option_profilelist_castingcart  = bb_agency_get_option('bb_agency_option_profilelist_castingcart');
+	$bb_agency_option_profilelist_favorite	 = bb_agency_get_option('bb_agency_option_profilelist_favorite');
+  	
+  	if ($type=="casting" && !$bb_agency_option_profilelist_castingcart) return false;
+    if ($type=="favorite" && !$bb_agency_option_profilelist_favorite) return false;
+    if (!is_user_logged_in()) return false;
+	
+    if ($type == "casting" || $type == "favorite" ) {
+            
+        if ( ($bb_agency_option_privacy == 2) || 
+ 
+            // Model list public. Must be logged to view profile information
+            ($bb_agency_option_privacy == 1) ||
+				
+			// Model list public and information
+            ($bb_agency_option_privacy == 0) ||
+ 				
+			//admin users
+			(current_user_can( 'manage_options' )) ||
+ 
+			//  Must be logged as "Client" to view model list and profile information
+			($bb_agency_option_privacy == 3 && bb_agency_is_client_profiletype()) ) {
+            
+            return true;
         }
-        return false;
+    }
+    return false;
 }
 
 /*
@@ -3575,9 +3550,15 @@ function bb_agency_is_client_profiletype( $user_id = null ) {
 	$query = "SELECT `ProfileType` FROM ". table_agency_profile ." WHERE `ProfileUserLinked` = ". $user_id;
 	
 	$type = $wpdb->get_var($query);
-	$title = $wpdb->get_var("SELECT `DataTypeTitle` FROM ". table_agency_data_type ." WHERE DataTypeID = ". $type);
 
-	return (strtolower($title) == "client");
+	bb_agency_debug( __FUNCTION__ . ' user ' . $user_id . ' type = '. $type . ' (' . ( $type == bb_agency_CLIENTS_ID ? 'client' : 'model' ) . ')' );
+
+	return $type == bb_agency_CLIENTS_ID;
+}
+
+function bb_agency_client_id() {
+	global $wpdb;
+	return (int)$wpdb->get_var("SELECT `DataTypeID` FROM " .table_agency_data_type . " WHERE `DataTypeTag` = 'clients'");
 }
 
 /**
