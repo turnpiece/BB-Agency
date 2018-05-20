@@ -6,15 +6,17 @@
   Description: Enhancement to the BB Agency software allowing models to manage their own information. Forked from RB Agency Interact plugin.
   Author: Paul Jenkins
   Author URI: http://turnpiece.com/
-  Version: 0.0.4
+  Version: 0.0.5
 */
-$bb_agencyinteract_VERSION = "0.0.4"; 
+$bb_agencyinteract_VERSION = "0.0.5"; 
 if (!session_id())
-session_start();
+	session_start();
+
 if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], '2.8', '<') ) { // if less than 2.8 
 	echo "<div class=\"error\"><p>". __("This plugin requires WordPress version 2.8 or newer", bb_agencyinteract_TEXTDOMAIN) .".</p></div>\n";
 	return;
 }
+
 // *************************************************************************************************** //
 // Avoid direct calls to this file, because now WP core and framework has been used
 	if ( !function_exists('add_action') ) {
@@ -244,51 +246,19 @@ if ( is_admin() ){
      
 
 // *************************************************************************************************** //
-// Custom password protected pages
-/*		
-	function bb_agencyinteract_password_form() {
-		global $post;
-		$redirect_to = get_permalink($post->ID);
-		ob_start();
-		include('theme/include-login.php');
-		return ob_get_clean();
-	}
-	add_filter( 'the_password_form', 'bb_agencyinteract_password_form' );
 
-	function bb_agencyinteract_after_login($user_login, $user) {
-    	if (isset($_POST['redirect_to'])) {
-    		wp_redirect($_POST['redirect_to']);
-    		exit;
-    	}
-	}
-	add_action('wp_login', 'bb_agencyinteract_after_login', 10, 2);        
-*/		     
+	// MailChim user sync
+	add_filter( 'mailchimp_sync_should_sync_user', function( $subscribe, $user ) {
 
-/*
-function bb_agencyinteract_intercept_private_page( $posts, &$wp_query )
-{
-    // remove filter now, so that on subsequent post querying we don't get involved!
-    remove_filter( 'the_posts', '__intercept_private_page', 5, 2 );
+	    if ( function_exists('bb_agency_is_client_profiletype') && bb_agency_is_client_profiletype( $user->ID ) ) {
+	    	if ( get_user_meta( $user->ID, 'newsletter', true ) ) {
+	    		return $subscribe;
+	    	}
+	    }
 
-    if ( !( $wp_query->is_page && empty($posts) ) )
-        return $posts; // bail, not page with no results
-
-    // if you want to explicitly check it *is* private, use the code block below:   
-    
-    if ( !empty( $wp_query->query['page_id'] ) )
-        $page = get_page( $wp_query->query['page_id'] );
-    else
-        $page = get_page_by_path( $wp_query->query['pagename'] );
-
-    if ( $page && $page->post_status == 'private' ) {
-        // redirect
-        $url = urlencode(get_permalink($page->ID));
-        wp_safe_redirect(get_bloginfo('wpurl')."/profile-login/?redirect_to=$url");
-        exit;
-    }
-}
-is_admin() || add_filter( 'the_posts', 'bb_agencyinteract_intercept_private_page', 5, 2 );
-*/
+	    // do not subscribe otherwise
+	    return false;
+	});
 		                
 // *************************************************************************************************** //
 // Add Short Codes
