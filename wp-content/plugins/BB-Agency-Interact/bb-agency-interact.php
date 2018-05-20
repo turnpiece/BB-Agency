@@ -6,9 +6,9 @@
   Description: Enhancement to the BB Agency software allowing models to manage their own information. Forked from RB Agency Interact plugin.
   Author: Paul Jenkins
   Author URI: http://turnpiece.com/
-  Version: 0.0.3
+  Version: 0.0.4
 */
-$bb_agencyinteract_VERSION = "0.0.3"; 
+$bb_agencyinteract_VERSION = "0.0.4"; 
 if (!session_id())
 session_start();
 if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], '2.8', '<') ) { // if less than 2.8 
