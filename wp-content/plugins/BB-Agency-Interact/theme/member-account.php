@@ -204,13 +204,12 @@ if (isset($_POST['action'])) {
 
 				$isLinked = $wpdb->update(
 					table_agency_profile, 
-					array( 'ProfileUserLinked' => $current_user->ID ), array( 'ProfileID' => $ProfileID ) 
+					array( 'ProfileUserLinked' => $current_user->ID ), 
+					array( 'ProfileID' => $ProfileID ) 
 				);
 
 				if ($isLinked){
 					wp_redirect(get_bloginfo("wpurl") . "/profile-member/media/");
-				}  else {
-				    die(mysql_error());	 				    				
 				}
 			} else {
 				$user_data = array(

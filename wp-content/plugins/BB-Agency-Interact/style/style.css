@@ -1,7 +1,8 @@
 #profile-manage .manage-content { padding: 15px; background: #fff; }
 #profile-manage .manage-content h1,
 #profile-manage .manage-content h3 { margin-bottom: 15px; }
-#profile-manage .manage-content p { margin: 0 0 15px 0; line-height: 18px; }
+#profile-manage .manage-content p { margin: 0 0 15px 0; color:  #000; }
+#profile-manage .manage-content a { font:  inherit; }
 #profile-manage .manage-content select { padding: 3px; }
 #profile-manage .manage-section { overflow: hidden; margin-bottom: 15px; }
 #profile-manage .manage-section .section-content { overflow: hidden; }
@@ -20,7 +21,7 @@ p.submit { margin-top: 15px!important; }
 #profile-manage table tr td select { max-width: 200px; }
 #profile-manage table tr td input[type="text"], 
 #profile-manage table tr td input[type="email"], 
-#profile-manage table tr td input[type="password"] { max-width: 450px; min-width: 300px; }
+#profile-manage table tr td input[type="password"] { max-width: 450px; min-width: 300px; font: inherit; }
 #profile-manage table tr td.labelled > label { width: 50px; float:left; line-height: 24px; padding-right: 10px; text-align: right; }
 #profile-manage table tr td.labelled > input { width: 150px; margin-bottom: 5px; }
 #profile-manage .profile-manage-menu { overflow: hidden; margin: 20px auto 0; }

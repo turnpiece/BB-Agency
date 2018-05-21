@@ -92,20 +92,26 @@ if (is_user_logged_in()) {
 	
 		// ****************************************************************************************** //
 		// Check if User is Logged in or not
-		if (is_user_logged_in()) { 
-			
+		if (is_user_logged_in()) : ?>
+			<p>In line with the General Data Protection Regulations (GDPR) we are continuing to update and review the consent we hold regarding personal data. We take your privacy very seriously, and you can find out more about how we store and use your data in our <a href="/privacy-policy">privacy policy</a>.</p>
+ 
+			<p>You may withdraw your consent at any time by updating your preferences below or emailing <a href="mailto:<?php bloginfo('admin_email') ?>"><?php bloginfo('admin_email') ?></a>.</p>
+			<?php
+
 			if (function_exists('bb_agency_is_client_profiletype') && bb_agency_is_client_profiletype($user_id))
 				include 'include-profile-preferences-client.php';
 			else
 				include 'include-profile-preferences-model.php';
 
-		} else {
-			echo "<p class=\"warning\">\n";
-					_e('You must be logged in to update your preferences.', bb_agencyinteract_TEXTDOMAIN);
-			echo "</p><!-- .warning -->\n";
+		else : ?>
+			<p class="warning">
+				<?php _e('You must be logged in to update your preferences.', bb_agencyinteract_TEXTDOMAIN); ?>
+			</p><!-- .warning -->
+			<?php 
 			// Show Login Form
-			include(dirname(__FILE__)."/include-login.php"); 	
-		}
+			include(dirname(__FILE__)."/include-login.php"); 
+				
+		endif;
 		
 	echo "  </div><!-- #content -->\n";
 	echo "</div><!-- #container -->\n";
