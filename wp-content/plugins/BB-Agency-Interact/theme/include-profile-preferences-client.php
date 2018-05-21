@@ -11,7 +11,7 @@
 		<p>
 			<label for="newsletter">
 				<input type="checkbox" name="newsletter" id="newsletter" value="1" <?php checked( get_user_meta( get_current_user_id(), 'newsletter', true ) ) ?> />
-				<?php _e( 'I want to keep receiving the annual Kiddiwinks Newsletter via email.' ) ?>
+				<?php _e( 'I am happy to receive occasional newsletters from Kiddiwinks, providing information on what we have been up to.' ) ?>
 			</label>
 		</p>
 		<p>

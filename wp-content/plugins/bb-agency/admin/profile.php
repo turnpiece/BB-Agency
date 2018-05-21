@@ -294,7 +294,7 @@ if (isset($_POST['action'])) {
                         foreach( array( 
                             'email_updates',
                             'newsletter',
-                            'postal',
+                            'postal'
                         ) as $id )
                             update_user_meta( $ProfileUserLinked, $id, isset( $_POST[$id] ) );
                         
@@ -302,7 +302,8 @@ if (isset($_POST['action'])) {
                         
                         foreach( array(
                             'clients', 
-                            'marketing'
+                            'marketing',
+                            'newsletter'
                         ) as $id ) {
                             update_user_meta( $ProfileUserLinked, $id, isset( $_POST[$id] ) );
                         }
@@ -720,25 +721,28 @@ function bb_display_manage($ProfileID) {
                     <th colspan="2"><h3><?php _e( 'Preferences', bb_agency_TEXTDOMAIN ) ?></h3></th>
                 </tr>
                 <?php if (bb_agency_is_client_profiletype($ProfileUser)) : // clients
-                        foreach( array( 
-                            'email_updates' => __( 'Can be emailed about castings and shoots' ),
-                            'newsletter' => __( 'Wants to receive the newsletter' ),
-                            'postal' => __( 'Can be sent cards in the post' ),
-                        ) as $id => $label ) : ?>
+
+                    foreach( array( 
+                        'email_updates' => __( 'Can be emailed about castings and shoots' ),
+                        'newsletter' => __( 'Wants to receive the newsletter' ),
+                        'postal' => __( 'Can be sent cards in the post' ),
+                    ) as $id => $label ) : ?>
                 <tr valign="top">
                     <td scope="row"><?php echo $label ?></td>
                     <td><input type="checkbox" name="<?php echo $id ?>" value="1" <?php checked( get_user_meta( $ProfileUser, $id, true ) ) ?>" /></td>
                 </tr>
-                <?php endforeach; else : // models ?>
+                <?php endforeach; else : // models
+
+                    foreach( array(
+                        'clients' => __( 'Details can be sent to clients' ),
+                        'marketing' => __( 'Images can be used on social media' ),
+                        'newsletter' => __( 'Wants to receive the newsletter' )
+                    ) as $id => $label ) : ?>
                 <tr valign="top">
-                    <td scope="row"><?php _e( 'Details can be sent to clients' ) ?></td>
-                    <td><input type="checkbox" name="clients" value="1" <?php checked( get_user_meta( $ProfileUser, 'clients', true ) ) ?>" /></td>
+                    <td scope="row"><?php echo $label ?></td>
+                    <td><input type="checkbox" name="<?php echo $id ?>" value="1" <?php checked( get_user_meta( $ProfileUser, $id, true ) ) ?>" /></td>
                 </tr>
-                <tr valign="top">
-                    <td scope="row"><?php _e( 'Images can be used on social media' ) ?></td>
-                    <td><input type="checkbox" name="marketing" value="1" <?php checked( get_user_meta( $ProfileUser, 'marketing', true ) ) ?>" /></td>
-                </tr>
-                <?php endif;
+                <?php endforeach; endif;
             }
             
             // Private Information

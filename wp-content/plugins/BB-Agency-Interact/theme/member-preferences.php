@@ -55,10 +55,20 @@ if (isset($_POST['action']) && $user_id == (int)$_POST['user_id']) {
 	} else {
 
 		// update user meta for models
-		foreach( array( 'clients', 'marketing' ) as $id ) {
+		foreach( array( 'clients', 'marketing', 'newsletter' ) as $id ) {
 			update_user_meta( $user_id, $id, isset( $_POST[$id] ) );
 
-			$message .= ( $id == 'clients' ? 'Send my details to' : 'Use my photos for' ) . ' ' . ( str_replace( '_', ' ', $id ) ) . ' => ' . ( isset( $_POST[$id] ) ? 'yes' : 'no' ) . "\r\n";
+			switch( $id ) {
+				case 'clients' :
+					$message .= 'Send my details to ';
+					break;
+
+				case 'marketing' :
+					$message .= 'Use my photos for ';
+					break;
+			}
+
+			$message .= $id . ' => ' . ( isset( $_POST[$id] ) ? 'yes' : 'no' ) . "\r\n";
 		}
 	}
 
