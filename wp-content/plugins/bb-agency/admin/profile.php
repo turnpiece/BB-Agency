@@ -719,7 +719,7 @@ function bb_display_manage($ProfileID) {
                 <tr valign="top">
                     <th colspan="2"><h3><?php _e( 'Preferences', bb_agency_TEXTDOMAIN ) ?></h3></th>
                 </tr>
-                <?php if ($ProfileType == 1) : // clients
+                <?php if (bb_agency_is_client_profiletype($ProfileUser)) : // clients
                         foreach( array( 
                             'email_updates' => __( 'Can be emailed about castings and shoots' ),
                             'newsletter' => __( 'Wants to receive the newsletter' ),
