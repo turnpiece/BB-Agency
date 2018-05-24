@@ -5,19 +5,19 @@
 		<p>
 			<label for="email_updates">
 				<input type="checkbox" name="email_updates" id="email_updates" value="1" <?php checked( get_user_meta( get_current_user_id(), 'email_updates', true ) ) ?> />
-				<?php _e( 'I am happy to receive emails from Kiddiwinks Agency with details of models registered with them.' ) ?>
+				<?php _e( 'I am happy to receive emails from <?php bloginfo( 'name' ) ?> with details of models registered with them.' ) ?>
 			</label>
 		</p>
 		<p>
 			<label for="newsletter">
 				<input type="checkbox" name="newsletter" id="newsletter" value="1" <?php checked( get_user_meta( get_current_user_id(), 'newsletter', true ) ) ?> />
-				<?php _e( 'I am happy to receive occasional newsletters from Kiddiwinks, providing information on what we have been up to.' ) ?>
+				<?php _e( 'I am happy to receive occasional newsletters from <?php bloginfo( 'name' ) ?>, providing information on what we have been up to.' ) ?>
 			</label>
 		</p>
 		<p>
 			<label for="postal">
 				<input type="checkbox" name="postal" id="postal" value="1" <?php checked( get_user_meta( get_current_user_id(), 'postal', true ) ) ?> />
-				<?php _e( 'I am happy to receive cards through the post, or e-cards on email, from Kiddiwinks for Christmas/Easter/Birthdays.' ) ?>
+				<?php _e( 'I am happy to receive cards through the post, or e-cards on email, from <?php bloginfo( 'name' ) ?> for Christmas/Easter/Birthdays.' ) ?>
 			</label>
 		</p>
 	</fieldset>
