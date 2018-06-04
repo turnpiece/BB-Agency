@@ -1,6 +1,4 @@
 <?php
-	global $wpdb;
-
     // profile type
     $ptype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
     $ptype = retrieve_title($ptype);
@@ -16,40 +14,40 @@
 	echo " <table class=\"form-table\">\n";
 	echo "  <tbody>\n";
 	echo "    <tr>\n";
-	echo "		<td scope=\"row\" class=\"label\" colspan=\"2\"><h3>". __("Contact Information", bb_agency_TEXTDOMAIN) ."</h3></th>\n";
+	echo "		<td scope=\"row\" colspan=\"2\"><h3>". __("Contact Information", bb_agency_TEXTDOMAIN) ."</h3></th>\n";
 	echo "	  </tr>\n";
 	echo "    <tr valign=\"top\">\n";
-	echo "		<td scope=\"row\" class=\"label\">". __("First Name", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+	echo "		<td scope=\"row\">". __("First Name", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 	echo "		<td>\n";
 	echo "			<input type=\"text\" id=\"ProfileContactNameFirst\" name=\"ProfileContactNameFirst\" value=\"". $current_user->first_name ."\" />\n";
 	echo "		</td>\n";
 	echo "	  </tr>\n";
 	echo "    <tr valign=\"top\">\n";
-	echo "		<td scope=\"row\" class=\"label\">". __("Last Name", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+	echo "		<td scope=\"row\">". __("Last Name", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 	echo "		<td>\n";
 	echo "			<input type=\"text\" id=\"ProfileContactNameLast\" name=\"ProfileContactNameLast\" value=\"". $current_user->last_name ."\" />\n";
 	echo "		</td>\n";
 	echo "	  </tr>\n";
 	echo "    <tr valign=\"top\">\n";
-	echo "		<td scope=\"row\" class=\"label\">". __("Phone", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
-	echo "		<td class=\"labelled\">\n";
-	echo "			<label>Home:</label> <input type=\"text\" id=\"ProfileContactPhoneHome\" name=\"ProfileContactPhoneHome\" value=\"". $ProfileContactPhoneHome ."\" /><br />\n";
-	echo "			<label>Mobile:</label> <input type=\"text\" id=\"ProfileContactPhoneCell\" name=\"ProfileContactPhoneCell\" value=\"". $ProfileContactPhoneCell ."\" /><br />\n";
-	echo "			<label>Work:</label> <input type=\"text\" id=\"ProfileContactPhoneWork\" name=\"ProfileContactPhoneWork\" value=\"". $ProfileContactPhoneWork ."\" /><br />\n";
+	echo "		<td scope=\"row\">". __("Phone", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+	echo "		<td>\n";
+	echo "			<label style=\"width: 50px;float:left;line-height: 24px;\">Home:</label> <input type=\"text\" style=\"width: 144px;\" id=\"ProfileContactPhoneHome\" name=\"ProfileContactPhoneHome\" value=\"". $ProfileContactPhoneHome ."\" /><br />\n";
+	echo "			<label style=\"width: 50px;float:left;line-height: 24px;\">Mobile:</label> <input type=\"text\" style=\"width: 144px;\" id=\"ProfileContactPhoneCell\" name=\"ProfileContactPhoneCell\" value=\"". $ProfileContactPhoneCell ."\" /><br />\n";
+	echo "			<label style=\"width: 50px;float:left;line-height: 24px;\">Work:</label> <input type=\"text\" style=\"width: 144px;\" id=\"ProfileContactPhoneWork\" name=\"ProfileContactPhoneWork\" value=\"". $ProfileContactPhoneWork ."\" /><br />\n";
 	echo "		</td>\n";
 	echo "    <tr valign=\"top\">\n";
-	echo "		<td scope=\"row\" class=\"label\">". __("Website", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+	echo "		<td scope=\"row\">". __("Website", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 	echo "		<td>\n";
 	echo "			<input type=\"text\" id=\"ProfileContactWebsite\" name=\"ProfileContactWebsite\" value=\"". $ProfileContactWebsite ."\" />\n";
 	echo "		</td>\n";
 	echo "	  </tr>\n";
 	// Public Information
 	echo "    <tr valign=\"top\">\n";
-	echo "		<td scope=\"row\" class=\"label\" colspan=\"2\"><h3>". __("Public Information", bb_agencyinteract_TEXTDOMAIN) ."</h3>The following information may appear in profile pages.</th>\n";
+	echo "		<td scope=\"row\" colspan=\"2\"><h3>". __("Public Information", bb_agencyinteract_TEXTDOMAIN) ."</h3>The following information may appear in profile pages.</th>\n";
 	echo "	  </tr>\n";
 	echo "    <tr valign=\"top\">\n";
 	echo "    <tr valign=\"top\">\n";
-	echo "		<td scope=\"row\" class=\"label\">". __("Birth date", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+	echo "		<td scope=\"row\">". __("Birth date", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 	echo "		<td>\n";
 				  /* Month */ 
 				  $monthName = array(1=> "January", "February", "March","April", "May", "June", "July", "August","September", "October", "November", "December"); 
@@ -75,7 +73,7 @@
 	echo "		</td>\n";
 	echo "	  </tr>\n";
 	echo "    <tr valign=\"top\">\n";
-	echo "		<td scope=\"row\" class=\"label\">". __("Due date", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+	echo "		<td scope=\"row\">". __("Due date", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 	echo "		<td>\n";
 				  /* Month */ 
 				  $monthName = array(1=> "January", "February", "March","April", "May", "June", "July", "August","September", "October", "November", "December"); 
@@ -102,35 +100,35 @@
 	echo "	  </tr>\n";
 	// Private Information
 	echo "    <tr valign=\"top\">\n";
-	echo "		<td scope=\"row\" class=\"label\" colspan=\"2\"><h3>". __("Private Information", bb_agencyinteract_TEXTDOMAIN) ."</h3>". __("The following information will NOT appear in public areas and is for administrative use only.", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+	echo "		<td scope=\"row\" colspan=\"2\"><h3>". __("Private Information", bb_agencyinteract_TEXTDOMAIN) ."</h3>". __("The following information will NOT appear in public areas and is for administrative use only.", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 	echo "	  </tr>\n";
 
 	echo "    <tr valign=\"top\">\n";
-	echo "		<td scope=\"row\" class=\"label\">". __("Street", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+	echo "		<td scope=\"row\">". __("Street", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 	echo "		<td>\n";
 	echo "			<input type=\"text\" id=\"ProfileLocationStreet\" name=\"ProfileLocationStreet\" />\n";
 	echo "		</td>\n";
 	echo "	  </tr>\n";
 	echo "    <tr valign=\"top\">\n";
-	echo "		<td scope=\"row\" class=\"label\">". __("Town", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+	echo "		<td scope=\"row\">". __("Town", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 	echo "		<td>\n";
 	echo "			<input type=\"text\" id=\"ProfileLocationCity\" name=\"ProfileLocationCity\" />\n";
 	echo "		</td>\n";
 	echo "	  </tr>\n";
 	echo "    <tr valign=\"top\">\n";
-	echo "		<td scope=\"row\" class=\"label\">". __("County", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+	echo "		<td scope=\"row\">". __("County", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 	echo "		<td>\n";
 	echo "			<input type=\"text\" id=\"ProfileLocationState\" name=\"ProfileLocationState\" />\n";
 	echo "		</td>\n";
 	echo "	  </tr>\n";
 	echo "    <tr valign=\"top\">\n";
-	echo "		<td scope=\"row\" class=\"label\">". __("Post code", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+	echo "		<td scope=\"row\">". __("Post code", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 	echo "		<td>\n";
 	echo "			<input type=\"text\" id=\"ProfileLocationZip\" name=\"ProfileLocationZip\" />\n";
 	echo "		</td>\n";
 	echo "	  </tr>\n";
 	echo "    <tr valign=\"top\">\n";
-	echo "		<td scope=\"row\" class=\"label\">". __("Country", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+	echo "		<td scope=\"row\">". __("Country", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 	echo "		<td>\n";
 	echo "			<input type=\"text\" id=\"ProfileLocationCountry\" name=\"ProfileLocationCountry\" />\n";
 	echo "		</td>\n";
@@ -140,54 +138,54 @@
 	 * Get Private custom Fields Here
 	 *
 	 */
-    $ProfileInformation = "1"; // Private fields only
+		    $ProfileInformation = "1"; // Private fields only
 
-	$query1 = "SELECT ProfileCustomID, ProfileCustomTitle, ProfileCustomType, ProfileCustomOptions, ProfileCustomOrder, ProfileCustomView, ProfileCustomShowGender, ProfileCustomShowProfile, ProfileCustomShowSearch, 
-	                  ProfileCustomShowLogged, ProfileCustomShowAdmin,ProfileCustomShowRegistration FROM "
-	         . table_agency_customfields ." WHERE ProfileCustomView = ". $ProfileInformation ." ORDER BY ProfileCustomOrder ASC";
-	
-	$results1 = $wpdb->get_results($query1);
-	$count1 = count($results1);
-	$pos = 0;
+			$query1 = "SELECT ProfileCustomID, ProfileCustomTitle, ProfileCustomType, ProfileCustomOptions, ProfileCustomOrder, ProfileCustomView, ProfileCustomShowGender, ProfileCustomShowProfile, ProfileCustomShowSearch, 
+			                  ProfileCustomShowLogged, ProfileCustomShowAdmin,ProfileCustomShowRegistration FROM "
+			         . table_agency_customfields ." WHERE ProfileCustomView = ". $ProfileInformation ." ORDER BY ProfileCustomOrder ASC";
+			
+			$results1 = mysql_query($query1);
+			$count1 = mysql_num_rows($results1);
+			$pos = 0;
+			while ($data1 = mysql_fetch_array($results1)) { 
+                               /*
+                                * Get Profile Types to
+                                * filter models from clients
+                                */
+                                $permit_type = false;
 
-	foreach ($results1 as $data1) { 
-		/*
-		* Get Profile Types to
-		* filter models from clients
-		*/
-		$permit_type = false;
+                                $PID = $data1['ProfileCustomID'];
 
-		$PID = $data1->ProfileCustomID;
+                                $get_types = "SELECT ProfileCustomTypes FROM ". table_agency_customfields_types .
+                                            " WHERE ProfileCustomID = " . $PID;
 
-		$get_types = "SELECT ProfileCustomTypes FROM ". table_agency_customfields_types .
-		            " WHERE ProfileCustomID = " . $PID;
+                                $result = mysql_query($get_types);
 
-		$result = $wpdb->get_results($get_types);
+                                while ( $p = mysql_fetch_array($result)){
+                                        $types = $p['ProfileCustomTypes'];			    
+                                }
 
-		foreach ( $result as $p ){
-		    $types = $p->ProfileCustomTypes;			    
-		}
+                                $types = explode(",",$types); 
 
-		$types = explode(",",$types); 
+                                if(in_array($ptype,$types)){ $permit_type=true; }
+                                
+				if ( ($data1["ProfileCustomShowGender"] == $ProfileGender) || ($data1["ProfileCustomShowGender"] == 0) 
+                                      && $permit_type == true )  {
 
-		if (in_array($ptype,$types)){ 
-			$permit_type=true; 
-		}
-                        
-		if ( ($data1->ProfileCustomShowGender == $ProfileGender) || ($data1->ProfileCustomShowGender == 0) 
-                              && $permit_type == true )  {
+					include("view-custom-fields.php");
 
-			include("view-custom-fields.php");
-		}
-	}
+				}
+			}
+        
+
 	
 	$bb_agencyinteract_options_arr = get_option('bb_agencyinteract_options');
-	$bb_agencyinteract_option_registerallow = bb_agencyinteract_ALLOW_REGISTRATION;
+	$bb_agencyinteract_option_registerallow = (int)$bb_agencyinteract_options_arr['bb_agencyinteract_option_registerallow'];
 
 	
 	  if ($bb_agencyinteract_option_registerallow  == 1) {
 		echo "    <tr valign=\"top\">\n";
-		echo "		<td scope=\"row\" class=\"label\">". __("Username(cannot be changed.)", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+		echo "		<td scope=\"row\">". __("Username(cannot be changed.)", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 		echo "		<td>\n";
 		if(isset($current_user->user_login)){
 		echo "			<input type=\"text\" id=\"ProfileUsername\"  disabled=\"disabled\" value=\"".$current_user->user_login."\" />\n";
@@ -200,13 +198,13 @@
 	 }
 	
 	echo "    <tr valign=\"top\">\n";
-	echo "		<td scope=\"row\" class=\"label\">". __("Password (Leave blank to keep same password)", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+	echo "		<td scope=\"row\">". __("Password (Leave blank to keep same password)", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 	echo "		<td>\n";
 	echo "			<input type=\"password\" id=\"ProfilePassword\" name=\"ProfilePassword\" />\n";
 	echo "		</td>\n";
 	echo "	  </tr>\n";
 	echo "    <tr valign=\"top\">\n";
-	echo "		<td scope=\"row\" class=\"label\">". __("Password (Retype to Confirm)", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
+	echo "		<td scope=\"row\">". __("Password (Retype to Confirm)", bb_agencyinteract_TEXTDOMAIN) ."</th>\n";
 	echo "		<td>\n";
 	echo "			<input type=\"password\" id=\"ProfilePasswordConfirm\" name=\"ProfilePasswordConfirm\" />\n";
 	echo "		</td>\n";
@@ -215,7 +213,7 @@
 	echo "</table>\n";
 	echo "<p class=\"submit\">\n";
 	echo "     <input type=\"hidden\" name=\"action\" value=\"addRecord\" />\n";
-	echo "     <input type=\"submit\" name=\"submit\" value=\"". __("Save and Continue", bb_agencyinteract_TEXTDOMAIN) ."\" class=\"button-primary\" />\n";
+	echo "     <input type=\"submit\" name=\"submit\" value=\"". __("Save and Continue", bb_restaurant_TEXTDOMAIN) ."\" class=\"button-primary\" />\n";
 	echo "</p>\n";
 	echo "</form>\n";
 ?>

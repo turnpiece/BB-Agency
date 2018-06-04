@@ -1,1 +1,0 @@
-<a class="primary-link" href="<?php echo admin_url("admin.php?page=" . $_GET['page']) ?>&action=add"><?php _e("Create New Booking", bb_agency_TEXTDOMAIN) ?></a>

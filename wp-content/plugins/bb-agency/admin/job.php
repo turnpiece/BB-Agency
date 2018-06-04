@@ -9,7 +9,6 @@ $bb_agency_option_persearch = (int)bb_agency_get_option('bb_agency_option_persea
 // database tables
 $t_job = table_agency_job;
 $t_profile = table_agency_profile;
-$t_booking = table_agency_booking;
 
 // settings
 $job = LabelSingular;
@@ -113,29 +112,6 @@ if ($_POST) {
                 }
                 
                 $results = $wpdb->query($sql) or die(mysql_error());
-
-                // add booking records
-                $date = $wpdb->escape($_POST['JobDate']);
-
-                if ($action != 'add') {
-                    // delete existing booking records
-                    $wpdb->delete( $t_booking, array( 'JobID' => $id ) );
-                }
-                
-                if (!empty($_POST['JobModelBooked'])) {
-                    foreach ($_POST['JobModelBooked'] as $model) {
-                        $wpdb->insert( 
-                            $t_booking, 
-                            array( 
-                                'BookedFrom'        => $date,
-                                'BookedTo'          => $date,
-                                'JobID'             => $id,
-                                'ProfileID'         => $model
-                            ),
-                            array( '%s', '%s', '%d', '%d' )
-                        );          
-                    }
-                }
 
                 // display success messsage
                 if ($action == 'add') {
@@ -256,12 +232,7 @@ if ($_POST) {
 switch ($action) {
     case 'delete' :
         if ($_GET['JobID']) {
-            // delete job record
-            $wpdb->delete( $t_job, array( `JobID` => $_GET['JobID'] ) );
-
-            // delete booking records
-            $wpdb->delete( $t_booking, array( 'JobID' => $_GET['JobID'] ) );
-            
+            $wpdb->query("DELETE FROM $t_job WHERE `JobID` = ".$_GET['JobID']);
             bb_agency_admin_message('<p>'. __("That job has been deleted.", bb_agency_TEXTDOMAIN) . '</p>');
         }
         elseif (!empty($_GET['JobIDs'])) {

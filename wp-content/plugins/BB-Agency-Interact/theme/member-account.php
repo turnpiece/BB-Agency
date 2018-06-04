@@ -6,16 +6,16 @@ Template Name: Edit Member Details
 * @desc		Edit Member Details
 */
 session_start();
-
+header("Cache-control: private"); //IE 6 Fix
 global $wpdb;
 /* Get User Info ******************************************/ 
 global $current_user, $wp_roles;
 get_currentuserinfo();
 // Get Settings
 $bb_agency_options_arr = get_option('bb_agency_options');
-$bb_agency_option_profilenaming = (int)$bb_agency_options_arr['bb_agency_option_profilenaming'];
+	$bb_agency_option_profilenaming 		= (int)$bb_agency_options_arr['bb_agency_option_profilenaming'];
 $bb_agencyinteract_options_arr = get_option('bb_agencyinteract_options');
-$bb_agencyinteract_option_registerallow = bb_agencyinteract_ALLOW_REGISTRATION;
+	$bb_agencyinteract_option_registerallow = (int)$bb_agencyinteract_options_arr['bb_agencyinteract_option_registerallow'];
 
 // Were they users or agents?
 $profiletype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
@@ -33,14 +33,14 @@ if ($profiletype == 1) { $profiletypetext = __("Agent/Producer", bb_agencyintera
 
 // Form Post
 if (isset($_POST['action'])) {
-	$ProfileID					= $_POST['ProfileID'];
-	$ProfileUsername			= $_POST['ProfileUsername'];
-	$ProfilePassword			= $_POST['ProfilePassword'];
-	$ProfilePasswordConfirm		= $_POST['ProfilePasswordConfirm'];
-	$ProfileUserLinked			= $_POST['ProfileUserLinked'];
-	$ProfileContactNameFirst	= trim($_POST['ProfileContactNameFirst']);
-	$ProfileContactNameLast		= trim($_POST['ProfileContactNameLast']);
-	$ProfileContactDisplay		= trim($_POST['ProfileContactDisplay']);
+	$ProfileID					=$_POST['ProfileID'];
+	$ProfileUsername			=$_POST['ProfileUsername'];
+	$ProfilePassword			=$_POST['ProfilePassword'];
+	$ProfilePasswordConfirm		=$_POST['ProfilePasswordConfirm'];
+	$ProfileUserLinked			=$_POST['ProfileUserLinked'];
+	$ProfileContactNameFirst	=trim($_POST['ProfileContactNameFirst']);
+	$ProfileContactNameLast		=trim($_POST['ProfileContactNameLast']);
+	$ProfileContactDisplay		=trim($_POST['ProfileContactDisplay']);
 
   	if (empty($ProfileContactDisplay)) {  // Probably a new record... 
 		if ($bb_agency_option_profilenaming == 0) { 
@@ -57,31 +57,31 @@ if (isset($_POST['action'])) {
                 }
   	}
 
-	$ProfileGallery				= $_POST['ProfileGallery'];
+	$ProfileGallery				=$_POST['ProfileGallery'];
 
   	if (empty($ProfileGallery)) {  // Probably a new record... 
 		$ProfileGallery = bb_agency_safenames($ProfileContactDisplay); 
   	}
 
-	$ProfileContactEmail		= $_POST['ProfileContactEmail'];
-	$ProfileContactWebsite		= $_POST['ProfileContactWebsite'];
-	$ProfileContactLinkFacebook	= $_POST['ProfileContactLinkFacebook'];
-	$ProfileContactLinkTwitter	= $_POST['ProfileContactLinkTwitter'];
-	$ProfileContactLinkYouTube	= $_POST['ProfileContactLinkYouTube'];
-	$ProfileContactLinkFlickr	= $_POST['ProfileContactLinkFlickr'];
-	$ProfileContactPhoneHome	= $_POST['ProfileContactPhoneHome'];
-	$ProfileContactPhoneCell	= $_POST['ProfileContactPhoneCell'];
-	$ProfileContactPhoneWork	= $_POST['ProfileContactPhoneWork'];
-	$ProfileGender    			= $_POST['ProfileGender'];
-	$ProfileType    			= $_POST['ProfileType'];
-	$ProfileDateBirth	    	= $_POST['ProfileDateBirth'];
-	$ProfileDateDue	    		= $_POST['ProfileDateDue'];
-	$ProfileLocationStreet		= $_POST['ProfileLocationStreet'];
-	$ProfileLocationCity		= bb_agency_strtoproper($_POST['ProfileLocationCity']);
-	$ProfileLocationState		= strtoupper($_POST['ProfileLocationState']);
-	$ProfileLocationZip			= $_POST['ProfileLocationZip'];
-	$ProfileLocationCountry		= $_POST['ProfileLocationCountry'];
-	$ProfileLanguage			= $_POST['ProfileLanguage'];
+	$ProfileContactEmail		=$_POST['ProfileContactEmail'];
+	$ProfileContactWebsite		=$_POST['ProfileContactWebsite'];
+	$ProfileContactLinkFacebook	=$_POST['ProfileContactLinkFacebook'];
+	$ProfileContactLinkTwitter	=$_POST['ProfileContactLinkTwitter'];
+	$ProfileContactLinkYouTube	=$_POST['ProfileContactLinkYouTube'];
+	$ProfileContactLinkFlickr	=$_POST['ProfileContactLinkFlickr'];
+	$ProfileContactPhoneHome	=$_POST['ProfileContactPhoneHome'];
+	$ProfileContactPhoneCell	=$_POST['ProfileContactPhoneCell'];
+	$ProfileContactPhoneWork	=$_POST['ProfileContactPhoneWork'];
+	$ProfileGender    		=$_POST['ProfileGender'];
+	$ProfileType    		=$_POST['ProfileType'];
+	$ProfileDateBirth	    		=$_POST['ProfileDateBirth'];
+	$ProfileDateDue	    		=$_POST['ProfileDateDue'];
+	$ProfileLocationStreet		=$_POST['ProfileLocationStreet'];
+	$ProfileLocationCity		=bb_agency_strtoproper($_POST['ProfileLocationCity']);
+	$ProfileLocationState		=strtoupper($_POST['ProfileLocationState']);
+	$ProfileLocationZip		=$_POST['ProfileLocationZip'];
+	$ProfileLocationCountry		=$_POST['ProfileLocationCountry'];
+	$ProfileLanguage			=$_POST['ProfileLanguage'];
 
 	if ($bb_agencyinteract_option_registerapproval == 1) {
 
@@ -202,15 +202,13 @@ if (isset($_POST['action'])) {
 			 
 			if ( username_exists( $ProfileUsername) ) {
 
-				$isLinked = $wpdb->update(
-					table_agency_profile, 
-					array( 'ProfileUserLinked' => $current_user->ID ), 
-					array( 'ProfileID' => $ProfileID ) 
-				);
+				$isLinked =  mysql_query("UPDATE ". table_agency_profile ." SET ProfileUserLinked =  ". $current_user->ID ." WHERE ProfileID = ".$ProfileID." ");
+				if($isLinked){
 
-				if ($isLinked){
 					wp_redirect(get_bloginfo("wpurl") . "/profile-member/media/");
-				}
+
+				}  else {
+				    die(mysql_error());	 				    				}
 			} else {
 				$user_data = array(
 				    'ID' => $current_user->id,
@@ -238,12 +236,13 @@ if (isset($_POST['action'])) {
 					
 			/* Redirect so the page will show updated info. */
 			if ( !$error ) {
+				
 				wp_redirect(get_bloginfo("wpurl") . "/profile-member/manage/");
 				//exit;
 			}
 		} else {
 			
-       		$alerts = "<div id=\"message\" class=\"error\"><p>". __("Error creating record, please ensure you have filled out all required fields.", bb_agencyinteract_TEXTDOMAIN) ."<br />". $error ."</p></div>"; 
+       	$alerts = "<div id=\"message\" class=\"error\"><p>". __("Error creating record, please ensure you have filled out all required fields.", bb_agencyinteract_TEXTDOMAIN) ."<br />". $error ."</p></div>"; 
 		}
 	break;
 	
@@ -291,13 +290,12 @@ if (isset($_POST['action'])) {
 				
 				if ((substr($key, 0, 15) == "ProfileCustomID") && (isset($value) && !empty($value))) {
 					
-					$ProfileCustomID = substr($key, 15);
+						$ProfileCustomID = substr($key, 15);
 					
 					// Remove Old Custom Field Values
-					$results1 = $wpdb->delete(
-						table_agency_customfield_mux, 
-						array( 'ProfileCustomID' => $ProfileCustomID, 'ProfileID' => $ProfileID ) 
-					);
+					$delete1 = "DELETE FROM " . table_agency_customfield_mux . " WHERE ProfileCustomID = ". $ProfileCustomID ." AND ProfileID = ".$ProfileID."";
+					$results1 = mysql_query($delete1) or die(mysql_error());	
+					
 					
 					if(is_array($value)){
 						$value =  implode(",",$value);
@@ -309,6 +307,7 @@ if (isset($_POST['action'])) {
 				}
 			}
 		
+			
 			$alerts = "<div id=\"message\" class=\"updated\"><p>". __("Profile updated successfully", bb_agencyinteract_TEXTDOMAIN) ."!</a></p></div>";
 		} else {
 			$alerts = "<div id=\"message\" class=\"error\"><p>". __("Error updating record, please ensure you have filled out all required fields.", bb_agencyinteract_TEXTDOMAIN) ."<br />". $error ."</p></div>"; 
@@ -325,9 +324,17 @@ if (isset($_POST['action'])) {
 get_header();
 
 // Check Sidebar
+$bb_agencyinteract_options_arr = get_option('bb_agencyinteract_options');
+$bb_agencyinteract_option_profilemanage_sidebar = $bb_agencyinteract_options_arr['bb_agencyinteract_option_profilemanage_sidebar'];
+$content_class = "";
+if (is_user_logged_in()) {
+	$content_class = "eight";
+} else {
+	$content_class = "twelve";
+}
 
-	// get profile Custom fields value
-	echo "<div id=\"container\" class=\"".get_content_class()." column bb-agency-interact-account\">\n";
+		// get profile Custom fields value
+	echo "<div id=\"container\" class=\"".$content_class." column bb-agency-interact-account\">\n";
 	echo "  <div id=\"content\">\n";
 	
 		// ****************************************************************************************** //
@@ -340,9 +347,14 @@ get_header();
 			 */
 			$ptype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
 	                $ptype = retrieve_title($ptype);
-
-			echo "<div id=\"profile-steps\">Profile Setup: Account</div>\n";
-						
+			$restrict = array('client','clients','agents','agent','producer','producers');
+			if(in_array(strtolower($ptype),$restrict)){
+				echo "<div id=\"profile-steps\">Profile Setup: Step 1 of 2</div>\n";
+			} else {
+				echo "<div id=\"profile-steps\">Profile Setup: Step 1 of 3</div>\n";
+			}
+			
+			
 			echo "<div id=\"profile-manage\" class=\"profile-account\">\n";
 			$bb_agency_new_registeredUser = get_user_meta($current_user->id,'bb_agency_new_registeredUser');
 			
@@ -353,11 +365,11 @@ get_header();
 			echo $alerts;
 			/* Check if the user is regsitered *****************************************/ 
 			// Verify Record
-			$sql = "SELECT ProfileID FROM ". table_agency_profile ." WHERE ProfileUserLinked =  ". $current_user->ID;
-			$results = $wpdb->get_results($sql);
-			$count = count($results);
+			$sql = "SELECT ProfileID FROM ". table_agency_profile ." WHERE ProfileUserLinked =  ". $current_user->ID ."";
+			$results = mysql_query($sql);
+			$count = mysql_num_rows($results);
 			if ($count > 0) {
-			  	foreach ($results as $data) {
+			  	while ($data = mysql_fetch_array($results)) {
 					// Manage Profile
 					include(dirname(__FILE__)."/include-profileaccount.php");								
 			  	} // is there record?
@@ -366,7 +378,7 @@ get_header();
 				// Users CAN register themselves
 				
 				// No Record Exists, register them
-				echo "<p>". __("Records show you are not currently linked to a model or agency profile.  Let's setup your profile now!", bb_agencyinteract_TEXTDOMAIN) ."</p>";
+				echo "<p>". __("Records show you are not currently linked to a model or agency profile.  Lets setup your profile now!", bb_agencyinteract_TEXTDOMAIN) ."</p>";
 				
 				// Register Profile
 				include(dirname(__FILE__)."/include-profileregister.php"); 	

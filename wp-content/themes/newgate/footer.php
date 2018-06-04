@@ -116,46 +116,40 @@ if (
 <!-- _________________________ Start Footer _________________________ -->
 	<footer id="footer" role="contentinfo">
 	<?php 
-		if (isset($cmsms_option[CMSMS_SHORTNAME . '_footer_copyright']) && $cmsms_option[CMSMS_SHORTNAME . '_footer_copyright'])
-			echo '<span class="copyright">' . stripslashes($cmsms_option[CMSMS_SHORTNAME . '_footer_copyright']) . '</span>' . "\n";
+		echo '<span class="copyright">' . stripslashes($cmsms_option[CMSMS_SHORTNAME . '_footer_copyright']) . '</span>' . "\n";
 		
-		if (isset($cmsms_option[CMSMS_SHORTNAME . '_footer_additional_content'])) {
-
-			if ($cmsms_option[CMSMS_SHORTNAME . '_footer_additional_content'] == 'text') {
-				echo stripslashes($cmsms_option[CMSMS_SHORTNAME . '_footer_html']);
-
-			} elseif ($cmsms_option[CMSMS_SHORTNAME . '_footer_additional_content'] == 'social' && isset($cmsms_option[CMSMS_SHORTNAME . '_social_icons'])) {
-				echo '<ul class="social_icons">' . "\n";
+		if ($cmsms_option[CMSMS_SHORTNAME . '_footer_additional_content'] == 'text') {
+			echo stripslashes($cmsms_option[CMSMS_SHORTNAME . '_footer_html']);
+		} elseif ($cmsms_option[CMSMS_SHORTNAME . '_footer_additional_content'] == 'social' && isset($cmsms_option[CMSMS_SHORTNAME . '_social_icons'])) {
+			echo '<ul class="social_icons">' . "\n";
+			
+			foreach ($cmsms_option[CMSMS_SHORTNAME . '_social_icons'] as $cmsms_social_icons) {
+				$cmsms_social_icon = explode('|', str_replace(' ', '', $cmsms_social_icons));
 				
-				foreach ($cmsms_option[CMSMS_SHORTNAME . '_social_icons'] as $cmsms_social_icons) {
-					$cmsms_social_icon = explode('|', str_replace(' ', '', $cmsms_social_icons));
+				if (is_numeric($cmsms_social_icon[0])) {
+					$image = wp_get_attachment_image_src($cmsms_social_icon[0], 'full');
 					
-					if (is_numeric($cmsms_social_icon[0])) {
-						$image = wp_get_attachment_image_src($cmsms_social_icon[0], 'full');
-						
-						$image = $image[0];
-					} else {
-						$image = $cmsms_social_icon[0];
-					}
-					
-					echo '<li>' . "\n\t" . 
-						'<a' . (($cmsms_social_icon[2] == 'true') ? ' target="_blank"' : '') . ' href="' . $cmsms_social_icon[1] . '" title="' . $cmsms_social_icon[1] . '">' . "\n\t\t" . 
-							'<img src="' . $image . '" alt="' . $cmsms_social_icon[1] . '" />' . "\r\t" . 
-						'</a>' . "\r" . 
-					'</li>' . "\n";
+					$image = $image[0];
+				} else {
+					$image = $cmsms_social_icon[0];
 				}
 				
-				echo '</ul>' . "\n";
-				
-			} elseif ($cmsms_option[CMSMS_SHORTNAME . '_footer_additional_content'] == 'nav' && has_nav_menu('footer')) {
-				wp_nav_menu(array( 
-					'theme_location' => 'footer', 
-					'container' => '', 
-					'sort_column' => 'menu_order', 
-					'menu_id' => 'footer_nav', 
-					'menu_class' => 'footer_nav' 
-				));
+				echo '<li>' . "\n\t" . 
+					'<a' . (($cmsms_social_icon[2] == 'true') ? ' target="_blank"' : '') . ' href="' . $cmsms_social_icon[1] . '" title="' . $cmsms_social_icon[1] . '">' . "\n\t\t" . 
+						'<img src="' . $image . '" alt="' . $cmsms_social_icon[1] . '" />' . "\r\t" . 
+					'</a>' . "\r" . 
+				'</li>' . "\n";
 			}
+			
+			echo '</ul>' . "\n";
+		} elseif ($cmsms_option[CMSMS_SHORTNAME . '_footer_additional_content'] == 'nav' && has_nav_menu('footer')) {
+			wp_nav_menu(array( 
+				'theme_location' => 'footer', 
+				'container' => '', 
+				'sort_column' => 'menu_order', 
+				'menu_id' => 'footer_nav', 
+				'menu_class' => 'footer_nav' 
+			));
 		}
 	?>
 	</footer>

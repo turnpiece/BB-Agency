@@ -6,17 +6,15 @@
   Description: Enhancement to the BB Agency software allowing models to manage their own information. Forked from RB Agency Interact plugin.
   Author: Paul Jenkins
   Author URI: http://turnpiece.com/
-  Version: 0.0.6
+  Version: 0.0.2
 */
-$bb_agencyinteract_VERSION = "0.0.6"; 
+$bb_agencyinteract_VERSION = "0.0.2"; 
 if (!session_id())
-	session_start();
-
+session_start();
 if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], '2.8', '<') ) { // if less than 2.8 
 	echo "<div class=\"error\"><p>". __("This plugin requires WordPress version 2.8 or newer", bb_agencyinteract_TEXTDOMAIN) .".</p></div>\n";
 	return;
 }
-
 // *************************************************************************************************** //
 // Avoid direct calls to this file, because now WP core and framework has been used
 	if ( !function_exists('add_action') ) {
@@ -34,16 +32,11 @@ add_action( 'the_post', 'bbagency_interact_the_post_action' );
 // Plugin Definitions
 	define("bb_agencyinteract_VERSION", $bb_agencyinteract_VERSION); // e.g. 1.0
 	define("bb_agencyinteract_BASENAME", plugin_basename(__FILE__) );  // bb-agency/bb-agency.php
-	define('bb_agencyinteract_SEND_EMAILS', true);
 	$bb_agencyinteract_WPURL = get_bloginfo("wpurl"); // http://domain.com/wordpress
-	$bb_agencyinteract_EMAIL = get_bloginfo('admin_email');
-	$bb_agencyinteract_EMAIL_PHOTOS = preg_replace('/^\w+@/', 'jessica@', $bb_agencyinteract_EMAIL);
 	$bb_agencyinteract_WPUPLOADARRAY = wp_upload_dir(); // Array  $bb_agencyinteract_WPUPLOADARRAY['baseurl'] $bb_agencyinteract_WPUPLOADARRAY['basedir']
 	define("bb_agencyinteract_BASEDIR", get_bloginfo("wpurl") ."/". PLUGINDIR ."/". dirname( plugin_basename(__FILE__) ) ."/" );  // http://domain.com/wordpress/wp-content/plugins/bb-agency-interact/
 	define("bb_agencyinteract_UPLOADDIR", $bb_agencyinteract_WPUPLOADARRAY['baseurl'] ."/profile-media/" );  // http://domain.com/wordpress/wp-content/uploads/profile-media/
 	define("bb_agencyinteract_UPLOADPATH", $bb_agencyinteract_WPUPLOADARRAY['basedir'] ."/profile-media/" ); // /home/content/99/6048999/html/domain.com/wordpress/wp-content/uploads/profile-media/
-	define("bb_agencyinteract_ALLOW_UPLOADS", true);
-	define("bb_agencyinteract_ALLOW_REGISTRATION", true);
 	define("bb_agencyinteract_TEXTDOMAIN", basename(dirname( __FILE__ )) ); //   bb-agency
 // Call Language Options
 	add_action('init', 'bb_agencyinteract_loadtranslation');
@@ -163,7 +156,7 @@ if ( is_admin() ){
 		class bb_agencyinteract_widget_loginactions extends WP_Widget {
 			
 			// Setup
-			function __construct() {
+			function bb_agencyinteract_widget_loginactions() {
 				$widget_ops = array('classname' => 'bb_agencyinteract_widget_profileaction', 'description' => __("Displays profile actions such as login and links to edit", bb_agencyinteract_TEXTDOMAIN) );
 				$this->WP_Widget('bb_agencyinteract_widget_profileaction', __("Agency Interact Login", bb_agencyinteract_TEXTDOMAIN), $widget_ops);
 			}
@@ -174,6 +167,9 @@ if ( is_admin() ){
 				echo $before_widget;
 				$title = empty($instance['title']) ? ' ' : apply_filters('widget_title', $instance['title']);
 				$count = $instance['trendShowCount'];
+				# $title = empty($instance['title']) ? ' ' : apply_filters('widget_title', $instance['title']);
+				# $entry_title = empty($instance['entry_title']) ? ' ' : apply_filters('widget_entry_title', $instance['entry_title']);
+				# $comments_title = empty($instance['comments_title']) ? ' ' : apply_filters('widget_comments_title', $instance['comments_title']);
 				
 				$atts = array('count' => $count);
  				
@@ -246,19 +242,51 @@ if ( is_admin() ){
      
 
 // *************************************************************************************************** //
+// Custom password protected pages
+/*		
+	function bb_agencyinteract_password_form() {
+		global $post;
+		$redirect_to = get_permalink($post->ID);
+		ob_start();
+		include('theme/include-login.php');
+		return ob_get_clean();
+	}
+	add_filter( 'the_password_form', 'bb_agencyinteract_password_form' );
 
-	// MailChim user sync
-	add_filter( 'mailchimp_sync_should_sync_user', function( $subscribe, $user ) {
+	function bb_agencyinteract_after_login($user_login, $user) {
+    	if (isset($_POST['redirect_to'])) {
+    		wp_redirect($_POST['redirect_to']);
+    		exit;
+    	}
+	}
+	add_action('wp_login', 'bb_agencyinteract_after_login', 10, 2);        
+*/		     
 
-	    if ( function_exists('bb_agency_is_client_profiletype') && bb_agency_is_client_profiletype( $user->ID ) ) {
-	    	if ( get_user_meta( $user->ID, 'newsletter', true ) ) {
-	    		return $subscribe;
-	    	}
-	    }
+/*
+function bb_agencyinteract_intercept_private_page( $posts, &$wp_query )
+{
+    // remove filter now, so that on subsequent post querying we don't get involved!
+    remove_filter( 'the_posts', '__intercept_private_page', 5, 2 );
 
-	    // do not subscribe otherwise
-	    return false;
-	});
+    if ( !( $wp_query->is_page && empty($posts) ) )
+        return $posts; // bail, not page with no results
+
+    // if you want to explicitly check it *is* private, use the code block below:   
+    
+    if ( !empty( $wp_query->query['page_id'] ) )
+        $page = get_page( $wp_query->query['page_id'] );
+    else
+        $page = get_page_by_path( $wp_query->query['pagename'] );
+
+    if ( $page && $page->post_status == 'private' ) {
+        // redirect
+        $url = urlencode(get_permalink($page->ID));
+        wp_safe_redirect(get_bloginfo('wpurl')."/profile-login/?redirect_to=$url");
+        exit;
+    }
+}
+is_admin() || add_filter( 'the_posts', 'bb_agencyinteract_intercept_private_page', 5, 2 );
+*/
 		                
 // *************************************************************************************************** //
 // Add Short Codes

@@ -16,21 +16,13 @@
 		// Call Custom Code to put in header
 		function bb_agencyinteract_inserthead() {
 		  if( !is_admin() ) {
-			echo "<link rel=\"stylesheet\" href=\"". bb_agencyinteract_BASEDIR ."style/style.min.css\" type=\"text/css\" media=\"screen\" />\n";
+			echo "<link rel=\"stylesheet\" href=\"". bb_agencyinteract_BASEDIR ."style/style.css\" type=\"text/css\" media=\"screen\" />\n";
+			echo "<script type=\"text/javascript\" src=\"". bb_agencyinteract_BASEDIR ."jquery-page.js\"></script>";
 		  }
 		  if(!wp_script_is('jquery')) {
 			echo "<script type=\"text/javascript\" src=\"". bb_agencyinteract_BASEDIR ."style/jquery.1.8.js\"></script>";
 			
 			} 
-		}
-
-	add_action('wp_enqueue_scripts', 'bb_agencyinteract_scripts');
-
-		function bb_agencyinteract_scripts() {
-			if (!is_admin()) {
-				wp_enqueue_script( 'bb_agencyinteract_page', bb_agencyinteract_BASEDIR .'jquery-page.js', array('jquery'), null, true );
-				wp_localize_script( 'bb_agencyinteract_page', 'page', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
-			}
 		}
 
 // *************************************************************************************************** //
@@ -62,25 +54,21 @@
 	add_filter('template_include', 'bb_agencyinteract_template_include', 1, 1); 
 		function bb_agencyinteract_template_include( $template ) {
 			if ( get_query_var( 'type' ) ) {
-				if (get_query_var( 'type' ) == "profileoverview") {
-					return dirname(__FILE__) . '/theme/member-overview.php'; 
-			  	} elseif (get_query_var( 'type' ) == "account") {
-					return dirname(__FILE__) . '/theme/member-account.php'; 
-			  	} elseif (get_query_var( 'type' ) == "subscription") {
-					return dirname(__FILE__) . '/theme/member-subscription.php'; 
-			  	} elseif (get_query_var( 'type' ) == "availability") {
-					return dirname(__FILE__) . '/theme/member-availability.php'; 
-			  	} elseif (get_query_var( 'type' ) == "manage") {
-					return dirname(__FILE__) . '/theme/member-profile.php'; 
-			  	} elseif (get_query_var( 'type' ) == "media") {
-					return dirname(__FILE__) . '/theme/member-media.php'; 
-				} elseif (get_query_var( 'type' ) == "preferences") {
-					return dirname(__FILE__) . '/theme/member-preferences.php'; 
-			  	} elseif (get_query_var( 'type' ) == "profileregister") {
-					return dirname(__FILE__) . '/theme/member-register.php'; 
-			  	} elseif (get_query_var( 'type' ) == "profilelogin") {
-					return dirname(__FILE__) . '/theme/member-login.php'; 
-			  	}
+			  if (get_query_var( 'type' ) == "profileoverview") {
+				return dirname(__FILE__) . '/theme/member-overview.php'; 
+			  } elseif (get_query_var( 'type' ) == "account") {
+				return dirname(__FILE__) . '/theme/member-account.php'; 
+			  } elseif (get_query_var( 'type' ) == "subscription") {
+				return dirname(__FILE__) . '/theme/member-subscription.php'; 
+			  } elseif (get_query_var( 'type' ) == "manage") {
+				return dirname(__FILE__) . '/theme/member-profile.php'; 
+			  } elseif (get_query_var( 'type' ) == "media") {
+				return dirname(__FILE__) . '/theme/member-media.php'; 
+			  } elseif (get_query_var( 'type' ) == "profileregister") {
+				return dirname(__FILE__) . '/theme/member-register.php'; 
+			  } elseif (get_query_var( 'type' ) == "profilelogin") {
+				return dirname(__FILE__) . '/theme/member-login.php'; 
+			  }
 			}
 			return $template;
 		}
@@ -98,7 +86,6 @@
 	// Redefine user notification function  
 	if ( !function_exists('wp_new_user_notification') ) {  
 		function wp_new_user_notification( $user_id, $plaintext_pass = '' ) {  
-
 			$user = new WP_User($user_id);  
 	  
 			$user_login = stripslashes($user->user_login);  
@@ -108,7 +95,7 @@
 			$message .= sprintf(__('Username: %s'), $user_login) . "\r\n\r\n";  
 			$message .= sprintf(__('E-mail: %s'), $user_email) . "\r\n";  
 	  
-			bb_agencyinteract_email_admin( sprintf(__('[%s] New User Registration'), get_option('blogname')), $message );
+			@wp_mail(get_option('admin_email'), sprintf(__('[%s] New User Registration'), get_option('blogname')), $message);  
 	  
 			if ( empty($plaintext_pass) )  
 				return;  
@@ -126,7 +113,8 @@
 				$message .= sprintf(__('Any work undertaken is governed by our <a href="%s">Terms &amp; Conditions</a>', bb_agency_TEXTDOMAIN), bb_agency_TERMS);
 			}
 	 
-			bb_agencyinteract_email_user( $user_email, sprintf(__('%s Registration Successful! Login Details'), get_option('blogname')), $message);
+	 		$headers = 'From: '. get_option('blogname') .' <'. get_option('admin_email') .'>' . "\r\n";
+			wp_mail($user_email, sprintf(__('%s Registration Successful! Login Details'), get_option('blogname')), nl2br($message), $headers);  
 	  
 		}  
 	}  
@@ -140,40 +128,7 @@
 			return $ProfileGallery;
      }
 
-     // email admin
-     function bb_agencyinteract_email_admin( $subject, $message ) {
 
-     	if (!defined('bb_agencyinteract_SEND_EMAILS') || !bb_agencyinteract_SEND_EMAILS)
-     		return;
-
-     	global $bb_agencyinteract_EMAIL;
-     	return @wp_mail($bb_agencyinteract_EMAIL, $subject, $message);  
-     }
-
-     // email user
-     function bb_agencyinteract_email_user( $email, $subject, $message ) {
-
-     	if (!defined('bb_agencyinteract_SEND_EMAILS') || !bb_agencyinteract_SEND_EMAILS)
-     		return;
-
-     	global $bb_agencyinteract_EMAIL;
-     	$headers = 'From: '. get_option('blogname') .' <'. $bb_agencyinteract_EMAIL .'>' . "\r\n";
-     	return @wp_mail($email, $subject, $message, $headers);  
-     }
-
-     // get profile
-     function bb_agencyinteract_get_profile( $user_id ) {
-     	global $wpdb;
-		$query = "SELECT * FROM " . table_agency_profile . " WHERE `ProfileUserLinked` = '$user_id'";
-		return $wpdb->get_results($query);
-     }
-
-     // get contact name
-     function bb_agencyinteract_get_name( $user_id ) {
-     	global $wpdb;
-		$query = "SELECT `ProfileContactDisplay` FROM " . table_agency_profile . " WHERE `ProfileUserLinked` = '$user_id'";
-		return $wpdb->get_var($query);
-     }
 
 // *************************************************************************************************** //
 // Functions
@@ -220,6 +175,51 @@
 		}
 
 
+	/*
+
+	OBSOLETE  Just use for reference
+
+	add_filter("registration_redirect", "bb_agencyinteract_register_redirect");
+		function bb_agencyinteract_register_redirect() {
+			return "/profile-member/";
+		}
+	add_filter('register', 'bb_agencyinteract_register_movepage');
+		function bb_agencyinteract_register_movepage($link) {
+			if(!is_user_logged_in()) {
+				$link = '<a href="/profile-register/">' . __('Register') . '</a>';
+			}
+			$link = str_replace(site_url("wp-login.php?action=register"), "/profile-member/", $link );
+			return $link;
+		}
+	add_filter('site_url',  'wplogin_filter', 10, 3);
+		function wplogin_filter( $url, $path, $orig_scheme) {
+			$old  = array( "/(wp-login\.php)/");
+			$new  = array( "/profile-login/");
+			return preg_replace( $old, $new, $url, 1);
+		}
+	// Redirect after Registration
+	add_filter("register_redirect", "bb_agencyinteract_register_redirect");
+		function bb_agencyinteract_register_redirect() {
+			return "/profile-member/";
+		}
+		
+
+	// Change Login URL
+	// Change Registration Form Submit Titles
+	add_filter('register', 'change_admin');
+		function change_admin($link) {
+			$link = str_replace("Site Admin", "Your Account", $link);
+			return $link;
+		}
+	add_filter('register', 'bb_agencyinteract_register_changenames');
+		function bb_agencyinteract_register_changenames($link) {
+			$link = str_replace(">Register<", ">Sign up<", $link);
+			return $link;
+		}
+	*/
+
+
+
     // function for checking male and female filter
 	if ( !function_exists('gender_filter') ) {  
 		function gender_filter($gender=0) {
@@ -254,22 +254,22 @@
 			 if($ID != 0){
 					 
 				if($type == "dropdown"){
-					$result = $wpdb->get_results("SELECT ProfileCustomValue FROM "
+					$result = mysql_query("SELECT ProfileCustomValue FROM "
 							. table_agency_customfield_mux .
 							" WHERE ProfileCustomID = ". $customID .
 							" AND ProfileCustomValue = '" . $val . "' "
 							." AND ProfileID = "
 							. $ID);
 				} else {
-					$result = $wpdb->get_results("SELECT ProfileCustomValue FROM "
+					$result = mysql_query("SELECT ProfileCustomValue FROM "
 							. table_agency_customfield_mux .
 							" WHERE ProfileCustomID = ". $customID ." AND ProfileID = "
 							. $ID);
 				}
 
-				foreach($result as $row){
+				while($row = mysql_fetch_assoc($result)){
 					if($type == "textbox"){
-					 return $row->ProfileCustomValue;
+					 return $row["ProfileCustomValue"];
 					} elseif($type == "dropdown") {
 					 return "selected";
 					}
@@ -297,58 +297,19 @@
 	if ( !function_exists('retrieve_title') ) {  
 		function retrieve_title($id=0) {
 		   global $wpdb;
-		   
 		   /* 
 		    * return title
 			*/
-            $type = $wpdb->get_var( "SELECT DataTypeTitle FROM ". table_agency_data_type ." WHERE DataTypeID = " . $id );
-
-            if ($type)
-            	return $type;
-
-		}
-	}
-
-	if (!function_exists('get_content_class')) {
-		function get_content_class() {
-			$bb_agencyinteract_options_arr = get_option('bb_agencyinteract_options');
-			$bb_agencyinteract_option_profilemanage_sidebar = $bb_agencyinteract_options_arr['bb_agencyinteract_option_profilemanage_sidebar'];
-
-			if (is_user_logged_in()) {
-				return "eight";
+            $check_type = "SELECT DataTypeTitle FROM ". table_agency_data_type ." WHERE DataTypeID = " . $id;
+			$check_query = mysql_query($check_type) OR die(mysql_error());
+			if(mysql_num_rows($check_query) > 0){
+				$fetch = mysql_fetch_assoc($check_query);
+				return $fetch['DataTypeTitle'];
 			} else {
-				return "twelve";
+				return false;
 			}
 		}
 	}
-
-	// set primary profile image
-	add_action('wp_ajax_set_primary_image', 'set_primary_image');
-
-	if (!function_exists('set_primary_image')) {
-		function set_primary_image() {
-			global $wpdb;
-
-			$image = filter_input(INPUT_POST, 'image');
-			$profile = filter_input(INPUT_POST, 'profile');
-
-			if ($image && $profile) {
-				// remove existing primary flag
-				$wpdb->update( 
-					table_agency_profile_media, 
-					array( 'ProfileMediaPrimary' => 0 ), 
-					array( 'ProfileID' => $profile, 'ProfileMediaPrimary' => 1 ) 
-				);
-				// add primary flag to selected image
-				$wpdb->update( 
-					table_agency_profile_media, 
-					array( 'ProfileMediaPrimary' => 1 ), 
-					array( 'ProfileID' => $profile, 'ProfileMediaID' => $image ) 
-				);
-			}
-		}
-	}
-
 
 
 ?>

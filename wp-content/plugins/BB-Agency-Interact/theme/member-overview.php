@@ -7,7 +7,7 @@ Template Name: 	Member Details
 */
 
 session_start();
-
+header("Cache-control: private"); //IE 6 Fix
 global $wpdb;
 
 /* Get User Info ******************************************/ 
@@ -18,7 +18,7 @@ get_currentuserinfo();
 $bb_agency_options_arr 							= get_option('bb_agency_options');
 $bb_agency_option_profilenaming 				= (int)$bb_agency_options_arr['bb_agency_option_profilenaming'];
 $bb_agencyinteract_options_arr 					= get_option('bb_agencyinteract_options');
-$bb_agencyinteract_option_registerallow 		= bb_agencyinteract_ALLOW_REGISTRATION;
+$bb_agencyinteract_option_registerallow 		= (int)$bb_agencyinteract_options_arr['bb_agencyinteract_option_registerallow'];
 $bb_agencyinteract_option_overviewpagedetails 	= (int)$bb_agencyinteract_options_arr['bb_agencyinteract_option_overviewpagedetails'];
 
 // Check Sidebar
@@ -53,45 +53,49 @@ get_header();
 			 * Set Media to not show to
 			 * client/s, agents, producers,
 			 */
-            $ptype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
-	        $ptype = retrieve_title($ptype);
-			echo "<div id=\"profile-steps\">Profile Setup</div>\n";
-
+                        $ptype = (int)get_user_meta($current_user->id, "bb_agency_interact_profiletype", true);
+	                $ptype = retrieve_title($ptype);
+			$restrict = array('client','clients','agents','agent','producer','producers');
+			if(in_array(strtolower($ptype),$restrict)){
+				echo "<div id=\"profile-steps\">Profile Setup: Step 1 of 2</div>\n";
+			} else {
+				echo "<div id=\"profile-steps\">Profile Setup: Step 1 of 3</div>\n";
+			}
+                        
 			echo "	<div id=\"profile-manage\" class=\"profile-overview\">\n";
 				
 			/* Check if the user is regsitered *****************************************/ 
 			$sql = "SELECT ProfileID FROM ". table_agency_profile ." WHERE ProfileUserLinked =  ". $current_user->ID ."";
-			$profileID = $wpdb->get_var($sql);
+			$results = mysql_query($sql);
+			$count = mysql_num_rows($results);
+			if ($count > 0) {
 
-			if ($profileID) {
-
-				// Menu
-				include("include-menu.php"); 	
-				echo " <div class=\"manage-overview manage-content\">\n";
-					  
+			// Menu
+			include("include-menu.php"); 	
+			echo " <div class=\"manage-overview manage-content\">\n";
+			  
+			$data = mysql_fetch_array($results);  // is there record?
+				  
 				echo "	 <div class=\"manage-section welcome\">\n";			
 				echo "	 <h1>". __("Welcome Back", bb_agencyinteract_TEXTDOMAIN) ." ". $current_user->first_name ."!</h1>";
 				// Record Exists
 			
 				/* Show account information here *****************************************/
 				 
-				echo "<div class=\"section-content section-account\">\n"; // .account
-				echo "<ul>\n";
-				echo "<li><a href=\"account/\">Edit Your Account</a></li>\n";
-				echo "<li><a href=\"manage/\">Manage Your Details</a></li>\n";
-				if (defined('bb_agencyinteract_ALLOW_UPLOADS') && bb_agencyinteract_ALLOW_UPLOADS) {
-					echo "<li><a href=\"media/\">Manage Photos and Media</a></li>\n";
+				echo " <div class=\"section-content section-account\">\n"; // .account
+				echo " 	<ul>\n";
+				echo "      <li><a href=\"account/\">Edit Your Account Details</a></li>\n";
+				echo "      <li><a href=\"manage/\">Manage Your Profile Information</a></li>\n";
+				echo "      <li><a href=\"media/\">Manage Photos and Media</a></li>\n";
+				if($bb_subscription){
+				echo "      <li><a href=\"subscription/\">Manage your Subscription</a></li>\n";
 				}
-				if ($bb_subscription){
-					echo "<li><a href=\"subscription/\">Manage Your Subscription</a></li>\n";
-				}
-				echo "<li><a href=\"availability/\">Manage Availability</a></li>\n";
-				echo "</ul>\n";
-				echo "</div>\n";
-			  	echo "</div>\n"; // .welcome
-			  	echo "</div>\n"; // .profile-manage-inner
-				  
-				// No Record Exists, register them
+				echo "	</ul>\n";
+				echo " </div>\n";
+			  	echo " </div>\n"; // .welcome
+			  	echo " </div>\n"; // .profile-manage-inner
+			  
+			// No Record Exists, register them
 			} else {
 					
 				echo "<h1>". __("Welcome", bb_agencyinteract_TEXTDOMAIN) ." ". $current_user->first_name ."!</h1>";
