@@ -21,16 +21,15 @@ if (isset($_POST['action'])) {
 		foreach($_POST as $ProfileID) {
 			// Verify Record
 			$queryDelete = "SELECT * FROM ". table_agency_profile ." WHERE ProfileID =  ". $ProfileID;
-			$resultsDelete = mysql_query($queryDelete);
-			while ($dataDelete = mysql_fetch_array($resultsDelete)) {
+			$resultsDelete = $wpdb->get_results($queryDelete);
+			foreach ($resultsDelete as $dataDelete) {
 				$ProfileGallery = $dataDelete['ProfileGallery'];
 		
 				// Remove Profile
-				$delete = "DELETE FROM " . table_agency_profile . " WHERE ProfileID = ". $ProfileID;
-				$results = $wpdb->query($delete);
+				$wpdb->delete(table_agency_profile, array('ProfileID' => $ProfileID) );
+
 				// Remove Media
-				$delete = "DELETE FROM " . table_agency_profile_media . " WHERE ProfileID = ". $ProfileID;
-				$results = $wpdb->query($delete);
+				$wpdb->delete(table_agency_profile_media, array('ProfileID' => $ProfileID) );
 					
 				if (isset($ProfileGallery)) {
 					// Remove Folder
@@ -38,12 +37,12 @@ if (isset($_POST['action'])) {
 					$mydir = opendir($dir);
 					while(false !== ($file = readdir($mydir))) {
 						if($file != "." && $file != "..") {
-							unlink($dir.$file) or DIE("couldn't delete $dir$file<br />");
+							unlink($dir.$file) or die("couldn't delete $dir$file<br />");
 						}
 					}
 					// remove dir
 					if(is_dir($dir)) {
-						rmdir($dir) or DIE("couldn't delete $dir$file<br />");
+						rmdir($dir) or die("couldn't delete $dir$file<br />");
 					}
 					closedir($mydir);
 					
@@ -70,62 +69,62 @@ else {
 // *************************************************************************************************** //
 // Manage Record
 function bb_display_list() {
-  global $wpdb;
-  $bb_agency_options_arr = get_option('bb_agency_options');
+  	global $wpdb;
+  	$bb_agency_options_arr = get_option('bb_agency_options');
 	$bb_agency_option_locationtimezone 		= (int)$bb_agency_options_arr['bb_agency_option_locationtimezone'];
-  echo "<div class=\"wrap\">\n";
-  echo "  <div id=\"rb-overview-icon\" class=\"icon32\"></div>\n";
-  echo "  <h2>". __("List", bb_agencyinteract_TEXTDOMAIN) ." ". LabelPlural ."</h2>\n";
+  	echo "<div class=\"wrap\">\n";
+  	echo "  <div id=\"rb-overview-icon\" class=\"icon32\"></div>\n";
+  	echo "  <h2>". __("List", bb_agencyinteract_TEXTDOMAIN) ." ". LabelPlural ."</h2>\n";
 	
-  echo "  <h3 class=\"title\">". __("All Records", bb_agencyinteract_TEXTDOMAIN) ."</h3>\n";
+  	echo "  <h3 class=\"title\">". __("All Records", bb_agencyinteract_TEXTDOMAIN) ."</h3>\n";
 		
-		// Sort By
-        $sort = "";
-        if (isset($_GET['sort']) && !empty($_GET['sort'])){
-            $sort = $_GET['sort'];
-        }
-        else {
-            $sort = "profile.ProfileContactNameFirst";
-        }
-		
-		// Sort Order
-        $dir = "";
-        if (isset($_GET['dir']) && !empty($_GET['dir'])){
-            $dir = $_GET['dir'];
-            if ($dir == "desc" || !isset($dir) || empty($dir)){
-               $sortDirection = "asc";
-               } else {
-               $sortDirection = "desc";
-            } 
-		} else {
-			   $sortDirection = "desc";
-			   $dir = "asc";
-		}
+	// Sort By
+    $sort = "";
+    if (isset($_GET['sort']) && !empty($_GET['sort'])){
+        $sort = $_GET['sort'];
+    }
+    else {
+        $sort = "profile.ProfileContactNameFirst";
+    }
+	
+	// Sort Order
+    $dir = "";
+    if (isset($_GET['dir']) && !empty($_GET['dir'])){
+        $dir = $_GET['dir'];
+        if ($dir == "desc" || !isset($dir) || empty($dir)){
+           $sortDirection = "asc";
+           } else {
+           $sortDirection = "desc";
+        } 
+	} else {
+		   $sortDirection = "desc";
+		   $dir = "asc";
+	}
   	
-		// Filter
-		$filter = "WHERE profile.ProfileIsActive = 3 ";
-        if ((isset($_GET['ProfileContactNameFirst']) && !empty($_GET['ProfileContactNameFirst'])) || isset($_GET['ProfileContactNameLast']) && !empty($_GET['ProfileContactNameLast'])){
-        	if (isset($_GET['ProfileContactNameFirst']) && !empty($_GET['ProfileContactNameFirst'])){
-			$selectedNameFirst = $_GET['ProfileContactNameFirst'];
-			$query .= "&ProfileContactNameFirst=". $selectedNameFirst ."";
-			$filter .= " AND profile.ProfileContactNameFirst LIKE '". $selectedNameFirst ."%'";
-	        }
-        	if (isset($_GET['ProfileContactNameLast']) && !empty($_GET['ProfileContactNameLast'])){
-			$selectedNameLast = $_GET['ProfileContactNameLast'];
-			$query .= "&ProfileContactNameLast=". $selectedNameLast ."";
-			$filter .= " AND profile.ProfileContactNameLast LIKE '". $selectedNameLast ."%'";
-	        }
-		}
-		if (isset($_GET['ProfileLocationCity']) && !empty($_GET['ProfileLocationCity'])){
-			$selectedCity = $_GET['ProfileLocationCity'];
-			$query .= "&ProfileLocationCity=". $selectedCity ."";
-			$filter .= " AND profile.ProfileLocationCity='". $selectedCity ."'";
-		}
-		if (isset($_GET['ProfileType']) && !empty($_GET['ProfileType'])){
-			$selectedType = $_GET['ProfileType'];
-			$query .= "&ProfileType=". $selectedType ."";
-			$filter .= " AND profiletype.DataTypeID='". $selectedType ."'";
-		}
+	// Filter
+	$filter = "WHERE profile.ProfileIsActive = 3 ";
+    if ((isset($_GET['ProfileContactNameFirst']) && !empty($_GET['ProfileContactNameFirst'])) || isset($_GET['ProfileContactNameLast']) && !empty($_GET['ProfileContactNameLast'])){
+    	if (isset($_GET['ProfileContactNameFirst']) && !empty($_GET['ProfileContactNameFirst'])){
+		$selectedNameFirst = $_GET['ProfileContactNameFirst'];
+		$query .= "&ProfileContactNameFirst=". $selectedNameFirst ."";
+		$filter .= " AND profile.ProfileContactNameFirst LIKE '". $selectedNameFirst ."%'";
+        }
+    	if (isset($_GET['ProfileContactNameLast']) && !empty($_GET['ProfileContactNameLast'])){
+		$selectedNameLast = $_GET['ProfileContactNameLast'];
+		$query .= "&ProfileContactNameLast=". $selectedNameLast ."";
+		$filter .= " AND profile.ProfileContactNameLast LIKE '". $selectedNameLast ."%'";
+        }
+	}
+	if (isset($_GET['ProfileLocationCity']) && !empty($_GET['ProfileLocationCity'])){
+		$selectedCity = $_GET['ProfileLocationCity'];
+		$query .= "&ProfileLocationCity=". $selectedCity ."";
+		$filter .= " AND profile.ProfileLocationCity='". $selectedCity ."'";
+	}
+	if (isset($_GET['ProfileType']) && !empty($_GET['ProfileType'])){
+		$selectedType = $_GET['ProfileType'];
+		$query .= "&ProfileType=". $selectedType ."";
+		$filter .= " AND profiletype.DataTypeID='". $selectedType ."'";
+	}
 		
 		// Bulk Action
 		
@@ -137,51 +136,51 @@ function bb_display_list() {
 			   if(isset($_POST['profileID'])){
 					foreach($_POST['profileID'] as $key){
 					 
-									$ProfileID = $key;
-									// Verify Record
-									$queryDelete = "SELECT * FROM ". table_agency_profile ." WHERE ProfileID =  ". $ProfileID;
-									$resultsDelete = mysql_query($queryDelete);
-									while ($dataDelete = mysql_fetch_array($resultsDelete)) {
-										$ProfileGallery = $dataDelete['ProfileGallery'];
+						$ProfileID = $key;
+						// Verify Record
+						$queryDelete = "SELECT * FROM ". table_agency_profile ." WHERE ProfileID =  ". $ProfileID;
+						$resultsDelete = $wpdb->get_results($queryDelete);
+						while ($dataDelete = mysql_fetch_array($resultsDelete)) {
+							$ProfileGallery = $dataDelete['ProfileGallery'];
+					
+							// Remove Profile
+							$delete = "DELETE FROM " . table_agency_profile . " WHERE ProfileID = ". $ProfileID;
+							$results = $wpdb->query($delete);
+							// Remove Media
+							$delete = "DELETE FROM " . table_agency_profile_media . " WHERE ProfileID = ". $ProfileID;
+							$results = $wpdb->query($delete);
 								
-										// Remove Profile
-										$delete = "DELETE FROM " . table_agency_profile . " WHERE ProfileID = ". $ProfileID;
-										$results = $wpdb->query($delete);
-										// Remove Media
-										$delete = "DELETE FROM " . table_agency_profile_media . " WHERE ProfileID = ". $ProfileID;
-										$results = $wpdb->query($delete);
+							if (isset($ProfileGallery)) {
+								// Remove Folder
+								$dir = bb_agency_UPLOADPATH . $ProfileGallery ."/";
+								$mydir = opendir($dir);
+								while(false !== ($file = readdir($mydir))) {
+									if($file != "." && $file != "..") {
+										$isUnlinked = @unlink($dir.$file);
+										if($isUnlinked){
 											
-										if (isset($ProfileGallery)) {
-											// Remove Folder
-											$dir = bb_agency_UPLOADPATH . $ProfileGallery ."/";
-											$mydir = opendir($dir);
-											while(false !== ($file = readdir($mydir))) {
-												if($file != "." && $file != "..") {
-													$isUnlinked = @unlink($dir.$file);
-													if($isUnlinked){
-														
-													}else{
-													   echo "Couldn't delete $dir$file<br />";	
-													}
-												}
-											}
-											// remove dir
-											if(is_dir($dir)) {
-												$isRemoved = @rmdir($dir);
-												if($isRemoved){
-														
-												}else{
-													   echo "Couldn't delete $dir$file<br />";	
-												}
-											}
-											closedir($mydir);
-											
-										} else {
-											echo __("No valid record found.", bb_agencyinteract_TEXTDOMAIN);
+										}else{
+										   echo "Couldn't delete $dir$file<br />";	
 										}
+									}
+								}
+								// remove dir
+								if(is_dir($dir)) {
+									$isRemoved = @rmdir($dir);
+									if($isRemoved){
 											
-									echo ('<div id="message" class="updated"><p>'. __("Profile deleted successfully!", bb_agencyinteract_TEXTDOMAIN) .'</p></div>');
-									} // is there record?
+									}else{
+										   echo "Couldn't delete $dir$file<br />";	
+									}
+								}
+								closedir($mydir);
+								
+							} else {
+								echo __("No valid record found.", bb_agencyinteract_TEXTDOMAIN);
+							}
+								
+						echo ('<div id="message" class="updated"><p>'. __("Profile deleted successfully!", bb_agencyinteract_TEXTDOMAIN) .'</p></div>');
+						} // is there record?
 									
 						
 					}
@@ -200,7 +199,7 @@ function bb_display_list() {
 							$ProfileID = $key;
 							// Verify Record
 							$queryApprove = "UPDATE ". table_agency_profile ." SET ProfileIsActive = 1 WHERE ProfileID =  ". $ProfileID;
-							$resultsApprove = mysql_query($queryApprove);
+							$resultsApprove = $wpdb->get_results($queryApprove);
 						
 							
 						}
@@ -218,14 +217,14 @@ function bb_display_list() {
 		if(isset($_GET["action"])=="approveRecord"){
 			$ProfileID = $_GET["ProfileID"];
 			$queryApprove = "UPDATE ". table_agency_profile ." SET ProfileIsActive = 1 WHERE ProfileID =  ". $ProfileID;
-			$resultsApprove = mysql_query($queryApprove);
+			$resultsApprove = $wpdb->get_results($queryApprove);
 			if($resultsApprove){ 
 				echo ('<div id="message" class="updated"><p>'. __("$profileLabel Approved successfully!", bb_agencyinteract_TEXTDOMAIN) .'</p></div>');
 			}
 		}
 		
 		//Paginate
-		$items = mysql_num_rows(mysql_query("SELECT * FROM ". table_agency_profile ." profile LEFT JOIN ". table_agency_data_type ." profiletype ON profile.ProfileType = profiletype.DataTypeID ". $filter  ."")); // number of total rows in the database
+		$items = count($wpdb->get_results("SELECT * FROM ". table_agency_profile ." profile LEFT JOIN ". table_agency_data_type ." profiletype ON profile.ProfileType = profiletype.DataTypeID ". $filter  ."")); // number of total rows in the database
 		if($items > 0) {
 			$p = new bb_agency_pagination;
 			$p->items($items);
@@ -248,14 +247,13 @@ function bb_display_list() {
 			$limit = "";
 		}
 		
-		
         echo "<div class=\"tablenav\">\n";
- 	  $queryGenderResult = mysql_query("SELECT GenderID, GenderTitle FROM ".table_agency_data_gender." ");
-		  $queryGenderCount = mysql_num_rows($queryGenderResult);
-		  while($fetchGender = mysql_fetch_assoc($queryGenderResult)){
-			 echo "	<div style=\"float: left; \"><a class=\"button-primary\" href=\"". admin_url("admin.php?page=bb_agency_menu_profiles") ."&action=add&ProfileGender=".$fetchGender["GenderID"]."\">". __("Create New ".ucfirst($fetchGender["GenderTitle"])."", bb_agency_TEXTDOMAIN) ."</a></div>\n";
+ 	  	$queryGenderResult = $wpdb->get_results("SELECT GenderID, GenderTitle FROM ".table_agency_data_gender." ");
+		  $queryGenderCount = count($queryGenderResult);
+		  foreach ($queryGenderResult as $fetchGender){
+			 echo "	<div style=\"float: left; \"><a class=\"button-primary\" href=\"". admin_url("admin.php?page=bb_agency_menu_profiles") ."&action=add&ProfileGender=".$fetchGender->GenderID."\">". __("Create New ".ucfirst($fetchGender->GenderTitle)."", bb_agency_TEXTDOMAIN) ."</a></div>\n";
 		  }
-	  echo "  <div class=\"tablenav-pages\">\n";
+	  	echo "  <div class=\"tablenav-pages\">\n";
 				if($items > 0) {
 					echo $p->show();  // Echo out the list of paging. 
 				}
@@ -265,9 +263,6 @@ function bb_display_list() {
 		echo "  <thead>\n";
 		echo "    <tr>\n";
 		echo "        <td style=\"width: 90%;\" nowrap=\"nowrap\">    \n";  
-       
-	
-	
 		echo "        	<form method=\"GET\" action=\"". admin_url("admin.php?page=". $_GET['page']) ."\">\n";
 		echo "        		<input type=\"hidden\" name=\"page_index\" id=\"page_index\" value=\"". $_GET['page_index'] ."\" />  \n";
 		echo "        		<input type=\"hidden\" name=\"page\" id=\"page\" value=\"". $_GET['page'] ."\" />\n";
@@ -278,23 +273,23 @@ function bb_display_list() {
 		echo "        		". __("Location", bb_agencyinteract_TEXTDOMAIN) .": \n";
 		echo "        		<select name=\"ProfileLocationCity\">\n";
 		echo "				  <option value=\"\">". __("Any Location", bb_agencyinteract_TEXTDOMAIN) ."</option>";
-								$query = "SELECT DISTINCT ProfileLocationCity, ProfileLocationState FROM ". table_agency_profile ." ORDER BY ProfileLocationState, ProfileLocationCity ASC";
-								$results = mysql_query($query);
-								$count = mysql_num_rows($results);
-								while ($data = mysql_fetch_array($results)) {
-									if (isset($data['ProfileLocationCity']) && !empty($data['ProfileLocationCity'])) {
-									echo "<option value=\"". $data['ProfileLocationCity'] ."\" ". selected($selectedCity, $data["ProfileLocationCity"]) ."\">". $data['ProfileLocationCity'] .", ". strtoupper($dataLocation["ProfileLocationState"]) ."</option>\n";
-									}
-								} 
+		$query = "SELECT DISTINCT ProfileLocationCity, ProfileLocationState FROM ". table_agency_profile ." ORDER BY ProfileLocationState, ProfileLocationCity ASC";
+		$results = $wpdb->get_results($query);
+		$count = count($results);
+		foreach ($results as $data) {
+			if (isset($data->ProfileLocationCity) && !empty($data->ProfileLocationCity)) {
+				echo "<option value=\"". $data->ProfileLocationCity ."\" ". selected($selectedCity, $data->ProfileLocationCity) ."\">". $data->ProfileLocationCity .", ". strtoupper($dataLocation->ProfileLocationState) ."</option>\n";
+			}
+		} 
 		echo "        		</select>\n";
 		echo "        		". __("Category", bb_agencyinteract_TEXTDOMAIN) .":\n";
 		echo "        		<select name=\"ProfileType\">\n";
 		echo "				  <option value=\"\">". __("Any Category", bb_agencyinteract_TEXTDOMAIN) ."</option>";
-								$query = "SELECT DataTypeID, DataTypeTitle FROM ". table_agency_data_type ." ORDER BY DataTypeTitle ASC";
-								$results = mysql_query($query);
-								$count = mysql_num_rows($results);
-								while ($data = mysql_fetch_array($results)) {
-									echo "<option value=\"". $data['DataTypeID'] ."\" ". selected($selectedCity, $data["DataTypeTitle"]) ."\">". $data['DataTypeTitle'] ."</option>\n";
+								$query = "SELECT `DataTypeID`, `DataTypeTitle` FROM ". table_agency_data_type ." ORDER BY `DataTypeTitle` ASC";
+								$results = $wpdb->get_results($query);
+								$count = count($results);
+								foreach ($results as $data) {
+									echo "<option value=\"". $data->DataTypeID ."\" ". selected($selectedCity, $data->DataTypeTitle) ."\">". $data->DataTypeTitle ."</option>\n";
 								} 
 		echo "        		</select>\n";
 		echo "        		<input type=\"submit\" value=\"". __("Filter", bb_agencyinteract_TEXTDOMAIN) ."\" class=\"button-primary\" />\n";
@@ -355,57 +350,47 @@ function bb_display_list() {
 		echo " </tfoot>\n";
 		echo " <tbody>\n";
         $query = "SELECT * FROM ". table_agency_profile ." profile LEFT JOIN ". table_agency_data_type ." profiletype ON profile.ProfileType = profiletype.DataTypeID ". $filter  ." ORDER BY $sort $limit";
-        $results2 = @mysql_query($query);
-        $count = @mysql_num_rows($results2);
-        while ($data = @mysql_fetch_array($results2)) {
+        $results2 = $wpdb->get_results($query);
+        $count = count($results2);
+        foreach ($results2 as $data) {
             
-            $ProfileID = $data['ProfileID'];
-            $ProfileGallery = stripslashes($data['ProfileGallery']);
-            $ProfileContactNameFirst = stripslashes($data['ProfileContactNameFirst']);
-            $ProfileContactNameLast = stripslashes($data['ProfileContactNameLast']);
-            $ProfileLocationCity = bb_agency_strtoproper(stripslashes($data['ProfileLocationCity']));
-            $ProfileLocationState = stripslashes($data['ProfileLocationState']);
-            $ProfileGender = stripslashes($data['ProfileGender']);
-            $ProfileDateBirth = stripslashes($data['ProfileDateBirth']);
-            $ProfileStatHits = stripslashes($data['ProfileStatHits']);
-            $ProfileDateCreated = stripslashes($data['ProfileDateCreated']);
+            $ProfileID = $data->ProfileID;
+            $ProfileGallery = stripslashes($data->ProfileGallery);
+            $ProfileContactNameFirst = stripslashes($data->ProfileContactNameFirst);
+            $ProfileContactNameLast = stripslashes($data->ProfileContactNameLast);
+            $ProfileLocationCity = bb_agency_strtoproper(stripslashes($data->ProfileLocationCity));
+            $ProfileLocationState = stripslashes($data->ProfileLocationState);
+            $ProfileGender = stripslashes($data->ProfileGender);
+            $ProfileDateBirth = stripslashes($data->ProfileDateBirth);
+            $ProfileStatHits = stripslashes($data->ProfileStatHits);
+            $ProfileDateCreated = stripslashes($data->ProfileDateCreated);
             
-			 $DataTypeTitle = stripslashes($data['ProfileType']);
+			 $DataTypeTitle = stripslashes($data->ProfileType);
 			
-			if(strpos($data['ProfileType'], ",") > 0){
-            $title = explode(",",$data['ProfileType']);
+			if(strpos($data->ProfileType, ",") > 0){
+            $title = explode(",",$data->ProfileType);
             $new_title = "";
             foreach($title as $t){
                 $id = (int)$t;
                 $get_title = "SELECT DataTypeTitle FROM " . table_agency_data_type .  
                              " WHERE DataTypeID = " . $id;   
-                $resource = mysql_query($get_title);             
+                $resource = $wpdb->get_results($get_title);             
                 $get = mysql_fetch_assoc($resource);
-                if (mysql_num_rows($resource) > 0 ){
+                if (count($resource) > 0 ){
                     $new_title .= "," . $get['DataTypeTitle']; 
                 }
             }
             $new_title = substr($new_title,1);
         } else {
-                $new_title = "";
-                $id = (int)$data['ProfileType'];
-                $get_title = "SELECT DataTypeTitle FROM " . table_agency_data_type .  
-                             " WHERE DataTypeID = " . $id;   
-                $resource = mysql_query($get_title);             
-                $get = mysql_fetch_assoc($resource);
-                if (mysql_num_rows($resource) > 0 ){
-                    $new_title = $get['DataTypeTitle']; 
-                }
+            $id = (int)$data->ProfileType; 
+            $new_title = $wpdb->get_var("SELECT `DataTypeTitle` FROM " . table_agency_data_type . " WHERE `DataTypeID` = " . $id);
         }
-         
-        
+     
         $DataTypeTitle = stripslashes($new_title);
-			$resultImageCount = mysql_query("SELECT * FROM " . table_agency_profile_media . " WHERE ProfileID='". $ProfileID ."' AND ProfileMediaType = 'Image'");
-			$profileImageCount = mysql_num_rows($resultImageCount);
-			
-			$resultProfileGender = mysql_query("SELECT * FROM ".table_agency_data_gender." WHERE GenderID = '".$ProfileGender."' ");
-			$fetchProfileGender = mysql_fetch_assoc($resultProfileGender);
-			$ProfileGender  = $fetchProfileGender["GenderTitle"];
+		$resultImageCount = $wpdb->get_results("SELECT * FROM " . table_agency_profile_media . " WHERE `ProfileID` = '". $ProfileID ."' AND `ProfileMediaType` = 'Image'");
+		$profileImageCount = count($resultImageCount);
+
+		$ProfileGenderTitle = $wpdb->get_var("SELECT `GenderTitle` FROM ".table_agency_data_gender." WHERE `GenderID` = '".$ProfileGender."' ");
 		echo "    <tr". $rowColor .">\n";
 		echo "        <th class=\"check-column\" scope=\"row\">\n";
 		echo "          <input type=\"checkbox\" value=\"". $ProfileID ."\" class=\"administrator\" id=\"". $ProfileID ."\" name=\"profileID[". $ProfileID ."]\"/>\n";
@@ -421,7 +406,7 @@ function bb_display_list() {
 		echo "          </div>\n";
 		echo "        </td>\n";
 		echo "        <td class=\"ProfileContactNameLast column-ProfileContactNameLast\">". $ProfileContactNameLast ."</td>\n";
-		echo "        <td class=\"ProfileGender column-ProfileGender\">". $ProfileGender ."</td>\n";
+		echo "        <td class=\"ProfileGender column-ProfileGender\">". $ProfileGenderTitle ."</td>\n";
 		echo "        <td class=\"ProfilesProfileDate column-ProfilesProfileDate\">". bb_agency_get_age($ProfileDateBirth) ."</td>\n";
 		echo "        <td class=\"ProfilesProfileDate column-ProfilesProfileDate\">". $ProfileDateDue ."</td>\n";
 		echo "        <td class=\"ProfileLocationCity column-ProfileLocationCity\">". $ProfileLocationCity ."</td>\n";
@@ -435,10 +420,7 @@ function bb_display_list() {
 		echo "    </tr>\n";
 		
 		
-		
-		
         }
-            @mysql_free_result($results2);
             if ($count < 1) {
 				if (isset($filter)) { 
 		echo "    <tr>\n";

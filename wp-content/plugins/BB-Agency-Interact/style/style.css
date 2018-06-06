@@ -1,7 +1,8 @@
 #profile-manage .manage-content { padding: 15px; background: #fff; }
 #profile-manage .manage-content h1,
 #profile-manage .manage-content h3 { margin-bottom: 15px; }
-#profile-manage .manage-content p { margin: 0 0 15px 0; line-height: 18px; }
+#profile-manage .manage-content p { margin: 0 0 15px 0; color:  #000; }
+#profile-manage .manage-content a { font:  inherit; }
 #profile-manage .manage-content select { padding: 3px; }
 #profile-manage .manage-section { overflow: hidden; margin-bottom: 15px; }
 #profile-manage .manage-section .section-content { overflow: hidden; }
@@ -9,14 +10,21 @@ p.submit { margin-top: 15px!important; }
 
 #profile-steps { font-size: 22px; text-align: center; background: #eee; border-bottom: 3px solid #aaa; padding: 10px; }
 
-#profile-manage { overflow: hidden; }
+#profile-manage { overflow: hidden; max-width: 750px; margin: 0 auto; }
+#profile-manage .manage-content { max-width: 640px; margin: 20px auto; }
 #profile-manage h2 { margin: 20px 0 10px 0; }
-#profile-manage table { border:none }
-#profile-manage table tr td { font-size: 13px; padding: 5px; }
-#profile-manage table tr td h3 { font-size: 16px; margin-bottom:10px; }
-#profile-manage table tr td select { width: 200px; }
-#profile-manage table tr td input[type="text"], #profile-manage table tr td input[type="email"], #profile-manage table tr td input[type="password"] { width: 194px; }
-#profile-manage .profile-manage-menu { overflow: hidden; margin: 20px 0 0 0; }
+#profile-manage table { border: none; width: 100%; }
+#profile-manage table tr th,
+#profile-manage table tr td.label { max-width: 194px; } 
+#profile-manage table tr td { padding: 5px; }
+#profile-manage table tr td h3 { margin-bottom:10px; }
+#profile-manage table tr td select { max-width: 200px; }
+#profile-manage table tr td input[type="text"], 
+#profile-manage table tr td input[type="email"], 
+#profile-manage table tr td input[type="password"] { max-width: 450px; min-width: 300px; font: inherit; }
+#profile-manage table tr td.labelled > label { width: 50px; float:left; line-height: 24px; padding-right: 10px; text-align: right; }
+#profile-manage table tr td.labelled > input { width: 150px; margin-bottom: 5px; }
+#profile-manage .profile-manage-menu { overflow: hidden; margin: 20px auto 0; }
 #profile-manage .profile-manage-menu #subMenuTab { overflow: hidden; }
 #profile-manage .profile-manage-menu #subMenuTab a { float: left; border-left: 1px solid #fff; padding: 10px 20px; color: #555; background: url(/wp-content/uploads/2012/01/bg-tab.png) repeat-x }
 #profile-manage .profile-manage-menu #subMenuTab a:hover { color: #444; background: url(/wp-content/uploads/2012/01/bg-tab.png) 0 -38px repeat-x  }
@@ -37,7 +45,8 @@ p.submit { margin-top: 15px!important; }
 /* 	My Media - /profile-member/media/
 	/theme/member-media.php
 	/theme/include-profilemedia.php */
-#profile-manage .manage-section.upload div textarea { vertical-align: top; }
+#profile-manage .manage-section.upload div { padding: 10px 0; }
+#profile-manage .manage-section.upload div textarea { vertical-align: top; width: 100%; }
 #profile-manage .manage-section.upload p { margin: 15px 0; }
 
 #profile-manage .manage-section.media .media-video { display: inline-block; margin: 15px; width: 250px; }
@@ -47,42 +56,86 @@ p.submit { margin-top: 15px!important; }
 #profile-manage .manage-profile p select { width: 165px; }
 
 /* Profile Gallery */
-/*#profile-manage .manage-section.gallery .profileimage { float: left; margin: 0 10px 10px 0; height: 150px; position: relative; overflow: hidden; background: #eee; }*/
 
 #profile-manage .manage-section.gallery .profileimage {
-    background: none repeat scroll 0 0 #EEEEEE;
+    border: 1px solid #eee;
     float: left;
-    height: auto;
-    margin: 0 10px 10px 0;
+    height: 220px;
+    margin: 0 3% 10px 0;
     overflow: hidden;
-    padding: 0px;
+    padding: 0;
     position: relative;
-    width: 101px;
+    width: 30%;
+    opacity: 0.6;
+    text-align: center;
 }
 
-
-#profile-manage .manage-section.gallery .profileimage .delete a { display: block; text-align: center; }
-/*#profile-manage .manage-section.gallery .profileimage .primary { position: absolute; left: 0; right: 0; bottom: 0; padding: 5px 10px; border-radius: 0; font-weight: normal; font-size: 13px; }*/
-#profile-manage .manage-section.gallery .profileimage .primary {
+#profile-manage .manage-section.gallery .profileimage.live {
+    opacity: 1;
+}
+#profile-manage .manage-section.gallery .profileimage.primary-picture {
+    border: 1px solid #cc3333;
+    opacity: 1;
+}
+#profile-manage .manage-section.gallery .profileimage .delete a { 
+    display: block; 
+    text-align: center;
+    font-size: 14px;
+}
+#profile-manage .manage-section.gallery .profileimage .action {
+    position: absolute;
+    top: 0;
+    height: 25px;
     border-radius: 0;
-    bottom: 0;
-    float: left;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: normal;
     left: 0;
     padding: 5px 10px;
-    position: relative;
     right: 0;
-    width: 78%;
     z-index: 99999;
+    opacity: 0.7;
+    background: #EEEEEE;
+}
+#profile-manage .manage-section.gallery .profileimage .action.delete {
+    opacity: 1.0;
+    top: auto;
+    bottom: 0;
+}
+#profile-manage .manage-section.gallery .profileimage.live .action.delete {
+    opacity: 0.7;
+}
+#profile-manage .manage-section.gallery .profileimage.live .action:hover {
+    opacity: 1.0 !important;
+}
+#profile-manage .manage-section.gallery .profileimage.primary-picture .action {
+    display: none;
+}
+#profile-manage .manage-section.gallery .profileimage .action > label {
+    margin: 0;
+    display: block;
+}
+#profile-manage .manage-section.gallery .profileimage > img {
+    min-height: 75%;
+    max-height: 100%;
+    max-width: 150%;
+}
+#profile-manage .manage-section.gallery .profileimage .bb_button label { cursor: pointer; }
+
+#profile-manage.preferences form {
+    max-width: 500px;
 }
 
-.profileimage > img {
-    margin-bottom: 35px;
+#profile-manage.preferences form label {
+    position: relative;
+    display: inline-block;
+    padding-left: 25px;
 }
 
-#profile-manage .manage-section.gallery .profileimage .primary input { margin: 0; }
-#profile-manage .manage-section.gallery .profileimage .primary label { cursor: pointer; }
+#profile-manage.preferences form label input {
+    position: absolute;
+    left: 0;
+    top: 5px;
+}
 
 /** Sign In - Register **/
 #bbsignin-register { text-align: center; vertical-align: top; }
@@ -103,7 +156,7 @@ p.submit { margin-top: 15px!important; }
 #bbsignin-register .inline-block .register { margin-bottom: 15px; }
 
 /* Register */
-.bb-agency-interact {  }
+.bb-agency-interact ul { list-style-type: none; }
 .bb-agency-interact p.alert { border-bottom: 3px solid #0C0; background:#fafafa; padding: 10px; }
 .bb-agency-interact h1 { margin-bottom:10px;text-align: left; }
 .bb-agency-interact form#adduser {  }

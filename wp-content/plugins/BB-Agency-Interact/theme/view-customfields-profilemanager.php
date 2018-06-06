@@ -1,7 +1,6 @@
 <?php
-		$q2 = mysql_query("SELECT ProfileCustomValue FROM ". table_agency_customfield_mux ." WHERE ProfileCustomID = ". $data1['ProfileCustomID'] ." AND ProfileID = ". $ProfileID." ");
-		$data2 = mysql_fetch_assoc($q2);
-		$ProfileCustomValue = $data2['ProfileCustomValue'];
+		$ProfileCustomValue = $wpdb->get_var("SELECT `ProfileCustomValue` FROM ". table_agency_customfield_mux ." WHERE ProfileCustomID = ". $data1['ProfileCustomID'] ." AND ProfileID = ". $ProfileID." ");
+
 		if ($ProfileCustomType == 1) { //TEXT
 			if (!empty($ProfileCustomValue)){
 				echo "<input type=\"text\" name=\"ProfileCustomID". $data1['ProfileCustomID'] ."\" value=\"". $ProfileCustomValue ."\" /><br />\n";

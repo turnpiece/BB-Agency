@@ -4,7 +4,7 @@
 	
 	/* Check if users can register. */
 	$registration = get_option( 'bb_agencyinteract_options' );
-	$bb_agencyinteract_option_registerallow = $registration["bb_agencyinteract_option_registerallow"];
+	$bb_agencyinteract_option_registerallow = bb_agencyinteract_ALLOW_REGISTRATION;
 	// Facebook Login Integration
 	$bb_agencyinteract_option_fb_registerallow = $registration['bb_agencyinteract_option_fb_registerallow'];
 	$bb_agencyinteract_option_fb_app_id = $registration['bb_agencyinteract_option_fb_app_id'];
