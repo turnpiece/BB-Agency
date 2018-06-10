@@ -41,13 +41,19 @@ $bb_agency_option_profilenaming = bb_agency_get_option('bb_agency_option_profile
 $bb_agency_option_profilelist_sidebar = bb_agency_get_option('bb_agency_option_profilelist_sidebar');
 
 $t_profile = table_agency_profile;
-$t_datatype = table_agency_data_type;
-$query = <<<EOF
+
+if (bb_agency_SITETYPE == 'children') {
+	$t_datatype = table_agency_data_type;
+	$query = <<<EOF
 SELECT p.*, dt.`DataTypePrivacy` AS ProfilePrivacy, dt.`DataTypeTalent` AS ProfileHasTalent
 FROM $t_profile AS p
 LEFT JOIN $t_datatype AS dt ON dt.`DataTypeID` = p.`ProfileType`
 WHERE p.`ProfileGallery` = '%s'
 EOF;
+
+} else {
+	$query = "SELECT * FROM $t_profile WHERE `ProfileGallery` = '%s'";
+}
 
 $profile = $wpdb->get_row( $wpdb->prepare( $query, $profileURL ) );
 
@@ -73,10 +79,14 @@ if ($bb_agency_option_profilenaming == 0) {
 }
 $ProfileContactEmail		= $profile->ProfileContactEmail;
 $ProfileType				= $profile->ProfileType;
-$ProfileHasTalent			= $profile->ProfileHasTalent;
-$ProfileTalent				= $profile->ProfileTalent;
-$ProfileGenre				= $profile->ProfileGenre;
-$ProfileAbility				= $profile->ProfileAbility;
+/*
+if (bb_agency_SITETYPE == 'children') {
+	$ProfileHasTalent			= $profile->ProfileHasTalent;
+	$ProfileTalent				= $profile->ProfileTalent;
+	$ProfileGenre				= $profile->ProfileGenre;
+	$ProfileAbility				= $profile->ProfileAbility;
+}
+*/
 $ProfileContactWebsite		= $profile->ProfileContactWebsite;
 $ProfileContactPhoneHome	= $profile->ProfileContactPhoneHome;
 $ProfileContactPhoneCell	= $profile->ProfileContactPhoneCell;
