@@ -20,7 +20,10 @@ if (function_exists('bb_agencyinteract_approvemembers')) {
 $t_profile = table_agency_profile;
 $t_media = table_agency_profile_media;
 $t_data_type = table_agency_data_type;
-$t_data_talent = table_agency_data_talent;
+
+if (bb_agency_SITETYPE == 'children')
+    $t_data_talent = table_agency_data_talent;
+
 $t_custom = table_agency_customfield_mux;
 
 // *************************************************************************************************** //
@@ -597,9 +600,13 @@ function bb_display_manage($ProfileID) {
     $t_profile      = table_agency_profile;
     $t_media        = table_agency_profile_media;
     $t_data_type    = table_agency_data_type;
-    $t_data_talent  = table_agency_data_talent;
-    $t_data_genre   = table_agency_data_genre;
-    $t_data_ability = table_agency_data_ability;
+
+    if (bb_agency_SITETYPE == 'children') {
+        $t_data_talent  = table_agency_data_talent;
+        $t_data_genre   = table_agency_data_genre;
+        $t_data_ability = table_agency_data_ability;
+    }
+
     $t_gender       = table_agency_data_gender;
 
     $bb_agency_option_agencyimagemaxheight = bb_agency_get_option('bb_agency_option_agencyimagemaxheight');
@@ -1272,7 +1279,7 @@ function bb_display_manage($ProfileID) {
             <?php endif; // end of talents ?>
 
             <?php endif; // end of children only code ?>
-            
+
             <tr valign="top">
                 <th scope="row"><?php _e("Status", bb_agency_TEXTDOMAIN) ?>:</th>
                 <td>
@@ -1400,7 +1407,10 @@ function bb_display_list() {
     $t_profile = table_agency_profile;
     $t_media = table_agency_profile_media;
     $t_data_type = table_agency_data_type;
-    $t_data_talent = table_agency_data_talent;
+
+    if (bb_agency_SITETYPE == 'children')
+        $t_data_talent = table_agency_data_talent;
+
     ?>
     <div class="wrap">
     <?php
@@ -1470,7 +1480,8 @@ function bb_display_list() {
             $filter .= " profile.ProfileType = '$selectedType'";
         }
     }
-    if (!empty($_GET['ProfileTalent'])){
+
+    if (bb_agency_SITETYPE == 'children' && !empty($_GET['ProfileTalent'])){
         $selectedTalent = strtolower($_GET['ProfileTalent']);
         $query .= "&ProfileTalent=". $selectedTalent .'';
         if(strpos($filter,'profile') > 0){
