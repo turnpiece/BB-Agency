@@ -68,20 +68,22 @@ if (isset($_POST['action'])) {
         $ProfileType = implode(",", $ProfileType);
     }
     
-    // get posted talents
-    $ProfileTalent = $_POST['ProfileTalent'];
-    if (is_array($ProfileTalent)) {
-        $ProfileTalent = implode(",", $ProfileTalent);
-    }
+    if (bb_agency_SITETYPE == 'children') {
+        // get posted talents
+        $ProfileTalent = $_POST['ProfileTalent'];
+        if (is_array($ProfileTalent)) {
+            $ProfileTalent = implode(",", $ProfileTalent);
+        }
 
-    // get posted genres
-    $ProfileGenre = $_POST['ProfileGenre'];
-    if (is_array($ProfileGenre)) {
-        $ProfileGenre = implode(",", $ProfileGenre);
+        // get posted genres
+        $ProfileGenre = $_POST['ProfileGenre'];
+        if (is_array($ProfileGenre)) {
+            $ProfileGenre = implode(",", $ProfileGenre);
+        }
+        
+        // get posted ability
+        $ProfileAbility = $_POST['ProfileAbility'];
     }
-    
-    // get posted ability
-    $ProfileAbility = $_POST['ProfileAbility'];
 
     $ProfileIsActive = $_POST['ProfileIsActive']; // 0 Inactive | 1 Active | 2 Archived | 3 Pending Approval
     $ProfileIsFeatured = $_POST['ProfileIsFeatured'];
@@ -614,7 +616,10 @@ function bb_display_manage($ProfileID) {
 
     if (!empty($ProfileID)) {
 
-        $query = "SELECT p.*, dt.`DataTypeTalent` AS HasTalent FROM `$t_profile` p LEFT JOIN `$t_data_type` dt ON dt.`DataTypeID` = p.`ProfileType` WHERE ProfileID = '$ProfileID' LIMIT 1";
+        if (bb_agency_SITETYPE == 'bumps')
+            $query = "SELECT p.*, dt.`DataTypeTalent` AS HasTalent FROM `$t_profile` p LEFT JOIN `$t_data_type` dt ON dt.`DataTypeID` = p.`ProfileType` WHERE `ProfileID` = '$ProfileID' LIMIT 1";
+        else
+            $query = "SELECT * FROM `$t_profile` WHERE `ProfileID` = '$ProfileID' LIMIT 1";
 
         bb_agency_debug( $query );
 
@@ -1219,6 +1224,9 @@ function bb_display_manage($ProfileID) {
                     <?php endif; ?>
                 </td>
             </tr>
+
+            <?php if (bb_agency_SITETYPE == 'children')) : ?>
+
             <?php $talents = $wpdb->get_results("SELECT * FROM `$t_data_talent` ORDER BY `DataTalentTitle`"); if (!empty($talents)) : ?>
             <tr valign="top" id="ProfileTalent" class="profile-talent">
                 <th scope="row"><?php _e("Talent", bb_agency_TEXTDOMAIN) ?></th>
@@ -1262,6 +1270,9 @@ function bb_display_manage($ProfileID) {
             </tr>
             <?php endif; // end of abilities ?>
             <?php endif; // end of talents ?>
+
+            <?php endif; // end of children only code ?>
+            
             <tr valign="top">
                 <th scope="row"><?php _e("Status", bb_agency_TEXTDOMAIN) ?>:</th>
                 <td>
