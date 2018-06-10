@@ -131,7 +131,7 @@ if (!function_exists("bb_agency_inserthead_profile")){
 					case 99 :
 						// Slimbox
 						wp_enqueue_script( 'slimbox2', plugins_url('/js/slimbox2.js', __FILE__) );
-						wp_register_style( 'slimbox2', plugins_url('/style/slimbox2.css', __FILE__) );
+						wp_register_style( 'slimbox2', plugins_url('/style/slimbox2.min.css', __FILE__) );
 	        			wp_enqueue_style( 'slimbox2' );
 						break;
 					case 0 :
