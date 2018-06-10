@@ -163,20 +163,26 @@
 	
 	</div>
 
-	<?php if (defined('bb_agencyinteract_ALLOW_UPLOADS') && bb_agencyinteract_ALLOW_UPLOADS) :
+	<?php if (defined('bb_agencyinteract_ALLOW_UPLOADS') && bb_agencyinteract_ALLOW_UPLOADS) : ?>
 
-		echo "	<div class=\"manage-section upload\">\n";
-		echo "		<h3>". __("Upload Media Files", bb_agencyinteract_TEXTDOMAIN) ."</h3>\n";
-		echo "		<p>". __("Upload new media using the forms below. The following formats are available: jpg, mp3 and pdf. If uploading an mp3 for a voice monologue, use the  \"Voice Demo\" option. For resumes, make sure the file is a PDF ", bb_agencyinteract_TEXTDOMAIN) .".</p>\n";
+		<div class="manage-section upload">
+			<h3><?php _e("Upload Media Files", bb_agencyinteract_TEXTDOMAIN) ?></h3>
+			<p><?php _e("Upload new media using the forms below.", bb_agencyinteract_TEXTDOMAIN) ?></p>
+		<?php
+		for( $i=1; $i<10; $i++ ) : ?>
+			<div>
+				<label><?php _e( 'Type' ) ?>: </label>
+				<select name="profileMedia<?php echo $i ?>Type">
+					<option value="Image"><?php _e( 'Image', bb_agencyinteract_TEXTDOMAIN ) ?></option>
+					<option value="Private"><?php _e( 'Private', bb_agencyinteract_TEXTDOMAIN ) ?></option> 
+					<?php bb_agency_getMediaCategories($profile->ProfileGender) ?>
+				</select>
+				<input type='file' id='profileMedia<?php echo $i ?>' name='profileMedia<?php echo $i ?>' />
+			</div>
+		<?php endfor; ?>
+		<p><?php _e("Paste the video URL below.", bb_agencyinteract_TEXTDOMAIN) ?></p>
 	
-		for( $i=1; $i<10; $i++ ) {
-			echo "<div><label>Type: </label><select name=\"profileMedia". $i ."Type\"><option value=\"Image\">Image</option><option value=\"Headshot\">Headshot</option><option value=\"CompCard\">Comp Card</option><option>Resume</option><option>Voice Demo</option>"; 
-			bb_agency_getMediaCategories($profile->ProfileGender);
-			echo "</select><input type='file' id='profileMedia". $i ."' name='profileMedia". $i ."' /></div>\n";
-		}
-
-		echo "		<p>". __("Paste the video URL below", bb_agencyinteract_TEXTDOMAIN) .".</p>\n";
-	
+		<?php
 		echo "<div><label>Type: </label><select name=\"profileMediaV1Type\"><option selected>". __("Video Slate", bb_agencyinteract_TEXTDOMAIN) ."</option><option>". __("Video Monologue", bb_agencyinteract_TEXTDOMAIN) ."</option><option>". __("Demo Reel", bb_agencyinteract_TEXTDOMAIN) ."</option></select><textarea id='profileMediaV1' name='profileMediaV1'></textarea></div>\n";
 		echo "<div><label>Type: </label><select name=\"profileMediaV2Type\"><option>". __("Video Slate", bb_agencyinteract_TEXTDOMAIN) ."</option><option selected>". __("Video Monologue", bb_agencyinteract_TEXTDOMAIN) ."</option><option>". __("Demo Reel", bb_agencyinteract_TEXTDOMAIN) ."</option></select><textarea id='profileMediaV2' name='profileMediaV2'></textarea></div>\n";
 		echo "<div><label>Type: </label><select name=\"profileMediaV3Type\"><option>". __("Video Slate", bb_agencyinteract_TEXTDOMAIN) ."</option><option>". __("Video Monologue", bb_agencyinteract_TEXTDOMAIN) ."</option><option selected>". __("Demo Reel", bb_agencyinteract_TEXTDOMAIN) ."</option></select><textarea id='profileMediaV3' name='profileMediaV3'></textarea></div>\n";
