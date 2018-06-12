@@ -2368,8 +2368,8 @@ class WP_Widget_Custom_Twitter extends WP_Widget {
 			$before_widget;
 ?>
 		<script type="text/javascript">
-			jQuery(document).ready(function($) { 
-				$('#<?php echo $args['widget_id']; ?>_tweets').tweet( { 
+			jQuery(document).ready(function () { 
+				jQuery('#<?php echo $args['widget_id']; ?>_tweets').tweet( { 
 					modpath : '<?php echo get_template_directory_uri(); ?>/framework/class/load_tweets.php', 
 					username : '<?php echo $user; ?>', 
 					count : <?php echo $number; ?>, 
@@ -2439,6 +2439,8 @@ class WP_Widget_Custom_Twitter extends WP_Widget {
         <?php
     }
 }
+
+
 
 function wp_custom_widgets_init() {
     if (!is_blog_installed()) {

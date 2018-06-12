@@ -5,18 +5,15 @@ header("Cache-control: private"); //IE 6 Fix
 // Get User Information
 global $user_ID; 
 global $current_user;
-global $wpdb;
 get_currentuserinfo();
 $CurrentUser = $current_user->id;
 
 // Get Profile
 $profileURL = get_query_var('target'); //$_REQUEST["profile"];
 
-if (!$profileURL)
-	wp_die( 'Invalid page request' );
-
 $bb_agency_option_agencyname = bb_agency_get_option('bb_agency_option_agencyname');
 $bb_agency_option_privacy = bb_agency_get_option('bb_agency_option_privacy');
+$bb_agency_option_unittype = bb_agency_get_option('bb_agency_option_unittype');
 $bb_agency_option_galleryorder = bb_agency_get_option('bb_agency_option_galleryorder');
 $bb_agency_option_showcontactpage = bb_agency_get_option('bb_agency_option_showcontactpage');
 
@@ -40,74 +37,59 @@ $bb_agency_option_agency_urlcontact = bb_agency_get_option('bb_agency_option_age
 $bb_agency_option_profilenaming = bb_agency_get_option('bb_agency_option_profilenaming');
 $bb_agency_option_profilelist_sidebar = bb_agency_get_option('bb_agency_option_profilelist_sidebar');
 
+global $wpdb;
 $t_profile = table_agency_profile;
-
-if (bb_agency_SITETYPE == 'children') {
-	$t_datatype = table_agency_data_type;
-	$query = <<<EOF
-SELECT p.*, dt.`DataTypePrivacy` AS ProfilePrivacy, dt.`DataTypeTalent` AS ProfileHasTalent
+$t_datatype = table_agency_data_type;
+$query = <<<EOF
+SELECT p.*, dt.`DataTypePrivacy` AS ProfilePrivacy 
 FROM $t_profile AS p
 LEFT JOIN $t_datatype AS dt ON dt.`DataTypeID` = p.`ProfileType`
-WHERE p.`ProfileGallery` = '%s'
+WHERE p.`ProfileGallery` = '$profileURL'
 EOF;
 
-} else {
-	$query = "SELECT * FROM $t_profile WHERE `ProfileGallery` = '%s'";
-}
-
-$profile = $wpdb->get_row( $wpdb->prepare( $query, $profileURL ) );
-
-if (empty($profile))
-	die ( __("Error, query failed", bb_agency_TEXTDOMAIN ) );
-
-$ProfileID					= $profile->ProfileID;
-$ProfileUserLinked			= $profile->ProfileUserLinked;
-$ProfileGallery				= $profile->ProfileGallery;
-$ProfileContactDisplay		= $profile->ProfileContactDisplay;
-$ProfileContactNameFirst	= $profile->ProfileContactNameFirst;
-$ProfileContactNameLast		= $profile->ProfileContactNameLast;
-if ($bb_agency_option_profilenaming == 0) {
-	$ProfileContactDisplay = $ProfileContactNameFirst . " ". $ProfileContactNameLast;
-} elseif ($bb_agency_option_profilenaming == 1) {
-	$ProfileContactDisplay = $ProfileContactNameFirst . " ". substr($ProfileContactNameLast, 0, 1);
-} elseif ($bb_agency_option_profilenaming == 3) {
-	$ProfileContactDisplay = "ID ". $ProfileID;
-} elseif ($bb_agency_option_profilenaming == 4) {
-	$ProfileContactDisplay = $ProfileContactNameFirst;
-} elseif ($bb_agency_option_profilenaming == 5) {
-	$ProfileContactDisplay = $ProfileContactNameLast;
-}
-$ProfileContactEmail		= $profile->ProfileContactEmail;
-$ProfileType				= $profile->ProfileType;
-/*
-if (bb_agency_SITETYPE == 'children') {
-	$ProfileHasTalent			= $profile->ProfileHasTalent;
-	$ProfileTalent				= $profile->ProfileTalent;
-	$ProfileGenre				= $profile->ProfileGenre;
-	$ProfileAbility				= $profile->ProfileAbility;
-}
-*/
-$ProfileContactWebsite		= $profile->ProfileContactWebsite;
-$ProfileContactPhoneHome	= $profile->ProfileContactPhoneHome;
-$ProfileContactPhoneCell	= $profile->ProfileContactPhoneCell;
-$ProfileContactPhoneWork	= $profile->ProfileContactPhoneWork;
-$ProfileGender    			= $profile->ProfileGender;
-$ProfileDateBirth	    	= $profile->ProfileDateBirth;
-$ProfileDateDue	    		= $profile->ProfileDateDue;
-$ProfileAge 				= bb_agency_get_age($ProfileDateBirth);
-$ProfileLocationCity		= $profile->ProfileLocationCity;
-$ProfileLocationState		= $profile->ProfileLocationState;
-$ProfileLocationZip			= $profile->ProfileLocationZip;
-$ProfileLocationCountry		= $profile->ProfileLocationCountry;
-$ProfileDateUpdated			= $profile->ProfileDateUpdated;
-$ProfileIsActive			= $profile->ProfileIsActive; // 0 Inactive | 1 Active | 2 Archived | 3 Pending Approval
-$ProfileStatHits			= $profile->ProfileStatHits;
-$ProfileDateViewLast		= $profile->ProfileDateViewLast;
-$ProfilePrivacy				= $profile->ProfilePrivacy;
-
-// Update Stats
-$updateStats = $wpdb->query("UPDATE $t_profile SET ProfileStatHits = ProfileStatHits + 1, ProfileDateViewLast = NOW() WHERE ProfileID = '{$ProfileID}' LIMIT 1");
-
+$results = mysql_query($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ).' - '.mysql_error());
+$count = mysql_num_rows($results);
+while ($data = mysql_fetch_array($results)) {
+	$ProfileID					=$data['ProfileID'];
+	$ProfileUserLinked			=$data['ProfileUserLinked'];
+	$ProfileGallery				=stripslashes($data['ProfileGallery']);
+	$ProfileContactDisplay		=stripslashes($data['ProfileContactDisplay']);
+	$ProfileContactNameFirst	=stripslashes($data['ProfileContactNameFirst']);
+	$ProfileContactNameLast		=stripslashes($data['ProfileContactNameLast']);
+	if ($bb_agency_option_profilenaming == 0) {
+		$ProfileContactDisplay = $ProfileContactNameFirst . " ". $ProfileContactNameLast;
+	} elseif ($bb_agency_option_profilenaming == 1) {
+		$ProfileContactDisplay = $ProfileContactNameFirst . " ". substr($ProfileContactNameLast, 0, 1);
+	} elseif ($bb_agency_option_profilenaming == 3) {
+		$ProfileContactDisplay = "ID ". $ProfileID;
+	} elseif ($bb_agency_option_profilenaming == 4) {
+		$ProfileContactDisplay = $ProfileContactNameFirst;
+	} elseif ($bb_agency_option_profilenaming == 5) {
+		$ProfileContactDisplay = $ProfileContactNameLast;
+	}
+	$ProfileContactEmail		= stripslashes($data['ProfileContactEmail']);
+	$ProfileType				= $data['ProfileType'];
+	$ProfileContactWebsite		= stripslashes($data['ProfileContactWebsite']);
+	$ProfileContactPhoneHome	= stripslashes($data['ProfileContactPhoneHome']);
+	$ProfileContactPhoneCell	= stripslashes($data['ProfileContactPhoneCell']);
+	$ProfileContactPhoneWork	= stripslashes($data['ProfileContactPhoneWork']);
+	$ProfileGender    			= stripslashes($data['ProfileGender']);
+	$ProfileDateBirth	    	= stripslashes($data['ProfileDateBirth']);
+	$ProfileDateDue	    		= stripslashes($data['ProfileDateDue']);
+	$ProfileAge 				= bb_agency_get_age($ProfileDateBirth);
+	$ProfileLocationCity		= stripslashes($data['ProfileLocationCity']);
+	$ProfileLocationState		= stripslashes($data['ProfileLocationState']);
+	$ProfileLocationZip			= stripslashes($data['ProfileLocationZip']);
+	$ProfileLocationCountry		= stripslashes($data['ProfileLocationCountry']);
+	$ProfileDateUpdated			= stripslashes($data['ProfileDateUpdated']);
+	$ProfileIsActive			= stripslashes($data['ProfileIsActive']); // 0 Inactive | 1 Active | 2 Archived | 3 Pending Approval
+	$ProfileStatHits			= stripslashes($data['ProfileStatHits']);
+	$ProfileDateViewLast		= stripslashes($data['ProfileDateViewLast']);
+	$ProfilePrivacy				= stripslashes($data['ProfilePrivacy']);
+	
+	// Update Stats
+	$updateStats = $wpdb->query("UPDATE $t_profile SET ProfileStatHits = ProfileStatHits + 1, ProfileDateViewLast = NOW() WHERE ProfileID = '{$ProfileID}' LIMIT 1");
+} 
 // Change Title
 if (!function_exists("bb_agency_override_title")){
 add_filter('wp_title', 'bb_agency_override_title', 10, 2);
@@ -131,7 +113,7 @@ if (!function_exists("bb_agency_inserthead_profile")){
 					case 99 :
 						// Slimbox
 						wp_enqueue_script( 'slimbox2', plugins_url('/js/slimbox2.js', __FILE__) );
-						wp_register_style( 'slimbox2', plugins_url('/style/slimbox2.min.css', __FILE__) );
+						wp_register_style( 'slimbox2', plugins_url('/style/slimbox2.css', __FILE__) );
 	        			wp_enqueue_style( 'slimbox2' );
 						break;
 					case 0 :
@@ -211,10 +193,9 @@ if (!function_exists("bb_agency_inserthead_profile")){
 // GET HEADER  
 get_header();
 	
-?>
-<div id="container" <?php if ($bb_agency_option_profilelist_sidebar == 0) { echo "class=\"one-column\""; } ?> >
-	<div id="content" role="main" class="transparent">
-	<?php
+echo "<div id=\"container\" "; if ($bb_agency_option_profilelist_sidebar == 0) { echo "class=\"one-column\""; } echo">\n";
+echo "    <div id=\"content\" role=\"main\" class=\"transparent\">\n";
+if ($count > 0) {
 	if (( !$ProfilePrivacy || is_user_logged_in()) && (
 			( $bb_agency_option_privacy >= 1 && is_user_logged_in() ) || 
 			( $bb_agency_option_privacy > 1 && isset($_SESSION['SearchMuxHash']) ) || 
@@ -233,7 +214,7 @@ get_header();
 			if(strpos($_SERVER['HTTP_REFERER'],'client-view') > 0){
 				include ("include-profile-layout.php"); 	
 			} else {
-				echo __("Inactive Profile", bb_agency_TEXTDOMAIN) ."\n";
+				echo "". __("Inactive Profile", bb_agency_TEXTDOMAIN) ."\n";
 			}
 	  	}
 	} else {
@@ -243,11 +224,12 @@ get_header();
 		$_SESSION['ProfileLastViewed'] = get_query_var('target');
 		include("include-login.php"); 	
 	}
-	?>
-	</div>
-</div>
-<?php
+} else {
+	// There is no record found.
+	echo "". __("Invalid Profile", bb_agency_TEXTDOMAIN) ."\n";
+}
+echo "  </div>\n";
+echo "</div>\n";
 
 get_footer(); 
-
 ?>

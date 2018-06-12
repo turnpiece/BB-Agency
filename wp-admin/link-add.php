@@ -7,10 +7,10 @@
  */
 
 /** Load WordPress Administration Bootstrap */
-require_once( dirname( __FILE__ ) . '/admin.php' );
+require_once('./admin.php');
 
 if ( ! current_user_can('manage_links') )
-	wp_die(__('Sorry, you are not allowed to add links to this site.'));
+	wp_die(__('You do not have sufficient permissions to add links to this site.'));
 
 $title = __('Add New Link');
 $parent_file = 'link-manager.php';
@@ -24,6 +24,6 @@ if ( wp_is_mobile() )
 	wp_enqueue_script( 'jquery-touch-punch' );
 
 $link = get_default_link_to_edit();
-include( ABSPATH . 'wp-admin/edit-link-form.php' );
+include('./edit-link-form.php');
 
-require( ABSPATH . 'wp-admin/admin-footer.php' );
+require('./admin-footer.php');

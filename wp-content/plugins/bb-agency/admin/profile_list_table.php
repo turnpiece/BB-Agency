@@ -19,14 +19,14 @@
 
 <?php
 $query = "SELECT * FROM ". table_agency_profile ." profile LEFT JOIN ". table_agency_data_type ." profiletype ON profile.ProfileType = profiletype.DataTypeID ". $filter  ." ORDER BY $sort $dir $limit";
-$results2 = $wpdb->get_results($query);
-$count = count($results2);
+$results2 = mysql_query($query);
+$count = mysql_num_rows($results2);
 $i = 0;
-foreach ($results2 as $data) {
-  $ProfileID = $data->ProfileID;
-  $ProfileContactNameFirst = stripslashes($data->ProfileContactNameFirst);
-  $ProfileContactNameLast = stripslashes($data->ProfileContactNameLast);
-  $ProfileContactEmail = bb_agency_strtoproper(stripslashes($data->ProfileContactEmail));
+while ($data = mysql_fetch_array($results2)) {
+  $ProfileID = $data['ProfileID'];
+  $ProfileContactNameFirst = stripslashes($data['ProfileContactNameFirst']);
+  $ProfileContactNameLast = stripslashes($data['ProfileContactNameLast']);
+  $ProfileContactEmail = bb_agency_strtoproper(stripslashes($data['ProfileContactEmail']));
 
   $i++;
   if ($i % 2 == 0) {

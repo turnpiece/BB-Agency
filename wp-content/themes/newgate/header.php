@@ -98,7 +98,7 @@ if ($cmsms_option[CMSMS_SHORTNAME . '_seo']) {
 } 
 ?>" />
 <title><?php
-if (isset($cmsms_option[CMSMS_SHORTNAME . '_seo']) && $cmsms_option[CMSMS_SHORTNAME . '_seo']) {
+if ($cmsms_option[CMSMS_SHORTNAME . '_seo']) {
 	if ( 
 		!is_home() && 
 		!is_404() && 
@@ -124,7 +124,7 @@ if (isset($cmsms_option[CMSMS_SHORTNAME . '_seo']) && $cmsms_option[CMSMS_SHORTN
 ?></title>
 
 <?php 
-if (isset($cmsms_option[CMSMS_SHORTNAME . '_favicon']) && $cmsms_option[CMSMS_SHORTNAME . '_favicon']) {
+if ($cmsms_option[CMSMS_SHORTNAME . '_favicon']) {
 	if ($cmsms_option[CMSMS_SHORTNAME . '_favicon_url'] !== '') { 
 		echo '<link rel="shortcut icon" href="' . ((is_numeric($cmsms_option[CMSMS_SHORTNAME . '_favicon_url'])) ? array_shift(wp_get_attachment_image_src($cmsms_option[CMSMS_SHORTNAME . '_favicon_url'], 'full')) : $cmsms_option[CMSMS_SHORTNAME . '_favicon_url']) . '" type="image/x-icon" />';
 	} else {
@@ -153,7 +153,6 @@ if (is_singular() && get_option('thread_comments')) {
 wp_head();
 
 ?>
-<script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="abd7b6c6-3635-45b3-9e99-d73fd0710102" type="text/javascript" async></script>
 </head>
 <?php
 	if ($cmsms_option[CMSMS_SHORTNAME . '_boxed_version'] || is_page(3027)) {
@@ -183,13 +182,13 @@ if (
 <header id="header"<?php echo (is_admin_bar_showing()) ? ' class="h_mt"' : ''; ?>>
 	<div class="header_inner">
 	<?php 
-		if (!empty($cmsms_option[CMSMS_SHORTNAME . '_header_custom_html'])) {
+		if ($cmsms_option[CMSMS_SHORTNAME . '_header_custom_html']) {
 			echo '<div class="header_html">' . "\n";
 			echo stripslashes($cmsms_option[CMSMS_SHORTNAME . '_header_html']) . "\n";
 			echo '</div>' . "\n";
 		}
 		
-		if (!empty($cmsms_option[CMSMS_SHORTNAME . '_text_logo'])) {
+		if ($cmsms_option[CMSMS_SHORTNAME . '_text_logo']) {
 			if ($cmsms_option[CMSMS_SHORTNAME . '_text_logo_title'] !== '') {
 				$blog_title = $cmsms_option[CMSMS_SHORTNAME . '_text_logo_title'];
 			} else {
@@ -212,7 +211,7 @@ if (
 			
 			echo '</a>';
 		} else {
-			if (empty($cmsms_option[CMSMS_SHORTNAME . '_logo_url'])) {
+			if ($cmsms_option[CMSMS_SHORTNAME . '_logo_url'] === '') {
 				echo '<a href="' . home_url() . '/" title="' . get_bloginfo('name') . '" class="logo">' . "\n\t" . 
 					'<img src="' . get_template_directory_uri() . '/img/logo.png" alt="' . get_bloginfo('name') . '" />' . "\r" . 
 				'</a>' . "\n";
@@ -248,6 +247,7 @@ if (
 				echo '</ul>';
 			}
 			
+
 			echo "\r";
 		?>
 		</nav>

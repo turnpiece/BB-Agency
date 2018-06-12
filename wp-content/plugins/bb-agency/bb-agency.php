@@ -5,10 +5,10 @@
   Description: Forked from RB Agency plugin and adapted for the Beautiful Bumps agency. With this plugin you can easily manage models' profiles and information.
   Author: Paul Jenkins
   Author URI: http://turnpiece.com/
-  Version: 2.0.6
+  Version: 0.0.4
 */
 
-$bb_agency_VERSION = "2.0.6"; // starter
+$bb_agency_VERSION = "2.0.0"; // starter
 
 if (!get_option("bb_agency_version")) {  
 	add_option("bb_agency_version", $bb_agency_VERSION , '', 'no');  
@@ -42,15 +42,11 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 	define('bb_agency_UPLOADREL', str_replace(get_bloginfo('url'), '', $bb_agency_WPUPLOADARRAY['baseurl']) .'/profile-media/' );  // /wordpress/wp-content/uploads/profile-media/
 	define('bb_agency_UPLOADDIR', $bb_agency_WPUPLOADARRAY['baseurl'] .'/profile-media/' );  // http://domain.com/wordpress/wp-content/uploads/profile-media/
 	define('bb_agency_UPLOADPATH', $bb_agency_WPUPLOADARRAY['basedir'] .'/profile-media/' ); // /home/content/99/6048999/html/domain.com/wordpress/wp-content/uploads/profile-media/
-	define('bb_agency_ADMIN_MEDIA_UPLOAD', true); // whether to allow administrators to upload media for models
 	define('bb_agency_TEXTDOMAIN', basename(dirname( __FILE__ )) ); //   bb-agency
 	define('bb_agency_SITETYPE', 'bumps'); // bumps or children
-	define('bb_agency_MAX_AGE', 18);
 	define('bb_agency_PLUGIN_TITLE', 'BB Agency'. (bb_agency_SITETYPE == 'children' ? ' (Kiddiwinks)' : ''));
-	define('bb_agency_PHONE', bb_agency_SITETYPE == 'children' ? '07740 334325' : '020 3355 8743');
+	define('bb_agency_PHONE', bb_agency_SITETYPE == 'children' ? '020 3051 8894' : '07740 334325');
 	define('bb_agency_LOGOPATH', ABSPATH . '/wp-content/uploads/' . (bb_agency_SITETYPE == 'children' ? '2014/07/Kiddiwinks-Logo.png' : '2013/07/Beautiful_Bumps_Logo1.jpg'));
-	define('bb_agency_MAX_HEIGHT', 200); // max height in cm
-	define('bb_agency_DEBUGGING', false); // debugging
 	
 	//define('bb_agency_TESTING', true);
 	define('bb_agency_TERMS', get_bloginfo('url').'/clients-standard-terms-conditions');
@@ -93,8 +89,10 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 		define('table_agency_profile', "bb_agency_profile");
 	if (!defined("table_agency_job"))
 		define('table_agency_job', "bb_agency_job");
-	if (!defined("table_agency_booking"))
-		define('table_agency_booking', "bb_agency_booking");
+	if (!defined("table_agency_invoice"))
+		define('table_agency_job', "bb_agency_invoice");
+	if (!defined("table_agency_invoice_item"))
+		define('table_agency_job', "bb_agency_invoice_item");
 	if (!defined("table_agency_profile_media"))
 		define('table_agency_profile_media', "bb_agency_profile_media");
 	if (!defined("table_agency_data_ethnicity"))
@@ -111,16 +109,6 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 		define('table_agency_rel_taxonomy', "bb_agency_rel_taxonomy");
 	if (!defined("table_agency_data_type"))
 		define('table_agency_data_type', "bb_agency_data_type");
-
-	if (bb_agency_SITETYPE == 'children') {
-		if (!defined("table_agency_data_talent"))
-			define('table_agency_data_talent', "bb_agency_data_talent");
-		if (!defined("table_agency_data_genre"))
-			define('table_agency_data_genre', "bb_agency_data_genre");
-		if (!defined("table_agency_data_ability"))
-			define('table_agency_data_ability', "bb_agency_data_ability");
-	}
-	
 	if (!defined("table_agency_customfields"))
 		define('table_agency_customfields', "bb_agency_customfields");
 	if (!defined("table_agency_customfield_mux"))
@@ -142,10 +130,18 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 // Declare Global WordPress Database Access
     global $wpdb;
 
+// Do the tables exist?
+	if ($wpdb->get_var("show tables like '". table_agency_profile ."'") == table_agency_profile) { // No, it doesn't
+		// Time for a diaper change, call the upgrade script
+		include_once(dirname(__FILE__).'/upgrade.php');
+	}
+	
+
 // Declare Version
 	$bb_agency_storedversion = get_option("bb_agency_version");
 	$bb_agency_VERSION = get_option("bb_agency_version");	
 	define('bb_agency_VERSION', $bb_agency_VERSION); // e.g. 1.0
+
 
 // Call default functions
 	include_once(dirname(__FILE__).'/functions.php');
@@ -166,7 +162,7 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 		define('bb_agency_MUMSTOBE_ID', 1); // id of mums to be data type
 		define('bb_agency_AFTERBIRTH_ID', 2); // id of data type to move mums to be to once they've given birth
 	}
-	define('bb_agency_CLIENTS_ID', bb_agency_client_id()); // id of clients
+	define('bb_agency_CLIENTS_ID', 7); // id of clients
 	//define('bb_agency_BABIES_ID', 8); // id of babies
 
 
@@ -229,7 +225,6 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 				ProfileDateUpdated TIMESTAMP,
 				ProfileDateViewLast TIMESTAMP,
 				ProfileType VARCHAR(255),
-				ProfileTalent VARCHAR(255),
 				ProfileIsActive INT(10) NOT NULL DEFAULT '0',
 				ProfileIsFeatured INT(10) NOT NULL DEFAULT '0',
 				ProfileIsPromoted INT(10) NOT NULL DEFAULT '0',
@@ -263,18 +258,6 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 			dbDelta($sql);
 			$results = $wpdb->query("INSERT INTO " . table_agency_data_type . " (DataTypeID, DataTypeTitle) VALUES ('','Model')");
 			$results = $wpdb->query("INSERT INTO " . table_agency_data_type . " (DataTypeID, DataTypeTitle) VALUES ('','Talent')");
-
-			// Setup > Talent
-			$sql = "CREATE TABLE IF NOT EXISTS ".table_agency_data_talent." (
-				DataTalentID INT(10) NOT NULL AUTO_INCREMENT,
-				DataTalentTitle VARCHAR(255),
-				DataTalentTag VARCHAR(50),
-				PRIMARY KEY (DataTalentID)
-				);";
-			dbDelta($sql);
-			$results = $wpdb->query("INSERT INTO " . table_agency_data_talent . " (DataTypeID, DataTypeTitle) VALUES ('','Dance','dance')");
-			$results = $wpdb->query("INSERT INTO " . table_agency_data_talent . " (DataTypeID, DataTypeTitle) VALUES ('','Singing','singing')");
-			$results = $wpdb->query("INSERT INTO " . table_agency_data_talent . " (DataTypeID, DataTypeTitle) VALUES ('','Acting','acting')");
 
 			// Setup > Taxonomy: Gender
 			$sql = "CREATE TABLE IF NOT EXISTS ". table_agency_data_gender ." (
@@ -313,28 +296,28 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 				);";
 			dbDelta($sql);
 	 	// Populate Custom Fields
-		$ethnicity = $wpdb->get_var("SELECT ProfileCustomTitle FROM ". table_agency_customfields ." WHERE ProfileCustomTitle = 'Ethnicity'");
-
-		if ($ethnicity) {
+		$query = mysql_query("SELECT ProfileCustomTitle FROM ". table_agency_customfields ." WHERE ProfileCustomTitle = 'Ethnicity'");
+		$count = mysql_num_rows($query);
+		if ($count < 1) {
 			$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES (1, 'Ethnicity', 	3, '|African American|Caucasian|American Indian|East Indian|Eurasian|Filipino|Hispanic/Latino|Asian|Chinese|Japanese|Korean|Polynesian|Other|', 0, 1, 0, 1, 1, 0, 1, 0)");
+			$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES (2, 'Skin Tone', 	3, '|Fair|Medium|Dark|', 0, 2, 0, 1, 1, 0, 1, 0)");
+			$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES (3, 'Hair Colour', 	3, '|Blonde|Black|Brown|Dark Brown|Light Brown|Red|Strawberry|Auburn|', 0, 3, 0, 1, 1, 0, 1, 0)");
+			$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES (4, 'Eye Colour', 	3, '|Blue|Brown|Hazel|Green|Black|', 0, 4, 0, 1, 1, 0, 1, 0)");
+			$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES (5, 'Height', 		7, '3', 0, 5, 0, 1, 1, 0, 1, 0)");
+			$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES (6, 'Weight', 		7, '2', 0, 6, 0, 1, 1, 0, 1, 0)");
+			$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES (7, 'Shirt', 		1, '', 0, 8, 1, 1, 1, 0, 1, 0)");
+			$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES (8, 'Waist', 		7, '1', 0, 9, 0, 1, 1, 0, 1, 0)");
+			$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES (9, 'Hips', 		7, '1', 0, 10, 2, 1, 1, 0, 1, 0)");
+			$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES(10, 'Shoe Size', 	7, '1', 0, 11, 0, 1, 1, 0, 1, 0)");
+			$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES(11, 'Suit', 		3, '|36S|37S|38S|39S|40S|41S|42S|43S|44S|45S|46S|36R|38R|40R|42R|44R|46R|48R|50R|52R|54R|40L|42L|44L|46L|48L|50L|52L|54L|', 0, 7, 1, 1, 1, 0, 1, 0)");
+			$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES(12, 'Inseam', 		7, '1', 0, 10, 1, 1, 1, 0, 1, 0)");
+			$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES(13, 'Dress', 		3, '|2|4|6|8|10|12|14|16|18|', 0, 8, 2, 1, 1, 0, 1, 0)");
+			$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES(14, 'Bust', 		3, '|32A|32B|32C|32D|32DD|34A|34B|34C|34D|34DD|36C|36D|36DD|', 0, 7, 2, 1, 1, 0, 1, 0)");
+			$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES(15, 'Union', 		3, '|SAG/AFTRA|SAG ELIG|NON-UNION|', 0, 20, 0, 1, 1, 0, 1, 0)");
+			$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES(16, 'Experience', 	4, '', 0, 13, 0, 1, 1, 0, 1, 0)");
+			$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES(17, 'Language', 	1, '', 0, 14, 0, 1, 1, 0, 1, 0)");
+			$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES(18, 'Booking', 	4, '', 0, 15, 0, 1, 1, 0, 1, 0)");
 		}
-		$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES (2, 'Skin Tone', 	3, '|Fair|Medium|Dark|', 0, 2, 0, 1, 1, 0, 1, 0)");
-		$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES (3, 'Hair Colour', 	3, '|Blonde|Black|Brown|Dark Brown|Light Brown|Red|Strawberry|Auburn|', 0, 3, 0, 1, 1, 0, 1, 0)");
-		$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES (4, 'Eye Colour', 	3, '|Blue|Brown|Hazel|Green|Black|', 0, 4, 0, 1, 1, 0, 1, 0)");
-		$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES (5, 'Height', 		7, '3', 0, 5, 0, 1, 1, 0, 1, 0)");
-		$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES (6, 'Weight', 		7, '2', 0, 6, 0, 1, 1, 0, 1, 0)");
-		$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES (7, 'Shirt', 		1, '', 0, 8, 1, 1, 1, 0, 1, 0)");
-		$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES (8, 'Waist', 		7, '1', 0, 9, 0, 1, 1, 0, 1, 0)");
-		$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES (9, 'Hips', 		7, '1', 0, 10, 2, 1, 1, 0, 1, 0)");
-		$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES(10, 'Shoe Size', 	7, '1', 0, 11, 0, 1, 1, 0, 1, 0)");
-		$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES(11, 'Suit', 		3, '|36S|37S|38S|39S|40S|41S|42S|43S|44S|45S|46S|36R|38R|40R|42R|44R|46R|48R|50R|52R|54R|40L|42L|44L|46L|48L|50L|52L|54L|', 0, 7, 1, 1, 1, 0, 1, 0)");
-		$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES(12, 'Inseam', 		7, '1', 0, 10, 1, 1, 1, 0, 1, 0)");
-		$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES(13, 'Dress', 		3, '|2|4|6|8|10|12|14|16|18|', 0, 8, 2, 1, 1, 0, 1, 0)");
-		$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES(14, 'Bust', 		3, '|32A|32B|32C|32D|32DD|34A|34B|34C|34D|34DD|36C|36D|36DD|', 0, 7, 2, 1, 1, 0, 1, 0)");
-		$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES(15, 'Union', 		3, '|SAG/AFTRA|SAG ELIG|NON-UNION|', 0, 20, 0, 1, 1, 0, 1, 0)");
-		$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES(16, 'Experience', 	4, '', 0, 13, 0, 1, 1, 0, 1, 0)");
-		$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES(17, 'Language', 	1, '', 0, 14, 0, 1, 1, 0, 1, 0)");
-		$insert = $wpdb->query("INSERT INTO " . table_agency_customfields . " VALUES(18, 'Booking', 	4, '', 0, 15, 0, 1, 1, 0, 1, 0)");
 	
 			// Setup > Custom Field Types > Mux Values
 			$sql9mux = "CREATE TABLE IF NOT EXISTS ". table_agency_customfield_mux ." (
@@ -398,7 +381,7 @@ if ( ! isset($GLOBALS['wp_version']) || version_compare($GLOBALS['wp_version'], 
 			      MediaCategoryOrder VARCHAR(255),
 				PRIMARY KEY (MediaCategoryID)
 				);";
-			dbDelta($sql13);	
+			mysql_query($sql13);	
 		  
 		   // Setup > Custom Field Types
 			$sql = "CREATE TABLE IF NOT EXISTS ". table_agency_customfields_types." (
@@ -446,31 +429,31 @@ if ( is_admin() ){
 			wp_deregister_script('prettyPhoto');
 			wp_deregister_script('general');
 
+
 			wp_enqueue_script('jquery');
 			wp_enqueue_script('jquery-ui-script', plugins_url('js/jquery-ui-1.10.3.custom.min.js', __FILE__), array('jquery') );
 			wp_enqueue_style('jquery-ui-style', plugins_url('js/jquery-ui-1.10.3.custom.min.css', __FILE__) );
 		}
 
 	add_action('wp_footer', 'bb_agency_wp_footer');
-	add_action( 'admin_print_scripts', 'bb_agency_wp_footer', 100);
-		function bb_agency_wp_footer() { ?>
-			<script type="text/javascript">
-				jQuery(document).ready(function($){
-					$('.bbdatepicker').datepicker({
-						dateFormat : 'yy-mm-dd'
-					});
-				});
-			</script>
-		<?php }
+	add_action( 'admin_print_footer_scripts', 'bb_agency_wp_footer', 100);
+		function bb_agency_wp_footer() {
+			echo "<script type=\"text/javascript\">\n";
+			echo "jQuery(document).ready(function(){\n";
+			echo "	jQuery('.bbdatepicker').datepicker({\n";
+			echo "		dateFormat : 'yy-mm-dd'\n";
+			echo "	});\n";
+			echo "});\n";
+			echo "</script>\n";
+		}
 
-	add_action( 'admin_print_scripts', 'bb_agency_admin_print_scripts', 100);
+	add_action( 'admin_print_footer_scripts', 'bb_agency_admin_print_scripts', 100);
 		function bb_agency_admin_print_scripts() {
 			wp_enqueue_script('jquery-ui-script', plugins_url('js/jquery-ui-1.10.3.custom.min.js', __FILE__), array('jquery') );
 		}
 
-	add_action( 'init', 'bb_agency_admin_print_styles', 100);
+	add_action( 'admin_print_styles', 'bb_agency_admin_print_styles', 100);
 		function bb_agency_admin_print_styles() {
-			wp_enqueue_style('bb-agency-admin', plugins_url('style/admin.css', __FILE__) );
 			wp_enqueue_style('jquery-ui-style', plugins_url('js/jquery-ui-1.10.3.custom.min.css', __FILE__) );
 		}
 
@@ -482,7 +465,7 @@ if ( is_admin() ){
 		class bb_agency_widget_showpromoted extends WP_Widget {
 			
 			// Setup
-			function __construct() {
+			function bb_agency_widget_showpromoted() {
 				$widget_ops = array('classname' => 'bb_agency_widget_showpromoted', 'description' => __("Displays promoted profiles", bb_agency_TEXTDOMAIN) );
 				$this->WP_Widget('bb_agency_widget_showpromoted', __("BB Agency : Featured", bb_agency_TEXTDOMAIN), $widget_ops);
 			}
@@ -532,7 +515,7 @@ if ( is_admin() ){
 		class bb_agency_widget_showsearch extends WP_Widget {
 			
 			// Setup
-			function __construct() {
+			function bb_agency_widget_showsearch() {
 				$widget_ops = array('classname' => 'bb_agency_widget_showsearch', 'description' => __("Displays profile search fields", bb_agency_TEXTDOMAIN) );
 				$this->WP_Widget('bb_agency_widget_showsearch', __("BB Agency : Search", bb_agency_TEXTDOMAIN), $widget_ops);
 			}
@@ -623,13 +606,13 @@ if ( is_admin() ){
 	}
 
 	add_filter ('wp_mail_from', 'bb_agency_set_mail_from');
-	function bb_agency_set_mail_from( $email = null ) {
-		return is_null($email) ? bb_agency_get_option('bb_agency_option_agencyemail') : $email;
+	function bb_agency_set_mail_from() {
+		return bb_agency_get_option('bb_agency_option_agencyemail');
 	}
 		
 	add_filter ('wp_mail_from_name', 'bb_agency_set_mail_from_name');
-	function bb_agency_set_mail_from_name( $name = null ) {
-		return is_null($name) ? bb_agency_get_option('bb_agency_option_agencyname') : $name;
+	function bb_agency_set_mail_from_name() {
+		return bb_agency_get_option('bb_agency_option_agencyname');
 	}
 
 
@@ -651,9 +634,6 @@ if ( is_admin() ){
 		$wpdb->query("DROP TABLE " . table_agency_data_gender);
 		$wpdb->query("DROP TABLE " . table_agency_rel_taxonomy);
 		$wpdb->query("DROP TABLE " . table_agency_data_type);
-		$wpdb->query("DROP TABLE " . table_agency_data_talent);
-		$wpdb->query("DROP TABLE " . table_agency_data_genre);
-		$wpdb->query("DROP TABLE " . table_agency_data_ability);
 		$wpdb->query("DROP TABLE " . table_agency_customfields);
 		$wpdb->query("DROP TABLE " . table_agency_customfield_mux);
 		$wpdb->query("DROP TABLE " . table_agency_searchsaved);

@@ -35,7 +35,6 @@ function bb_agency_init() {
         add_action('admin_menu', 'bb_agency_addsettingspage');
     }
 }
-
 function bb_agency_on_load() {
     add_filter( 'plugin_action_links_' . bb_agency_BASENAME, 'bb_agency_filter_plugin_meta', 10, 2 );  
 }
@@ -83,11 +82,8 @@ function bb_agency_add_custom_box() {
 
 /* Prints the inner fields for the custom post/page section */
 function bb_agency_inner_custom_box() {
-
-    global $wpdb;
-
-    // Use nonce for verification
-    echo '<input type="hidden" name="bb_agency_noncename" id="bb_agency_noncename" value="'. wp_create_nonce( plugin_basename(__FILE__) ) . '" />';
+  // Use nonce for verification
+  echo '<input type="hidden" name="bb_agency_noncename" id="bb_agency_noncename" value="'. wp_create_nonce( plugin_basename(__FILE__) ) . '" />';
 
     echo "<div class=\"submitbox\" id=\"add_ticket_box\">";
     ?><script type="text/javascript">
@@ -146,9 +142,9 @@ function bb_agency_inner_custom_box() {
     $query= "SELECT GenderID, GenderTitle FROM " .  table_agency_data_gender . " GROUP BY GenderTitle ";
         
         echo "<option value=\"\">All Gender</option>";
-        $dataShowGender = $wpdb->get_row($query);
-        if ($dataShowGender) {
-            echo "<option value=\"".$dataShowGender->GenderID."\" >".$dataShowGender->GenderTitle."</option>";
+        $queryShowGender = mysql_query($query);
+        while($dataShowGender = mysql_fetch_assoc($queryShowGender)){
+            echo "<option value=\"".$dataShowGender["GenderID"]."\" >".$dataShowGender["GenderTitle"]."</option>";
          }
     echo "</select>";
     echo "</td></tr>\n";
@@ -189,9 +185,8 @@ function set_bb_agency_menu(){
     add_submenu_page("bb_agency_menu", __("Saved Searches", bb_agency_TEXTDOMAIN), __("Saved Searches", bb_agency_TEXTDOMAIN), 7,"bb_agency_searchsaved","bb_agency_searchsaved");
     add_submenu_page("bb_agency_menu", __("Manage Jobs", bb_agency_TEXTDOMAIN), __("Manage Jobs", bb_agency_TEXTDOMAIN), 7,"bb_agency_jobs","bb_agency_jobs");
     add_submenu_page("bb_agency_menu", __("Search Jobs", bb_agency_TEXTDOMAIN), __("Search Jobs", bb_agency_TEXTDOMAIN), 7,"bb_agency_jobsearch","bb_agency_jobsearch");
-    add_submenu_page("bb_agency_menu", __("Bookings", bb_agency_TEXTDOMAIN), __("Bookings", bb_agency_TEXTDOMAIN), 7,"bb_agency_bookings","bb_agency_bookings");
-    add_submenu_page("bb_agency_menu", __("Import", bb_agency_TEXTDOMAIN), __("Import", bb_agency_TEXTDOMAIN), 7,"bb_agency_import","bb_agency_import");
-    add_submenu_page("bb_agency_menu", __("Settings", bb_agency_TEXTDOMAIN), __("Settings", bb_agency_TEXTDOMAIN), 7,"bb_agency_settings","bb_agency_settings");
+//    add_submenu_page("bb_agency_menu", __("Tools &amp; Reports", bb_agency_TEXTDOMAIN), __("Tools &amp; Reports", bb_agency_TEXTDOMAIN), 7,"bb_agency_reports","bb_agency_reports");
+    add_submenu_page("bb_agency_menu", __("Edit Settings", bb_agency_TEXTDOMAIN), __("Settings", bb_agency_TEXTDOMAIN), 7,"bb_agency_settings","bb_agency_settings");
 }
 
 function bb_agency_send_email() {
@@ -290,9 +285,6 @@ function bb_agency_search(){
 function bb_agency_jobs(){
     include_once('admin/job.php');
 }
-function bb_agency_bookings(){
-    include_once('admin/booking.php');
-}
 function bb_agency_jobsearch(){
     include_once('admin/job/search.php');
 }
@@ -302,8 +294,8 @@ function bb_agency_job_invoice(){
 function bb_agency_searchsaved(){
     include_once('admin/searchsaved.php');
 }
-function bb_agency_import(){
-    include_once('admin/import.php');
+function bb_agency_reports(){
+    include_once('admin/reports.php');
 }
 function bb_agency_settings(){
     include_once('admin/settings.php');
@@ -325,7 +317,7 @@ function bb_agency_have_cart() {
 // return casting cart
 function bb_agency_get_cart() {
     if (bb_agency_have_cart())
-        return $_SESSION['cartArray']; 
+        return $_SESSION['cartArray'];
 }
 
 function bb_agency_the_cart_string() {
@@ -393,7 +385,7 @@ function bb_agency_client_dropdown($name, $value = null) {
     $t_profile = table_agency_profile;
     $client_id = bb_agency_CLIENTS_ID;
     $sql = <<<EOF
-SELECT `ProfileID` AS id, IF(`ProfileContactDisplay`, `ProfileContactDisplay`, CONCAT(`ProfileContactNameFirst`, ' ', `ProfileContactNameLast`)) AS name 
+SELECT `ProfileID` AS id, `ProfileContactDisplay` AS name 
 FROM $t_profile 
 WHERE `ProfileType` = '$client_id' 
 AND `ProfileIsActive` = '1' 
@@ -406,7 +398,7 @@ EOF;
     foreach ($clients as $client) {
         $option[] = '<option value="'.$client->id.'" '.selected($client->id, $value, false).'>'.$client->name.'</option>';
     }
-    return '<select name="'.$name.'" size="1" class="client-select">'.implode("\n", $option).'</select>';
+    return '<select name="'.$name.'" size="1">'.implode("\n", $option).'</select>';
 }
 
 function bb_agency_get_job($id) {

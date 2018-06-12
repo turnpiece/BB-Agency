@@ -1,10 +1,10 @@
 === Social Stickers ===
 Contributors: ZeroCool51
-Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=SKMW3BAC8KE52
+Donate link: http://gum.co/social-stickers
 Tags: social profile, social icons, social, social widget, facebook, twitter, social widget
 Requires at least: 3.0
-Tested up to: 4.3
-Stable tag: 2.2.9
+Tested up to: 3.5
+Stable tag: 2.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,18 +24,80 @@ What this plugin offers:
 * You can also output number of Twitter followers and Facebook page likes
 * Fully customize your HTML output
 
-Currently supports over 70 social networks.
+Currently supported social networks:
 
-**WANT MORE?**
-
-**[GO PRO](http://bostjan.gets-it.net/plugin/social-stickers-pro).**
-
-Features:
-
-* Drag and drop theme creation,
-* multisite compatibility,
-* shortcode generation,
-* stickers statistics in beautiful graphs
+* 500px
+* About Me
+* Academia.edu
+* AIM
+* Anobii
+* APP.net
+* Behance
+* Bebo
+* Blogconnect
+* Bloglovin
+* Blogger
+* Coderwall
+* Dailybooth
+* Delicious
+* Designfloat
+* Deviantart
+* Digg
+* Dribble
+* Ebay
+* Email
+* exfm
+* Etsy
+* Flickr
+* Facebook
+* Forrst
+* Formspring
+* Foursquare
+* Github
+* Geeklist
+* Goodreads
+* Google+
+* Gravatar
+* Grooveshark
+* Hi5
+* IMDB
+* Instagram
+* LastFM
+* Lovelybooks
+* Livejournal
+* Linkedin
+* Mixcloud
+* Myspace
+* Newsvine
+* Orkut
+* Picassa
+* Pinboard
+* Pinterest
+* Posterous
+* Ravelry
+* RSS
+* Snapjoy
+* Spotify
+* Skype
+* Stackoverflow
+* Quora
+* Qik
+* Slashdot
+* Spotify
+* Slideshare
+* Soundcloud
+* Steam
+* Stumbleupon
+* Tout
+* Tumblr
+* Twitter
+* Vimeo
+* Youtube
+* Yelp
+* Zerply
+* Zootool
+* Xing
+* Wordpress
 
 == Installation ==
 
@@ -56,30 +118,6 @@ None at the moment.
 4. Plugin settings page (advanced plugin mode settings)
 
 == Changelog ==
-
-= 2.2.9 =
-* [Bufix] Typo in method call. Please update immediately.
-
-= 2.2.8 =
-* [Bugfix] Replaced deprecated widget call. Please update if using WordPress 4.3 or newer.
-
-= 2.2.7 =
-* [Bugfix] Fixed constructor for widget.
-
-= 2.2.6 =
-* [Important bugfix] Widget not showing in some cases, an IMPORTANT update.
-
-= 2.2.5 =
-* [Fix] Update method fixes.
-
-= 2.2.4 =
-* [Fix] Changed purchase link for pro version.
-
-= 2.2.3 =
-* [New] Added SpecificFeeds network.
-
-= 2.2.2 =
-* [Fix] Fixed theme selection bug (clashing with Omnisearch).
 
 = 2.2.1 =
 * [Fix] Fixed a custom HTML output error (not showing icons correctly if using custom HTML output)
@@ -237,6 +275,10 @@ All themes, their authors and links are respectfully credited in the plugin itse
 == Author ==
 
 The author of this plugin is Bostjan Cigan, visit the [homepage](http://bostjan.gets-it.net "homepage").
+
+== Homepage ==
+
+Visit the [homepage](http://wpplugz.is-leet.com "homepage of social stickers") of the plugin.
 
 == Donators ==
 

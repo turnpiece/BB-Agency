@@ -166,7 +166,7 @@ function cmsms_font_style_list() {
 	return $list;
 }
 
-/*
+
 // Custom password protection message
 function my_password_form() {
     global $post;
@@ -179,4 +179,4 @@ function my_password_form() {
     return $o;
 }
 add_filter( 'the_password_form', 'my_password_form' );
-*/
+

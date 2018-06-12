@@ -8,8 +8,9 @@ $bb_agency_option_agencyimagemaxheight = bb_agency_get_option('bb_agency_option_
 if (empty($bb_agency_option_agencyimagemaxheight) || $bb_agency_option_agencyimagemaxheight < 500) {
     $bb_agency_option_agencyimagemaxheight = 800;
 }
-
+//$bb_agency_option_profilenaming = (int) bb_agency_get_option('bb_agency_option_profilenaming');
 $bb_agency_option_locationtimezone = (int) bb_agency_get_option('bb_agency_option_locationtimezone');
+
 
 if (function_exists('bb_agencyinteract_approvemembers')) {
     // Load Interact Settings
@@ -20,10 +21,6 @@ if (function_exists('bb_agencyinteract_approvemembers')) {
 $t_profile = table_agency_profile;
 $t_media = table_agency_profile_media;
 $t_data_type = table_agency_data_type;
-
-if (bb_agency_SITETYPE == 'children')
-    $t_data_talent = table_agency_data_talent;
-
 $t_custom = table_agency_customfield_mux;
 
 // *************************************************************************************************** //
@@ -64,30 +61,10 @@ if (isset($_POST['action'])) {
     $ProfileLanguage = $_POST['ProfileLanguage'];
     $ProfileDateUpdated = $_POST['ProfileDateUpdated'];
     $ProfileDateViewLast = $_POST['ProfileDateViewLast'];
-    
-    // get posted profile types
     $ProfileType = $_POST['ProfileType'];
     if (is_array($ProfileType)) {
         $ProfileType = implode(",", $ProfileType);
     }
-    
-    if (bb_agency_SITETYPE == 'children') {
-        // get posted talents
-        $ProfileTalent = $_POST['ProfileTalent'];
-        if (is_array($ProfileTalent)) {
-            $ProfileTalent = implode(",", $ProfileTalent);
-        }
-
-        // get posted genres
-        $ProfileGenre = $_POST['ProfileGenre'];
-        if (is_array($ProfileGenre)) {
-            $ProfileGenre = implode(",", $ProfileGenre);
-        }
-        
-        // get posted ability
-        $ProfileAbility = $_POST['ProfileAbility'];
-    }
-
     $ProfileIsActive = $_POST['ProfileIsActive']; // 0 Inactive | 1 Active | 2 Archived | 3 Pending Approval
     $ProfileIsFeatured = $_POST['ProfileIsFeatured'];
     $ProfileIsPromoted = $_POST['ProfileIsPromoted'];
@@ -98,6 +75,7 @@ if (isset($_POST['action'])) {
 
     // Notify User and Admin
     $ProfileNotifyUser = $_POST["ProfileNotifyUser"];
+		
 
     // Error checking
     $error = '';
@@ -192,9 +170,8 @@ if (isset($_POST['action'])) {
 			
                 // Notify admin and user
                 if (isset($ProfileNotifyUser) && $ProfileNotifyUser <> "yes" && isset($new_user) && function_exists('bb_agencyinteract_approvemembers')) {
-                    wp_new_user_notification( $new_user, null, 'both' );
+                    wp_new_user_notification($new_user, $ProfilePassword);
                 }
-
                 // Set Display Name as Record ID (We have to do this after so we know what record ID to use... right ;)
                 if ($bb_agency_option_profilenaming == 3) {
                     $ProfileContactDisplay = "ID-" . $ProfileID;
@@ -243,9 +220,6 @@ if (isset($_POST['action'])) {
         case 'editRecord':
             if (!empty($ProfileContactNameFirst) && !empty($ProfileID)) :
 
-                // get WP user
-                $ProfileUserLinked = $_REQUEST['wpuserid'];
-
                 $fields = bb_agency_get_profile_fields();
 
                 // Create update query
@@ -282,38 +256,16 @@ if (isset($_POST['action'])) {
 
                 $results = $wpdb->query($update) or wp_die(mysql_error() .': '. $update);
 
-				update_user_meta($ProfileUserLinked, 'bb_agency_interact_profiletype', esc_attr($ProfileType));
-                update_user_meta($ProfileUserLinked, 'bb_agency_interact_pgender', esc_attr($ProfileGender));
-
-                bb_agency_debug( $ProfileUserLinked . ' => ' . print_r( $_POST, true ) );
-
+				update_usermeta($_REQUEST['wpuserid'], 'bb_agency_interact_profiletype', esc_attr($ProfileType));
+                update_usermeta($_REQUEST['wpuserid'], 'bb_agency_interact_pgender', esc_attr($ProfileGender));
+                
                 if ($ProfileUserLinked > 0) {
                     /* Update WordPress user information. */
-                    update_user_meta($ProfileUserLinked, 'first_name', esc_attr($ProfileContactNameFirst) );
-                    update_user_meta($ProfileUserLinked, 'last_name', esc_attr($ProfileContactNameLast) );
-                    update_user_meta($ProfileUserLinked, 'nickname', esc_attr($ProfileContactDisplay) );
-                    update_user_meta($ProfileUserLinked, 'display_name', esc_attr($ProfileContactDisplay) );
-                    update_user_meta($ProfileUserLinked, 'user_email', esc_attr($ProfileContactEmail) );
-
-                    if (bb_agency_is_client_profiletype( $ProfileUserLinked )) { //client
-                        foreach( array( 
-                            'email_updates',
-                            'newsletter',
-                            'postal'
-                        ) as $id )
-                            update_user_meta( $ProfileUserLinked, $id, isset( $_POST[$id] ) );
-                        
-                    } else {
-                        
-                        foreach( array(
-                            'clients', 
-                            'marketing',
-                            'newsletter'
-                        ) as $id ) {
-                            update_user_meta( $ProfileUserLinked, $id, isset( $_POST[$id] ) );
-                        }
-                          
-                    }
+                    update_usermeta($ProfileUserLinked, 'first_name', esc_attr($ProfileContactNameFirst));
+                    update_usermeta($ProfileUserLinked, 'last_name', esc_attr($ProfileContactNameLast));
+                    update_usermeta($ProfileUserLinked, 'nickname', esc_attr($ProfileContactDisplay));
+                    update_usermeta($ProfileUserLinked, 'display_name', esc_attr($ProfileContactDisplay));
+                    update_usermeta($ProfileUserLinked, 'user_email', esc_attr($ProfileContactEmail));
                 }
 
                 // Remove Old Custom Field Values
@@ -328,12 +280,11 @@ if (isset($_POST['action'])) {
                             $value = implode(",", $value);
                         }
                         $insert1 = "INSERT INTO `$t_custom` (ProfileID,ProfileCustomID,ProfileCustomValue)" . "VALUES ('" . $ProfileID . "','" . $ProfileCustomID . "','" . $value . "')";
-                        bb_agency_debug( $insert1 );
                         $results1 = $wpdb->query($insert1);
                     }
                 }
  
-                $ProfileGallery = bb_agency_checkdir($ProfileGallery);  // Check Directory - create directory if does not exist
+                bb_agency_checkdir($ProfileGallery);  // Check Directory - create directory if does not exist
                 
                 // Upload Image & Add to Database
                 $i = 1;
@@ -346,8 +297,8 @@ if (isset($_POST['action'])) {
                             // Upload if it doesnt exist already
                             $path_parts = pathinfo($_FILES['profileMedia' . $i]['name']);
                             $safeProfileMediaFilename = bb_agency_safenames($path_parts['filename'] . "." . $path_parts['extension']);
-                            $results = $wpdb->get_results("SELECT * FROM `$t_media` WHERE ProfileID='" . $ProfileID . "' AND ProfileMediaURL = '" . $safeProfileMediaFilename . "'");
-                            $count = count($results);
+                            $results = mysql_query("SELECT * FROM `$t_media` WHERE ProfileID='" . $ProfileID . "' AND ProfileMediaURL = '" . $safeProfileMediaFilename . "'") or die(mysql_error());
+                            $count = mysql_num_rows($results);
 
                             if ($count < 1) {
                                 if ($uploadMediaType == "Image") {
@@ -443,12 +394,12 @@ if (isset($_POST['action'])) {
 
                 /* --------------------------------------------------------- CLEAN THIS UP -------------- */
                 // Do we have a custom image yet? Lets just set the first one as primary.
-                $results = $wpdb->get_results("SELECT * FROM `$t_media` WHERE ProfileID='$ProfileID' AND ProfileMediaType = 'Image' AND ProfileMediaPrimary='1'");
-                $count = count($results);
+                $results = mysql_query("SELECT * FROM `$t_media` WHERE ProfileID='$ProfileID' AND ProfileMediaType = 'Image' AND ProfileMediaPrimary='1'");
+                $count = mysql_num_rows($results);
                 if ($count < 1) {
-                    $resultsNeedOne = $wpdb->get_results("SELECT * FROM `$t_media` WHERE ProfileID='" . $ProfileID . "' AND ProfileMediaType = 'Image' LIMIT 0, 1");
-                    foreach ($resultsNeedOne as $dataNeedOne) {
-                        $resultsFoundOne = $wpdb->query("UPDATE `$t_media` SET ProfileMediaPrimary='1' WHERE ProfileID='" . $ProfileID . "' AND ProfileMediaID = '" . $dataNeedOne->ProfileMediaID . "'");
+                    $resultsNeedOne = mysql_query("SELECT * FROM `$t_media` WHERE ProfileID='" . $ProfileID . "' AND ProfileMediaType = 'Image' LIMIT 0, 1");
+                    while ($dataNeedOne = mysql_fetch_array($resultsNeedOne)) {
+                        $resultsFoundOne = $wpdb->query("UPDATE `$t_media` SET ProfileMediaPrimary='1' WHERE ProfileID='" . $ProfileID . "' AND ProfileMediaID = '" . $dataNeedOne['ProfileMediaID'] . "'");
                         break;
                     }
                 }
@@ -464,7 +415,7 @@ if (isset($_POST['action'])) {
                 /* --------------------------------------------------------- CLEAN THIS UP -------------- */
                 ?>
                 <div id="message" class="updated">
-                    <p><?php _e("Profile updated successfully", bb_agency_TEXTDOMAIN) ?>! <a href="<?php echo admin_url("admin.php?page=" . $_GET['page']) ?>&amp;action=editRecord&amp;ProfileID=<?php echo $ProfileID ?>"><?php _e("Continue editing the record", bb_agency_TEXTDOMAIN) ?>?</a>
+                    <p><?php _e("Profile updated successfully", bb_agency_TEXTDOMAIN) ?>! <a href="<?php echo admin_url("admin.php?page=" . $_GET['page']) ?>&action=editRecord&ProfileID=<?php echo $ProfileID ?>"><?php _e("Continue editing the record", bb_agency_TEXTDOMAIN) ?>?</a>
                     </p>
                 </div>
             <?php else : ?>
@@ -482,18 +433,21 @@ if (isset($_POST['action'])) {
         case 'deleteRecord':
             foreach ($_POST as $ProfileID) {
 
+
+
                 // Verify Record
                 $queryDelete = "SELECT * FROM `$t_profile` WHERE `ProfileID` = '$ProfileID'";
-                $resultsDelete = $wpdb->get_results($queryDelete);
+                $resultsDelete = mysql_query($queryDelete);
 
-                foreach ($resultsDelete as $dataDelete) {
-                    $ProfileGallery = $dataDelete->ProfileGallery;
+                while ($dataDelete = mysql_fetch_array($resultsDelete)) {
+                    $ProfileGallery = $dataDelete['ProfileGallery'];
 
                     // Remove Profile
-                    $wpdb->delete($t_profile, array( 'ProfileID' => $ProfileID ) );
-
+                    $delete = "DELETE FROM `$t_profile` WHERE `ProfileID` = '$ProfileID'";
+                    $results = $wpdb->query($delete);
                     // Remove Media
-                    $wpdb->delete($t_media, array( 'ProfileID' => $ProfileID ) );
+                    $delete = "DELETE FROM `$t_media` WHERE `ProfileID` = '$ProfileID'";
+                    $results = $wpdb->query($delete);
 
                     if (isset($ProfileGallery)) {
                         // Remove Folder
@@ -534,42 +488,41 @@ if (isset($_POST['action'])) {
 }
 // *************************************************************************************************** //
 // Delete Single
-elseif ($_GET['action'] == "deleteRecord" || $_GET['action'] == "deleteDuplicateRecord") {
+elseif ($_GET['action'] == "deleteRecord") {
 
     $ProfileID = $_GET['ProfileID'];
     // Verify Record
     $queryDelete = "SELECT * FROM `$t_profile` WHERE `ProfileID` =  '$ProfileID'";
-    $resultsDelete = $wpdb->get_results($queryDelete);
-    foreach ($resultsDelete as $dataDelete) {
-        $ProfileGallery = $dataDelete->ProfileGallery;
+    $resultsDelete = mysql_query($queryDelete);
+    while ($dataDelete = mysql_fetch_array($resultsDelete)) {
+        $ProfileGallery = $dataDelete['ProfileGallery'];
 
         // Remove Profile
-        $wpdb->delete($t_profile, array( 'ProfileID' => $ProfileID ) );
-
+        $delete = "DELETE FROM `$t_profile` WHERE `ProfileID` =  '$ProfileID'";
+        $results = $wpdb->query($delete);
         // Remove Media
-        $wpdb->delete($t_media, array( 'ProfileID' => $ProfileID ) );
+        $delete = "DELETE FROM `$t_media` WHERE `ProfileID` =  '$ProfileID'";
+        $results = $wpdb->query($delete);
 
-        if ($_GET['action'] == "deleteRecord") {
-            if (isset($ProfileGallery)) {
-                // Remove Folder
-                $dir = bb_agency_UPLOADPATH . $ProfileGallery . "/";
-                $mydir = @opendir($dir);
-                while (false !== ($file = @readdir($mydir))) {
-                    if ($file != "." && $file != "..") {
-                        @unlink($dir . $file) or DIE("couldn't delete $dir$file<br />");
-                    }
+        if (isset($ProfileGallery)) {
+            // Remove Folder
+            $dir = bb_agency_UPLOADPATH . $ProfileGallery . "/";
+            $mydir = @opendir($dir);
+            while (false !== ($file = @readdir($mydir))) {
+                if ($file != "." && $file != "..") {
+                    @unlink($dir . $file) or DIE("couldn't delete $dir$file<br />");
                 }
-                // remove dir
-                if (is_dir($dir)) {
-                    rmdir($dir) or DIE("couldn't delete $dir$file folder not exist<br />");
-                }
-                closedir($mydir);
-            } else {
-                echo __("No valid record found.", bb_agency_TEXTDOMAIN);
             }
-
-            wp_delete_user($dataDelete->ProfileUserLinked);
+            // remove dir
+            if (is_dir($dir)) {
+                rmdir($dir) or DIE("couldn't delete $dir$file folder not exist<br />");
+            }
+            closedir($mydir);
+        } else {
+            echo __("No valid record found.", bb_agency_TEXTDOMAIN);
         }
+
+        wp_delete_user($dataDelete["ProfileUserLinked"]);
         echo ('<div id="message" class="updated"><p>' . __("Profile deleted successfully!", bb_agency_TEXTDOMAIN) . '</p></div>');
     } // is there record?
     bb_display_list();
@@ -591,23 +544,13 @@ elseif ($_GET['action'] == "editRecord" || $_GET['action'] == "addRecord") {
 // *************************************************************************************************** //
 // Manage Record
 function bb_display_manage($ProfileID) {
-    
-    bb_agency_debug( __FUNCTION__ . ' ' . $ProfileID );
-
     global $wpdb;
 
     // database tables
-    $t_profile      = table_agency_profile;
-    $t_media        = table_agency_profile_media;
-    $t_data_type    = table_agency_data_type;
-
-    if (bb_agency_SITETYPE == 'children') {
-        $t_data_talent  = table_agency_data_talent;
-        $t_data_genre   = table_agency_data_genre;
-        $t_data_ability = table_agency_data_ability;
-    }
-
-    $t_gender       = table_agency_data_gender;
+    $t_profile = table_agency_profile;
+    $t_media = table_agency_profile_media;
+    $t_data_type = table_agency_data_type;
+    $t_gender = table_agency_data_gender;
 
     $bb_agency_option_agencyimagemaxheight = bb_agency_get_option('bb_agency_option_agencyimagemaxheight');
     if (empty($bb_agency_option_agencyimagemaxheight) || $bb_agency_option_agencyimagemaxheight < 500) {
@@ -621,30 +564,64 @@ function bb_display_manage($ProfileID) {
     // Include Admin Menu
     include ("admin-menu.php");
 
-    if (!empty($ProfileID)) {
+    if (!empty($ProfileID) && $ProfileID > 0) {
 
-        if (bb_agency_SITETYPE == 'bumps')
-            $query = "SELECT p.*, dt.`DataTypeTalent` AS HasTalent FROM `$t_profile` p LEFT JOIN `$t_data_type` dt ON dt.`DataTypeID` = p.`ProfileType` WHERE `ProfileID` = '$ProfileID' LIMIT 1";
-        else
-            $query = "SELECT * FROM `$t_profile` WHERE `ProfileID` = '$ProfileID' LIMIT 1";
+        $query = "SELECT * FROM `$t_profile` WHERE ProfileID = '$ProfileID'";
+        $results = mysql_query($query) or wp_die(__("Error, query failed", bb_agency_TEXTDOMAIN).': '.$query);
+        $count = mysql_num_rows($results);
 
-        bb_agency_debug( $query );
+        while ($data = mysql_fetch_array($results)) {
+            $ProfileID = $data['ProfileID'];
+            $ProfileUserLinked = $data['ProfileUserLinked'];
+            $ProfileGallery = stripslashes($data['ProfileGallery']);
+            $ProfileContactDisplay = stripslashes($data['ProfileContactDisplay']);
+            $ProfileContactNameFirst = stripslashes($data['ProfileContactNameFirst']);
+            $ProfileContactNameLast = stripslashes($data['ProfileContactNameLast']);
+            $ProfileUsername = stripslashes($data['ProfileUsername']);
+            $ProfileContactEmail = stripslashes($data['ProfileContactEmail']);
+            $ProfileContactWebsite = stripslashes($data['ProfileContactWebsite']);
+            $ProfileContactLinkFacebook = stripslashes($data['ProfileContactLinkFacebook']);
+            $ProfileContactLinkTwitter = stripslashes($data['ProfileContactLinkTwitter']);
+            $ProfileContactLinkYouTube = stripslashes($data['ProfileContactLinkYouTube']);
+            $ProfileContactLinkFlickr = stripslashes($data['ProfileContactLinkFlickr']);
+            $ProfileContactPhoneHome = stripslashes($data['ProfileContactPhoneHome']);
+            $ProfileContactPhoneCell = stripslashes($data['ProfileContactPhoneCell']);
+            $ProfileContactPhoneWork = stripslashes($data['ProfileContactPhoneWork']);
+            $ProfileGender = stripslashes($data['ProfileGender']);
+            $ProfileTypeArray = stripslashes($data['ProfileType']);
+           
+			$ProfileDateBirth = stripslashes($data['ProfileDateBirth']);
+            if (bb_agency_SITETYPE == 'bumps') {
+                $ProfileDateDue = stripslashes($data['ProfileDateDue']);
+            }
+            $ProfileLocationStreet = stripslashes($data['ProfileLocationStreet']);
+            $ProfileLocationCity = stripslashes($data['ProfileLocationCity']);
+            $ProfileLocationState = stripslashes($data['ProfileLocationState']);
+            $ProfileLocationZip = stripslashes($data['ProfileLocationZip']);
+            $ProfileLocationCountry = stripslashes($data['ProfileLocationCountry']);
+            $ProfileLocationLatitude = stripslashes($data['ProfileLocationLatitude']);
+            $ProfileLocationLongitude = stripslashes($data['ProfileLocationLongitude']);
 
-        $profile = $wpdb->get_row( $query );
-
-        $ProfileID = $profile->ProfileID;
-        $ProfileGallery = $profile->ProfileGallery;
-        $ProfileType = $profile->ProfileType;
-        $ProfileGender = $profile->ProfileGender;
-        $ProfileUser = $profile->ProfileUserLinked;
-
+            $ProfileDateUpdated = stripslashes($data['ProfileDateUpdated']);
+            $ProfileType = stripslashes($data['ProfileType']);
+            $ProfileIsActive = stripslashes($data['ProfileIsActive']);
+            $ProfileIsFeatured = stripslashes($data['ProfileIsFeatured']);
+            $ProfileIsPromoted = stripslashes($data['ProfileIsPromoted']);
+            $ProfileStatHits = stripslashes($data['ProfileStatHits']);
+            $ProfileDateViewLast = stripslashes($data['ProfileDateViewLast']);
+            ?>    
+            <h2 class="title"><?php _e("Edit", bb_agency_TEXTDOMAIN) ?> <?php echo LabelSingular ?> <a class="button-secondary" href="<?php echo admin_url("admin.php?page=" . $_GET['page']) ?>"><?php _e("Back to " . LabelSingular . " List", bb_agency_TEXTDOMAIN) ?></a> <a class="button-primary" href="<?php echo bb_agency_PROFILEDIR . $bb_agency_UPLOADDIR . $ProfileGallery . '/' ?>" target="_blank">Preview Profile</a></h2>
+            <p>
+                <?php _e("Make changes in the form below to edit a", bb_agency_TEXTDOMAIN) ?> <?php echo strtolower(LabelSingular) ?>.<br /><strong><?php _e("Required fields are marked", bb_agency_TEXTDOMAIN) ?> *</strong>
+            </p>
+        <?php
+        }
     } else {
         // Set default values for new records
         $ProfilesModelDate = $date;
-        $ProfileType = 0;
+        $ProfileType = 1;
         $ProfileGender = "Unknown";
         $ProfileIsActive = 1;
-        $ProfileUser = null;
         $ProfileLocationCountry = $bb_agency_option_locationcountry;
         ?>
         <h2 class="title">Add New <?php echo LabelSingular ?> <a class="button-primary" href="<?php echo admin_url("admin.php?page=" . $_GET['page']) ?>"><?php _e("Back to " . LabelSingular . " List", bb_agency_TEXTDOMAIN) ?></a></h2>
@@ -657,7 +634,7 @@ function bb_display_manage($ProfileID) {
     <?php else : ?>
         <form method="post" enctype="multipart/form-data" action="<?php echo admin_url("admin.php?page=" . $_GET['page']) ?>">
     <?php endif; ?>
-    <div class="halfwidth alignleft">
+    <div style="float: left; width: 50%;">
         <table class="form-table">
             <tbody>
             <tr colspan="2">
@@ -667,7 +644,7 @@ function bb_display_manage($ProfileID) {
                 <tr valign="top">
                   <th scope="row"><?php _e("Display Name", bb_agency_TEXTDOMAIN) ?></th>
                   <td>
-                      <input class="regular-text" type="text" id="ProfileContactDisplay" name="ProfileContactDisplay" value="<?php echo $profile->ProfileContactDisplay ? $profile->ProfileContactDisplay : $profile->ProfileContactNameFirst ?>" />
+                      <input class="regular-text" type="text" id="ProfileContactDisplay" name="ProfileContactDisplay" value="<?php echo $ProfileContactDisplay ? $ProfileContactDisplay : $ProfileContactNameFirst ?>" />
                   </td>
                 </tr>
             <?php endif;
@@ -684,7 +661,7 @@ function bb_display_manage($ProfileID) {
                     <?php else : ?>
                     <input type="text" id="ProfileGallery" name="ProfileGallery" value="<?php echo $ProfileGallery ?>" />
                     <div id="message">
-                        <span class="error"><?php printf(__("No %s folder exists", bb_agency_TEXTDOMAIN), $ProfileGallery) ?></span>
+                        <span class="error"><?php _e("No Folder Exists", bb_agency_TEXTDOMAIN) ?></span>
                     <?php endif; ?>
                     </div>
                   </td>
@@ -694,13 +671,13 @@ function bb_display_manage($ProfileID) {
             <tr valign="top" class="required">
               <th scope="row"><?php _e("First Name", bb_agency_TEXTDOMAIN) ?>*</th>
               <td>
-                  <input type="text" class="regular-text" id="ProfileContactNameFirst" name="ProfileContactNameFirst" value="<?php echo $profile->ProfileContactNameFirst ?>" />
+                  <input type="text" class="regular-text" id="ProfileContactNameFirst" name="ProfileContactNameFirst" value="<?php echo $ProfileContactNameFirst ?>" />
               </td>
             </tr>
             <tr valign="top" class="required">
               <th scope="row"><?php _e("Last Name", bb_agency_TEXTDOMAIN) ?>*</th>
               <td>
-                  <input type="text" class="regular-text" id="ProfileContactNameLast" name="ProfileContactNameLast" value="<?php echo $profile->ProfileContactNameLast ?>" />
+                  <input type="text" class="regular-text" id="ProfileContactNameLast" name="ProfileContactNameLast" value="<?php echo $ProfileContactNameLast ?>" />
               </td>
             </tr>
 
@@ -717,46 +694,17 @@ function bb_display_manage($ProfileID) {
                   <th scope="row"><?php _e("Password", bb_agency_TEXTDOMAIN) ?>*</th>
                   <td>
                       <input type="text" class="regular-text" id="ProfilePassword" name="ProfilePassword" />
-                      <input type="button" onclick="javascript:document.getElementById('ProfilePassword').value=Math.random().toString(36).substr(2,6);" value="Generate Password" name="GeneratePassword" />
+                      <input type="button" onclick="javascript:document.getElementById('ProfilePassword').value=Math.random().toString(36).substr(2,6);" value="Generate Password"  name="GeneratePassword" />
                   </td>
                 </tr>
                 <tr valign="top">
                   <th scope="row"><?php _e("Send Login details?", bb_agency_TEXTDOMAIN) ?></th>
                   <td>
-                      <input type="checkbox" name="ProfileNotifyUser" /> Send login details to the new user and admin by email.
+                      <input type="checkbox"  name="ProfileNotifyUser" /> Send login details to the new user and admin by email.
                   </td>
                 </tr>
             <?php endif;
 
-            if (!is_null($ProfileUser)) { ?>
-                <tr valign="top">
-                    <th colspan="2"><h3><?php _e( 'Preferences', bb_agency_TEXTDOMAIN ) ?></h3></th>
-                </tr>
-                <?php if (bb_agency_is_client_profiletype($ProfileUser)) : // clients
-
-                    foreach( array( 
-                        'email_updates' => __( 'Can be emailed about castings and shoots' ),
-                        'newsletter' => __( 'Wants to receive the newsletter' ),
-                        'postal' => __( 'Can be sent cards in the post' ),
-                    ) as $id => $label ) : ?>
-                <tr valign="top">
-                    <td scope="row"><?php echo $label ?></td>
-                    <td><input type="checkbox" name="<?php echo $id ?>" value="1" <?php checked( get_user_meta( $ProfileUser, $id, true ) ) ?>" /></td>
-                </tr>
-                <?php endforeach; else : // models
-
-                    foreach( array(
-                        'clients' => __( 'Details can be sent to clients' ),
-                        'marketing' => __( 'Images can be used on social media' ),
-                        'newsletter' => __( 'Wants to receive the newsletter' )
-                    ) as $id => $label ) : ?>
-                <tr valign="top">
-                    <td scope="row"><?php echo $label ?></td>
-                    <td><input type="checkbox" name="<?php echo $id ?>" value="1" <?php checked( get_user_meta( $ProfileUser, $id, true ) ) ?>" /></td>
-                </tr>
-                <?php endforeach; endif;
-            }
-            
             // Private Information
             ?>
             <tr valign="top">
@@ -765,13 +713,13 @@ function bb_display_manage($ProfileID) {
             <tr valign="top" class="required">
               <th scope="row"><?php _e("Email Address", bb_agency_TEXTDOMAIN) ?>*</th>
               <td>
-                  <input type="text" class="regular-text" id="ProfileContactEmail" name="ProfileContactEmail" value="<?php echo $profile->ProfileContactEmail ?>" />
+                  <input type="text" class="regular-text" id="ProfileContactEmail" name="ProfileContactEmail" value="<?php echo $ProfileContactEmail ?>" />
               </td>
             </tr>
             <tr valign="top">
               <th scope="row"><?php _e("Website", bb_agency_TEXTDOMAIN) ?></th>
               <td>
-                  <input type="text" class="regular-text" id="ProfileContactWebsite" name="ProfileContactWebsite" value="<?php echo $profile->ProfileContactWebsite ?>" />
+                  <input type="text" class="regular-text" id="ProfileContactWebsite" name="ProfileContactWebsite" value="<?php echo $ProfileContactWebsite ?>" />
               </td>
             </tr>
             <tr valign="top">
@@ -779,11 +727,11 @@ function bb_display_manage($ProfileID) {
               <td>
               <fieldset>
                   <label>Home:</label><br />
-                  <input type="text" id="ProfileContactPhoneHome" name="ProfileContactPhoneHome" value="<?php echo $profile->ProfileContactPhoneHome ?>" /><br />
+                  <input type="text" id="ProfileContactPhoneHome" name="ProfileContactPhoneHome" value="<?php echo $ProfileContactPhoneHome ?>" /><br />
                   <label>Mobile:</label><br />
-                  <input type="text" id="ProfileContactPhoneCell" name="ProfileContactPhoneCell" value="<?php echo $profile->ProfileContactPhoneCell ?>" /><br />
+                  <input type="text" id="ProfileContactPhoneCell" name="ProfileContactPhoneCell" value="<?php echo $ProfileContactPhoneCell ?>" /><br />
                   <label>Work:</label><br />
-                  <input type="text" id="ProfileContactPhoneWork" name="ProfileContactPhoneWork" value="<?php echo $profile->ProfileContactPhoneWork ?>" /><br />
+                  <input type="text" id="ProfileContactPhoneWork" name="ProfileContactPhoneWork" value="<?php echo $ProfileContactPhoneWork ?>" /><br />
               </fieldset>
               </td>
             </tr>
@@ -791,39 +739,39 @@ function bb_display_manage($ProfileID) {
             <tr valign="top">
               <th scope="row"><?php _e("Street", bb_agency_TEXTDOMAIN) ?></th>
               <td>
-                  <input type="text" class="regular-text" id="ProfileLocationStreet" name="ProfileLocationStreet" value="<?php echo $profile->ProfileLocationStreet ?>" />
+                  <input type="text" class="regular-text" id="ProfileLocationStreet" name="ProfileLocationStreet" value="<?php echo $ProfileLocationStreet ?>" />
               </td>
             </tr>
             <tr valign="top">
               <th scope="row"><?php _e("Town", bb_agency_TEXTDOMAIN) ?></th>
               <td>
-                  <input type="text" class="regular-text" id="ProfileLocationCity" name="ProfileLocationCity" value="<?php echo $profile->ProfileLocationCity ?>" />
+                  <input type="text" class="regular-text" id="ProfileLocationCity" name="ProfileLocationCity" value="<?php echo $ProfileLocationCity ?>" />
               </td>
             </tr>
             <tr valign="top">
               <th scope="row"><?php _e("County", bb_agency_TEXTDOMAIN) ?></th>
               <td>
-                  <input type="text" class="regular-text" id="ProfileLocationState" name="ProfileLocationState" value="<?php echo $profile->ProfileLocationState ?>" />
+                  <input type="text" class="regular-text" id="ProfileLocationState" name="ProfileLocationState" value="<?php echo $ProfileLocationState ?>" />
               </td>
             </tr>
             <tr valign="top">
               <th scope="row"><?php _e("Post code", bb_agency_TEXTDOMAIN) ?></th>
               <td>
-                  <input type="text" id="ProfileLocationZip" name="ProfileLocationZip" value="<?php echo $profile->ProfileLocationZip ?>" />
+                  <input type="text" id="ProfileLocationZip" name="ProfileLocationZip" value="<?php echo $ProfileLocationZip ?>" />
               </td>
             </tr>
             <tr valign="top">
               <th scope="row"><?php _e("Country", bb_agency_TEXTDOMAIN) ?></th>
               <td>
-                  <input type="text" class="regular-text" id="ProfileLocationCountry" name="ProfileLocationCountry" value="<?php echo $profile->ProfileLocationCountry ?>" />
+                  <input type="text" class="regular-text" id="ProfileLocationCountry" name="ProfileLocationCountry" value="<?php echo $ProfileLocationCountry ?>" />
               </td>
             </tr>
             <?php
             // display location map
-            if ($profile->ProfileLocationLatitude != '' && $profile->ProfileLocationLongitude != '') : ?>
+            if ($ProfileLocationLatitude != '' && $ProfileLocationLongitude != '') : ?>
                 <tr valign="top">
                     <td scope="row"><?php _e('Location', bb_agency_TEXTDOMAIN) ?></td>
-                    <td><?php bb_agency_map($profile->ProfileLocationLatitude, $profile->ProfileLocationLongitude, $profile->ProfileContactDisplay) ?></td>
+                    <td><?php bb_agency_map($ProfileLocationLatitude, $ProfileLocationLongitude, $ProfileContactDisplay) ?></td>
                 </tr>
             <?php endif;
 
@@ -854,7 +802,7 @@ function bb_display_manage($ProfileID) {
                 <td>
                     <select name="ProfileGender" id="ProfileGender">
                     <?php
-                    $ProfileGender1 = get_user_meta($profile->ProfileUserLinked, 'bb_agency_interact_pgender', true);
+                    $ProfileGender1 = get_user_meta($ProfileUserLinked, 'bb_agency_interact_pgender', true);
                    
                 	if ($ProfileGender=='') {
                 		$ProfileGender = $_GET["ProfileGender"];
@@ -875,14 +823,14 @@ function bb_display_manage($ProfileID) {
             <tr valign="top">
                 <th scope="row"><?php _e("Birth date", bb_agency_TEXTDOMAIN) ?> <em>YYYY-MM-DD</em></th>
                 <td>
-                    <input class="bbdatepicker" type="text" id="ProfileDateBirth" name="ProfileDateBirth" value="<?php echo $profile->ProfileDateBirth ?>" />
+                    <input class="bbdatepicker" type="text" id="ProfileDateBirth" name="ProfileDateBirth" value="<?php echo $ProfileDateBirth ?>" />
                 </td>
             </tr>
             <?php if (bb_agency_SITETYPE == 'bumps') : ?>
                 <tr valign="top">
                     <th scope="row"><?php _e("Due date", bb_agency_TEXTDOMAIN) ?><em>YYYY-MM-DD</em></th>
                     <td>
-                        <input class="bbdatepicker" type="text" id="ProfileDateDue" name="ProfileDateDue" value="<?php echo $profile->ProfileDateDue ?>" />
+                        <input class="bbdatepicker" type="text" id="ProfileDateDue" name="ProfileDateDue" value="<?php echo $ProfileDateDue ?>" />
                     </td>
                 </tr>
             <?php endif;
@@ -891,17 +839,17 @@ function bb_display_manage($ProfileID) {
             // ProfileCustomView = 1 , Private
             if (isset($_GET["ProfileGender"])) {
                 $ProfileGender = $_GET["ProfileGender"];
-                bb_custom_fields(0, 0, $ProfileGender, true, $ProfileType);
+                bb_custom_fields(0, 0, $ProfileGender, true);
             } else {
-                bb_custom_fields(0, $ProfileID, $ProfileGender, true, $ProfileType);
+                bb_custom_fields(0, $ProfileID, $ProfileGender, true);
             }
             ?>
             </tbody>
         </table>
     </div>
 
-    <div id="profile-manage-media" class="halfwidth alignright">
-        <?php if (!empty($ProfileID)) : // Editing Record ?>
+    <div id="profile-manage-media" style="float: left; width: 50%; ">
+        <?php if (!empty($ProfileID) && $ProfileID > 0) { // Editing Record ?>
         <h3><?php _e("Gallery", bb_agency_TEXTDOMAIN) ?></h3>
         <script type="text/javascript">
             function confirmDelete(delMedia,mediaType) {
@@ -911,226 +859,160 @@ function bb_display_manage($ProfileID) {
             }
         </script>
         <?php
-            if (isset($_GET['actionsub'])) { // process submitted form
+            //mass delete
+            if ($_GET["actionsub"] == "massphotodelete" && is_array($_GET['targetids'])) {
+                $massmediaids = '';
+                $massmediaids = implode(",", $_GET['targetids']);
+                //get all the images
 
-                switch( $_GET['actionsub'] ) {
-
-                    case 'massphotodelete' :
-
-                        $ids = '';
-                        $ids = implode(",", $_GET['targetids']);
-                        //get all the images
-
-                        $queryImgConfirm = "SELECT `ProfileMediaID`, `ProfileMediaURL` FROM `$t_media` WHERE `ProfileID` = $ProfileID AND `ProfileMediaID` IN ($ids) AND `ProfileMediaType` = 'Image'";
-                        $resultsImgConfirm = $wpdb->get_results($queryImgConfirm);
-                        $countImgConfirm = count($resultsImgConfirm);
-                        $mass_image_data = array();
-                        foreach ($resultsImgConfirm as $dataImgConfirm) {
-                            $mass_image_data[$dataImgConfirm->ProfileMediaID] = $dataImgConfirm->ProfileMediaURL;
-                        }
-                        //delete all the images from database
-                        $massmediaids = implode(",", array_keys($mass_image_data));
-                        $queryMassImageDelete = "DELETE FROM `$t_media` WHERE ProfileID = $ProfileID AND ProfileMediaID IN ($massmediaids) AND ProfileMediaType = 'Image'";
-                        $resultsMassImageDelete = $wpdb->query($queryMassImageDelete);
-
-                        //delete images on the disk
-                        $dirURL = bb_agency_UPLOADPATH . $ProfileGallery;
-                        foreach ($mass_image_data as $mid => $ProfileMediaURL) {
-                            if (!@unlink($dirURL . '/' . $ProfileMediaURL)) : ?>
-                                <div id="message" class="error">
-                                    <p><?php _e("Error removing", bb_agency_TEXTDOMAIN) ?> <strong><?php echo $ProfileMediaURL ?></strong>: <?php _e("file did not exist.", bb_agency_TEXTDOMAIN) ?>.</p></div>
-                            <?php else : ?>
-                                <div id="message" class="updated">
-                                    <p>File <strong><?php echo $ProfileMediaURL ?></strong> <?php _e("successfully removed", bb_agency_TEXTDOMAIN) ?>.</p>
-                                </div>
-                            <?php endif;
-                        }
-                        break;
-
-                    case 'photodelete' :
-                        $deleteTargetID = $_GET["targetid"];
-
-                        // Verify Record
-                        $queryImgConfirm = "SELECT * FROM `$t_media` WHERE `ProfileID` =  '$ProfileID' AND `ProfileMediaID` =  '$deleteTargetID'";
-                        
-                        $images = $wpdb->get_results( $queryImgConfirm );
-
-                        if (!empty($images)) : foreach ($images as $image) :
-
-                            // Remove Record
-                            $delete = "DELETE FROM `$t_media` WHERE `ProfileID` =  '$ProfileID' AND `ProfileMediaID` = '$image->ProfileMediaID'";
-                            $results = $wpdb->query($delete);
-
-                            if ($image->ProfileMediaType == "Demo Reel" || 
-                                $image->ProfileMediaType == "Video Monologue" || 
-                                $image->ProfileMediaType == "Video Slate") : ?>
-                                <div id="message" class="updated"><p>File <strong><?php echo $image->ProfileMediaURL ?></strong> <?php _e("successfully removed", bb_agency_TEXTDOMAIN) ?>.</p></div>
-                            <?php else : 
-                                // Remove File
-                                $dirURL = bb_agency_UPLOADPATH . $ProfileGallery;
-                                if (!unlink($dirURL . '/' . $image->ProfileMediaURL)) : ?>
-                                    <div id="message" class="error">
-                                        <p><?php _e("Error removing", bb_agency_TEXTDOMAIN) ?> <strong><?php echo $image->ProfileMediaURL ?></strong>. <?php _e("File did not exist.", bb_agency_TEXTDOMAIN) ?>.</p>
-                                    </div>
-                                <?php else : ?>
-                                    <div id="message" class="updated">
-                                        <p>File <strong><?php echo $image->ProfileMediaURL ?></strong> <?php _e("successfully removed", bb_agency_TEXTDOMAIN) ?>.</p>
-                                    </div>
-                                <?php endif;
-                            endif;
-                        endforeach; endif; // is there record?
-                        break;
-
-                    case 'massphotoshow' :
-                    case 'massphotohide' :
-
-                        $ids = implode(",", $_GET['targetids']);
-                        //get all the images
-
-                        $queryImgConfirm = "SELECT `ProfileMediaID`, `ProfileMediaURL` FROM `$t_media` WHERE `ProfileID` = $ProfileID AND `ProfileMediaID` IN ($ids) AND `ProfileMediaType` = 'Image'";
-
-                        $resultsImgConfirm = $wpdb->get_results($queryImgConfirm);
-                        $countImgConfirm = count($resultsImgConfirm);
-                        $mass_image_data = array();
-                        
-                        foreach ($resultsImgConfirm as $dataImgConfirm) {
-                            $mass_image_data[$dataImgConfirm->ProfileMediaID] = $dataImgConfirm->ProfileMediaURL;
-                        }
-                        
-                        // update database
-                        $ids = implode(",", array_keys($mass_image_data));
-                        $set = $_GET['actionsub'] == 'massphotoshow' ? 1 : 0;
-                        $wpdb->query( "UPDATE `$t_media` SET `ProfileMediaLive` = $set WHERE `ProfileID` = $ProfileID AND `ProfileMediaID` IN ($ids) AND `ProfileMediaType` = 'Image'" );
-
-                        break;
+                $queryImgConfirm = "SELECT ProfileMediaID,ProfileMediaURL FROM `$t_media` WHERE ProfileID = $ProfileID AND ProfileMediaID IN ($massmediaids) AND ProfileMediaType = 'Image'";
+                $resultsImgConfirm = mysql_query($queryImgConfirm);
+                $countImgConfirm = mysql_num_rows($resultsImgConfirm);
+                $mass_image_data = array();
+                while ($dataImgConfirm = mysql_fetch_array($resultsImgConfirm)) {
+                    $mass_image_data[$dataImgConfirm['ProfileMediaID']] = $dataImgConfirm['ProfileMediaURL'];
+                }
+                //delete all the images from database
+                $massmediaids = implode(",", array_keys($mass_image_data));
+                $queryMassImageDelete = "DELETE FROM `$t_media` WHERE ProfileID = $ProfileID AND ProfileMediaID IN ($massmediaids) AND ProfileMediaType = 'Image'";
+                $resultsMassImageDelete = $wpdb->query($queryMassImageDelete);
+                //delete images on the disk
+                $dirURL = bb_agency_UPLOADPATH . $ProfileGallery;
+                foreach ($mass_image_data as $mid => $ProfileMediaURL) {
+                    if (!@unlink($dirURL . '/' . $ProfileMediaURL)) : ?>
+                        <div id="message" class="error">
+                            <p><?php _e("Error removing", bb_agency_TEXTDOMAIN) ?> <strong><?php echo $ProfileMediaURL ?></strong>: <?php _e("file did not exist.", bb_agency_TEXTDOMAIN) ?>.</p></div>
+                    <?php else : ?>
+                        <div id="message" class="updated">
+                            <p>File <strong><?php echo $ProfileMediaURL ?></strong> <?php _e("successfully removed", bb_agency_TEXTDOMAIN) ?>.</p>
+                        </div>
+                    <?php endif;
                 }
             }
 
-            // Get images
-            $queryImg = "SELECT * FROM `$t_media` WHERE `ProfileID` = '$ProfileID' AND `ProfileMediaType` = 'Image' ORDER BY `ProfileMediaPrimary` DESC, `ProfileMediaID` DESC";
+            // Are we deleting?
+            if ($_GET["actionsub"] == "photodelete") :
+                $deleteTargetID = $_GET["targetid"];
 
-            bb_agency_debug($queryImg);
+                // Verify Record
+                $queryImgConfirm = "SELECT * FROM `$t_media` WHERE `ProfileID` =  '$ProfileID' AND `ProfileMediaID` =  '$deleteTargetID'";
+                $resultsImgConfirm = mysql_query($queryImgConfirm);
+                $countImgConfirm = mysql_num_rows($resultsImgConfirm);
+                while ($dataImgConfirm = mysql_fetch_array($resultsImgConfirm)) :
+                    $ProfileMediaID = $dataImgConfirm['ProfileMediaID'];
+                    $ProfileMediaType = $dataImgConfirm['ProfileMediaType'];
+                    $ProfileMediaURL = $dataImgConfirm['ProfileMediaURL'];
 
-            $resultsImg = $wpdb->get_results($queryImg);
-            $countImg = count($resultsImg);
-            if (!empty($resultsImg)) :
-                foreach ($resultsImg as $dataImg) :
-                    $styleClass = '';
-                    if ($dataImg->ProfileMediaPrimary) {
-                        $styleBackground = "#900000";
-                        $isChecked = " checked";
-                        $isCheckedText = " Primary";
-                        if ($countImg == 1) {
-                            $toDelete = '<div class="delete"><a href="javascript:confirmDelete(\'' . $dataImg->ProfileMediaID . '\',\'' . $dataImg->ProfileMediaType . '\')"><span>Delete</span> &raquo;</a></div>';
-                        } else {
-                            $toDelete = '';
-                            $massDelete = '';
-                        }
-                    } else {
-                        $styleBackground = $dataImg->ProfileMediaLive ? "#000000" : "#888888";
-                        $isChecked = '';
-                        $isCheckedText = __( 'Primary', bb_agency_TEXTDOMAIN );
-                        $massSelect = '<input type="checkbox" name="massgalsel" value="' . $dataImg->ProfileMediaID . '"> <span style="color:#FFFFFF">'.__('Select', bb_agency_TEXTDOMAIN).'</span>';
-                    }
-                    ?>
-                    <div class="profileimage" style="background: <?php echo $styleBackground ?>" class="<?php echo $dataImg->ProfileMediaLive ? 'showing' : 'hidden' ?>">
-                        <?php echo $toDelete ?>
-                        <?php echo $toShowHide ?>
-                        <img src="<?php echo bb_agency_UPLOADDIR . $ProfileGallery . '/' . $dataImg->ProfileMediaURL ?>" style="width: 100px; z-index: 1; \" />
-                        <div class="primary" style="background: <?php echo $styleBackground ?>">
-                            <input type="radio" name="ProfileMediaPrimary" value="<?php echo  $dataImg->ProfileMediaID ?>" <?php echo $isChecked ?> /> <?php echo $isCheckedText ?>
-                            <div><?php echo $massSelect ?></div>
-                        </div>
-                    </div>
-                    <?php
-                endforeach;
+                    // Remove Record
+                    $delete = "DELETE FROM `$t_media` WHERE `ProfileID` =  '$ProfileID' AND `ProfileMediaID` = '$ProfileMediaID'";
+                    $results = $wpdb->query($delete);
+
+                    if ($ProfileMediaType == "Demo Reel" || $ProfileMediaType == "Video Monologue" || $ProfileMediaType == "Video Slate") : ?>
+                        <div id="message" class="updated"><p>File <strong><?php echo $ProfileMediaURL ?></strong> <?php _e("successfully removed", bb_agency_TEXTDOMAIN) ?>.</p></div>
+                    <?php else : 
+                        // Remove File
+                        $dirURL = bb_agency_UPLOADPATH . $ProfileGallery;
+                        if (!unlink($dirURL . '/' . $ProfileMediaURL)) : ?>
+                            <div id="message" class="error">
+                                <p><?php _e("Error removing", bb_agency_TEXTDOMAIN) ?> <strong><?php echo $ProfileMediaURL ?></strong>. <?php _e("File did not exist.", bb_agency_TEXTDOMAIN) ?>.</p>
+                            </div>
+                        <?php else : ?>
+                            <div id="message" class="updated">
+                                <p>File <strong><?php echo $ProfileMediaURL ?></strong> <?php _e("successfully removed", bb_agency_TEXTDOMAIN) ?>.</p>
+                            </div>
+                        <?php endif;
+                    endif;
+                endwhile; // is there record?
             endif;
+
+            // Go about our biz-nazz
+            $queryImg = "SELECT * FROM `$t_media` WHERE `ProfileID` =  '$ProfileID' AND `ProfileMediaType` = 'Image' ORDER BY `ProfileMediaPrimary` DESC, `ProfileMediaID` DESC";
+            $resultsImg = mysql_query($queryImg);
+            $countImg = mysql_num_rows($resultsImg);
+            while ($dataImg = mysql_fetch_array($resultsImg)) :
+                if ($dataImg['ProfileMediaPrimary']) {
+                    $styleBackground = "#900000";
+                    $isChecked = " checked";
+                    $isCheckedText = " Primary";
+                    if ($countImg == 1) {
+                        $toDelete = '<div class="delete"><a href="javascript:confirmDelete(\'' . $dataImg['ProfileMediaID'] . '\',\'' . $dataImg['ProfileMediaType'] . '\')"><span>Delete</span> &raquo;</a></div>';
+                    } else {
+                        $toDelete = '';
+                        $massDelete = '';
+                    }
+                } else {
+                    $styleBackground = "#000000";
+                    $isChecked = '';
+                    $isCheckedText = " Select";
+                    $toDelete = '<div class="delete"><a href="javascript:confirmDelete(\'' . $dataImg['ProfileMediaID'] . '\',\'' . $dataImg['ProfileMediaType'] . '\')"><span>Delete</span> &raquo;</a></div>';
+                    $massDelete = '<input type="checkbox" name="massgaldel" value="' . $dataImg['ProfileMediaID'] . '"> <span style="color:#FFFFFF">Delete</span>';
+                }
+                ?>
+                <div class="profileimage" style="background: <?php echo $styleBackground ?>">
+                    <?php echo $toDelete ?>
+                    <img src="<?php echo bb_agency_UPLOADDIR . $ProfileGallery . '/' . $dataImg['ProfileMediaURL'] ?>" style="width: 100px; z-index: 1; \" />
+                    <div class="primary" style="background: <?php echo $styleBackground ?>">
+                        <input type="radio" name="ProfileMediaPrimary" value="<?php echo  $dataImg['ProfileMediaID'] ?>" <?php echo $isChecked ?> /><?php echo $isCheckedText ?>
+                        <div><?php echo $massDelete ?></div>
+                    </div>
+                </div>
+                <?php
+            endwhile;
 
             if ($countImg < 1) : ?>
                 <div><?php _e("There are no images loaded for this profile yet.", bb_agency_TEXTDOMAIN) ?></div>
-            <?php else : ?>
-                <div style="clear: both;"></div>
-                <p>
-                    <a id="mass_gallery_delete" href="#"><?php _e('Delete Selected Images', bb_agency_TEXTDOMAIN) ?></a>
-                </p>
-                <p>
-                    <a id="mass_gallery_show" href="#"><?php _e('Show Selected Images', bb_agency_TEXTDOMAIN) ?></a>
-                </p>
-                <p>
-                    <a id="mass_gallery_hide" href="#"><?php _e('Hide Selected Images', bb_agency_TEXTDOMAIN) ?></a>
-                </p>
-                <script language="javascript">
-
-                    jQuery(document).ready(function($) {
-
-                        var pID = <?php echo $ProfileID ?>;
-                        var adminUrl = '<?php echo admin_url('admin.php?page='.$_GET['page']) ?>';
-
-                        function getIds() {
-                            var ids = '&';
-                            $("input:checkbox[name=massgalsel]:checked").each(function() {
-                                if(ids != '&'){
-                                    ids += '&';
-                                }
-                                ids += 'targetids[]='+$(this).val();
-                            });
-                            return ids;
-                        }
-
-                        $('#mass_gallery_delete').on( 'click', function() {
-                            mass_gallery_action( 'delete' )     
-                        })
-
-                        $('#mass_gallery_show').on( 'click', function() {
-                            mass_gallery_action( 'show' )  
-                        })
-
-                        $('#mass_gallery_hide').on( 'click', function() {
-                            mass_gallery_action( 'hide' )  
-                        })
-
-                        function mass_gallery_action( type ) {
-                            var ids = getIds();
-
-                            if( ids != '&'){
-                                if(confirm("Do you want to "+type+" all the selected images?")){
-                                    var url = adminUrl + "&action=editRecord&ProfileID=" + pID + "&actionsub=massphoto" + type + ids;
-                                    document.location = url;
-                                }
-                            }
-                            else{
-                                alert("You have to select images to "+type);
-                            }  
-                        }
-                    })
-
-                </script>
             <?php endif; ?>
+            <div style="clear: both;"></div>
+            <a href="javascript:confirm_mass_gallery_delete();">Delete Selected Images</a>
+            <script language="javascript">
+                function confirm_mass_gallery_delete() {
+                    jQuery(document).ready(function() {
+                        var mas_del_ids = '&';
+                        jQuery("input:checkbox[name=massgaldel]:checked").each(function() {
+                            if(mas_del_ids != '&'){
+                                mas_del_ids += '&';
+                            }
+                            mas_del_ids += 'targetids[]='+jQuery(this).val();
+                        });
+
+                        if( mas_del_ids != '&'){
+                            if(confirm("Do you want to delete all the selected images?")){
+                                urlmassdelete = "<?php echo admin_url('admin.php?page='.$_GET['page']) ?>&action=editRecord&ProfileID=<?php echo $ProfileID ?>&actionsub=massphotodelete" + mas_del_ids;
+                                document.location = urlmassdelete;
+                            }
+                        }
+                        else{
+                            alert("You have to select images to delete");
+                        }
+                    });
+                }
+            </script>
+
             <br /><br />
             <h3><?php _e("Media", bb_agency_TEXTDOMAIN) ?></h3>
             <p><?php _e("The following files (pdf, audio file, etc.) are associated with this record", bb_agency_TEXTDOMAIN) ?>.</p>
             <?php
             $queryMedia = "SELECT * FROM `$t_media` WHERE `ProfileID` =  '$ProfileID' AND `ProfileMediaType` <> 'Image'";
-            $resultsMedia = $wpdb->get_results($queryMedia);
-            $countMedia = count($resultsMedia);
-            foreach ($resultsMedia as $dataMedia) :
-                $deleteLink = '<a href="javascript:confirmDelete(\'' . $dataMedia->ProfileMediaID . '\',\'' . ($dataMedia->ProfileMediaType == 'Private' ? 'private file' : strtolower($dataMedia->ProfileMediaType)) . '\')">DELETE</a>';
-                $galleryDir = bb_agency_UPLOADDIR . $ProfileGallery . '/' . $dataMedia->ProfileMediaURL;
-                if ($dataMedia->ProfileMediaType == "Demo Reel" || 
-                    $dataMedia->ProfileMediaType == "Video Monologue" || 
-                    $dataMedia->ProfileMediaType == "Video Slate") : ?>
+            $resultsMedia = mysql_query($queryMedia);
+            $countMedia = mysql_num_rows($resultsMedia);
+            while ($dataMedia = mysql_fetch_array($resultsMedia)) :
+                $deleteLink = '<a href="javascript:confirmDelete(\'' . $dataMedia['ProfileMediaID'] . '\',\'' . ($dataMedia['ProfileMediaType'] == 'Private' ? 'private file' : strtolower($dataMedia['ProfileMediaType'])) . '\')">DELETE</a>';
+                $galleryDir = bb_agency_UPLOADDIR . $ProfileGallery . '/' . $dataMedia['ProfileMediaURL'];
+                if ($dataMedia['ProfileMediaType'] == "Demo Reel" || 
+                    $dataMedia['ProfileMediaType'] == "Video Monologue" || 
+                    $dataMedia['ProfileMediaType'] == "Video Slate") : ?>
                     <div style="float: left; width: 120px; text-align: center; padding: 10px;">
-                        <?php echo $dataMedia->ProfileMediaType ?><br />
-                        <?php echo bb_agency_get_videothumbnail($dataMedia->ProfileMediaURL) ?><br />
-                        <a href="http://www.youtube.com/watch?v=<?php echo $dataMedia->ProfileMediaURL ?>" target="_blank">Link to Video</a><br />
+                        <?php echo $dataMedia['ProfileMediaType'] ?><br />
+                        <?php echo bb_agency_get_videothumbnail($dataMedia['ProfileMediaURL']) ?><br />
+                        <a href="http://www.youtube.com/watch?v=<?php echo $dataMedia['ProfileMediaURL'] ?>" target="_blank">Link to Video</a><br />
                         [<?php echo $deleteLink ?>]
                     </div>
                 <?php else : ?>
                     <div>
-                        <?php echo $dataMedia->ProfileMediaType ?>: <a href="<?php echo $galleryDir ?>" target="_blank"><?php echo $dataMedia->ProfileMediaTitle ?></a> [<?php echo $deleteLink ?>]
+                        <?php echo $dataMedia['ProfileMediaType'] ?>: <a href="<?php echo $galleryDir ?>" target="_blank"><?php echo $dataMedia['ProfileMediaTitle'] ?></a> [<?php echo $deleteLink ?>]
                     </div>
                 <?php endif;
-            endforeach;
+            endwhile;
 
         if ($countMedia < 1) : ?>
             <div>
@@ -1138,10 +1020,6 @@ function bb_display_manage($ProfileID) {
             </div>
         <?php endif; ?>
         <div style="clear: both;"></div>
-
-    <?php endif; ?>
-
-    <?php if (defined('bb_agency_ADMIN_MEDIA_UPLOAD') && bb_agency_ADMIN_MEDIA_UPLOAD) : ?>
         <h3><?php _e("Upload", bb_agency_TEXTDOMAIN) ?></h3>
         <p><?php _e("Upload new media using the forms below", bb_agency_TEXTDOMAIN) ?>.</p>
 
@@ -1163,27 +1041,18 @@ function bb_display_manage($ProfileID) {
         <div>Type: <select name="profileMediaV1Type"><option selected><?php _e("Video Slate", bb_agency_TEXTDOMAIN) ?></option><option><?php _e("Video Monologue", bb_agency_TEXTDOMAIN) ?></option><option><?php _e("Demo Reel", bb_agency_TEXTDOMAIN) ?></option></select><textarea id='profileMediaV1' name='profileMediaV1'></textarea></div>
         <div>Type: <select name="profileMediaV2Type"><option><?php _e("Video Slate", bb_agency_TEXTDOMAIN) ?></option><option selected><?php _e("Video Monologue", bb_agency_TEXTDOMAIN) ?></option><option><?php _e("Demo Reel", bb_agency_TEXTDOMAIN) ?></option></select><textarea id='profileMediaV2' name='profileMediaV2'></textarea></div>
         <div>Type: <select name="profileMediaV3Type"><option><?php _e("Video Slate", bb_agency_TEXTDOMAIN) ?></option><option><?php _e("Video Monologue", bb_agency_TEXTDOMAIN) ?></option><option selected><?php _e("Demo Reel", bb_agency_TEXTDOMAIN) ?></option></select><textarea id='profileMediaV3' name='profileMediaV3'></textarea></div>
-    <?php endif; ?>
-    
+
         <div>
             <h3>Model Card</h3>
             <p>
-                <a href="/card/<?php echo $ProfileGallery ?>.jpg?<?php echo time() ?>">
-                    <img src="/card/<?php echo $ProfileGallery ?>.jpg?<?php echo time() ?>" width="400" alt="<?php echo $ProfileGallery ?> model card" />
+                <a href="/card/<?php echo $ProfileGallery ?>.jpg">
+                    <img src="/card/<?php echo $ProfileGallery ?>.jpg" width="400" alt="<?php echo $ProfileGallery ?>" />
                 </a>
             </p>
         </div>
-    <?php if ($profile->HasTalent && $profile->ProfileTalent) : ?>
-        <div>
-            <h3>LBDA Card</h3>
-            <p>
-                <a href="/lbda/<?php echo $ProfileGallery ?>.jpg?<?php echo time() ?>">
-                    <img src="/lbda/<?php echo $ProfileGallery ?>.jpg?<?php echo time() ?>" width="400" alt="<?php echo $ProfileGallery ?> LBDA card" />
-                </a>
-            </p>
-        </div>
-    <?php endif; ?>
-
+    <?php
+    }
+    ?>
     </div>
 
     <div style="clear: both; "></div>
@@ -1193,117 +1062,50 @@ function bb_display_manage($ProfileID) {
             <tr valign="top">
               <th scope="row" colspan="2"><h3><?php _e("Classification", bb_agency_TEXTDOMAIN) ?></h3></th>
             </tr>
-            <tr valign="top" id="ProfileType">
+            <tr valign="top">
                 <th scope="row"><?php _e("Classification", bb_agency_TEXTDOMAIN) ?></th>
                 <td>
-                    <?php $types = $wpdb->get_results("SELECT * FROM `$t_data_type` ORDER BY `DataTypeTitle`");
+                    <fieldset><?php
+                    $ProfileTypeArray = explode(",", $ProfileTypeArray);
 
-                    if (!empty($types)) : 
-
-                        $ProfileTypeArray = explode(',', $profile->ProfileType);
-                    ?>
-                    <fieldset>
-                    <?php foreach ($types as $type) : ?>
-                        <input type="checkbox" name="ProfileType[]" id="ProfileType_<?php echo $type->DataTypeID ?>" value="<?php echo $type->DataTypeID ?>" class="profile-type <?php if ($type->DataTypeTalent) echo 'talent'; ?>" <?php echo (!empty($ProfileTypeArray) && in_array($type->DataTypeID, $ProfileTypeArray)) ? ' checked="checked"' : '' ?> /><?php echo $type->DataTypeTitle ?><br />
-                    <?php endforeach; ?>
-                    <script>
-                    jQuery(document).ready(function($) {
-
-                        $('#ProfileType').find('input.profile-type').on('change', function() {
-                            toggleTalent();
-                        });
-
-                        function toggleTalent() {
-                            if ($('#ProfileType').find('input.profile-type.talent').prop('checked')) {
-                                $('.profile-talent').show();
-                            } else {
-                                $('.profile-talent').hide();
-                            }
-                        }
-
-                        toggleTalent();
-                        
-                    });
-                    </script>
+                	$query3 = "SELECT * FROM `$t_data_type` ORDER BY `DataTypeTitle`";
+                    $results3 = mysql_query($query3);
+                    $count3 = mysql_num_rows($results3);
+                    $action = @$_GET["action"];
+                    while ($data3 = mysql_fetch_array($results3)) : ?>
+                        <input type="checkbox" name="ProfileType[]" id="ProfileType[]" value="<?php echo  $data3['DataTypeID'] ?>" <?php echo (!empty($ProfileTypeArray) && in_array($data3['DataTypeID'], $ProfileTypeArray)) ? ' checked="checked"' : '' ?> /><?php echo $data3['DataTypeTitle'] ?><br />
+                    <?php endwhile; ?>
                     </fieldset>
-                    <?php else : ?>
+                    <?php if ($count3 < 1) : ?>
                         <?php _e("No items to select", bb_agency_TEXTDOMAIN) ?> <a href="<?php echo admin_url("admin.php?page=bb_agency_settings&ConfigID=5") ?>"><?php _e("Setup Options", bb_agency_TEXTDOMAIN) ?></a>
                     <?php endif; ?>
+
                 </td>
             </tr>
-
-            <?php if (bb_agency_SITETYPE == 'children')) : ?>
-
-            <?php $talents = $wpdb->get_results("SELECT * FROM `$t_data_talent` ORDER BY `DataTalentTitle`"); if (!empty($talents)) : ?>
-            <tr valign="top" id="ProfileTalent" class="profile-talent">
-                <th scope="row"><?php _e("Talent", bb_agency_TEXTDOMAIN) ?></th>
-                <td>
-                    <fieldset><?php
-                    $ProfileTalentArray = explode(",", $profile->ProfileTalent);
-
-                    foreach ($talents as $talent) : ?>
-                        <input type="checkbox" name="ProfileTalent[]" id="ProfileTalent_<?php echo $talent->DataTalentID ?>" value="<?php echo $talent->DataTalentID ?>" <?php echo (!empty($ProfileTalentArray) && in_array($talent->DataTalentID, $ProfileTalentArray)) ? ' checked="checked"' : '' ?> /><?php echo $talent->DataTalentTitle ?><br />
-                    <?php endforeach; ?>
-                    </fieldset>
-                </td>
-            </tr>
-            <?php $genres = $wpdb->get_results("SELECT * FROM `$t_data_genre`"); if (!empty($genres)) : ?>
-            <tr valign="top" id="ProfileGenre" class="profile-talent">
-                <th scope="row"><?php _e("Genre", bb_agency_TEXTDOMAIN) ?></th>
-                <td>
-                    <fieldset><?php
-                    $ProfileGenreArray = explode(",", $profile->ProfileGenre);
-
-                    foreach ($genres as $genre) : ?>
-                        <input type="checkbox" name="ProfileGenre[]" id="ProfileGenre_<?php echo $genre->DataGenreID ?>" value="<?php echo $genre->DataGenreID ?>" <?php echo (!empty($ProfileGenreArray) && in_array($genre->DataGenreID, $ProfileGenreArray)) ? ' checked="checked"' : '' ?> /><?php echo $genre->DataGenreTitle ?><br />
-                    <?php endforeach; ?>
-                    </fieldset>
-                </td>
-            </tr>
-            <?php endif; // end of genres ?>
-            <?php $abilities = $wpdb->get_results("SELECT * FROM `$t_data_ability`"); if (!empty($abilities)) : ?>
-            <tr valign="top" id="ProfileAbility" class="profile-talent">
-                <th scope="row"><?php _e("Ability", bb_agency_TEXTDOMAIN) ?></th>
-                <td>
-                    <fieldset>
-                        <select name="ProfileAbility" size="1">
-                            <option value=""> --- Ability --- </option>
-                            <?php foreach ($abilities as $ability) : ?>
-                            <option id="ProfileAbility_<?php echo $ability->DataAbilityID ?>" value="<?php echo $ability->DataAbilityID ?>" <?php selected($ability->DataAbilityID, $profile->ProfileAbility) ?>><?php echo $ability->DataAbilityTitle ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </fieldset>
-                </td>
-            </tr>
-            <?php endif; // end of abilities ?>
-            <?php endif; // end of talents ?>
-
-            <?php endif; // end of children only code ?>
-
             <tr valign="top">
                 <th scope="row"><?php _e("Status", bb_agency_TEXTDOMAIN) ?>:</th>
                 <td>
                     <select id="ProfileIsActive" name="ProfileIsActive">
-                        <option value="1" <?php selected(1, $profile->ProfileIsActive) ?>><?php _e("Active", bb_agency_TEXTDOMAIN) ?></option>
-                        <option value="4" <?php selected(4, $profile->ProfileIsActive) ?>><?php _e("Active - Not Visible On Website", bb_agency_TEXTDOMAIN) ?></option>
-                        <option value="0" <?php selected(0, $profile->ProfileIsActive) ?>><?php _e("Inactive", bb_agency_TEXTDOMAIN) ?></option>
-                        <option value="2" <?php selected(2, $profile->ProfileIsActive) ?>><?php _e("Archived", bb_agency_TEXTDOMAIN) ?></option>
-                        <option value="3" <?php selected(3, $profile->ProfileIsActive) ?>><?php _e("Pending Approval", bb_agency_TEXTDOMAIN) ?></option>
+                        <option value="1" <?php selected(1, $ProfileIsActive) ?>><?php _e("Active", bb_agency_TEXTDOMAIN) ?></option>
+                        <option value="4" <?php selected(4, $ProfileIsActive) ?>><?php _e("Active - Not Visible On Website", bb_agency_TEXTDOMAIN) ?></option>
+                        <option value="0" <?php selected(0, $ProfileIsActive) ?>><?php _e("Inactive", bb_agency_TEXTDOMAIN) ?></option>
+                        <option value="2" <?php selected(2, $ProfileIsActive) ?>><?php _e("Archived", bb_agency_TEXTDOMAIN) ?></option>
+                        <option value="3" <?php selected(3, $ProfileIsActive) ?>><?php _e("Pending Approval", bb_agency_TEXTDOMAIN) ?></option>
                     </select>
                 </td>
             </tr>
             <tr valign="top">
                 <th scope="row"><?php _e("Promotion", bb_agency_TEXTDOMAIN) ?>:</th>
                 <td>
-                    <input type="checkbox" name="ProfileIsFeatured" id="ProfileIsFeatured" value="1" <?php checked($profile->ProfileIsFeatured, 1, false) ?> /> Featured<br />
+                    <input type="checkbox" name="ProfileIsFeatured" id="ProfileIsFeatured" value="1" <?php checked($ProfileIsFeatured, 1, false) ?> /> Featured<br />
                 </td>
             </tr>
-            <?php if (isset($profile->ProfileUserLinked) && $profile->ProfileUserLinked > 0) : ?>
+            <?php if (isset($ProfileUserLinked) && $ProfileUserLinked > 0) : ?>
             <tr valign="top">
                 <th scope="row"><?php _e("WordPress User", bb_agency_TEXTDOMAIN) ?></th>
                 <td>
-                    <a href="<?php echo admin_url("user-edit.php") ?>?user_id=<?php echo $profile->ProfileUserLinked ?>&wp_http_referer=%2Fwp-admin%2Fadmin.php%3Fpage%3Dbb_agency_profiles">ID# <?php echo $profile->ProfileUserLinked ?></a>
-    		      <input type='hidden' name='wpuserid' value="<?php echo $profile->ProfileUserLinked ?>" />
+                    <a href="<?php echo admin_url("user-edit.php") ?>?user_id=<?php echo $ProfileUserLinked ?>&wp_http_referer=%2Fwp-admin%2Fadmin.php%3Fpage%3Dbb_agency_profiles">ID# <?php echo $ProfileUserLinked ?></a>
+    		      <input type='hidden' name='wpuserid' value="<?php echo $ProfileUserLinked ?>" />
                 </td>
             </tr>
             <?php endif;
@@ -1313,28 +1115,28 @@ function bb_display_manage($ProfileID) {
             <tr valign="top">
                 <th scope="row"><?php _e("Date Updated", bb_agency_TEXTDOMAIN) ?></th>
                 <td>
-                    <input type="text" id="ProfileDateUpdated" name="ProfileDateUpdated" value="<?php echo $profile->ProfileDateUpdated ?>" />
+                    <input type="text" id="ProfileDateUpdated" name="ProfileDateUpdated" value="<?php echo $ProfileDateUpdated ?>" />
                 </td>
             </tr>
             <tr valign="top">
                 <th scope="row"><?php _e("Profile Views", bb_agency_TEXTDOMAIN) ?></th>
                 <td>
-                    <input type="text" id="ProfileStatHits" name="ProfileStatHits" value="<?php echo $profile->ProfileStatHits ?>" />
+                    <input type="text" id="ProfileStatHits" name="ProfileStatHits" value="<?php echo $ProfileStatHits ?>" />
                 </td>
             </tr>
             <tr valign="top">
                 <th scope="row"><?php _e("Profile Viewed Last", bb_agency_TEXTDOMAIN) ?></th>
                 <td>
-                    <input type="text" id="ProfileDateViewLast" name="ProfileDateViewLast" value="<?php echo $profile->ProfileDateViewLast ?>" />
+                    <input type="text" id="ProfileDateViewLast" name="ProfileDateViewLast" value="<?php echo $ProfileDateViewLast ?>" />
                 </td>
             </tr>
             <?php else : ?>
             <tr valign="top">
                 <th scope="row"></th>
                 <td>
-                    <input type="hidden" id="ProfileDateUpdated" name="ProfileDateUpdated" value="<?php echo $profile->ProfileDateUpdated ?>" />
-                    <input type="hidden" id="ProfileStatHits" name="ProfileStatHits" value="<?php echo $profile->ProfileStatHits ?>" />
-                    <input type="hidden" id="ProfileDateViewLast" name="ProfileDateViewLast" value="<?php echo $profile->ProfileDateViewLast ?>" />
+                    <input type="hidden" id="ProfileDateUpdated" name="ProfileDateUpdated" value="<?php echo $ProfileDateUpdated ?>" />
+                    <input type="hidden" id="ProfileStatHits" name="ProfileStatHits" value="<?php echo $ProfileStatHits ?>" />
+                    <input type="hidden" id="ProfileDateViewLast" name="ProfileDateViewLast" value="<?php echo $ProfileDateViewLast ?>" />
                 </td>
             </tr>
             <?php endif; ?>
@@ -1379,7 +1181,7 @@ function bb_display_manage($ProfileID) {
     <?php endif; ?>
 
     
-    <?php _e('Last updated on', bb_agency_TEXTDOMAIN) ?> <?php echo bb_agency_human_date($profile->ProfileDateUpdated) ?>
+    <?php _e('Last updated on', bb_agency_TEXTDOMAIN) ?> <?php echo bb_agency_human_date($ProfileDateUpdated) ?>
     <p class="submit">
         <input type="hidden" name="ProfileID" value="<?php echo $ProfileID ?>" />
         <input type="hidden" name="action" value="editRecord" />
@@ -1407,10 +1209,6 @@ function bb_display_list() {
     $t_profile = table_agency_profile;
     $t_media = table_agency_profile_media;
     $t_data_type = table_agency_data_type;
-
-    if (bb_agency_SITETYPE == 'children')
-        $t_data_talent = table_agency_data_talent;
-
     ?>
     <div class="wrap">
     <?php
@@ -1475,19 +1273,9 @@ function bb_display_list() {
         $selectedType = strtolower($_GET['ProfileType']);
         $query .= "&ProfileType=". $selectedType .'';
         if(strpos($filter,'profile') > 0){
-            $filter .= " AND profile.ProfileType = '$selectedType'";
+             $filter .= " AND profile.ProfileType LIKE '%". $selectedType ."%'";
         } else {
-            $filter .= " profile.ProfileType = '$selectedType'";
-        }
-    }
-
-    if (bb_agency_SITETYPE == 'children' && !empty($_GET['ProfileTalent'])){
-        $selectedTalent = strtolower($_GET['ProfileTalent']);
-        $query .= "&ProfileTalent=". $selectedTalent .'';
-        if(strpos($filter,'profile') > 0){
-             $filter .= " AND {$selectedTalent} IN (profile.ProfileTalent)";
-        } else {
-              $filter .= " {$selectedTalent} IN (profile.ProfileTalent)";
+              $filter .= " profile.ProfileType LIKE '%". $selectedType ."%'";
         }
     }
     if (isset($_GET['ProfileVisible'])){
@@ -1505,9 +1293,9 @@ function bb_display_list() {
         $ProfileGender = (int)$_GET['ProfileGender'];
         if ($ProfileGender) {
             if(strpos($filter,'profile') > 0){
-                $filter .= " AND profile.`ProfileGender` = '$ProfileGender'";
+                $filter .= " AND profile.`ProfileGender` = '".$ProfileGender."'";
             } else {
-                $filter .= " profile.`ProfileGender` = '$ProfileGender'";
+                $filter .= " profile.`ProfileGender` = '".$ProfileGender."'";
             }
         }
     }
@@ -1519,35 +1307,31 @@ function bb_display_list() {
         $filter = '';
     }
 
-    bb_agency_debug( $filter );
-
+    
     // Paginate
-    $rs = $wpdb->get_results("SELECT * FROM `$t_profile` profile LEFT JOIN `$t_data_type` profiletype ON profile.`ProfileType` = profiletype.`DataTypeID` $filter");
+    $items = mysql_num_rows(mysql_query("SELECT * FROM `$t_profile` profile LEFT JOIN `$t_data_type` profiletype ON profile.`ProfileType` = profiletype.`DataTypeID` $filter")); // number of total rows in the database
 
-    if ($rs) {
-        $items = count( $rs ); // number of total rows in the database
+    if ($items > 0) {
+        $p = new bb_agency_pagination;
+        $p->items($items);
+        $p->limit(50); // Limit entries per page
+        $p->target("admin.php?page=" . $_GET['page'] . $query);
+        $p->currentPage($_GET[$p->paging]); // Gets and validates the current page
+        $p->calculate(); // Calculates what to show
+        $p->parameterName('paging');
+        $p->adjacents(1); //No. of page away from the current page
 
-        if ($items > 0) {
-            $p = new bb_agency_pagination;
-            $p->items($items);
-            $p->limit(50); // Limit entries per page
-            $p->target("admin.php?page=" . $_GET['page'] . $query);
-            $p->currentPage($_GET[$p->paging]); // Gets and validates the current page
-            $p->calculate(); // Calculates what to show
-            $p->parameterName('paging');
-            $p->adjacents(1); //No. of page away from the current page
-
-            if (!isset($_GET['paging'])) {
-                $p->page = 1;
-            } else {
-                $p->page = $_GET['paging'];
-            }
-
-            //Query for limit paging
-            $limit = "LIMIT " . ($p->page - 1) * $p->limit . ", " . $p->limit;
+        if (!isset($_GET['paging'])) {
+            $p->page = 1;
         } else {
-            $limit = '';
+            $p->page = $_GET['paging'];
         }
+
+        //Query for limit paging
+        $limit = "LIMIT " . ($p->page - 1) * $p->limit . ", " . $p->limit;
+    } else {
+        $limit = '';
+    }
 
     // Add New Records
     
@@ -1562,14 +1346,15 @@ function bb_display_list() {
                     <div class="inside-x" style="padding: 10px 10px 0px 10px; ">
                         <?php echo sprintf(__("Currently %d Profiles", bb_agency_TEXTDOMAIN), $items) ?><br />
                         <?php
-                            $queryGenderResult = $wpdb->get_results( "SELECT GenderID, GenderTitle FROM " . table_agency_data_gender, ARRAY_A );
+                            $queryGenderResult = mysql_query("SELECT GenderID, GenderTitle FROM " . table_agency_data_gender);
+                            $queryGenderCount = mysql_num_rows($queryGenderResult);
                             ?>
                             <p>
-                            <?php if (!empty($queryGenderResult)) : foreach ($queryGenderResult as $gender) : ?>
-                                <a class="button-primary" href="<?php echo admin_url("admin.php?page=" . $_GET['page']) ?>&amp;action=addRecord&amp;ProfileGender=<?php echo $fetchGender["GenderID"] ?>"><?php _e("Create New " . ucfirst($gender["GenderTitle"]), bb_agency_TEXTDOMAIN) ?></a>
-                            <?php endforeach; ?>
+                            <?php while ($fetchGender = mysql_fetch_assoc($queryGenderResult)) : ?>
+                                <a class="button-primary" href="<?php echo admin_url("admin.php?page=" . $_GET['page']) ?>&action=addRecord&ProfileGender=<?php echo $fetchGender["GenderID"] ?>"><?php _e("Create New " . ucfirst($fetchGender["GenderTitle"]), bb_agency_TEXTDOMAIN) ?></a>
+                            <?php endwhile; ?>
                             </p>
-                            <?php else : ?>
+                            <?php if ($queryGenderCount < 1) : ?>
                                 <p><?php echo sprintf(__('No Gender Found. <a href="%s">Create New Gender</a>', bb_agency_TEXTDOMAIN), admin_url('admin.php?page=bb_agency_settings&ampConfigID=5')) ?></p>
                             <?php endif; ?>
                     </div>
@@ -1603,11 +1388,11 @@ function bb_display_list() {
                                     <option value=""><?php _e("Any Category", bb_agency_TEXTDOMAIN) ?></option>
                                     <?php
                                     $query = "SELECT DataTypeID, DataTypeTitle FROM `$t_data_type` ORDER BY DataTypeTitle ASC";
-                                    $results = $wpdb->get_results($query);
-                                    $count = count($results);
-                                    foreach ($results as $data) : ?>
-                                    <option value="<?php echo $data->DataTypeID ?>" <?php selected($_GET['ProfileType'], $data->DataTypeID) ?>><?php echo $data->DataTypeTitle ?></option>
-                                    <?php endforeach; ?>
+                                    $results = mysql_query($query);
+                                    $count = mysql_num_rows($results);
+                                    while ($data = mysql_fetch_array($results)) : ?>
+                                    <option value="<?php echo $data['DataTypeID'] ?>" <?php selected($_GET['ProfileType'], $data["DataTypeID"]) ?>><?php echo $data['DataTypeTitle'] ?></option>
+                                    <?php endwhile; ?>
                                 </select>
                             </span>
                           <span><?php _e("Status", bb_agency_TEXTDOMAIN) ?>:
@@ -1622,24 +1407,25 @@ function bb_display_list() {
                             <select name="ProfileLocationCity">
                                 <option value=""><?php _e("Any Location", bb_agency_TEXTDOMAIN) ?></option>
                                 <?php
-                                $query = "SELECT DISTINCT `ProfileLocationCity`, `ProfileLocationState` FROM `$t_profile` ORDER BY `ProfileLocationState`, `ProfileLocationCity` ASC";
-                                $results = $wpdb->get_results($query);
-                                if (!empty($results)) : foreach ($results as $data) :
-                                    if (!empty($data->ProfileLocationCity)) : ?>
-                                        <option value="<?php echo $data->ProfileLocationCity ?>" <?php selected($selectedCity, $data->ProfileLocationCity) ?>><?php echo $data->ProfileLocationCity ?></option>
+                                $query = "SELECT DISTINCT ProfileLocationCity, ProfileLocationState FROM `$t_profile` ORDER BY ProfileLocationState, ProfileLocationCity ASC";
+                                $results = mysql_query($query);
+                                $count = mysql_num_rows($results);
+                                while ($data = mysql_fetch_array($results)) :
+                                    if (isset($data['ProfileLocationCity']) && !empty($data['ProfileLocationCity'])) : ?>
+                                        <option value="<?php echo $data['ProfileLocationCity'] ?>" <?php selected($selectedCity, $data["ProfileLocationCity"]) ?>><?php echo $data['ProfileLocationCity'] ?></option>
                                     <?php endif;
-                                endforeach; endif; ?>
+                                endwhile; ?>
                             </select>
                         </span>
                         <span><?php _e("Gender", bb_agency_TEXTDOMAIN) ?>:
                             <select name="ProfileGender">
                                 <option value=""><?php _e("Any Gender", bb_agency_TEXTDOMAIN) ?></option>
                                 <?php
-                                $query2 = "SELECT `GenderID`, `GenderTitle` FROM " . table_agency_data_gender . " ORDER BY `GenderID`";
-                                $results2 = $wpdb->get_results($query2);
-                                foreach ($results2 as $dataGender) : ?>
-                                <option value="<?php echo  $dataGender->GenderID ?>" <?php selected($_GET['ProfileGender'], $dataGender->GenderID, false) ?>><?php echo $dataGender->GenderTitle ?></option>
-                                <?php endforeach; ?>
+                                $query2 = "SELECT GenderID, GenderTitle FROM " . table_agency_data_gender . " ORDER BY GenderID";
+                                $results2 = mysql_query($query2);
+                                while ($dataGender = mysql_fetch_array($results2)) : ?>
+                                <option value="<?php echo  $dataGender["GenderID"] ?>" <?php selected($_GET["ProfileGender"], $dataGender["GenderID"], false) ?>><?php echo $dataGender["GenderTitle"] ?></option>
+                                <?php endwhile; ?>
                             </select>
                         </span>
                         <span class="submit"><input type="submit" value="<?php _e("Filter", bb_agency_TEXTDOMAIN) ?>" class="button-primary" /></span>
@@ -1702,80 +1488,82 @@ function bb_display_list() {
                     <tbody>
                     <?php
                     $query = "SELECT * FROM `$t_profile` profile LEFT JOIN `$t_data_type` profiletype ON profile.`ProfileType` = profiletype.`DataTypeID` $filter  ORDER BY $sort $dir $limit";
-                    $results2 = $wpdb->get_results($query);
-                    $count = count($results2);
-                    foreach ($results2 as $data) {
+                    $results2 = mysql_query($query);
+                    $count = mysql_num_rows($results2);
+                    while ($data = mysql_fetch_array($results2)) {
 
-                        $ProfileID = $data->ProfileID;
-                        $ProfileGallery = stripslashes($data->ProfileGallery);
-                        $ProfileContactNameFirst = stripslashes($data->ProfileContactNameFirst);
-                        $ProfileContactNameLast = stripslashes($data->ProfileContactNameLast);
-                        $ProfileLocationCity = bb_agency_strtoproper(stripslashes($data->ProfileLocationCity));
-                        $ProfileLocationState = stripslashes($data->ProfileLocationState);
-                        $ProfileGender = stripslashes($data->ProfileGender);
-                        $ProfileDateDue = stripslashes($data->ProfileDateDue);
-                        $ProfileDateBirth = stripslashes($data->ProfileDateBirth);
-                        $ProfileStatHits = stripslashes($data->ProfileStatHits);
-                        $ProfileDateViewLast = stripslashes($data->ProfileDateViewLast);
-                        if ($data->ProfileIsActive == 0) {
+                        $ProfileID = $data['ProfileID'];
+                        $ProfileGallery = stripslashes($data['ProfileGallery']);
+                        $ProfileContactNameFirst = stripslashes($data['ProfileContactNameFirst']);
+                        $ProfileContactNameLast = stripslashes($data['ProfileContactNameLast']);
+                        $ProfileLocationCity = bb_agency_strtoproper(stripslashes($data['ProfileLocationCity']));
+                        $ProfileLocationState = stripslashes($data['ProfileLocationState']);
+                        $ProfileGender = stripslashes($data['ProfileGender']);
+                        $ProfileDateDue = stripslashes($data['ProfileDateDue']);
+                        $ProfileDateBirth = stripslashes($data['ProfileDateBirth']);
+                        $ProfileStatHits = stripslashes($data['ProfileStatHits']);
+                        $ProfileDateViewLast = stripslashes($data['ProfileDateViewLast']);
+                        if ($data['ProfileIsActive'] == 0) {
                             // Inactive
                             $rowColor = ' style="background: #FFEBE8"';
-                        } elseif ($data->ProfileIsActive == 1) {
+                        } elseif ($data['ProfileIsActive'] == 1) {
                             // Active
                             $rowColor = '';
-                        } elseif ($data->ProfileIsActive == 2) {
+                        } elseif ($data['ProfileIsActive'] == 2) {
                             // Archived
                             $rowColor = ' style="background: #dadada"';
-                        } elseif ($data->ProfileIsActive == 3) {
+                        } elseif ($data['ProfileIsActive'] == 3) {
                             // Pending Approval
                             $rowColor = ' style="background: #DD4B39"';
                         }
 
                         // check if she's given birth
-                        if (bb_agency_SITETYPE == 'bumps' && bb_agency_ismumtobe($data->ProfileType) && bb_agency_datepassed($ProfileDateDue)) {
+                        if (bb_agency_SITETYPE == 'bumps' && bb_agency_ismumtobe($data['ProfileType']) && bb_agency_datepassed($ProfileDateDue)) {
 
                             // switch category
-                            $ptypes = explode(',', $data->ProfileType);
+                            $ptypes = explode(',', $data['ProfileType']);
                             for($i = 0; $i < count($ptypes); $i++){
                                 if ($ptypes[$i] == bb_agency_MUMSTOBE_ID)
                                     $ptypes[$i] = bb_agency_AFTERBIRTH_ID;
                             }
 
-                            $data->ProfileType = implode(',', $ptypes);
+                            $data['ProfileType'] = implode(',', $ptypes);
                             
                             // recategorize as family
-                            bb_agency_recategorize_profile($data->ProfileID, $data->ProfileType);              
+                            bb_agency_recategorize_profile($data['ProfileID'], $data['ProfileType']);              
                         }
                         
                         // Get Data Type Title
-                        if (strpos($data->ProfileType, ",") > 0){
-                            $title = explode(",",$data->ProfileType);
+                        if (strpos($data['ProfileType'], ",") > 0){
+                            $title = explode(",",$data['ProfileType']);
                             $new_title = '';
                             foreach($title as $t){
                                 $id = (int)$t;
                                 $get_title = "SELECT DataTypeTitle FROM " . table_agency_data_type .  
                                              " WHERE DataTypeID = " . $id;   
-                                $title = $wpdb->get_var($get_title); 
-                                if ($title) {            
-                                    $new_title .= "," . $title; 
+                                $resource = mysql_query($get_title);             
+                                $get = mysql_fetch_assoc($resource);
+                                if (mysql_num_rows($resource) > 0 ){
+                                    $new_title .= "," . $get['DataTypeTitle']; 
                                 }
                             }
                             $new_title = substr($new_title,1);
                         } else {
                             $new_title = '';
-                            $id = (int)$data->ProfileType;
+                            $id = (int)$data['ProfileType'];
                             $get_title = "SELECT DataTypeTitle FROM " . table_agency_data_type .  
                                          " WHERE DataTypeID = " . $id;   
-                            $title = $wpdb->get_var($get_title);             
-
-                            if ($title){
-                                $new_title = $title; 
+                            $resource = mysql_query($get_title);             
+                            $get = mysql_fetch_assoc($resource);
+                            if (mysql_num_rows($resource) > 0 ){
+                                $new_title = $get['DataTypeTitle']; 
                             }
                         }
                         
                         $DataTypeTitle = stripslashes($new_title);
 
-                        $profileImageCount = $wpdb->get_var("SELECT COUNT(*) FROM `$t_media` WHERE `ProfileID` = '$ProfileID' AND `ProfileMediaType` = 'Image'");
+                        $resultImageCount = mysql_query("SELECT * FROM `$t_media` WHERE `ProfileID` = '$ProfileID' AND `ProfileMediaType` = 'Image'");
+                        $profileImageCount = mysql_num_rows($resultImageCount);
 
                         ?>
                         <tr"<?php echo $rowColor ?>">
@@ -1792,7 +1580,7 @@ function bb_display_list() {
                               </div>
                             </td>
                             <?php if (bb_agency_SITETYPE == 'bumps') : ?>
-                            <td class="ProfilesProfileDate column-ProfilesProfileDate"><?php echo (is_null($ProfileDateDue) || $ProfileDateDue == '0000-00-00' ? $ProfileDateBirth : $ProfileDateDue) ?></td>
+                            <td class="ProfilesProfileDate column-ProfilesProfileDate"><?php echo (is_null($ProfileDateDue) || $ProfileDateDue == '0000-00-00' || bb_agency_datepassed($ProfileDateDue) ? $ProfileDateBirth : $ProfileDateDue) ?></td>
                             <?php endif; ?>
                             <td class="ProfileLocationCity column-ProfileLocationCity"><?php echo $ProfileLocationCity ?></td>
                             <td class="ProfileLocationCity column-ProfileLocationState"><?php echo $ProfileLocationState ?></td>
@@ -1803,7 +1591,7 @@ function bb_display_list() {
                         </tr>
                         <?php
                     }
-
+                    mysql_free_result($results2);
                     if ($count < 1) {
                         if (isset($filter)) : ?>
                             <tr>
@@ -1840,7 +1628,6 @@ function bb_display_list() {
             </form>
     </div>
 <?php
-    }
 }
 
 function bb_agency_get_profile_fields() {
@@ -1861,9 +1648,6 @@ function bb_agency_get_profile_fields() {
         'ProfileContactPhoneCell', 
         'ProfileContactPhoneWork',
         'ProfileType',
-        'ProfileTalent',
-        'ProfileGenre',
-        'ProfileAbility',
         'ProfileIsActive',
         'ProfileIsFeatured',
         'ProfileIsPromoted',
