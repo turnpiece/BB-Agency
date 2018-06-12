@@ -91,10 +91,10 @@ if ($_REQUEST["action"] == "search") {
 	}
 
 	// Age
-	if (isset($_REQUEST['age_from']) && !empty($_REQUEST['age_from'])) {
+	if (isset($_REQUEST['age_from']) && !empty($_REQUEST['age_from']) && is_numeric($_REQUEST['age_from'])) {
 		$filterArray['age_from'] = $_REQUEST['age_from'];
 	}
-	if (isset($_REQUEST['age_to']) && !empty($_REQUEST['age_to'])) {
+	if (isset($_REQUEST['age_to']) && !empty($_REQUEST['age_to']) && is_numeric($_REQUEST['age_to'])) {
 		$filterArray['age_to'] = $_REQUEST['age_to'];
 	}
 
@@ -151,7 +151,8 @@ if ($_REQUEST["action"] == "search") {
 	
 	// Pagination
 	$filterArray['paging'] = 1;
-	$filterArray['pagingperpage'] = 1000; 
+	$filterArray['pagingperpage'] = 0; 
+
 }
 
 // *************************************************************************************************** //

@@ -107,13 +107,13 @@ function FPDF($orientation='P', $unit='mm', $format='A4')
 		'symbol'=>'Symbol', 'zapfdingbats'=>'ZapfDingbats');
 	//Scale factor
 	if($unit=='pt')
-		$this->k=1;
+		$this->k =1;
 	elseif($unit=='mm')
-		$this->k=72/25.4;
+		$this->k = 72/10;
 	elseif($unit=='cm')
-		$this->k=72/2.54;
+		$this->k = 72;
 	elseif($unit=='in')
-		$this->k=72;
+		$this->k = 72 * 2.54;
 	else
 		$this->Error('Incorrect unit: '.$unit);
 	//Page format

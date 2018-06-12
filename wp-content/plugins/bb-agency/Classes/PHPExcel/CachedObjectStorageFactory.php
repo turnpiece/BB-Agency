@@ -104,7 +104,7 @@ class PHPExcel_CachedObjectStorageFactory
 													),
 		self::cache_to_apc					=> array( 'cacheTime'		=> 600
 													),
-		self::cache_to_memcache				=> array( 'memcacheServer'	=> '10.169.0.141',
+		self::cache_to_memcache				=> array( 'memcacheServer'	=> 'localhost',
 													  'memcachePort'	=> 11211,
 													  'cacheTime'		=> 600
 													),
