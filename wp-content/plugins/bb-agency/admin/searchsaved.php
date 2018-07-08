@@ -87,11 +87,6 @@ if (isset($_POST['action'])) {
     			
                 $SearchMuxMessage = str_ireplace("[link-place-holder]", "<a href='$link'>$link</a>", $SearchMuxMessage);
 
-                // add terms link
-                if (bb_agency_TERMS) {
-                    $SearchMuxMessage .= "\n\r\n\r\n\r" . sprintf(__('Any work undertaken is governed by our <a href="%s">Terms &amp; Conditions</a>', bb_agency_TEXTDOMAIN), bb_agency_TERMS);
-                }
-
     			// Create Record
 
     			$insert = "INSERT INTO " . table_agency_searchsaved_mux .
@@ -129,10 +124,17 @@ if (isset($_POST['action'])) {
                         $attachments[] = $path;
                 }
 
+                $message = $SearchMuxMessage;
+
+                // add terms link
+                if (bb_agency_TERMS) {
+                    $message .= "\n\r\n\r\n\r" . sprintf(__('Any work undertaken is governed by our <a href="%s">Terms &amp; Conditions</a>', bb_agency_TEXTDOMAIN), bb_agency_TERMS);
+                }
+
     			$isSent = wp_mail(
                     bb_agency_SEND_EMAILS ? $SearchMuxToEmail : $bb_agency_option_agencyemail, 
                     $SearchMuxSubject, 
-                    nl2br($SearchMuxMessage), 
+                    nl2br($message), 
                     $headers,
                     $attachments
                 );
@@ -446,7 +448,7 @@ if (isset($_POST['action'])) {
 			$p = new bb_agency_pagination;
 			$p->items($items);
 			$p->limit(50); // Limit entries per page
-			$p->target("admin.php?page=". $_GET['page'] .$query);
+			$p->target("admin.php?page=". $_GET['page']);
 			$p->currentPage($_GET[$p->paging]); // Gets and validates the current page
 			$p->calculate(); // Calculates what to show
 			$p->parameterName('paging');
