@@ -449,7 +449,6 @@ if ($action) {
             ORDER BY $sort $dir $limit";
 
 
-        echo $query;
         // Search Results
         $results2 = $wpdb->get_results($query);
         $count = count($results2);
