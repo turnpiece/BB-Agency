@@ -3,8 +3,8 @@
 // geocode an address
 
 class Geocoder {
-    static private $url = "http://maps.google.com/maps/api/geocode/json";
-    //static private $key = 'AIzaSyAwGmQOA2UBIBMr1t82cYi_K9cidbRBC48';
+    static private $url = "https://maps.googleapis.com/maps/api/geocode/json";
+    static private $key = 'AIzaSyAwGmQOA2UBIBMr1t82cYi_K9cidbRBC48';
 
     static public function getLocation($address)
     {
@@ -47,8 +47,7 @@ class Geocoder {
 
     static private function getUrl($address)
     {
-        //return self::$url . '?key=' . self::$key .'&sensor=false&address=' . urlencode($address);
-        return self::$url . '?sensor=false&address=' . urlencode($address);
+        return self::$url . '?key=' . self::$key .'&sensor=false&address=' . urlencode($address);
     }
 
     static private function curl_file_get_contents($URL)
