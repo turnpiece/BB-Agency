@@ -15,18 +15,18 @@ echo "    <div id=\"content\" role=\"main\" class=\"transparent\">\n";
 	
 	if (isset($SearchMuxHash)) {
 	
+		global $wpdb;
 		
 		$_SESSION['SearchMuxHash'] = $SearchMuxHash;
 		
-		$query = "SELECT search.SearchTitle, search.SearchProfileID, search.SearchOptions, searchsent.SearchMuxHash FROM ". table_agency_searchsaved ." search LEFT JOIN ". table_agency_searchsaved_mux ." searchsent ON search.SearchID = searchsent.SearchID WHERE searchsent.SearchMuxHash = \"". $SearchMuxHash ."\"";
-		$results = mysql_query($query) or die ( __("Error, query failed", bb_agency_TEXTDOMAIN ));
-		$count = mysql_num_rows($results);
+		$query = "SELECT search.`SearchTitle`, search.`SearchProfileID`, search.`SearchOptions`, searchsent.`SearchMuxHash` FROM ". table_agency_searchsaved ." search LEFT JOIN ". table_agency_searchsaved_mux ." searchsent ON search.`SearchID` = searchsent.`SearchID` WHERE searchsent.`SearchMuxHash` = \"". $SearchMuxHash ."\"";
 
-		while ($data = mysql_fetch_array($results)) {
-			 $SearchProfileID = $data['SearchProfileID'];
-                     
+		$results = $wpdb->get_results( $query );
+		$count = count($results);
+
+		foreach ($results as $data) {                     
 			if (function_exists('bb_agency_profile_list')) { 
-				$atts = array("pagingperpage" => 9999, "getprofile_saved" => $SearchProfileID);
+				$atts = array("pagingperpage" => 9999, "getprofile_saved" => $data->SearchProfileID);
 				bb_agency_profile_list($atts); 
 			}
 		}
