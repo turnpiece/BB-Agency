@@ -32,7 +32,7 @@ class LBDA_ModelCard extends ModelCard {
             $this->text_y += $this->line_height;
 
             // children
-            if ($age = $this->get_age()) {
+            if ($age = $this->get_age( $this->profile['ProfileDateBirth'] )) {
                 $this->print_text( 'Age: ' . $age );
                 $this->text_y += $this->line_height;
             }
