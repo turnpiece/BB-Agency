@@ -441,7 +441,7 @@ if (isset($_POST['action'])) {
 
 		//Paginate
 
-		$items = $wpdb->get_var("SELECT COUNT(*) FROM ". table_agency_searchsaved ." search LEFT JOIN ". table_agency_searchsaved_mux ." searchsent ON search.`SearchID` = search.`SearchID` ". $filter); // number of total rows in the database
+		$items = (int) $wpdb->get_var("SELECT COUNT(*) FROM ". table_agency_searchsaved ." search LEFT JOIN ". table_agency_searchsaved_mux ." searchsent ON search.`SearchID` = searchsent.`SearchID` ". $filter); // number of total rows in the database
 
 		if ($items > 0) {
 

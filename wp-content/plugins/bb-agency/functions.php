@@ -298,7 +298,8 @@
      *
      */
 	function bb_agency_random() {
-		return preg_replace("/([0-9])/e","chr((\\1+112))",rand(100000,999999));
+		//return preg_replace("/([0-9])/e","chr((\\1+112))",rand(100000,999999));
+		return preg_replace_callback( "/([0-9])/", function( $arg ){ return chr( intval($arg) + 112 ); }, rand(100000,999999) );
 	}
 	
 
@@ -1900,22 +1901,15 @@ class bb_agency_pagination {
 		$this->pagination = '';
 		$this->calculate == true;
 		$error = false;
-		if ($this->urlF and $this->urlF != '%' and strpos($this->target,$this->urlF)===false) {
-				//Es necesario especificar el comodin para sustituir
-				echo "Especificaste un wildcard para sustituir, pero no existe en el target<br />";
-				$error = true;
-			}elseif ($this->urlF and $this->urlF == '%' and strpos($this->target,$this->urlF)===false) {
-				echo "Es necesario especificar en el target el comodin % para sustituir el número de página<br />";
-				$error = true;
-			}
+
 		if ($this->total_pages < 0) {
-				echo "It is necessary to specify the <strong>number of pages</strong> (\$class->items(1000))<br />";
-				$error = true;
-			}
+			echo "It is necessary to specify the <strong>number of pages</strong> (\$class->items(1000))<br />";
+			$error = true;
+		}
 		if ($this->limit == NULL) {
-				echo "It is necessary to specify the <strong>limit of items</strong> to show per page (\$class->limit(10))<br />";
-				$error = true;
-			}
+			echo "It is necessary to specify the <strong>limit of items</strong> to show per page (\$class->limit(10))<br />";
+			$error = true;
+		}
 		if ($error)return false;
 		
 		$n = trim('<span>'. $this->nextT.'</span> '.$this->nextI);
@@ -1958,49 +1952,51 @@ class bb_agency_pagination {
 			elseif ($lastpage > 5 + ($this->adjacents * 2)) {//enough pages to hide some
 				//close to beginning; only hide later pages
 				if ($this->page < 1 + ($this->adjacents * 2)) {
-						for ($counter = 1; $counter < 4 + ($this->adjacents * 2); $counter++) {
-								if ($counter == $this->page)
-										$this->pagination .= "<span class=\"current\">$counter</span>";
-									else
-										$this->pagination .= "<a href=\"".$this->get_pagenum_link($counter)."\">$counter</a>";
-							}
-						$this->pagination .= "...";
-						$this->pagination .= "<a href=\"".$this->get_pagenum_link($lpm1)."\">$lpm1</a>";
-						$this->pagination .= "<a href=\"".$this->get_pagenum_link($lastpage)."\">$lastpage</a>";
-					}
+					for ($counter = 1; $counter < 4 + ($this->adjacents * 2); $counter++) {
+							if ($counter == $this->page)
+									$this->pagination .= "<span class=\"current\">$counter</span>";
+								else
+									$this->pagination .= "<a href=\"".$this->get_pagenum_link($counter)."\">$counter</a>";
+						}
+					$this->pagination .= "...";
+					$this->pagination .= "<a href=\"".$this->get_pagenum_link($lpm1)."\">$lpm1</a>";
+					$this->pagination .= "<a href=\"".$this->get_pagenum_link($lastpage)."\">$lastpage</a>";
+				}
 				//in middle; hide some front and some back
 				elseif ($lastpage - ($this->adjacents * 2) > $this->page && $this->page > ($this->adjacents * 2)) {
-						$this->pagination .= "<a href=\"".$this->get_pagenum_link(1)."\">1</a>";
-						$this->pagination .= "<a href=\"".$this->get_pagenum_link(2)."\">2</a>";
-						$this->pagination .= "...";
-						for ($counter = $this->page - $this->adjacents; $counter <= $this->page + $this->adjacents; $counter++)
-							if ($counter == $this->page)
-									$this->pagination .= "<span class=\"current\">$counter</span>";
-								else
-									$this->pagination .= "<a href=\"".$this->get_pagenum_link($counter)."\">$counter</a>";
-						$this->pagination .= "...";
-						$this->pagination .= "<a href=\"".$this->get_pagenum_link($lpm1)."\">$lpm1</a>";
-						$this->pagination .= "<a href=\"".$this->get_pagenum_link($lastpage)."\">$lastpage</a>";
-					}
+					$this->pagination .= "<a href=\"".$this->get_pagenum_link(1)."\">1</a>";
+					$this->pagination .= "<a href=\"".$this->get_pagenum_link(2)."\">2</a>";
+					$this->pagination .= "...";
+					for ($counter = $this->page - $this->adjacents; $counter <= $this->page + $this->adjacents; $counter++)
+						if ($counter == $this->page)
+								$this->pagination .= "<span class=\"current\">$counter</span>";
+							else
+								$this->pagination .= "<a href=\"".$this->get_pagenum_link($counter)."\">$counter</a>";
+					$this->pagination .= "...";
+					$this->pagination .= "<a href=\"".$this->get_pagenum_link($lpm1)."\">$lpm1</a>";
+					$this->pagination .= "<a href=\"".$this->get_pagenum_link($lastpage)."\">$lastpage</a>";
+				}
 				//close to end; only hide early pages
 				else {
-						$this->pagination .= "<a href=\"".$this->get_pagenum_link(1)."\">1</a>";
-						$this->pagination .= "<a href=\"".$this->get_pagenum_link(2)."\">2</a>";
-						$this->pagination .= "...";
-						for ($counter = $lastpage - (2 + ($this->adjacents * 2)); $counter <= $lastpage; $counter++)
-							if ($counter == $this->page)
-									$this->pagination .= "<span class=\"current\">$counter</span>";
-								else
-									$this->pagination .= "<a href=\"".$this->get_pagenum_link($counter)."\">$counter</a>";
-					}
+					$this->pagination .= "<a href=\"".$this->get_pagenum_link(1)."\">1</a>";
+					$this->pagination .= "<a href=\"".$this->get_pagenum_link(2)."\">2</a>";
+					$this->pagination .= "...";
+					for ($counter = $lastpage - (2 + ($this->adjacents * 2)); $counter <= $lastpage; $counter++)
+						if ($counter == $this->page)
+								$this->pagination .= "<span class=\"current\">$counter</span>";
+							else
+								$this->pagination .= "<a href=\"".$this->get_pagenum_link($counter)."\">$counter</a>";
+				}
 			}
 			if ($this->page) {
 				//siguiente button
 				if ($this->page < $counter - 1)
-						$this->pagination .= "<a href=\"".$this->get_pagenum_link($next)."\" class=\"pagedir next\">$n</a>";
-					else
-						$this->pagination .= "<span class=\"pagedir disabled\">$n</span>";
-					if ($this->showCounter)$this->pagination .= "<div class=\"pagedir pagination_data\">($this->total_pages Pages)</div>";
+					$this->pagination .= "<a href=\"".$this->get_pagenum_link($next)."\" class=\"pagedir next\">$n</a>";
+				else
+					$this->pagination .= "<span class=\"pagedir disabled\">$n</span>";
+				
+				if ($this->showCounter)
+					$this->pagination .= "<div class=\"pagedir pagination_data\">($this->total_pages Pages)</div>";
 			}
 		}
 		return true;
