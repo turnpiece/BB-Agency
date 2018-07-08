@@ -714,7 +714,6 @@
 		// Get Preferences
 		$bb_agency_option_privacy					 = bb_agency_get_option('bb_agency_option_privacy');
 		$bb_agency_option_profilelist_count			 = bb_agency_get_option('bb_agency_option_profilelist_count');
-		$bb_agency_option_profilelist_perpage		 = bb_agency_get_option('bb_agency_option_profilelist_perpage');
 		$bb_agency_option_profilelist_sortby		 = bb_agency_get_option('bb_agency_option_profilelist_sortby');
 		$bb_agency_option_layoutprofilelist		 	 = bb_agency_get_option('bb_agency_option_layoutprofilelist');
 		$bb_agency_option_profilelist_expanddetails	 = bb_agency_get_option('bb_agency_option_profilelist_expanddetails');
@@ -755,7 +754,7 @@
 				"featured" => null,
 				"stars" => null,
 				"paging" => 0,
-				"pagingperpage" => 40,
+				"pagingperpage" => 0,
 				"override_privacy" => null,
 				"profilefavorite" => null,
 				"profilecastingcart" => null,
