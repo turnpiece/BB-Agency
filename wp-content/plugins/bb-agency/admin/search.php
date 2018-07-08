@@ -85,6 +85,10 @@ if ($action) {
 
     if ($action == "search") {
 
+        $select = array();
+        $joins = array();
+        $where = array();
+
         // Sort By
         if (isset($_GET['sort']) && !empty($_GET['sort'])) {
             $sort = $_GET['sort'];
@@ -397,10 +401,6 @@ if ($action) {
            }     
         }
 
-        $select = array();
-        $joins = array();
-        $where = array();
-
         foreach ($filters as $key => $value) {
             $joins[] = "\nLEFT JOIN ". table_agency_customfield_mux ." AS cm{$key} ON profile.ProfileID = cm{$key}.ProfileID AND cm{$key}.ProfileCustomID = '$key'";
             $where[] = $value;
@@ -437,8 +437,8 @@ if ($action) {
             profile.*,
             CONCAT(profile.`ProfileContactNameFirst`,' ',profile.`ProfileContactNameLast`) AS `ProfileContactName`,
             profile.ProfileID as pID, 
-            media.ProfileMediaURL".
-            (!empty($select) ? implode(', ', $select).', ' : '')." 
+            media.ProfileMediaURL," .  
+            (!empty($select) ? implode(', ', $select) : '') . " 
             FROM ".table_agency_profile." AS profile ".
             (empty($joins) ? '' : implode(' ', $joins))." 
             LEFT JOIN ". table_agency_profile_media ." AS media 
@@ -449,7 +449,7 @@ if ($action) {
             ORDER BY $sort $dir $limit";
 
 
-
+        echo $query;
         // Search Results
         $results2 = $wpdb->get_results($query);
         $count = count($results2);

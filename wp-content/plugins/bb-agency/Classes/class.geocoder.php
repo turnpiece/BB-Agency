@@ -22,26 +22,25 @@ class Geocoder {
 
     static public function getMap($lat, $lng, $name) {
         ?>
-        <script type="text/javascript" src="//maps.googleapis.com/maps/api/js?sensor=false"></script>
-        <script type="text/javascript">
-            function initialize() {
-                var myLatlng = new google.maps.LatLng(<?php echo $lat ?>, <?php echo $lng ?>);
-                var myOptions = {
-                    zoom: 9,
-                    center: myLatlng,
-                    mapTypeId: google.maps.MapTypeId.ROADMAP
-                }
-                var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-                           
-                new google.maps.Marker({
-                    position: myLatlng,
-                    map: map,
-                    title: "<?php echo $name ?>"
+        <script src="//maps.googleapis.com/maps/api/js?key=<?php echo self::$key ?>&callback=initMap" async defer></script>
+        <script>
+            function initMap() {
+                var myLatLng = {lat: <?php echo $lat ?>, lng: <?php echo $lng ?>};
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    center: myLatLng,
+                    zoom: 9
                 });
+
+                var marker = new google.maps.Marker({
+                    position: myLatLng,
+                    map: map,
+                    title: '<?php echo $name ?>'
+                });
+
+                marker.setMap(map);
             }
-            google.maps.event.addDomListener(window, 'load', initialize);
         </script>
-        <div id="map_canvas" style="width: 100%; height: 200px;"></div>
+        <div id="map" style="width: 100%; height: 200px;"></div>
         <?php
     }
 
