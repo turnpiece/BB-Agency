@@ -437,19 +437,17 @@ if ($action) {
             profile.*,
             CONCAT(profile.`ProfileContactNameFirst`,' ',profile.`ProfileContactNameLast`) AS `ProfileContactName`,
             profile.ProfileID as pID, 
-            media.ProfileMediaURL," .  
-            (!empty($select) ? implode(', ', $select) : '') . " 
+            media.`ProfileMediaURL` " .  
+            (!empty($select) ? ', ' . implode(', ', $select) : '') . " 
             FROM ".table_agency_profile." AS profile ".
             (empty($joins) ? '' : implode(' ', $joins))." 
             LEFT JOIN ". table_agency_profile_media ." AS media 
-            ON profile.ProfileID = media.ProfileID AND media.ProfileMediaType = \"Image\" AND media.ProfileMediaPrimary = 1 
+            ON profile.`ProfileID` = media.`ProfileID` AND media.`ProfileMediaType` = \"Image\" AND media.`ProfileMediaPrimary` = 1 
             ".$filter." ".$cartQuery."   
-            GROUP BY profile.ProfileID ".
+            GROUP BY profile.`ProfileID` ".
             (empty($having) ? '' : 'HAVING '.implode(' AND ', $having))." 
             ORDER BY $sort $dir $limit";
 
-
-        echo $query;
         // Search Results
         $results2 = $wpdb->get_results($query);
         $count = count($results2);
