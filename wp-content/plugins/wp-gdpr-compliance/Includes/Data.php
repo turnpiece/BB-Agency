@@ -152,7 +152,7 @@ class Data {
                     'type' => $type
                 ))
             );
-            $output .= '<div class="wpgdprc-feedback" style="display: none;"></div>';
+            $output .= '<div class="wpgdprc-message" style="display: none;"></div>';
             $output .= '<table class="wpgdprc-table">';
             $output .= '<thead>';
             $output .= '<tr>';

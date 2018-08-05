@@ -5,10 +5,10 @@
   Description: Forked from RB Agency plugin and adapted for the Beautiful Bumps agency. With this plugin you can easily manage models' profiles and information.
   Author: Paul Jenkins
   Author URI: http://turnpiece.com/
-  Version: 2.1.1
+  Version: 2.1.2
 */
 
-$bb_agency_VERSION = "2.1.1"; // starter
+$bb_agency_VERSION = "2.1.2"; // starter
 
 if (!get_option("bb_agency_version")) {  
 	add_option("bb_agency_version", $bb_agency_VERSION , '', 'no');  
