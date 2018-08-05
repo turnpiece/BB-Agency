@@ -294,8 +294,7 @@
      *
      */
 	function bb_agency_random() {
-		//return preg_replace("/([0-9])/e","chr((\\1+112))",rand(100000,999999));
-		return preg_replace_callback( "/([0-9])/", function( $arg ){ return chr( intval($arg) + 112 ); }, rand(100000,999999) );
+		return preg_replace_callback( "/([0-9])/", function( $arg ){ return chr( $arg[1] + 112 ); }, rand(100000,999999) );
 	}
 	
 
